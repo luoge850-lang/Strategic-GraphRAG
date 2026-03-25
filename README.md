@@ -87,6 +87,7 @@ streamlit run src/app_dashboard.py
 
 ##  📂 Repository Structure
 
+```text
 ├── data/
 │   ├── evaluation/          # Golden dataset and generated JSON results
 │   └── pdfs/                # Raw SEC 10-K Filings
