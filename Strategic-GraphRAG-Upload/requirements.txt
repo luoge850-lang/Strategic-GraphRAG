@@ -1,0 +1,12 @@
+groq
+neo4j
+chromadb
+streamlit
+pyvis
+sentence-transformers
+langchain-huggingface
+langchain-community
+langchain-text-splitters
+pdfplumber
+tqdm
+python-dotenv
