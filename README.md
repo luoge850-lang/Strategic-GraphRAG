@@ -77,6 +77,7 @@ python src/step2_graph_ingestion.py        # Ingests Triplets to Neo4j
 ```
 
 **Phase 2: Automated Ablation Study**
+Note: step3 (Vector Engine), step4 (Graph Engine), and step5 (AI Judge) are decoupled, object-oriented modules. They are automatically managed by the Step 6 Orchestrator.
 ```bash
 python src/step6_batch_experiment_runner.py # Runs the 40-question benchmark
 python src/step7_report_generator.py        # Outputs metrics & LaTeX table
