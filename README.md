@@ -9,7 +9,7 @@
 ![LLM](https://img.shields.io/badge/LLM-Llama--3.3--70B-orange)
 ![Status](https://img.shields.io/badge/Status-Completed-success)
 
-![System Dashboard UI](data/ui_screenshot.png)
+<img width="2547" height="1260" alt="ui_screenshot" src="https://github.com/user-attachments/assets/aca5f282-ac13-48a9-9d6e-94312ffefe16" />
 
 ## 📑 Executive Summary
 
