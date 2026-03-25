@@ -80,21 +80,39 @@ Phase 3: Interactive Dashboard
 
 Bash
 streamlit run src/app_dashboard.py
-📂 Repository Structure
-Plaintext
-├── data/
-│   ├── evaluation/          # Golden dataset and generated JSON results
-│   └── pdfs/                # Raw SEC 10-K Filings
-├── src/
-│   ├── app_dashboard.py                 # Streamlit visual grounding console
-│   ├── step1_build_vector_baseline.py   # Baseline vector ingestion
-│   ├── step2_graph_ingestion.py         # Topological graph ingestion
-│   ├── step3_vector_rag_engine.py       # Baseline retrieval logic
-│   ├── step4_graphrag_query_engine.py   # Proposed shortest-path logic
-│   ├── step5_academic_evaluator.py      # LLM-as-a-Judge module
-│   ├── step6_batch_experiment_runner.py # Orchestrator script
-│   └── step7_report_generator.py        # Statistical aggregation
-├── .env.example
-├── .gitignore
-└── requirements.txt
-Developed with a focus on academic rigor, idempotency, and resilience engineering.
+
+## 🏗️ System Architecture & Methodology
+
+![System Dashboard UI](填写你的UI截图路径/比如data/ui_screenshot.png)
+
+This project implements a rigorous, symmetric **Ablation Study** comparing a baseline Vector RAG against the proposed GraphRAG. The pipeline is divided into three core subsystems, illustrated in the architecture flow below:
+
+```mermaid
+graph TD
+    %% Define Node Styles
+    classDef database fill:#f9f2f4,stroke:#d32f2f,stroke-width:2px;
+    classDef process fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
+    classDef llm fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+    
+    Data[Raw SEC 10-K Filings] --> Split(Recursive Text Chunking):::process
+    
+    subgraph Control Group: Vector Baseline
+        Split --> V_Embed[Dense Embedding]:::process
+        V_Embed --> V_DB[(ChromaDB)]:::database
+        Query[Strategic Query] --> V_Search[Cosine Similarity Search]:::process
+        V_DB --> V_Search
+        V_Search --> V_Gen[Llama-3.3-70B Synthesis]:::llm
+    end
+    
+    subgraph Experimental Group: Strategic-GraphRAG
+        Split --> G_Extract[Llama-3.1-8B Triplet Extraction]:::llm
+        G_Extract --> G_DB[(Neo4j Aura)]:::database
+        Query --> G_Agent[Agentic Keyword Extraction]:::llm
+        G_Agent --> G_Traverse[Cypher shortestPath Traversal]:::process
+        G_DB --> G_Traverse
+        G_Traverse --> G_Rerank[Cross-Encoder Reranking]:::process
+        G_Rerank --> G_Gen[Llama-3.3-70B Grounded Synthesis]:::llm
+    end
+    
+    V_Gen --> Eval[Academic Evaluator: Llama-as-a-Judge]:::llm
+    G_Gen --> Eval
