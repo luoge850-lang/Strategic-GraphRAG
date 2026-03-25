@@ -65,24 +65,27 @@ The empirical results over 40 complex financial reasoning queries (e.g., *Supply
 1. Clone the repository and install dependencies:
    ```bash
    pip install -r requirements.txt
-Configure your environment variables in a .env file (refer to .env.example).
+   ```
+2. Configure your environment variables in a `.env` file (refer to `.env.example`).
 
-Step-by-Step Execution
-Phase 1: Data Infrastructure
+### Step-by-Step Execution
 
-Bash
+**Phase 1: Data Infrastructure**
+```bash
 python src/step1_build_vector_baseline.py  # Builds ChromaDB
 python src/step2_graph_ingestion.py        # Ingests Triplets to Neo4j
-Phase 2: Automated Ablation Study
+```
 
-Bash
+**Phase 2: Automated Ablation Study**
+```bash
 python src/step6_batch_experiment_runner.py # Runs the 40-question benchmark
 python src/step7_report_generator.py        # Outputs metrics & LaTeX table
-Phase 3: Interactive Dashboard
+```
 
-Bash
+**Phase 3: Interactive Dashboard**
+```bash
 streamlit run src/app_dashboard.py
-
+```
 ---
 
 ##  📂 Repository Structure
