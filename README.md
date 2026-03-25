@@ -1,7 +1,7 @@
 # 🌌 Strategic-GraphRAG: Neuro-Symbolic Reasoning for Financial Intelligence
 
 **Author**: Louis Harrington  
-**Institution/Target**: National University of Singapore (NUS) Application Project  
+**Target**: Application to National University of Singapore (AI)
 **Domain**: Quantitative Finance, Natural Language Processing, Knowledge Graphs  
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
@@ -10,31 +10,74 @@
 ![Status](https://img.shields.io/badge/Status-Completed-success)
 
 <img width="2547" height="1260" alt="ui_screenshot" src="https://github.com/user-attachments/assets/aca5f282-ac13-48a9-9d6e-94312ffefe16" />
+👉 Interactive dashboard:
+
+* Ask a question
+* See the reasoning answer 
+* Highlighted nodes show how the answer is constructed
+
+---
+## ❗ Problem
+
+Traditional Vector-based RAG fails on financial documents because:
+
+* Relies on semantic similarity only
+* Cannot connect long-range dependencies
+* Breaks down on multi-hop reasoning
+
+➡️ Result:
+Either irrelevant answers or
+“Cannot answer from context” (no reasoning)
+
+---
+
+## 🚀 What does this project do?
+
+This system allows users to ask complex strategic questions about companies (e.g., “How do geopolitical risks affect NVIDIA’s supply chain?”) and visualizes the reasoning process through a knowledge graph.
+
+👉 Unlike traditional RAG systems, it does not just retrieve similar text —
+it reconstructs multi-hop causal relationships across hundreds of pages of financial reports.
+
+---
 
 ## 📑 Executive Summary
 
-Traditional Vector-based Retrieval-Augmented Generation (RAG) models suffer from **"Relevance Collapse"** when tasked with long-range, multi-hop causal reasoning in highly unstructured financial documents (e.g., SEC 10-K filings). They rely on semantic similarity, which fails to connect disparate logical dots across dozens of pages.
+This project demonstrates how Graph + LLM systems enable structured reasoning beyond traditional retrieval, leading to more reliable and interpretable AI.
 
-**Strategic-GraphRAG** introduces a Neuro-Symbolic architecture designed specifically for high-stakes financial reasoning. By converting raw corporate filings into a **Topological Knowledge Graph** and leveraging `shortestPath` graph traversal combined with neural reranking (Cross-Encoder), this system successfully mitigates hallucination and bridges causal gaps (e.g., linking geopolitical sanctions directly to specific supply chain bottlenecks).
+Traditional vector-based Retrieval-Augmented Generation (RAG) struggles with long-range, multi-hop reasoning in highly unstructured financial documents such as SEC 10-K filings. Because it relies purely on semantic similarity, it often fails to connect causally related information scattered across dozens of pages, resulting in irrelevant answers or incomplete reasoning.
+
+To address this limitation, Strategic-GraphRAG introduces a neuro-symbolic architecture for financial intelligence. The system transforms raw corporate filings into a topological knowledge graph, and replaces similarity-based retrieval with graph-based multi-hop reasoning (shortest-path traversal), further refined by neural reranking.
+
+As a result, the model can trace and reconstruct complex causal chains, significantly improving answer relevance while reducing hallucination—for example, linking geopolitical events directly to downstream supply chain impacts.
 
 ---
 
 ## 🏗️ System Architecture & Methodology
 
-This project implements a rigorous, symmetric **Ablation Study** comparing a baseline Vector RAG against the proposed GraphRAG. The pipeline is divided into three core subsystems:
+This system is designed to evaluate whether graph-based reasoning can outperform traditional vector retrieval in complex financial analysis.
+
+To ensure fairness, we implement a rigorous and symmetric ablation study, comparing a baseline Vector RAG with the proposed GraphRAG under identical conditions.
+
+The pipeline consists of three core subsystems:
 
 ### 1. Dual-Track Data Ingestion
-* **Control Group (Vector Space)**: PDF extraction, heuristic cleaning, and recursive chunking embedded into **ChromaDB** using `all-MiniLM-L6-v2`.
-* **Experimental Group (Topological Space)**: Agentic triplet extraction (Llama-3.1-8B) with SEC-specific administrative noise filters, mapped idempotently into **Neo4j** via Cypher `MERGE` operations.
+* **Vector Space (Baseline)**: Raw PDF filings are processed through extraction, heuristic cleaning, and recursive chunking, then embedded using `all-MiniLM-L6-v2` and stored in ChromaDB. 
+* **Graph Space (Ours)**: Documents are transformed into a structured knowledge graph via LLM-based triplet extraction (Llama-3.1-8B).
+Domain-specific noise filtering is applied to remove administrative artifacts, and entities/relations are stored in Neo4j using idempotent Cypher MERGE operations.
 
-### 2. Neuro-Symbolic Retrieval Engine
-* **Agentic Keyword Extraction**: Dynamically isolates core strategic entities from user queries.
-* **Topological Traversal**: Uses Cypher `shortestPath([*1..3])` to resolve multi-hop dependencies.
-* **Neural Reranking**: Applies `ms-marco-MiniLM-L-6-v2` (Cross-Encoder) to prune semantic noise and optimize the Signal-to-Noise Ratio (SNR) before LLM synthesis.
+### 2. Neuro-Symbolic Retrieval Engine 
+Instead of relying solely on semantic similarity, our method performs explicit multi-hop reasoning over graph structures, followed by neural refinement:
+
+* **Entity Extraction**: Key strategic entities are dynamically identified from user queries.
+* **Topological Reasoning**: Uses Cypher `shortestPath([*1..3])` to resolve multi-hop dependencies.
+* **Neural Reranking**: A Cross-Encoder (`ms-marco-MiniLM-L-6-v2`) filters irrelevant candidates and improves the signal-to-noise ratio (SNR) before final answer generation.
 
 ### 3. Autonomous Evaluation (LLM-as-a-Judge)
-An automated evaluator (Llama-3.3-70B, Temperature=0.0) audits the Q-C-A (Question-Context-Answer) traces based on a modified RAGAS framework across 40 golden strategic queries.
+To ensure objective evaluation, we design an automated assessment pipeline:
 
+* An evaluator model (Llama-3.3-70B, temperature=0.0) scores outputs based on Question–Context–Answer (Q-C-A) traces
+* Evaluation follows a modified RAGAS-style framework
+* The system is tested on 40 complex financial reasoning queries
 ---
 
 ## 📊 Quantitative Results (Ablation Study)
@@ -109,5 +152,13 @@ streamlit run src/app_dashboard.py
 ├── .gitignore
 └── requirements.txt
 ```
+##  📌 Future Work
+
+* Temporal GraphRAG (time-evolving knowledge graphs)
+* Multi-company comparative analysis
+* Improved reasoning path scoring
+
+---
+
 Designed & Developed with a focus on academic rigor, idempotency, and resilience engineering.
 
