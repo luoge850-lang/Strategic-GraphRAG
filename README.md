@@ -1,38 +1,16 @@
-# 🌌 Strategic-GraphRAG: Neuro-Symbolic Reasoning for Financial Intelligence
-
-**Author**: Louis Harrington  
-**Institution/Target**: National University of Singapore (NUS) Application Project  
-**Domain**: Quantitative Finance, Natural Language Processing, Knowledge Graphs  
-
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![Neo4j](https://img.shields.io/badge/Neo4j-AuraDB-blue)
-![LLM](https://img.shields.io/badge/LLM-Llama--3.3--70B-orange)
-![Status](https://img.shields.io/badge/Status-Completed-success)
-
-![System Dashboard UI](data/ui_screenshot.png)
-
-## 📑 Executive Summary
-
-Traditional Vector-based Retrieval-Augmented Generation (RAG) models suffer from **"Relevance Collapse"** when tasked with long-range, multi-hop causal reasoning in highly unstructured financial documents (e.g., SEC 10-K filings). They rely on semantic similarity, which fails to connect disparate logical dots across dozens of pages.
-
-**Strategic-GraphRAG** introduces a Neuro-Symbolic architecture designed specifically for high-stakes financial reasoning. By converting raw corporate filings into a **Topological Knowledge Graph** and leveraging `shortestPath` graph traversal combined with neural reranking (Cross-Encoder), this system successfully mitigates hallucination and bridges causal gaps (e.g., linking geopolitical sanctions directly to specific supply chain bottlenecks).
-
----
-
 ## 🏗️ System Architecture & Methodology
 
 This project implements a rigorous, symmetric **Ablation Study** comparing a baseline Vector RAG against the proposed GraphRAG. The pipeline is divided into three core subsystems, illustrated in the architecture flow below:
 
 ```mermaid
 graph TD
-    %% Define Node Styles
     classDef database fill:#f9f2f4,stroke:#d32f2f,stroke-width:2px;
     classDef process fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
     classDef llm fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
     
     Data[Raw SEC 10-K Filings] --> Split(Recursive Text Chunking):::process
     
-    subgraph Control Group: Vector Baseline
+    subgraph CG [Control Group: Vector Baseline]
         Split --> V_Embed[Dense Embedding]:::process
         V_Embed --> V_DB[(ChromaDB)]:::database
         Query[Strategic Query] --> V_Search[Cosine Similarity Search]:::process
@@ -40,7 +18,7 @@ graph TD
         V_Search --> V_Gen[Llama-3.3-70B Synthesis]:::llm
     end
     
-    subgraph Experimental Group: Strategic-GraphRAG
+    subgraph EG [Experimental Group: Strategic-GraphRAG]
         Split --> G_Extract[Llama-3.1-8B Triplet Extraction]:::llm
         G_Extract --> G_DB[(Neo4j Aura)]:::database
         Query --> G_Agent[Agentic Keyword Extraction]:::llm
