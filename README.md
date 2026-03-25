@@ -1,7 +1,9 @@
 # 🌌 Strategic-GraphRAG: Neuro-Symbolic Reasoning for Financial Intelligence
 
-**Author**: Louis Harrington  
+**Author**: Louis Harrington
+
 **Target**: Application to National University of Singapore (AI)
+
 **Domain**: Quantitative Finance, Natural Language Processing, Knowledge Graphs  
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
