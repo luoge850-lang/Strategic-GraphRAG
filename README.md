@@ -103,4 +103,6 @@ streamlit run src/app_dashboard.py
 ├── .env.example
 ├── .gitignore
 └── requirements.txt
+```
 Designed & Developed with a focus on academic rigor, idempotency, and resilience engineering.
+
