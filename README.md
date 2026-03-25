@@ -9,6 +9,8 @@
 ![LLM](https://img.shields.io/badge/LLM-Llama--3.3--70B-orange)
 ![Status](https://img.shields.io/badge/Status-Completed-success)
 
+![System Dashboard UI](data/ui_screenshot.png)
+
 ## 📑 Executive Summary
 
 Traditional Vector-based Retrieval-Augmented Generation (RAG) models suffer from **"Relevance Collapse"** when tasked with long-range, multi-hop causal reasoning in highly unstructured financial documents (e.g., SEC 10-K filings). They rely on semantic similarity, which fails to connect disparate logical dots across dozens of pages.
@@ -97,4 +99,4 @@ Plaintext
 ├── .env.example
 ├── .gitignore
 └── requirements.txt
-Developed with a focus on academic rigor, idempotency, and resilience engineering.
+Designed & Developed with a focus on academic rigor, idempotency, and resilience engineering.
