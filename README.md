@@ -85,7 +85,7 @@ streamlit run src/app_dashboard.py
 
 ---
 
-##📂 Repository Structure
+##  📂 Repository Structure
 
 ├── data/
 │   ├── evaluation/          # Golden dataset and generated JSON results
