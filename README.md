@@ -83,7 +83,7 @@ Phase 3: Interactive Dashboard
 Bash
 streamlit run src/app_dashboard.py
 📂 Repository Structure
-Plaintext
+
 ├── data/
 │   ├── evaluation/          # Golden dataset and generated JSON results
 │   └── pdfs/                # Raw SEC 10-K Filings
