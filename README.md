@@ -107,11 +107,30 @@ The empirical results over 40 complex financial reasoning queries (e.g., *Supply
 ## 🚀 Quick Start / Reproduction Guide
 
 ### Prerequisites
-1. Clone the repository and install dependencies:
+
+1. Create virtual environment:
+   ```bash
+   python -m venv venv
+   ```
+2. Activate environment:
+   * On Windows:
+   ```bash
+   venv\Scripts\activate
+   ```
+   * On macOS/Linux:
+   ```bash
+   source venv/bin/activate
+   ```
+3. Clone the repository and install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-2. Configure your environment variables in a `.env` file (refer to `.env.example`).
+4. Configure your environment variables in a `.env` file (refer to `.env.example`).
+   
+> *\*Note:
+>* Using a virtual environment helps avoid dependency conflicts 
+>* All required packages are listed in `requirements.txt`
+>* Tested with Python 3.x environment
 
 ### Step-by-Step Execution
 
