@@ -101,7 +101,7 @@ The empirical results over 40 complex financial reasoning queries (e.g., *Supply
 
 <p align="center">
   <a href="https://github.com/user-attachments/assets/4a005d64-dd55-4fc1-851b-7060678e2304">
-    <img src="https://github.com/user-attachments/assets/4a005d64-dd55-4fc1-851b-7060678e2304" width="600"/>
+    <img src="https://github.com/user-attachments/assets/4a005d64-dd55-4fc1-851b-7060678e2304" width="500"/>
   </a>
 </p>
 
