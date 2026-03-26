@@ -104,6 +104,9 @@ The empirical results over 40 complex financial reasoning queries (e.g., *Supply
     <img src="https://github.com/user-attachments/assets/4a005d64-dd55-4fc1-851b-7060678e2304" width="500"/>
   </a>
 </p>
+This figure presents the end-to-end execution pipeline of Strategic-GraphRAG.
+
+Each stage corresponds to a modular component (step1–step7), covering data processing, retrieval, evaluation, and visualization, enabling reproducible and structured experimentation.
 
 ---
 
