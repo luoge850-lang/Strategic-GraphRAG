@@ -11,6 +11,9 @@
 ![LLM](https://img.shields.io/badge/LLM-Llama--3.3--70B-orange)
 ![Status](https://img.shields.io/badge/Status-Completed-success)
 
+## 🧠 System Overview
+The overall architecture of Strategic-GraphRAG is illustrated below:
+
 <img width="2547" height="1260" alt="ui_screenshot" src="https://github.com/user-attachments/assets/aca5f282-ac13-48a9-9d6e-94312ffefe16" />
 👉 Interactive dashboard:
 
@@ -94,6 +97,15 @@ The empirical results over 40 complex financial reasoning queries (e.g., *Supply
 > *\*Note: The Baseline Vector RAG scored artificially high on Faithfulness because it consistently output "Cannot conclude based on the given documents," effectively preventing hallucinations but failing entirely at the reasoning task.*
 
 ---
+## ⚙️ Execution Pipeline
+
+<p align="center">
+  <a href="https://github.com/user-attachments/assets/4a005d64-dd55-4fc1-851b-7060678e2304">
+    <img src="https://github.com/user-attachments/assets/4a005d64-dd55-4fc1-851b-7060678e2304" width="600"/>
+  </a>
+</p>
+
+---
 
 ## 💻 Tech Stack
 * **Language Models**: Groq Cloud (Llama-3.3-70B for Synthesis/Judging, Llama-3.1-8B for Ingestion)
@@ -106,6 +118,23 @@ The empirical results over 40 complex financial reasoning queries (e.g., *Supply
 
 ## 🚀 Quick Start / Reproduction Guide
 
+### Neo4j Setup
+This project requires a Neo4j database instance for knowledge graph storage and querying.
+#### 1. Create virtual environment:
+* Neo4j Aura (cloud version, recommended)
+* Local Neo4j Desktop
+
+#### 2. Configure Environment Variables:
+Create a .env file based on .env.example:
+* NEO4J_URI=bolt://localhost:7687
+* NEO4J_USER=neo4j
+* NEO4J_PASSWORD=your_password
+
+#### 3. Data Preparation:
+To reproduce the full experiment:
+* Download NVIDIA SEC 10-K filings (multiple years)
+* Place PDF files under:`data/pdfs/`
+   
 ### Prerequisites
 
 1. Create virtual environment:
