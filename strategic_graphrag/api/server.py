@@ -334,7 +334,8 @@ async def health_check():
     neo4j_ok = False
     try:
         mgr = get_schema_manager()
-        neo4j_ok = mgr.driver.verify_connectivity() is not None
+        mgr.driver.verify_connectivity()
+        neo4j_ok = True
     except Exception:
         pass
 

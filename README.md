@@ -69,6 +69,15 @@ The API exposes `/query`, `/evidence/{entity_id}`, and
 `/graph/temporal/{risk_id}` for manual end-to-end checks against the active
 Neo4j instance.
 
+Run the read-only single-filing contract check with:
+
+```powershell
+python scripts/validate_single_pdf_kg.py --doc_id 2025-10-K --filename 2025-10-K.pdf
+```
+
+The check verifies EvidenceClaim links, source/target entities, exact text and
+page alignment, relation IDs, years, and ontology validation.
+
 ## Limitations of this freeze
 
 - The current benchmark and legacy experiment artifacts are not paper results.

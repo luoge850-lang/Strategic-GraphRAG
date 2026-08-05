@@ -337,7 +337,11 @@ class CausalPathFinder:
         WHERE ALL(r IN rels WHERE type(r) IS NOT NULL
                   AND r.year IS NOT NULL
                   AND r.evidence_id IS NOT NULL
-                  AND size(trim(coalesce(r.evidence_sentence, ''))) >= 20)
+                  AND size(trim(coalesce(r.evidence_sentence, ''))) >= 20
+                  AND EXISTS {{
+                      MATCH (claim:EvidenceClaim {{id: r.evidence_id}})
+                      WHERE claim.verification_status = 'VERBATIM'
+                  }})
         RETURN
             [nd IN nds | coalesce(nd.name, nd.id)] AS node_names,
             [nd IN nds | labels(nd)[0]] AS node_labels,
@@ -391,17 +395,17 @@ class CausalPathFinder:
         cypher = """
         MATCH (n)
         WHERE (n.name = $name OR n.id = $name)
-        OPTIONAL MATCH (claim:EvidenceClaim)-[:ABOUT_SOURCE|ABOUT_TARGET]->(n)
-        OPTIONAL MATCH (claim)-[:SUPPORTED_BY]->(s:Sentence)
-        OPTIONAL MATCH (n)-[r]-(m)
-        RETURN coalesce(claim.text, s.text) AS evidence,
-               coalesce(claim.page, s.page, r.page, 0) AS page,
-               coalesce(claim.section, s.section, r.section, '') AS section,
-               coalesce(claim.relation_type, type(r), '') AS relation,
-               coalesce(claim.doc_id, r.source_filing, r.filing, '') AS filing,
-               coalesce(claim.fiscal_year, r.year, 0) AS fiscal_year,
-               coalesce(claim.id, r.evidence_id, '') AS evidence_id,
-               coalesce(m.name, m.id, '') AS connected_to
+        MATCH (claim:EvidenceClaim)-[:ABOUT_SOURCE|ABOUT_TARGET]->(n)
+        MATCH (claim)-[:SUPPORTED_BY]->(s:Sentence)
+        RETURN claim.text AS evidence,
+               claim.page AS page,
+               claim.section AS section,
+               claim.relation_type AS relation,
+               claim.doc_id AS filing,
+               claim.fiscal_year AS fiscal_year,
+               claim.id AS evidence_id,
+               CASE WHEN claim.source_id = n.id
+                    THEN claim.target_id ELSE claim.source_id END AS connected_to
         LIMIT $limit
         """
         try:
@@ -419,11 +423,12 @@ class CausalPathFinder:
         WHERE risk.id = $risk_id OR toLower(risk.name) = toLower($risk_id)
         MATCH (risk)-[r]->(target)
         WHERE r.year IS NOT NULL
+        MATCH (claim:EvidenceClaim {id: r.evidence_id})
+        WHERE claim.verification_status = 'VERBATIM'
         RETURN target.name AS target, type(r) AS relation,
                r.causal_strength AS strength, r.year AS year,
-               r.evidence_sentence AS evidence, r.page AS page,
-               coalesce(r.source_filing, r.filing, '') AS filing,
-               coalesce(r.evidence_id, '') AS evidence_id
+               claim.text AS evidence, claim.page AS page,
+               claim.doc_id AS filing, claim.id AS evidence_id
         ORDER BY r.year, r.causal_strength DESC
         LIMIT 20
         """

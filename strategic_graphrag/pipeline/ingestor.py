@@ -169,6 +169,20 @@ class GraphIngestor:
             r.source_category = $sc,
             r.target_category = $tc
 
+        SET r.causal_strength = $cs,
+            r.confidence = $conf,
+            r.evidence_sentence = $ev,
+            r.year = $yr,
+            r.page = $pg,
+            r.filing = $file,
+            r.section = $sec,
+            r.extraction_method = $method,
+            r.source_category = $sc,
+            r.target_category = $tc,
+            r.evidence_id = $claim_id,
+            r.source_filing = $file,
+            r.source_page = $pg
+
         // 3. Temporal anchors
         MERGE (y:Year {{year: $yr}})
         MERGE (s)-[:OBSERVED_IN]->(y)
@@ -384,7 +398,18 @@ class GraphIngestor:
                         MERGE (claim)-[:ABOUT_TARGET]->(t)
 
                         SET r.source_filing = row.file,
-                            r.source_page = row.pg
+                            r.source_page = row.pg,
+                            r.causal_strength = row.cs,
+                            r.confidence = row.conf,
+                            r.evidence_sentence = row.ev,
+                            r.year = row.yr,
+                            r.page = row.pg,
+                            r.filing = row.file,
+                            r.section = row.sec,
+                            r.extraction_method = 'HYBRID',
+                            r.source_category = row.s_cat,
+                            r.target_category = row.t_cat,
+                            r.evidence_id = row.claim_id
                         """
                         session.run(cypher, batch=group)
                         total_ingested += len(group)
@@ -514,14 +539,14 @@ class GraphIngestor:
             logger.warning(f"Dedup error: {e}")
 
     def enforce_hubness(self, max_out_edges: int = 30):
-        """Prune only extracted edges, preserving provenance/time anchors."""
+        """Prune only ungrounded extracted edges, never evidence-backed edges."""
         cypher = f"""
         MATCH (n)-[r]->()
-        WHERE r.confidence IS NOT NULL
+        WHERE r.confidence IS NOT NULL AND r.evidence_id IS NULL
         WITH n, count(r) AS degree
         WHERE degree > {max_out_edges}
         MATCH (n)-[r]->(m)
-        WHERE r.confidence IS NOT NULL
+        WHERE r.confidence IS NOT NULL AND r.evidence_id IS NULL
         WITH n, degree, r, m
         ORDER BY r.confidence ASC
         WITH n, degree, collect(r)[0..toInteger(degree - {max_out_edges})] AS to_delete

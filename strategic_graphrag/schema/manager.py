@@ -366,7 +366,13 @@ class SchemaManager:
         for label in NODE_LABELS:
             r = self._run(f"MATCH (n:{label}) RETURN count(n) AS c")
             results["node_counts"][label] = r[0]["c"] if r else 0
+        existing_types = {
+            row["relationshipType"]
+            for row in self._run("CALL db.relationshipTypes()")
+        }
         for rel_type in RELATIONSHIP_TYPES:
+            if rel_type not in existing_types:
+                continue
             r = self._run(f"MATCH ()-[r:{rel_type}]->() RETURN count(r) AS c")
             results["rel_counts"][rel_type] = r[0]["c"] if r else 0
         return results
@@ -380,7 +386,13 @@ class SchemaManager:
             if r and r[0]["c"] > 0:
                 stats["by_label"][label] = r[0]["c"]
         stats["by_relationship"] = {}
+        existing_types = {
+            row["relationshipType"]
+            for row in self._run("CALL db.relationshipTypes()")
+        }
         for rel_type in RELATIONSHIP_TYPES:
+            if rel_type not in existing_types:
+                continue
             r = self._run(f"MATCH ()-[r:{rel_type}]->() RETURN count(r) AS c")
             if r and r[0]["c"] > 0:
                 stats["by_relationship"][rel_type] = r[0]["c"]
