@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>Strategic-GraphRAG | Financial Risk Causal Intelligence</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: { sans: ['system-ui','-apple-system','sans-serif'], mono: ['ui-monospace','SF Mono','monospace'] },
+      colors: {
+        surface: { DEFAULT: '#09090b', raised: '#121214', overlay: '#1a1a1e' },
+        accent: { DEFAULT: '#22d388', dim: '#1aad6a' },
+        border: { DEFAULT: '#232328', light: '#2e2e35' },
+        mute: { DEFAULT: '#6b6b76', light: '#8e8e99' },
+      }
+    }
+  }
+}
+</script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/d3-force@3"></script>
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+:root { color-scheme: dark; }
+* { scrollbar-width: thin; scrollbar-color: #232328 transparent; }
+body { margin: 0; background: #09090b; color: #e4e4e7; font-family: system-ui, -apple-system, sans-serif; font-feature-settings: "cv02","cv03","cv04","cv11"; }
+.glass { background: #121214; border: 1px solid #232328; border-radius: 16px; backdrop-filter: blur(12px); }
+.btn { padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; }
+.btn-primary { background: #22d388; color: #09090b; }
+.btn-primary:hover { background: #1aad6a; }
+.btn-primary:disabled { opacity: 0.2; cursor: default; }
+.node-label { font-size: 9px; font-family: ui-monospace, SF Mono, monospace; text-anchor: middle; pointer-events: none; user-select: none; }
+.path-card { background: #09090b; border: 1px solid #232328; border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.2s; margin-bottom: 8px; }
+.path-card:hover { border-color: #2e2e35; }
+.path-card.active { background: rgba(34,211,136,0.04); border-color: rgba(34,211,136,0.25); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 500; border: 1px solid; }
+.tag-risk { background: rgba(248,113,113,0.12); color: #fca5a5; border-color: rgba(248,113,113,0.2); }
+.tag-strategy { background: rgba(96,165,250,0.12); color: #93c5fd; border-color: rgba(96,165,250,0.2); }
+.tag-metric { background: rgba(251,191,36,0.12); color: #fcd34d; border-color: rgba(251,191,36,0.2); }
+.tag-mechanism { background: rgba(192,132,252,0.12); color: #d8b4fe; border-color: rgba(192,132,252,0.2); }
+.tag-regulation { background: rgba(251,146,60,0.12); color: #fdba74; border-color: rgba(251,146,60,0.2); }
+.tag-company { background: rgba(52,211,153,0.12); color: #6ee7b7; border-color: rgba(52,211,153,0.2); }
+.tag-default { background: rgba(161,161,170,0.1); color: #d4d4d8; border-color: rgba(161,161,170,0.15); }
+.rel-badge { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 9px; font-family: ui-monospace, SF Mono, monospace; font-weight: 500; }
+@media (prefers-reduced-motion:reduce){*{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect, useCallback, useRef, useMemo } = React
+const { motion, AnimatePresence } = window
+
+/* ── helpers ── */
+const fmt = s => s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+const nodeClr = labels => {
+  const l = (labels[0]||'').toLowerCase()
+  if (l.includes('risk')) return '#f87171'
+  if (l.includes('strategy')) return '#60a5fa'
+  if (l.includes('metric')) return '#fbbf24'
+  if (l.includes('mechanism')) return '#c084fc'
+  if (l.includes('regulation')) return '#fb923c'
+  if (l.includes('company')) return '#34d399'
+  if (l.includes('product')) return '#22d388'
+  if (l.includes('market')) return '#f472b6'
+  return '#a1a1aa'
+}
+const tagCls = label => {
+  const l = (label||'').toLowerCase()
+  if (l.includes('risk')) return 'tag tag-risk'
+  if (l.includes('strategy')) return 'tag tag-strategy'
+  if (l.includes('metric')) return 'tag tag-metric'
+  if (l.includes('mechanism')) return 'tag tag-mechanism'
+  if (l.includes('regulation')) return 'tag tag-regulation'
+  if (l.includes('company')) return 'tag tag-company'
+  return 'tag tag-default'
+}
+
+/* ── Force simulation ── */
+function runSim(nodes, edges, w, h) {
+  const sim = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(edges).id(d => d.id).distance(70))
+    .force('charge', d3.forceManyBody().strength(-180))
+    .force('center', d3.forceCenter(w/2, h/2))
+    .force('collide', d3.forceCollide(24))
+    .stop()
+  for (let i = 0; i < 150; i++) sim.tick()
+  nodes.forEach(n => {
+    n.x = Math.max(30, Math.min(w - 30, n.x ?? w/2))
+    n.y = Math.max(20, Math.min(h - 20, n.y ?? h/2))
+  })
+  return { nodes, edges }
+}
+
+/* ── Graph SVG component ── */
+function GraphSVG({ sim, hlNodes, hlEdges, w, h }) {
+  if (!sim) return <div className="flex items-center justify-center h-full text-mute text-sm">Loading graph data...</div>
+  const hasHL = hlNodes.size > 0
+  return (
+    <svg width="100%" height="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="xMidYMid meet" style={{background:'#09090b'}}>
+      <defs>
+        <filter id="g"><feGaussianBlur stdDeviation="2"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      {sim.edges.map((e, i) => {
+        const src = typeof e.source === 'object' ? e.source : sim.nodes.find(n => n.id === e.source)
+        const tgt = typeof e.target === 'object' ? e.target : sim.nodes.find(n => n.id === e.target)
+        if (!src || !tgt || src.x == null || tgt.x == null) return null
+        const isHL = hlEdges.has(`${src.id}|${tgt.id}`)
+        return <line key={i} x1={src.x} y1={src.y} x2={tgt.x} y2={tgt.y}
+          stroke={isHL ? '#22d388' : '#27272a'} strokeWidth={isHL ? 2.5 : 0.6}
+          opacity={hasHL ? (isHL ? 1 : 0.12) : 0.4} />
+      })}
+      {sim.nodes.map(n => {
+        if (n.x == null || n.y == null) return null
+        const isHL = hlNodes.has(n.id) || hlNodes.has(n.name)
+        const r = isHL ? 7 : 4.5
+        const c = nodeClr(n.labels||[])
+        return <g key={n.id}>
+          {isHL && <circle cx={n.x} cy={n.y} r={r+5} fill="#22d388" opacity="0.12" filter="url(#g)"/>}
+          <circle cx={n.x} cy={n.y} r={r} fill={c}
+            opacity={hasHL ? (isHL ? 1 : 0.25) : 0.75}
+            stroke={isHL ? '#22d388' : c} strokeWidth={isHL ? 2 : 0.5}/>
+          <text className="node-label" x={n.x} y={n.y + r + 10} fill={isHL ? '#a1a1aa' : '#52525b'}>
+            {fmt((n.name||n.id) || '').slice(0, 15)}
+          </text>
+        </g>
+      })}
+    </svg>
+  )
+}
+
+/* ── Main App ── */
+function App() {
+  const [q, setQ] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState(null)
+  const [gstats, setGstats] = useState(null)
+  const [error, setError] = useState('')
+  const [subgraph, setSubgraph] = useState(null)
+  const [hlNodes, setHlNodes] = useState(new Set())
+  const [hlEdges, setHlEdges] = useState(new Set())
+  const [selectedPath, setSelectedPath] = useState(0)
+  const graphRef = useRef(null)
+  const [dim, setDim] = useState({ w: 700, h: 550 })
+
+  /* load full graph on mount */
+  useEffect(() => {
+    fetch('/api/graph/statistics').then(r => r.json()).then(setGstats).catch(() => {})
+    fetch('/api/graph/subgraph?limit=100').then(r => r.json()).then(d => {
+      console.log('Graph loaded:', d.nodes?.length, 'nodes,', d.edges?.length, 'edges')
+      setSubgraph(d)
+    }).catch(e => console.error('Graph load error:', e))
+  }, [])
+
+  /* measure container */
+  useEffect(() => {
+    const el = graphRef.current; if (!el) return
+    const update = () => { const r = el.getBoundingClientRect(); setDim({ w: r.width || 700, h: r.height || 550 }) }
+    update(); const ro = new ResizeObserver(update); ro.observe(el); return () => ro.disconnect()
+  }, [])
+
+  /* run simulation */
+  const simResult = useMemo(() => {
+    if (!subgraph?.nodes?.length) return null
+    const gn = subgraph.nodes.map(n => ({ ...n }))
+    const ge = subgraph.edges.map(e => ({ source: e.source, target: e.target, type: e.type }))
+    return runSim(gn, ge, dim.w, dim.h)
+  }, [subgraph, dim])
+
+  /* query */
+  const submit = useCallback(async () => {
+    if (!q.trim() || loading) return
+    setLoading(true); setError('')
+    try {
+      const r = await fetch('/api/query', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question: q.trim(), max_paths: 8 }) }).then(r => r.json())
+      setResult(r); setSelectedPath(0)
+      const hn = new Set(); const he = new Set()
+      r.paths?.forEach(p => {
+        p.nodes.forEach(n => hn.add(n))
+        for (let i = 0; i < p.nodes.length - 1; i++) { he.add(`${p.nodes[i]}|${p.nodes[i+1]}`); he.add(`${p.nodes[i+1]}|${p.nodes[i]}`) }
+      })
+      setHlNodes(hn); setHlEdges(he)
+      fetch('/api/graph/statistics').then(r => r.json()).then(setGstats).catch(() => {})
+    } catch (e) { setError(e.message || 'Query failed') }
+    finally { setLoading(false) }
+  }, [q, loading])
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#09090b' }}>
+      {/* Nav */}
+      <nav style={{ position: 'sticky', top: 0, zIndex: 50, borderBottom: '1px solid #232328', background: 'rgba(9,9,11,0.85)', backdropFilter: 'blur(16px)' }}>
+        <div style={{ maxWidth: 1500, margin: '0 auto', padding: '0 24px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(34,211,136,0.1)', border: '1px solid rgba(34,211,136,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22d388', fontSize: 18, fontWeight: 700 }}>S</div>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: '-0.01em' }}>Strategic-GraphRAG</div>
+              <div style={{ fontSize: 10, color: '#6b6b76', fontFamily: 'ui-monospace, monospace' }}>Financial Risk Causal Intelligence</div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 20, fontSize: 11, fontFamily: 'ui-monospace, monospace', color: '#6b6b76' }}>
+            <span>6-Layer KG</span><span>21 Relations</span><span>Evidence-Backed</span>
+          </div>
+        </div>
+      </nav>
+
+      <main style={{ maxWidth: 1500, margin: '0 auto', padding: '32px 24px' }}>
+        {/* Header */}
+        <section style={{ paddingTop: 16, marginBottom: 24 }}>
+          <h1 style={{ fontSize: 'clamp(28px, 4vw, 38px)', fontWeight: 600, letterSpacing: '-0.02em', lineHeight: 1.15, maxWidth: 700, margin: 0 }}>
+            Financial Risk <span style={{ color: '#22d388' }}>Causal Intelligence</span>
+          </h1>
+          <p style={{ fontSize: 14, color: '#8e8e99', marginTop: 8, maxWidth: 600, lineHeight: 1.6 }}>
+            Neuro-symbolic analysis with temporal causal knowledge graphs. Every claim traced to SEC filing evidence.
+          </p>
+        </section>
+
+        {/* Stats */}
+        {gstats && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 24 }}>
+            {[
+              [gstats.total_nodes?.toLocaleString(), 'Nodes', '#22d388'],
+              [gstats.total_relationships?.toLocaleString(), 'Relations', '#60a5fa'],
+              [String(Object.keys(gstats.by_label||{}).length), 'Entity Types', '#fbbf24'],
+              [result ? String(result.metadata?.total_candidates||0) : '-', 'Candidates', '#c084fc'],
+            ].map(([v,l,c]) => (
+              <div key={l} className="glass" style={{ padding: '16px 20px' }}>
+                <div style={{ fontSize: 22, fontWeight: 600, fontFamily: 'ui-monospace, monospace', color: c }}>{v}</div>
+                <div style={{ fontSize: 10, color: '#6b6b76', fontFamily: 'ui-monospace, monospace', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 4 }}>{l}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Query */}
+        <div className="glass" style={{ padding: 16, marginBottom: 24 }}>
+          <div style={{ position: 'relative' }}>
+            <textarea value={q} onChange={e => setQ(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit() } }}
+              placeholder="Ask a financial risk question about NVIDIA..."
+              rows={2}
+              style={{ width: '100%', background: '#09090b', border: '1px solid #232328', borderRadius: 12, padding: '12px 16px', fontSize: 14, color: '#e4e4e7', resize: 'none', outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
+              disabled={loading} />
+            <button onClick={submit} disabled={!q.trim() || loading}
+              className="btn btn-primary"
+              style={{ position: 'absolute', right: 12, bottom: 12 }}>{loading ? '...' : 'Send'}</button>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12 }}>
+            {['How do US export controls impact NVIDIA revenue?', 'How does NVIDIA mitigate supply chain risks?', 'What risks does NVIDIA face in the China market?'].map(p => (
+              <button key={p} onClick={() => setQ(p)} disabled={loading}
+                style={{ padding: '6px 12px', borderRadius: 8, background: '#09090b', border: '1px solid #232328', color: '#8e8e99', fontSize: 11, cursor: 'pointer', fontFamily: 'inherit' }}>{p}</button>
+            ))}
+          </div>
+        </div>
+
+        {error && <div style={{ padding: 16, borderRadius: 12, background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.2)', color: '#fca5a5', fontSize: 13, marginBottom: 24 }}>{error}</div>}
+
+        {/* Graph + Results grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 24 }}>
+          {/* LEFT: Graph */}
+          <section className="glass" style={{ padding: 16, display: 'flex', flexDirection: 'column', minHeight: 600 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <div>
+                <div style={{ fontSize: 10, fontFamily: 'ui-monospace, monospace', color: '#6b6b76', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Knowledge Graph</div>
+                <div style={{ fontSize: 12, color: '#8e8e99', marginTop: 2 }}>
+                  {simResult ? `${simResult.nodes.length} nodes, ${simResult.edges.length} edges` : 'Loading...'}
+                  {result ? ` - ${result.metadata?.total_candidates||0} candidates` : ''}
+                </div>
+              </div>
+              {result && (
+                <div style={{ display: 'flex', gap: 12, fontSize: 10, fontFamily: 'ui-monospace, monospace', color: '#6b6b76' }}>
+                  <span><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#22d388', marginRight: 4 }} />Path</span>
+                  <span><span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#52525b', marginRight: 4 }} />Graph</span>
+                </div>
+              )}
+            </div>
+            <div ref={graphRef} style={{ flex: 1, borderRadius: 12, background: '#09090b', border: '1px solid #232328', overflow: 'hidden', position: 'relative' }}>
+              <GraphSVG sim={simResult} hlNodes={hlNodes} hlEdges={hlEdges} w={dim.w} h={dim.h - 8} />
+            </div>
+          </section>
+
+          {/* RIGHT: Results */}
+          <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {result ? (
+              <>
+                {/* Paths */}
+                <div className="glass" style={{ padding: 16 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <div style={{ fontSize: 10, fontFamily: 'ui-monospace, monospace', color: '#6b6b76', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Causal Paths</div>
+                    <div style={{ fontSize: 10, fontFamily: 'ui-monospace, monospace', color: '#22d388' }}>top {result.paths?.length||0} of {result.metadata?.total_candidates||0}</div>
+                  </div>
+                  <div style={{ maxHeight: 300, overflowY: 'auto' }}>
+                    {result.paths?.map((p, i) => (
+                      <div key={p.path_id} className={`path-card ${selectedPath === i ? 'active' : ''}`} onClick={() => setSelectedPath(i)}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                          <span style={{ fontSize: 10, fontFamily: 'ui-monospace, monospace', color: '#6b6b76' }}>Path {i+1} - {p.total_hops} hops</span>
+                          <span style={{ fontSize: 10, fontFamily: 'ui-monospace, monospace', fontWeight: 600, color: '#22d388' }}>{p.score?.toFixed(3)}</span>
+                        </div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, alignItems: 'center', marginBottom: 4 }}>
+                          {p.nodes.map((n, j) => (
+                            <span key={j} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                              <span className={tagCls(p.node_labels?.[j]||'')}>{fmt(n).slice(0, 18)}</span>
+                              {j < p.nodes.length - 1 && (
+                                <span className="rel-badge" style={{ background: 'rgba(255,255,255,0.05)', color: '#a1a1aa' }}>{p.relationships?.[j]}</span>
+                              )}
+                            </span>
+                          ))}
+                        </div>
+                        <div style={{ display: 'flex', gap: 8, fontSize: 9, fontFamily: 'ui-monospace, monospace', color: '#6b6b76' }}>
+                          {p.pages?.filter(pg => pg > 0).length > 0 && <span>pp. {[...new Set(p.pages.filter(pg => pg > 0))].slice(0,3).join(', ')}</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Selected path evidence */}
+                {result.paths?.[selectedPath] && (
+                  <div className="glass" style={{ padding: 16 }}>
+                    <div style={{ fontSize: 10, fontFamily: 'ui-monospace, monospace', color: '#6b6b76', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12 }}>
+                      Evidence - Path {selectedPath + 1}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      {result.paths[selectedPath].evidence?.map((ev, i) => (
+                        ev && ev.length > 15 ? (
+                          <div key={i} style={{ display: 'flex', gap: 8, padding: 10, borderRadius: 8, background: '#09090b', border: '1px solid #232328' }}>
+                            <span style={{ fontSize: 9, fontFamily: 'ui-monospace, monospace', color: '#22d388', flexShrink: 0 }}>[{i+1}]</span>
+                            <div>
+                              <div style={{ fontSize: 11, color: '#a1a1aa', lineHeight: 1.5 }}>{ev.length > 240 ? ev.slice(0, 240) + '...' : ev}</div>
+                              <div style={{ display: 'flex', gap: 8, marginTop: 4, fontSize: 9, fontFamily: 'ui-monospace, monospace', color: '#6b6b76' }}>
+                                <span>p.{result.paths[selectedPath].pages?.[i] || '?'}</span>
+                                <span>{result.paths[selectedPath].causal_strengths?.[i] || ''}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ) : null
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Synthesis */}
+                {result.answer && (
+                  <div className="glass" style={{ padding: 16 }}>
+                    <div style={{ fontSize: 10, fontFamily: 'ui-monospace, monospace', color: '#6b6b76', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 12 }}>LLM Synthesis</div>
+                    <div style={{ fontSize: 12, color: '#d4d4d8', lineHeight: 1.6, maxHeight: 300, overflowY: 'auto' }}>
+                      {result.answer.split('\n').map((line, i) => {
+                        if (line.startsWith('## ')) return <h3 key={i} style={{ fontSize: 14, fontWeight: 600, color: '#e4e4e7', margin: '12px 0 4px' }}>{line.replace('## ', '')}</h3>
+                        if (line.startsWith('> ')) return <blockquote key={i} style={{ borderLeft: '2px solid rgba(34,211,136,0.4)', paddingLeft: 12, fontSize: 11, color: '#a1a1aa', fontStyle: 'italic', margin: '4px 0' }}>{line.replace('> ', '')}</blockquote>
+                        if (line.startsWith('- ')) return <li key={i} style={{ fontSize: 11, color: '#a1a1aa', marginLeft: 12 }}>{line.replace('- ', '')}</li>
+                        if (line.trim()) return <p key={i} style={{ fontSize: 11, margin: '2px 0' }}>{line}</p>
+                        return <br key={i} />
+                      })}
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="glass" style={{ padding: 32, textAlign: 'center' }}>
+                <div style={{ fontSize: 14, color: '#6b6b76', marginBottom: 8 }}>Ask a question to see causal paths</div>
+                <div style={{ fontSize: 12, color: '#52525b' }}>The graph above shows the complete knowledge graph. Query to highlight causal chains.</div>
+              </div>
+            )}
+          </section>
+        </div>
+      </main>
+
+      <footer style={{ borderTop: '1px solid #232328', marginTop: 64, padding: '24px', textAlign: 'center' }}>
+        <div style={{ fontSize: 10, fontFamily: 'ui-monospace, monospace', color: '#6b6b76' }}>Strategic-GraphRAG v1.0 | Temporal Causal Knowledge Graph for Financial Risk Inference</div>
+      </footer>
+    </div>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />)
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+# =============================================================================
+# Strategic-GraphRAG .gitignore
+# =============================================================================
+
+# Environment
+.env
+.venv/
+venv/
+env/
+
+# Local agent/editor configuration
+.agents/
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Data — Regeneratable Artifacts
+data/chroma_db/
+data/processed/
+data/raw/
+data/processed_pdfs/
+data/pdfs/
+data/pdfs_other/
+data/evaluation_results.csv
+data/evaluation/ablation_results*.json
+data/evaluation/ablation_checkpoint.json
+data/evaluation/
+
+# Logs
+*.log
+
+# Pipeline artifacts (regenerated on each run)
+pipeline_stats.json
+test_answer.json
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Node (future frontend)
+node_modules/
+*.tsbuildinfo
+
+# OS
+*.swp
+*.swo
+*~

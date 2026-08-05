@@ -1,0 +1,302 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Strategic-GraphRAG Financial Ontology",
+  "description": "Temporal Causal Knowledge Graph Framework for Financial Risk Inference — 6-Layer Heterogeneous Ontology",
+  "version": "1.0.0",
+  "last_updated": "2026-07-20",
+
+  "layers": {
+    "layer_1_entity": {
+      "label": "Entity Layer",
+      "description": "Core business entities forming the structural backbone of the knowledge graph",
+      "node_types": {
+        "Company": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "name": {"type": "string", "required": true},
+            "ticker": {"type": "string", "required": false},
+            "sector": {"type": "string", "required": false, "enum": ["Semiconductors", "Software", "Cloud", "Automotive", "Financial", "Other"]},
+            "headquarters": {"type": "string", "required": false},
+            "description": {"type": "string", "required": false}
+          }
+        },
+        "Product": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "name": {"type": "string", "required": true},
+            "category": {"type": "string", "required": false, "enum": ["Processor", "GPU", "Software Platform", "System", "Automotive Platform", "Networking", "Other"]},
+            "generation": {"type": "string", "required": false},
+            "description": {"type": "string", "required": false}
+          }
+        },
+        "Market": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "name": {"type": "string", "required": true},
+            "market_type": {"type": "string", "required": false, "enum": ["GEOGRAPHIC", "SECTOR", "PRODUCT_CATEGORY"]},
+            "size_estimate": {"type": "string", "required": false},
+            "growth_rate": {"type": "string", "required": false},
+            "description": {"type": "string", "required": false}
+          }
+        },
+        "Region": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "name": {"type": "string", "required": true},
+            "region_type": {"type": "string", "required": false, "enum": ["COUNTRY", "CONTINENT", "ECONOMIC_BLOCK"]},
+            "description": {"type": "string", "required": false}
+          }
+        },
+        "Regulation": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "name": {"type": "string", "required": true},
+            "jurisdiction": {"type": "string", "required": false},
+            "regulation_type": {"type": "string", "required": false, "enum": ["EXPORT_CONTROL", "TARIFF", "ANTITRUST", "ENVIRONMENTAL", "DATA_PRIVACY", "FINANCIAL_REPORTING", "AI_SAFETY", "OTHER"]},
+            "effective_date": {"type": "string", "required": false},
+            "description": {"type": "string", "required": false}
+          }
+        }
+      }
+    },
+
+    "layer_2_risk": {
+      "label": "Risk Factor Layer",
+      "description": "Fine-grained financial risk factors extracted from SEC filings Item 1A",
+      "node_types": {
+        "RiskFactor": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "name": {"type": "string", "required": true},
+            "risk_category": {
+              "type": "string", "required": true,
+              "enum": [
+                "SUPPLY_CHAIN", "GEOPOLITICAL", "REGULATORY", "MARKET",
+                "OPERATIONAL", "FINANCIAL", "TECHNOLOGY", "REPUTATION",
+                "CYBER", "MACROECONOMIC", "LEGAL", "ENVIRONMENTAL",
+                "COMPETITION", "TALENT", "INTELLECTUAL_PROPERTY",
+                "DEMAND", "INVENTORY", "FOREIGN_EXCHANGE", "TAX",
+                "CREDIT", "LIQUIDITY", "CRYPTO", "PRODUCT_LIABILITY",
+                "ACQUISITION_INTEGRATION"
+              ]
+            },
+            "severity": {"type": "string", "required": false, "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]},
+            "likelihood": {"type": "string", "required": false, "enum": ["VERY_LIKELY", "LIKELY", "POSSIBLE", "UNLIKELY", "RARE"]},
+            "description": {"type": "string", "required": false}
+          }
+        }
+      }
+    },
+
+    "layer_3_strategy": {
+      "label": "Business Strategy Layer",
+      "description": "Corporate risk mitigation strategies and business responses",
+      "node_types": {
+        "Strategy": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "name": {"type": "string", "required": true},
+            "strategy_type": {
+              "type": "string", "required": true,
+              "enum": [
+                "DIVERSIFICATION", "COST_OPTIMIZATION", "R_AND_D_INVESTMENT",
+                "M_AND_A", "MARKET_EXPANSION", "TALENT_MANAGEMENT",
+                "TECHNOLOGY_INVESTMENT", "SUPPLY_CHAIN_RESILIENCE",
+                "REGULATORY_COMPLIANCE", "CYBERSECURITY_MEASURES",
+                "CUSTOMER_FOCUS", "PRODUCT_DIVERSIFICATION"
+              ]
+            },
+            "implementation_stage": {"type": "string", "required": false, "enum": ["PLANNED", "IN_PROGRESS", "IMPLEMENTED", "MATURE"]},
+            "effectiveness": {"type": "string", "required": false, "enum": ["PROVEN", "LIKELY", "UNCERTAIN", "INEFFECTIVE"]},
+            "description": {"type": "string", "required": false}
+          }
+        }
+      }
+    },
+
+    "layer_4_metric": {
+      "label": "Financial Metric Layer",
+      "description": "Structured financial indicators and quantitative metrics",
+      "node_types": {
+        "FinancialMetric": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "name": {"type": "string", "required": true},
+            "metric_type": {
+              "type": "string", "required": true,
+              "enum": ["REVENUE", "COST", "PROFIT", "CASH_FLOW", "VALUATION", "EFFICIENCY", "GROWTH", "LEVERAGE"]
+            },
+            "unit": {"type": "string", "required": false},
+            "value": {"type": "number", "required": false},
+            "fiscal_year": {"type": "integer", "required": false},
+            "trend_direction": {"type": "string", "required": false, "enum": ["INCREASING", "DECREASING", "STABLE", "VOLATILE"]},
+            "description": {"type": "string", "required": false}
+          }
+        }
+      },
+      "metric_registry": {
+        "REVENUE": {"metric_type": "REVENUE", "description": "Total revenue / sales"},
+        "GROSS_MARGIN": {"metric_type": "PROFIT", "description": "Gross profit / revenue"},
+        "OPERATING_MARGIN": {"metric_type": "PROFIT", "description": "Operating income / revenue"},
+        "NET_INCOME": {"metric_type": "PROFIT", "description": "Net earnings after all expenses"},
+        "CASH_FLOW": {"metric_type": "CASH_FLOW", "description": "Net cash from operations"},
+        "FREE_CASH_FLOW": {"metric_type": "CASH_FLOW", "description": "Operating cash flow minus CapEx"},
+        "OPERATING_COST": {"metric_type": "COST", "description": "Total operating expenses"},
+        "COST_OF_REVENUE": {"metric_type": "COST", "description": "Cost of goods sold / cost of revenue"},
+        "R_AND_D_EXPENSE": {"metric_type": "COST", "description": "Research and development expenditure"},
+        "SG_AND_A_EXPENSE": {"metric_type": "COST", "description": "Selling, general and administrative expense"},
+        "CAPEX": {"metric_type": "COST", "description": "Capital expenditures"},
+        "EARNINGS_PER_SHARE": {"metric_type": "VALUATION", "description": "Diluted earnings per share"},
+        "RETURN_ON_EQUITY": {"metric_type": "EFFICIENCY", "description": "Net income / shareholders' equity"},
+        "MARKET_VALUE": {"metric_type": "VALUATION", "description": "Market capitalization"},
+        "EBITDA": {"metric_type": "PROFIT", "description": "Earnings before interest, tax, depreciation, amortization"},
+        "DEBT_TO_EQUITY": {"metric_type": "LEVERAGE", "description": "Total debt / total equity"},
+        "CURRENT_RATIO": {"metric_type": "EFFICIENCY", "description": "Current assets / current liabilities"}
+      }
+    },
+
+    "layer_5_temporal": {
+      "label": "Temporal Evolution Layer",
+      "description": "Time-anchored nodes for modeling risk evolution, event sequences, and trend analysis",
+      "node_types": {
+        "Year": {
+          "properties": {
+            "year": {"type": "integer", "required": true, "unique": true},
+            "fiscal_year_end": {"type": "string", "required": false}
+          }
+        },
+        "Quarter": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "quarter": {"type": "integer", "required": true, "minimum": 1, "maximum": 4},
+            "fiscal_year": {"type": "integer", "required": true}
+          }
+        },
+        "Event": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "name": {"type": "string", "required": true},
+            "event_type": {
+              "type": "string", "required": true,
+              "enum": ["EARNINGS_CALL", "PRODUCT_LAUNCH", "REGULATORY_ACTION",
+                       "NATURAL_DISASTER", "MERGER_ACQUISITION", "LEADERSHIP_CHANGE",
+                       "MARKET_CRASH", "TRADE_POLICY_CHANGE", "SUPPLY_DISRUPTION",
+                       "TECHNOLOGY_BREAKTHROUGH", "PANDEMIC", "GEOPOLITICAL_CONFLICT"]
+            },
+            "event_date": {"type": "string", "required": false},
+            "description": {"type": "string", "required": false}
+          }
+        }
+      }
+    },
+
+    "layer_6_evidence": {
+      "label": "Document Evidence Layer",
+      "description": "Provenance trail linking every knowledge assertion to its source document, page, and sentence",
+      "node_types": {
+        "Document": {
+          "properties": {
+            "doc_id": {"type": "string", "required": true, "unique": true},
+            "filename": {"type": "string", "required": true},
+            "doc_type": {"type": "string", "required": true, "enum": ["10-K", "10-Q", "8-K", "ANNUAL_REPORT", "PRESS_RELEASE", "REGULATORY_FILING"]},
+            "filing_date": {"type": "string", "required": false},
+            "fiscal_year": {"type": "integer", "required": false},
+            "total_pages": {"type": "integer", "required": false}
+          }
+        },
+        "Sentence": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "text": {"type": "string", "required": true},
+            "page": {"type": "integer", "required": true},
+            "paragraph": {"type": "integer", "required": false},
+            "section": {"type": "string", "required": false, "enum": ["Item 1", "Item 1A", "Item 7", "Item 7A", "Item 8", "Other"]},
+            "doc_id": {"type": "string", "required": true}
+          }
+        },
+        "EvidenceClaim": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "text": {"type": "string", "required": true},
+            "relation_id": {"type": "string", "required": true},
+            "relation_type": {"type": "string", "required": true},
+            "page": {"type": "integer", "required": true},
+            "fiscal_year": {"type": "integer", "required": true},
+            "doc_id": {"type": "string", "required": true},
+            "source_id": {"type": "string", "required": true},
+            "target_id": {"type": "string", "required": true},
+            "verification_status": {
+              "type": "string", "required": true,
+              "enum": ["VERBATIM", "REVIEW_REQUIRED", "REJECTED"]
+            }
+          }
+        }
+      }
+    },
+
+    "bridge_mechanism": {
+      "label": "Causal Mechanism Bridge Layer",
+      "description": "Intermediate nodes that capture the HOW of causal chains (Risk → Mechanism → Financial Impact)",
+      "node_types": {
+        "Mechanism": {
+          "properties": {
+            "id": {"type": "string", "required": true, "unique": true},
+            "name": {"type": "string", "required": true},
+            "mechanism_type": {"type": "string", "required": false, "enum": ["TRANSMISSION", "AMPLIFICATION", "ABSORPTION", "FEEDBACK", "THRESHOLD"]},
+            "description": {"type": "string", "required": false}
+          }
+        }
+      }
+    }
+  },
+
+    "relationships": {
+    "provenance": {
+      "REPORTS": {"source": ["Document"], "target": ["Year"], "semantics": "Document reports a fiscal year"},
+      "SUPPORTED_BY": {"source": ["EvidenceClaim"], "target": ["Sentence"], "semantics": "Claim is supported by a sentence"},
+      "ABOUT_SOURCE": {"source": ["EvidenceClaim"], "target": ["Company", "Product", "Market", "Region", "Regulation", "RiskFactor", "Strategy", "FinancialMetric", "Mechanism", "Event"], "semantics": "Claim identifies the source entity"},
+      "ABOUT_TARGET": {"source": ["EvidenceClaim"], "target": ["Company", "Product", "Market", "Region", "Regulation", "RiskFactor", "Strategy", "FinancialMetric", "Mechanism", "Event"], "semantics": "Claim identifies the target entity"}
+    },
+    "causal": {
+      "EXPOSED_TO": {"source": ["Company", "Market", "Region", "Product"], "target": ["RiskFactor"], "semantics": "Entity is exposed to a specific risk"},
+      "CAUSES": {"source": ["RiskFactor", "Event", "Regulation", "Market", "Mechanism"], "target": ["RiskFactor", "FinancialMetric", "Mechanism", "Event"], "semantics": "Direct causal link"},
+      "TRIGGERS": {"source": ["RiskFactor", "Event"], "target": ["Mechanism"], "semantics": "Triggers a causal mechanism"},
+      "AMPLIFIES": {"source": ["RiskFactor", "Mechanism"], "target": ["RiskFactor"], "semantics": "Risk A amplifies Risk B"},
+      "AGGRAVATES": {"source": ["Mechanism"], "target": ["RiskFactor"], "semantics": "Mechanism aggravates a risk"}
+    },
+    "financial_impact": {
+      "INCREASES": {"source": ["RiskFactor", "Strategy", "Market", "Product", "Mechanism", "Event"], "target": ["FinancialMetric"], "semantics": "Increases a financial metric"},
+      "DECREASES": {"source": ["RiskFactor", "Strategy", "Market", "Mechanism", "Event"], "target": ["FinancialMetric"], "semantics": "Decreases a financial metric"}
+    },
+    "strategic": {
+      "IMPLEMENTS": {"source": ["Company"], "target": ["Strategy"], "semantics": "Company implements a strategy"},
+      "MITIGATES": {"source": ["Strategy"], "target": ["RiskFactor"], "semantics": "Strategy mitigates a risk"}
+    },
+    "structural": {
+      "OPERATES_IN": {"source": ["Company"], "target": ["Region", "Market"], "semantics": "Company operates in a region/market"},
+      "PRODUCES": {"source": ["Company"], "target": ["Product"], "semantics": "Company produces a product"},
+      "REGULATED_BY": {"source": ["Market", "Product", "Company"], "target": ["Regulation"], "semantics": "Entity is regulated by a regulation"},
+      "CONSTRAINS": {"source": ["Regulation"], "target": ["Market", "Product", "Company"], "semantics": "Regulation constrains an entity"},
+      "SUPPLIES_TO": {"source": ["Company"], "target": ["Market", "Region"], "semantics": "Company supplies to a market/region"},
+      "COMPETES_WITH": {"source": ["Company"], "target": ["Company"], "semantics": "Competitive relationship"},
+      "DEPENDS_ON": {"source": ["Company", "Product"], "target": ["Company", "Product", "Region"], "semantics": "Dependency relationship"}
+    },
+    "temporal": {
+      "OCCURS_DURING": {"source": ["Event", "RiskFactor"], "target": ["Year", "Quarter"], "semantics": "Event occurs during a time period"},
+      "PRECEDES": {"source": ["Event", "RiskFactor"], "target": ["Event", "RiskFactor"], "semantics": "Temporal ordering"},
+      "REPORTED_IN": {"source": ["RiskFactor", "Strategy", "FinancialMetric"], "target": ["Year"], "semantics": "Finding is reported in a fiscal year"}
+    },
+    "evidential": {
+      "HAS_EVIDENCE": {"source": ["EXPOSED_TO", "CAUSES", "MITIGATES", "AMPLIFIES", "INCREASES", "DECREASES", "TRIGGERS", "AGGRAVATES"], "target": ["Sentence"], "semantics": "Relationship has sentence-level evidence"},
+      "BELONGS_TO": {"source": ["Sentence"], "target": ["Document"], "semantics": "Sentence belongs to a document"}
+    }
+  },
+
+  "causal_strength_levels": {
+    "DIRECT_CAUSALITY": "Strong direct causal language (causes, results in, leads to, triggers)",
+    "INDIRECT_CAUSALITY": "Indirect or contributing influence (contributes to, influences, affects, plays a role)",
+    "RISK_ASSOCIATION": "Co-occurrence or associational link (in addition to, together with, including)",
+    "SPECULATIVE_RELATION": "Speculative or conditional (may, could, potentially, would)",
+    "DISCLOSED_EXPOSURE": "Standard risk factor disclosure language (exposed to, subject to, faces)"
+  }
+}
