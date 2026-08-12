@@ -24,7 +24,12 @@ from neo4j.exceptions import Neo4jError, ServiceUnavailable, SessionExpired
 from dotenv import load_dotenv
 
 from ..ontology.entity_registry import norm_id, is_banned
-from ..ontology.relation_inference import VALID_RELATIONS, CAUSAL_STRENGTHS, ENTITY_CATEGORIES
+from ..ontology.relation_inference import (
+    VALID_RELATIONS,
+    CAUSAL_STRENGTHS,
+    ENTITY_CATEGORIES,
+    classify_causal_form,
+)
 
 load_dotenv()
 logger = logging.getLogger("GraphIngestor")
@@ -92,6 +97,88 @@ class GraphIngestor:
         self._entity_counts.clear()
         self._relation_counts.clear()
 
+    def replace_filing(self, filename: str) -> Dict[str, int]:
+        """Remove only one filing's evidence before an explicit re-ingestion.
+
+        The normal ingestion path uses ``MERGE`` for idempotent writes, but
+        that alone cannot remove claims produced by an older extractor. This
+        method is deliberately explicit and scoped to one ``doc_id`` and
+        ``source_filing``. Shared entity nodes and Year nodes are preserved.
+        """
+        doc_id = filename.replace(".pdf", "")
+        counts = {"claim_edges": 0, "legacy_edges": 0, "claims": 0, "sentences": 0, "documents": 0}
+        try:
+            with self.driver.session() as session:
+                result = session.run(
+                    """
+                    MATCH (c:EvidenceClaim {doc_id: $doc_id})
+                    OPTIONAL MATCH ()-[r]->()
+                    WHERE r.evidence_id = c.id
+                    WITH c, collect(r) AS rels
+                    FOREACH (rel IN rels | DELETE rel)
+                    RETURN count(c) AS claims,
+                           sum(size(rels)) AS claim_edges
+                    """,
+                    doc_id=doc_id,
+                ).single()
+                if result:
+                    counts["claims"] = result["claims"] or 0
+                    counts["claim_edges"] = result["claim_edges"] or 0
+
+                result = session.run(
+                    """
+                    MATCH ()-[r]->()
+                    WHERE coalesce(r.source_filing, r.filing, '') = $filename
+                    OPTIONAL MATCH (c:EvidenceClaim {id: r.evidence_id})
+                    WITH r, c
+                    WHERE c IS NULL
+                    DELETE r
+                    RETURN count(r) AS legacy_edges
+                    """,
+                    filename=filename,
+                ).single()
+                if result:
+                    counts["legacy_edges"] = result["legacy_edges"] or 0
+
+                result = session.run(
+                    """
+                    MATCH (c:EvidenceClaim {doc_id: $doc_id})
+                    DETACH DELETE c
+                    RETURN count(c) AS claims
+                    """,
+                    doc_id=doc_id,
+                ).single()
+                if result:
+                    counts["claims"] = result["claims"] or counts["claims"]
+
+                result = session.run(
+                    """
+                    MATCH (s:Sentence {doc_id: $doc_id})
+                    DETACH DELETE s
+                    RETURN count(s) AS sentences
+                    """,
+                    doc_id=doc_id,
+                ).single()
+                if result:
+                    counts["sentences"] = result["sentences"] or 0
+
+                result = session.run(
+                    """
+                    MATCH (d:Document {doc_id: $doc_id})
+                    DETACH DELETE d
+                    RETURN count(d) AS documents
+                    """,
+                    doc_id=doc_id,
+                ).single()
+                if result:
+                    counts["documents"] = result["documents"] or 0
+
+            logger.warning("Replaced filing %s: %s", filename, counts)
+            return counts
+        except Neo4jError as e:
+            logger.error("Filing replacement failed for %s: %s", filename, e)
+            raise
+
     # ── Core Ingest Methods ──
 
     def ingest_triple(
@@ -119,8 +206,14 @@ class GraphIngestor:
         rel_type = str(triple.get("relation", "")).strip().upper()
         s_cat = str(triple.get("source_category", "")).strip()
         t_cat = str(triple.get("target_category", "")).strip()
+        causal_form = classify_causal_form(s_cat, t_cat)
         cs = str(triple.get("causal_strength", "DISCLOSED_EXPOSURE")).upper()
         evidence = str(triple.get("evidence_sentence", ""))[:500]
+        evidence_start = triple.get("evidence_char_start")
+        evidence_end = triple.get("evidence_char_end")
+        relation_polarity = str(triple.get("relation_polarity", "unknown")).strip().lower()
+        modality = str(triple.get("modality", "disclosed")).strip().lower()
+        temporal_scope = str(triple.get("temporal_scope", year)).strip()
 
         # Pre-checks
         if not s_name or not t_name or not rel_type:
@@ -167,7 +260,13 @@ class GraphIngestor:
             r.section = $sec,
             r.extraction_method = $method,
             r.source_category = $sc,
-            r.target_category = $tc
+            r.target_category = $tc,
+            r.causal_form = $cf,
+            r.evidence_char_start = $evidence_start,
+            r.evidence_char_end = $evidence_end,
+            r.relation_polarity = $relation_polarity,
+            r.modality = $modality,
+            r.temporal_scope = $temporal_scope
 
         SET r.causal_strength = $cs,
             r.confidence = $conf,
@@ -179,6 +278,7 @@ class GraphIngestor:
             r.extraction_method = $method,
             r.source_category = $sc,
             r.target_category = $tc,
+            r.causal_form = $cf,
             r.evidence_id = $claim_id,
             r.source_filing = $file,
             r.source_page = $pg
@@ -217,6 +317,11 @@ class GraphIngestor:
             claim.source_id = $s_id,
             claim.target_id = $t_id,
             claim.verification_status = 'VERBATIM'
+            ,claim.evidence_char_start = $evidence_start
+            ,claim.evidence_char_end = $evidence_end
+            ,claim.relation_polarity = $relation_polarity
+            ,claim.modality = $modality
+            ,claim.temporal_scope = $temporal_scope
         MERGE (claim)-[:SUPPORTED_BY]->(es)
         MERGE (claim)-[:ABOUT_SOURCE]->(s)
         MERGE (claim)-[:ABOUT_TARGET]->(t)
@@ -238,6 +343,12 @@ class GraphIngestor:
                     yr=year, pg=page, file=filename,
                     sec=section, doc_id=filename.replace(".pdf", ""),
                     sc=s_cat, tc=t_cat,
+                    cf=causal_form,
+                    evidence_start=evidence_start,
+                    evidence_end=evidence_end,
+                    relation_polarity=relation_polarity,
+                    modality=modality,
+                    temporal_scope=temporal_scope,
                     conf=self._calibrate_confidence(cs, "HYBRID", len(evidence), rel_type),
                     method="HYBRID",
                 )
@@ -278,6 +389,7 @@ class GraphIngestor:
             rel_type = str(triple.get("relation", "")).strip().upper()
             s_cat = str(triple.get("source_category", "")).strip()
             t_cat = str(triple.get("target_category", "")).strip()
+            causal_form = classify_causal_form(s_cat, t_cat)
             cs = str(triple.get("causal_strength", "DISCLOSED_EXPOSURE")).upper()
             evidence = str(triple.get("evidence_sentence", ""))[:500]
 
@@ -305,7 +417,14 @@ class GraphIngestor:
             es_id = eid + "_es"
             claim_id = eid + "_claim"
 
-            conf = self._calibrate_confidence(cs, "HYBRID", len(evidence), rel_type)
+            extraction_method = str(
+                triple.get("extraction_method", "HYBRID")
+            ).upper()
+            evidence_start = triple.get("evidence_char_start")
+            evidence_end = triple.get("evidence_char_end")
+            conf = self._calibrate_confidence(
+                cs, extraction_method, len(evidence), rel_type
+            )
 
             batch_params.append({
                 "s_id": s_id, "s_name": s_name, "s_cat": s_cat,
@@ -313,6 +432,19 @@ class GraphIngestor:
                 "eid": eid, "es_id": es_id, "rel_type": rel_type,
                 "claim_id": claim_id,
                 "cs": cs, "ev": evidence, "conf": conf,
+                "method": extraction_method,
+                "causal_form": causal_form,
+                "evidence_start": evidence_start,
+                "evidence_end": evidence_end,
+                "relation_polarity": str(
+                    triple.get("relation_polarity", "unknown")
+                ).strip().lower(),
+                "modality": str(
+                    triple.get("modality", "disclosed")
+                ).strip().lower(),
+                "temporal_scope": str(
+                    triple.get("temporal_scope", year)
+                ).strip(),
                 "yr": year, "pg": pg, "file": filename,
                 "sec": sec, "doc_id": doc_id,
             })
@@ -357,9 +489,15 @@ class GraphIngestor:
                             r.page = row.pg,
                             r.filing = row.file,
                             r.section = row.sec,
-                            r.extraction_method = 'HYBRID',
+                            r.extraction_method = row.method,
                             r.source_category = row.s_cat,
                             r.target_category = row.t_cat,
+                            r.causal_form = row.causal_form,
+                            r.evidence_char_start = row.evidence_start,
+                            r.evidence_char_end = row.evidence_end,
+                            r.relation_polarity = row.relation_polarity,
+                            r.modality = row.modality,
+                            r.temporal_scope = row.temporal_scope,
                             r.evidence_id = row.claim_id,
                             r.source_filing = row.file,
                             r.source_page = row.pg
@@ -392,7 +530,13 @@ class GraphIngestor:
                             claim.relation_type = row.rel_type,
                             claim.source_id = row.s_id,
                             claim.target_id = row.t_id,
-                            claim.verification_status = 'VERBATIM'
+                            claim.verification_status = 'VERBATIM',
+                            claim.extraction_method = row.method,
+                            claim.evidence_char_start = row.evidence_start,
+                            claim.evidence_char_end = row.evidence_end,
+                            claim.relation_polarity = row.relation_polarity,
+                            claim.modality = row.modality,
+                            claim.temporal_scope = row.temporal_scope
                         MERGE (claim)-[:SUPPORTED_BY]->(es)
                         MERGE (claim)-[:ABOUT_SOURCE]->(s)
                         MERGE (claim)-[:ABOUT_TARGET]->(t)
@@ -406,9 +550,15 @@ class GraphIngestor:
                             r.page = row.pg,
                             r.filing = row.file,
                             r.section = row.sec,
-                            r.extraction_method = 'HYBRID',
+                            r.extraction_method = row.method,
                             r.source_category = row.s_cat,
                             r.target_category = row.t_cat,
+                            r.causal_form = row.causal_form,
+                            r.evidence_char_start = row.evidence_start,
+                            r.evidence_char_end = row.evidence_end,
+                            r.relation_polarity = row.relation_polarity,
+                            r.modality = row.modality,
+                            r.temporal_scope = row.temporal_scope,
                             r.evidence_id = row.claim_id
                         """
                         session.run(cypher, batch=group)

@@ -26,7 +26,7 @@ from dataclasses import dataclass, field
 
 # PDF extraction
 import pdfplumber
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from .text_splitter import RecursiveTextSplitter
 
 # Internal modules
 from .section_detector import SectionDetector
@@ -44,14 +44,21 @@ logger = logging.getLogger("Pipeline")
 class PipelineConfig:
     """Configuration for the PDF → KG pipeline."""
     pdf_dir: str = "data/pdfs"
-    chunk_size: int = 3000
-    chunk_overlap: int = 400
+    chunk_size: int = 2400
+    chunk_overlap: int = 300
     use_llm: bool = True
     use_rules: bool = True
+    # Verify candidates on every target-section page by default.  The rule
+    # engine still runs first and supplies deterministic candidates; restricting
+    # LLM calls to Risk Factors made MD&A and Business systematically sparse.
+    llm_on_all_target_pages: bool = True
     target_sections: Tuple[str, ...] = ("RISK_FACTORS", "MD_AND_A", "BUSINESS")
     min_content_chars: int = 200
-    model_name: str = "llama-3.2-3b-preview"  # Smallest free Groq model, fastest, lowest TPD usage
+    llm_provider: Optional[str] = None
+    model_name: Optional[str] = None
+    require_llm: bool = False
     allow_multiple_pdfs: bool = False
+    replace_existing_filing: bool = False
     year_override: Optional[int] = None
 
 
@@ -81,11 +88,14 @@ class KnowledgeGraphPipeline:
         self.section_detector = SectionDetector(
             target_sections=set(self.config.target_sections)
         )
-        self.extractor = TripleExtractor(model_name=self.config.model_name)
+        self.extractor = TripleExtractor(
+            model_name=self.config.model_name,
+            provider=self.config.llm_provider,
+        )
         self.ingestor = GraphIngestor()
 
         # Text splitter
-        self.splitter = RecursiveCharacterTextSplitter(
+        self.splitter = RecursiveTextSplitter(
             chunk_size=self.config.chunk_size,
             chunk_overlap=self.config.chunk_overlap,
             separators=["\n\n", "\n", ". ", " ", ""],
@@ -93,6 +103,39 @@ class KnowledgeGraphPipeline:
 
         # Statistics
         self.stats: Dict = {}
+
+    @staticmethod
+    def _evidence_span(text: str, evidence: str) -> Tuple[Optional[int], Optional[int]]:
+        """Locate an evidence quote in page text, tolerating PDF line breaks."""
+        raw_text = str(text or "")
+        raw_evidence = str(evidence or "").strip()
+        if not raw_text or not raw_evidence:
+            return None, None
+        direct = raw_text.find(raw_evidence)
+        if direct >= 0:
+            return direct, direct + len(raw_evidence)
+
+        collapsed_chars: List[str] = []
+        original_offsets: List[int] = []
+        pending_space = False
+        for index, char in enumerate(raw_text):
+            if char.isspace():
+                pending_space = bool(collapsed_chars)
+                continue
+            if pending_space and collapsed_chars and collapsed_chars[-1] != " ":
+                collapsed_chars.append(" ")
+                original_offsets.append(index)
+            collapsed_chars.append(char)
+            original_offsets.append(index)
+            pending_space = False
+
+        collapsed_text = "".join(collapsed_chars)
+        collapsed_evidence = re.sub(r"\s+", " ", raw_evidence).strip()
+        start = collapsed_text.find(collapsed_evidence)
+        if start < 0 or start >= len(original_offsets):
+            return None, None
+        end_index = min(start + len(collapsed_evidence) - 1, len(original_offsets) - 1)
+        return original_offsets[start], original_offsets[end_index] + 1
 
     # ── PDF Text Extraction ──
 
@@ -194,16 +237,14 @@ class KnowledgeGraphPipeline:
             # Step 2: Extract text from target pages
             all_triples = []
             total_ingested = 0
+            pending_batches = []
+            page_stats = []
+            extraction_method_counts = {
+                "LLM_EXTRACTION": 0,
+                "RULE_EXTRACTION": 0,
+            }
 
             self.ingestor.reset_batch_state()
-
-            # Create document node
-            self.ingestor.create_document_node(
-                filename=filename,
-                doc_type="10-K" if "10-K" in filename else "10-Q",
-                fiscal_year=year,
-                total_pages=total_pages,
-            )
 
             for idx in target_indices:
                 page = pdf.pages[idx]
@@ -235,7 +276,13 @@ class KnowledgeGraphPipeline:
                 # the highest-density causal language.
                 is_risk_page = ("Item 1A" in section_label or
                                 "Risk Factor" in section_label)
-                if self.config.use_llm and is_risk_page:
+                llm_enabled_for_page = (
+                    self.config.use_llm
+                    and (self.config.llm_on_all_target_pages or is_risk_page)
+                )
+                llm_calls_before = self.extractor.llm_calls
+                llm_accepted_before = self.extractor.llm_accepted_triples
+                if llm_enabled_for_page:
                     chunks = self.splitter.split_text(text)
                     for chunk in chunks:
                         llm_triples = self.extractor.llm_extract(chunk)
@@ -246,6 +293,14 @@ class KnowledgeGraphPipeline:
 
                 # Filter and canonicalize
                 page_triples = self.extractor.filter_triples(page_triples, text)
+
+                for triple in page_triples:
+                    evidence_start, evidence_end = self._evidence_span(
+                        text, triple.get("evidence_sentence", "")
+                    )
+                    if evidence_start is not None:
+                        triple["evidence_char_start"] = evidence_start
+                        triple["evidence_char_end"] = evidence_end
 
                 # Deduplicate within page — LLM first (higher semantic quality),
                 # then rules fill gaps (P1-FIX #3)
@@ -261,26 +316,97 @@ class KnowledgeGraphPipeline:
                     )
                     if key not in seen_keys:
                         seen_keys.add(key)
-                        t.pop("_source", None)  # clean up internal marker
+                        source_marker = t.pop("_source", None)
+                        t["extraction_method"] = (
+                            "LLM_EXTRACTION" if source_marker == "llm"
+                            else "RULE_EXTRACTION"
+                        )
+                        extraction_method_counts[t["extraction_method"]] += 1
                         unique_triples.append(t)
 
-                # Step 5: Ingest to Neo4j
+                # Stage the batch in memory.  Replacement is deliberately
+                # deferred until the entire filing has passed extraction and
+                # the optional LLM quality gate, preventing data loss when a
+                # provider times out midway through a rebuild.
                 if unique_triples:
-                    ingested = self.ingestor.ingest_batch(
-                        triples=unique_triples,
-                        filename=filename,
-                        pages=[page_num] * len(unique_triples),
-                        year=year,
-                        sections=[section_label] * len(unique_triples),
+                    pending_batches.append({
+                        "triples": unique_triples,
+                        "page": page_num,
+                        "year": year,
+                        "section": section_label,
+                    })
+                    logger.info(
+                        f"  Page {page_num} [{section_label}]: "
+                        f"{len(unique_triples)} triples staged"
                     )
-                    total_ingested += ingested
-                    if ingested > 0:
-                        logger.info(
-                            f"  Page {page_num} [{section_label}]: "
-                            f"{len(unique_triples)} triples, {ingested} ingested"
-                        )
+
+                page_stats.append({
+                    "page": page_num,
+                    "section": section_label,
+                    "text_chars": len(text),
+                    "rule_candidates": len(rule_triples) if self.config.use_rules else 0,
+                    "llm_enabled": llm_enabled_for_page,
+                    "llm_calls": self.extractor.llm_calls - llm_calls_before,
+                    "llm_accepted_triples": (
+                        self.extractor.llm_accepted_triples - llm_accepted_before
+                    ),
+                    "strict_triples": len(unique_triples),
+                    "evidence_spans": sum(
+                        1 for triple in unique_triples
+                        if triple.get("evidence_char_start") is not None
+                    ),
+                })
 
                 all_triples.extend(unique_triples)
+
+            extraction_stats = self.extractor.get_llm_stats()
+            logger.info("  LLM extraction stats: %s", extraction_stats)
+            if self.config.require_llm:
+                if not self.config.use_llm or not self.extractor.llm_available:
+                    raise RuntimeError(
+                        "LLM is required for this rebuild, but no configured "
+                        "provider is available. Existing filing was preserved."
+                    )
+                if extraction_stats["calls"] == 0:
+                    raise RuntimeError(
+                        "LLM is required but no LLM extraction calls were made. "
+                        "Existing filing was preserved."
+                    )
+                if extraction_stats["failures"] > 0:
+                    raise RuntimeError(
+                        "LLM extraction had failed calls; refusing to replace "
+                        f"the filing: {extraction_stats}. Existing filing was preserved."
+                    )
+                if extraction_stats["accepted_triples"] == 0:
+                    raise RuntimeError(
+                        "LLM returned no evidence-grounded triples; refusing to "
+                        "replace the filing. Existing filing was preserved."
+                    )
+
+            # Commit phase: only after the whole PDF is staged and validated.
+            if self.config.replace_existing_filing:
+                self.ingestor.replace_filing(filename)
+
+            self.ingestor.create_document_node(
+                filename=filename,
+                doc_type="10-K" if "10-K" in filename else "10-Q",
+                fiscal_year=year,
+                total_pages=total_pages,
+            )
+            for batch in pending_batches:
+                ingested = self.ingestor.ingest_batch(
+                    triples=batch["triples"],
+                    filename=filename,
+                    pages=[batch["page"]] * len(batch["triples"]),
+                    year=batch["year"],
+                    sections=[batch["section"]] * len(batch["triples"]),
+                )
+                total_ingested += ingested
+                if ingested > 0:
+                    logger.info(
+                        f"  Page {batch['page']} [{batch['section']}]: "
+                        f"{len(batch['triples'])} triples, {ingested} ingested"
+                    )
 
         # Step 6: Log filing statistics
         batch_stats = self.ingestor.get_stats()
@@ -297,6 +423,12 @@ class KnowledgeGraphPipeline:
             "target_pages": len(target_indices),
             "triples_extracted": len(all_triples),
             "triples_ingested": total_ingested,
+            "llm": self.extractor.get_llm_stats(),
+            "extraction_method_counts": extraction_method_counts,
+            "page_stats": page_stats,
+            "pages_with_strict_triples": sum(
+                1 for page in page_stats if page["strict_triples"] > 0
+            ),
             "relations": dict(batch_stats["relations"]),
             "entities": dict(batch_stats["entities"]),
             "status": "completed",
@@ -406,8 +538,25 @@ def main():
         help="Disable LLM extraction (rule-based only)"
     )
     parser.add_argument(
-        "--chunk_size", type=int, default=3000,
+        "--chunk_size", type=int, default=2400,
         help="Text chunk size for LLM extraction"
+    )
+    parser.add_argument(
+        "--llm_provider", type=str, default=None,
+        choices=("gemini", "groq", "deepseek", "ollama", "local"),
+        help="Override the provider from LLM_PROVIDER"
+    )
+    parser.add_argument(
+        "--model_name", type=str, default=None,
+        help="Optional provider-specific model override; otherwise use provider default"
+    )
+    parser.add_argument(
+        "--require_llm", action="store_true",
+        help="Abort before replacement if any LLM extraction call fails or yields no accepted triples"
+    )
+    parser.add_argument(
+        "--llm_risk_only", action="store_true",
+        help="Use LLM verification only on Risk Factors pages (legacy quota-saving mode)"
     )
     parser.add_argument(
         "--year", type=int, default=None,
@@ -416,6 +565,10 @@ def main():
     parser.add_argument(
         "--allow_multiple_pdfs", action="store_true",
         help="Explicitly opt into multi-PDF ingestion after single-PDF validation"
+    )
+    parser.add_argument(
+        "--replace_existing_filing", action="store_true",
+        help="Delete only the same filing's evidence and edges before re-ingestion"
     )
     parser.add_argument(
         "--output_stats", type=str, default="pipeline_stats.json",
@@ -428,7 +581,12 @@ def main():
         pdf_dir=args.pdf_dir,
         chunk_size=args.chunk_size,
         use_llm=not args.no_llm,
+        llm_provider=args.llm_provider,
+        model_name=args.model_name,
+        llm_on_all_target_pages=not args.llm_risk_only,
+        require_llm=args.require_llm,
         allow_multiple_pdfs=args.allow_multiple_pdfs,
+        replace_existing_filing=args.replace_existing_filing,
         year_override=args.year,
     )
 

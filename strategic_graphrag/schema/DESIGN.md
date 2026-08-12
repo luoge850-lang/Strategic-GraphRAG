@@ -1,14 +1,37 @@
-# Strategic-GraphRAG: Evidence-Grounded Temporal Causal KG v2.0
+# Strategic-GraphRAG: Evidence-Grounded Temporal Causal KG
+
+> **Implementation contract: single-PDF stabilization (2026-08-11)**
+>
+> The current runnable baseline materializes `Company`, `Product`, `Market`,
+> `Region`, `RiskFactor`, `FinancialMetric`, `Event`, `Document`, `Sentence`,
+> `EvidenceClaim`, and `Year` nodes for one SEC filing. Its verified causal
+> relation families are `CAUSES`, `DECREASES`, `INCREASES`, `EXPOSED_TO`,
+> `OPERATES_IN`, and `PRODUCES`.
+>
+> `Mechanism`, `BusinessSegment`, `RiskDriver`, `RegulationChange`, and
+> `MitigationAction` are extension targets. They must not be described as
+> populated layers until extraction, ingestion, validation, and evaluation
+> contain them.
+>
+> Current edge/evidence properties are `year`, `page`, `source_filing`,
+> `evidence_sentence`, `confidence`, and `extraction_method`. Claims are
+> connected through `SUPPORTED_BY`, `ABOUT_SOURCE`, and `ABOUT_TARGET`; the
+> current graph does not yet create `Document-[:DISCLOSES]->EvidenceClaim`.
 
 ## Architecture: From Entity-Relation to Causal-Provenance Graph
 
-### Critical Design Flaw in v1.0
+### Research target versus current baseline
 v1.0 allowed `EXPORT_CONTROL → DECREASES → REVENUE` — a single-hop edge that collapses
 the entire causal mechanism into one relationship. This is scientifically invalid:
 regulations do not "decrease" revenue; they *constrain market access*, which *exposes*
 business segments to *revenue concentration risk*, which *may decrease* reported revenue.
 
-### v2.0 Multi-Hop Causal Ontology (8 layers)
+The paragraph above describes the research target. In the current single-PDF
+baseline, a direct risk-to-metric edge is retained only when its filing
+sentence passes the verbatim evidence and ontology validators. It should be
+reported as a direct disclosed impact, not as a completed mechanism model.
+
+### Target v2.0 Multi-Hop Causal Ontology (extension roadmap)
 
 ```
 Layer 1: ENTITY           Company, Product, Market, Region

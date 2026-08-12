@@ -31,11 +31,66 @@ from ..ontology.relation_inference import (
 
 logger = logging.getLogger("TripleExtractor")
 
+
+# Reverse aliases are used only for evidence validation. They let the strict
+# checker recognize canonical IDs such as CHIP_EXPORT_RESTRICTION when the
+# filing uses a natural-language alias such as "export controls".
+_CANONICAL_ALIASES_BY_ID: Dict[str, Set[str]] = defaultdict(set)
+for _alias, (_canonical_id, _category) in CANONICAL_MAP.items():
+    _CANONICAL_ALIASES_BY_ID[_canonical_id.lower()].add(
+        _alias.lower().replace("_", " ")
+    )
+
+
+def _entity_aliases(entity_name: str) -> Set[str]:
+    normalized = str(entity_name or "").lower().replace("_", " ").strip()
+    canonical_key = norm_id(entity_name).lower()
+    aliases = {normalized, canonical_key.replace("_", " ")}
+    aliases.update(_CANONICAL_ALIASES_BY_ID.get(canonical_key, set()))
+
+    for suffix in (" corporation", " company", " market", " risk", " event"):
+        if normalized.endswith(suffix):
+            base = normalized[: -len(suffix)].strip()
+            if len(base) >= 4:
+                aliases.add(base)
+
+    # SEC prose frequently pluralizes ontology terms ("natural disasters",
+    # "supply chain disruptions"). Keep the singular form as well because
+    # registry matching and evidence matching use different normalizations.
+    for alias in list(aliases):
+        if alias.endswith(("s", "x", "z", "ch", "sh")):
+            continue
+        aliases.add(f"{alias}s")
+
+    return {alias for alias in aliases if len(alias) >= 4}
+
+
+def _best_alias_span(text: str, aliases: Set[str]) -> Tuple[int, int]:
+    """Return the earliest occurrence of the longest matching alias.
+
+    Canonical aliases often contain both a specific phrase (``supply chain
+    disruption``) and a shorter phrase (``supply chain``).  Evidence checks
+    must prefer the specific phrase or the two entities can appear to overlap
+    at the same character position.
+    """
+    matches: List[Tuple[int, int, int]] = []
+    for alias in aliases:
+        if not alias:
+            continue
+        pattern = rf"(?<!\w){re.escape(alias)}(?!\w)"
+        match = re.search(pattern, text)
+        if match:
+            matches.append((len(alias), match.start(), match.end()))
+    if not matches:
+        return -1, -1
+    _, start, end = max(matches, key=lambda item: (item[0], -item[1]))
+    return start, end
+
 # =============================================================================
 # LLM Extraction Prompt
 # =============================================================================
 
-EXTRACTION_SYSTEM_PROMPT = """Extract financial causal triples from SEC 10-K text. Return ONLY a JSON array.
+EXTRACTION_SYSTEM_PROMPT = """Extract financial causal triples from SEC 10-K text. Return ONLY a JSON object with a 'triples' array.
 
 Entity categories: Company, RiskFactor, Strategy, FinancialMetric, Product, Market, Region, Regulation, Mechanism, Event.
 
@@ -43,12 +98,12 @@ Relation types: CAUSES, DECREASES, INCREASES, MITIGATES, EXPOSED_TO, TRIGGERS, A
 
 Critical rules:
 - Entity names in UPPER_SNAKE_CASE (e.g., SUPPLY_CHAIN_DISRUPTION, REVENUE, NVIDIA_CORPORATION)
-- evidence_sentence MUST be a verbatim quote from the text (30-500 chars)
-- Extract 5-15 triples. Quality over quantity.
+- evidence_sentence MUST be a verbatim quote from the text (20-200 chars)
+- Extract 3-8 highest-confidence triples. Quality and provenance over quantity.
 - Never use generic names like "employees", "customers", "management"
 
 JSON format:
-[{"source": "ENTITY", "source_category": "RiskFactor", "target": "ENTITY", "target_category": "FinancialMetric", "relation": "DECREASES", "evidence_sentence": "verbatim quote here"}]"""
+{"triples": [{"source": "ENTITY", "source_category": "RiskFactor", "target": "ENTITY", "target_category": "FinancialMetric", "relation": "DECREASES", "evidence_sentence": "verbatim quote here"}]}"""
 
 
 class TripleExtractor:
@@ -58,21 +113,27 @@ class TripleExtractor:
     Supports Gemini (free), Groq (free), and DeepSeek (paid) via LLMProvider.
     """
 
-    def __init__(self, llm_provider=None, model_name: str = None):
+    def __init__(self, llm_provider=None, model_name: str = None, provider: str = None):
         """
         Args:
             llm_provider: LLMProvider instance (auto-created from env if None)
             model_name: LLM model identifier (auto-detected if None)
+            provider: provider name used when creating the LLM instance
         """
         from ..llm_provider import get_llm
 
         if llm_provider is not None:
             self.llm = llm_provider
         else:
-            self.llm = get_llm()
+            self.llm = get_llm(provider=provider, model=model_name)
 
         self.model_name = model_name or self.llm.default_model
         self._llm_enabled = self.llm.available
+        self.llm_calls = 0
+        self.llm_successes = 0
+        self.llm_failures = 0
+        self.llm_accepted_triples = 0
+        self.llm_routes = set()
 
         if self._llm_enabled:
             logger.info(f"LLM extraction enabled: {self.llm.provider}/{self.model_name}")
@@ -82,22 +143,51 @@ class TripleExtractor:
 
     # ── LLM Extraction ──
 
-    def llm_extract(self, text: str, max_tokens: int = 512) -> List[Dict]:
+    @property
+    def llm_available(self) -> bool:
+        return bool(self._llm_enabled and self.llm.available)
+
+    def get_llm_stats(self) -> Dict:
+        return {
+            "calls": self.llm_calls,
+            "successes": self.llm_successes,
+            "failures": self.llm_failures,
+            "accepted_triples": self.llm_accepted_triples,
+            "routes": sorted(self.llm_routes),
+        }
+
+    def llm_extract(self, text: str, max_tokens: int = 3000) -> List[Dict]:
         """Extract triples using LLM with auto-fallback across providers."""
         if not self._llm_enabled:
             return []
 
-        prompt = f"{EXTRACTION_SYSTEM_PROMPT}\n\nTEXT:\n{text[:2000]}\n\nReturn ONLY valid JSON array."
+        # The caller already chunks the page to respect the provider context
+        # window.  Do not truncate the chunk a second time: doing so silently
+        # discarded the tail of every chunk and made evidence recall depend on
+        # character position.
+        prompt = f"{EXTRACTION_SYSTEM_PROMPT}\n\nTEXT:\n{text}\n\nReturn ONLY valid JSON object with the 'triples' array."
 
         # Use auto-fallback: primary → gemini → ollama → deepseek
         result = self.llm.extract_json_with_fallback(
             prompt,
             model=self.model_name,
+            max_tokens=max_tokens,
         )
+        self.llm_calls += 1
         if result is None:
+            self.llm_failures += 1
             return []
+        self.llm_successes += 1
+        route_provider = getattr(self.llm, "last_success_provider", None) or self.llm.provider
+        route_model = getattr(self.llm, "last_success_model", None) or self.model_name
+        self.llm_routes.add(f"{route_provider}/{route_model}")
         if isinstance(result, dict):
-            result = [result]
+            # DeepSeek JSON mode requires an object wrapper.  Gemini may also
+            # return this shape after the provider-agnostic prompt update.
+            if isinstance(result.get("triples"), list):
+                result = result["triples"]
+            else:
+                result = [result]
         if isinstance(result, list):
             # Keep only triples whose evidence is a verbatim excerpt from the
             # input text.  A plausible LLM paraphrase is not provenance.
@@ -127,13 +217,15 @@ class TripleExtractor:
                     continue
                 item["evidence_sentence"] = evidence[:500]
                 valid.append(item)
+            self.llm_accepted_triples += len(valid)
             return valid
         return []
 
     @staticmethod
     def _normalize_evidence_text(value: str) -> str:
         """Normalize whitespace while preserving the words of an excerpt."""
-        return re.sub(r"\s+", " ", str(value or "")).strip()
+        normalized = re.sub(r"[-‐‑‒–—/]+", " ", str(value or ""))
+        return re.sub(r"\s+", " ", normalized).strip()
 
     @classmethod
     def _evidence_is_verbatim(cls, evidence: str, source_text: str) -> bool:
@@ -292,6 +384,12 @@ class TripleExtractor:
             cs = detect_causal_strength(ev_text)
             valid, reason = validate_triple(src_cat, tgt_cat, rel, src_name, tgt_name)
             if not valid:
+                return None
+
+            evidence_supported, _support_reason = self._evidence_supports_relation(
+                src_name, tgt_name, rel, ev_raw
+            )
+            if not evidence_supported:
                 return None
 
             # ── Evidence-Relation Cross-Validation ──
@@ -578,7 +676,17 @@ class TripleExtractor:
             tn, tc = resolve_entity(t_raw, t_cat)
 
             valid_relation, _ = validate_triple(sc, tc, rel, sn, tn)
-            if valid_relation:
+            # Check the model's grounded names before canonical IDs.  The
+            # evidence sentence may contain a natural-language variant such
+            # as "cyber-attacks" while the ontology ID is CYBER_ATTACKS.
+            evidence_supported, _support_reason = self._evidence_supports_relation(
+                s_raw, t_raw, rel, evidence
+            )
+            if not evidence_supported and (sn != s_raw or tn != t_raw):
+                evidence_supported, _support_reason = self._evidence_supports_relation(
+                    sn, tn, rel, evidence
+                )
+            if valid_relation and evidence_supported:
                 t["source"] = sn
                 t["source_category"] = sc
                 t["target"] = tn
@@ -594,7 +702,7 @@ class TripleExtractor:
     # keyword that semantically matches the relationship direction
     RELATION_EVIDENCE_KEYWORDS = {
         "DECREASES": ["decrease", "decline", "reduce", "lower", "harm", "negatively",
-                       "adversely affect", "could reduce", "may reduce", "impair",
+                       "adversely affect", "adversely impact", "could reduce", "may reduce", "impair",
                        "diminish", "negatively impact", "hurt", "deteriorate"],
         "INCREASES": ["increase", "grow", "raise", "higher", "improve", "positively",
                        "drive growth", "boost", "expand", "accelerate", "strengthen"],
@@ -612,6 +720,102 @@ class TripleExtractor:
         "IMPLEMENTS": ["implement", "adopt", "employ", "deploy", "utilize", "execute",
                         "apply", "practice", "invest in"],
     }
+
+    STRUCTURAL_RELATIONS = {"OPERATES_IN", "PRODUCES", "COMPETES_WITH", "DEPENDS_ON"}
+
+    @classmethod
+    def _evidence_supports_relation(
+        cls,
+        source_name: str,
+        target_name: str,
+        relation: str,
+        evidence: str,
+    ) -> Tuple[bool, str]:
+        """Require entity presence and directional evidence for causal edges.
+
+        This intentionally errs on the side of rejection. A verbatim sentence
+        is not sufficient when it only lists two entities or expresses the
+        opposite direction. Structural relations retain the existing
+        co-occurrence policy and are reviewed separately.
+        """
+        relation = relation.upper()
+        text = cls._normalize_evidence_text(evidence).lower()
+        if not text:
+            return False, "EMPTY_EVIDENCE"
+
+        source_position, source_end = _best_alias_span(text, _entity_aliases(source_name))
+        target_position, target_end = _best_alias_span(text, _entity_aliases(target_name))
+        if source_position < 0 or target_position < 0:
+            return False, "ENTITY_NOT_PRESENT_IN_EVIDENCE"
+
+        if relation in cls.STRUCTURAL_RELATIONS:
+            return True, "STRUCTURAL_ENTITY_COOCCURRENCE"
+
+        keywords = list(cls.RELATION_EVIDENCE_KEYWORDS.get(relation, []))
+        if relation == "CAUSES":
+            keywords.extend(["disrupt", "impact", "affect", "discriminat", "contribute"])
+
+        def _has_keyword_between(left_end: int, right_start: int) -> bool:
+            if left_end > right_start:
+                return False
+            span = text[left_end:right_start]
+            return any(
+                cls._normalize_evidence_text(keyword).lower() in span
+                for keyword in keywords
+            )
+
+        reverse_markers_by_relation = {
+            "CAUSES": [
+                "due to", "because of", "caused by", "resulting from",
+                "stemming from", "driven by", "as a result of", "affected by",
+                "impacted by",
+            ],
+            "DECREASES": [
+                "due to", "because of", "caused by", "resulting from",
+                "stemming from", "as a result of", "affected by", "impacted by",
+            ],
+            "INCREASES": [
+                "due to", "because of", "driven by", "resulting from",
+                "stemming from", "supported by", "boosted by", "increased by",
+            ],
+            "MITIGATES": [
+                "mitigated by", "addressed by", "reduced by", "offset by",
+                "protected by", "managed by",
+            ],
+            "EXPOSED_TO": ["subject to", "exposed to", "affected by", "impacted by"],
+        }
+        reverse_markers = reverse_markers_by_relation.get(
+            relation,
+            [
+                "due to", "because of", "caused by", "resulting from",
+                "stemming from", "driven by", "as a result of", "affected by",
+                "impacted by",
+            ],
+        )
+
+        if source_position <= target_position:
+            source_span = text[source_end:target_position]
+            reverse_markers_in_source_span = {
+                "CAUSES": ["caused by", "resulting from", "stemming from", "due to", "because of"],
+                "DECREASES": ["due to", "because of", "caused by", "resulting from", "stemming from"],
+                "INCREASES": ["due to", "because of", "driven by", "resulting from", "stemming from"],
+                "MITIGATES": ["mitigated by", "reduced by", "offset by", "protected by", "managed by"],
+            }
+            if any(marker in source_span for marker in reverse_markers_in_source_span.get(relation, [])):
+                return False, "REVERSE_DIRECTIONAL_PATTERN"
+            if not _has_keyword_between(source_end, target_position):
+                return False, "NO_RELATION_DIRECTION_SIGNAL_BETWEEN_ENTITIES"
+            return True, "SOURCE_FIRST_DIRECTIONAL_SIGNAL"
+
+        # Target-first patterns are valid only when a relation-specific reverse
+        # marker occurs between the target and source.  A marker elsewhere in
+        # the sentence is not enough: list wording such as "subject to risks
+        # including currency fluctuations and natural disasters" must reject
+        # a causal edge between the listed risks.
+        reverse_span = text[target_end:source_position]
+        if any(marker in reverse_span for marker in reverse_markers):
+            return True, "TARGET_FIRST_REVERSE_MARKER"
+        return False, "TARGET_PRECEDES_SOURCE_WITHOUT_REVERSE_MARKER"
 
     @staticmethod
     def _find_evidence(text: str, source_term: str, target_term: str,

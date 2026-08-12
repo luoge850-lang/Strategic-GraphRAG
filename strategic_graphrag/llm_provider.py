@@ -40,7 +40,7 @@ PROVIDER_CONFIG = {
     },
     "deepseek": {
         "api_key_env": "DEEPSEEK_API_KEY",
-        "default_model": "deepseek-chat",
+        "default_model": "deepseek-v4-flash",
         "free": False,
         "type": "openai_compat",
         "base_url": "https://api.deepseek.com",
@@ -66,7 +66,7 @@ PROVIDER_CONFIG = {
 PROVIDER_MODELS = {
     "gemini": {"default": "gemini-2.5-flash", "fast": "gemini-2.5-flash", "pro": "gemini-2.5-pro"},
     "groq": {"default": "llama-3.3-70b-versatile", "fast": "llama-3.1-8b-instant", "pro": "llama-3.3-70b-versatile"},
-    "deepseek": {"default": "deepseek-chat", "fast": "deepseek-chat", "pro": "deepseek-reasoner"},
+    "deepseek": {"default": "deepseek-v4-flash", "fast": "deepseek-v4-flash", "pro": "deepseek-v4-pro"},
     "ollama": {"default": "qwen2.5:7b", "fast": "qwen2.5:3b", "pro": "qwen2.5:14b"},
     "local": {"default": "Qwen2.5-7B-Instruct", "fast": "Qwen2.5-3B-Instruct", "pro": "Qwen2.5-14B-Instruct"},
 }
@@ -92,7 +92,16 @@ class LLMProvider:
 
         cfg = PROVIDER_CONFIG[self.provider]
         self.api_key = api_key or os.getenv(cfg["api_key_env"], "")
-        self.default_model = model or cfg["default_model"]
+        # Resolve a model only within the selected provider.  A global
+        # DeepSeek model must never leak into a Groq/Gemini fallback client.
+        configured_model = os.getenv("LLM_MODEL", "").strip()
+        known_models = set(PROVIDER_MODELS.get(self.provider, {}).values())
+        if model:
+            self.default_model = model
+        elif configured_model in known_models:
+            self.default_model = configured_model
+        else:
+            self.default_model = cfg["default_model"]
         self.temperature = temperature
         self.max_tokens = max_tokens
         self.is_free = cfg["free"]
@@ -102,6 +111,8 @@ class LLMProvider:
         self._client = None  # OpenAI client for groq/deepseek/ollama
         self._local_model = None  # transformers model for local provider
         self._local_tokenizer = None
+        self.last_success_provider = None
+        self.last_success_model = None
 
         # Ollama and local are keyless — always "available"
         self._available = (self._type in ("ollama", "local_transformers")) or \
@@ -351,6 +362,16 @@ class LLMProvider:
         if json_mode and self.provider == "deepseek":
             kwargs["response_format"] = {"type": "json_object"}
 
+        # DeepSeek V4 Flash defaults to thinking mode.  For structured
+        # extraction, thinking can consume the entire output budget before
+        # emitting JSON.  Keep the fast model non-thinking by default, while
+        # allowing an explicit environment override for experiments.
+        if self.provider == "deepseek" and str(kwargs["model"]).startswith("deepseek-v4-flash"):
+            thinking = os.getenv("DEEPSEEK_THINKING", "disabled").strip().lower()
+            if thinking not in {"enabled", "disabled"}:
+                thinking = "disabled"
+            kwargs["extra_body"] = {"thinking": {"type": thinking}}
+
         try:
             resp = self._client.chat.completions.create(**kwargs)
             return resp.choices[0].message.content
@@ -365,12 +386,14 @@ class LLMProvider:
         prompt: str,
         system_prompt: str = "",
         model: str = None,
+        max_tokens: int = None,
     ) -> Optional[dict]:
         """Chat with forced JSON, return parsed dict or None."""
         text = self.chat(
             prompt=prompt,
             system_prompt=system_prompt,
             model=model,
+            max_tokens=max_tokens,
             json_mode=True,
         )
         if text is None:
@@ -397,15 +420,50 @@ class LLMProvider:
     def get_model_name(self, tier: str = "default") -> str:
         return PROVIDER_MODELS.get(self.provider, {}).get(tier, self.default_model)
 
-    def switch_provider(self, provider: str):
+    @classmethod
+    def fallback_model_for(cls, provider: str, requested_model: str = None) -> str:
+        """Resolve a model name without crossing provider boundaries."""
+        cfg = PROVIDER_CONFIG.get(provider, {})
+        default_model = cfg.get("default_model", "")
+        if not requested_model:
+            return default_model
+
+        known_models = set(PROVIDER_MODELS.get(provider, {}).values())
+        known_models.add(default_model)
+        if requested_model in known_models:
+            return requested_model
+
+        logger.warning(
+            "Model %s is not registered for fallback provider %s; using %s",
+            requested_model, provider, default_model,
+        )
+        return default_model
+
+    def switch_provider(self, provider: str, model: str = None):
         """Switch to a different provider at runtime."""
-        self.__init__(provider=provider)
+        self.__init__(provider=provider, model=model)
         return self
 
     # ── Auto-Fallback ──
 
-    # Order in which providers are tried when the primary fails
-    FALLBACK_ORDER = ["groq", "gemini", "local", "ollama", "deepseek"]
+    # Cross-provider fallback is opt-in.  This prevents a project configured
+    # for DeepSeek from silently sending financial filing text to another
+    # vendor.  Set LLM_FALLBACK_PROVIDERS=ollama,deepseek when explicitly
+    # desired.
+    FALLBACK_ORDER = []
+
+    @classmethod
+    def configured_fallback_order(cls, primary_provider: str) -> List[str]:
+        """Return the explicitly allowed fallback providers."""
+        raw = os.getenv("LLM_FALLBACK_PROVIDERS", "").strip()
+        if not raw:
+            return []
+        providers = []
+        for provider in raw.split(","):
+            provider = provider.strip().lower()
+            if provider in PROVIDER_CONFIG and provider != primary_provider and provider not in providers:
+                providers.append(provider)
+        return providers
 
     def chat_with_fallback(
         self,
@@ -423,6 +481,8 @@ class LLMProvider:
         # Try primary first
         result = self.chat(prompt, system_prompt, model, temperature, max_tokens, json_mode)
         if result is not None:
+            self.last_success_provider = self.provider
+            self.last_success_model = model or self.default_model
             return result
 
         # Build fallback list (skip primary, skip unavailable)
@@ -430,7 +490,7 @@ class LLMProvider:
         original_provider = self.provider
         original_model = self.default_model
 
-        for fb in self.FALLBACK_ORDER:
+        for fb in self.configured_fallback_order(original_provider):
             if fb in tried:
                 continue
             tried.add(fb)
@@ -446,18 +506,24 @@ class LLMProvider:
                 self.switch_provider(fb)
                 if not self.available:
                     continue
-                fb_model = model or self.default_model
+                fb_model = self.fallback_model_for(fb, model)
                 result = self.chat(prompt, system_prompt, fb_model, temperature, max_tokens, json_mode)
                 if result is not None:
                     logger.info(f"Fallback {fb} succeeded")
-                    self.switch_provider(original_provider)
+                    success_provider = fb
+                    success_model = fb_model
+                    self.switch_provider(original_provider, model=original_model)
+                    self.last_success_provider = success_provider
+                    self.last_success_model = success_model
                     return result
             except Exception as e:
                 logger.warning(f"Fallback {fb} error: {e}")
                 continue
 
         # All fallbacks exhausted — restore original provider
-        self.switch_provider(original_provider)
+        self.switch_provider(original_provider, model=original_model)
+        self.last_success_provider = None
+        self.last_success_model = None
         return None
 
     def extract_json_with_fallback(
@@ -465,16 +531,22 @@ class LLMProvider:
         prompt: str,
         system_prompt: str = "",
         model: str = None,
+        max_tokens: int = None,
     ) -> Optional[dict]:
         """extract_json with automatic provider fallback."""
-        result = self.extract_json(prompt, system_prompt, model=model)
+        result = self.extract_json(
+            prompt, system_prompt, model=model, max_tokens=max_tokens
+        )
         if result is not None:
+            self.last_success_provider = self.provider
+            self.last_success_model = model or self.default_model
             return result
 
         original_provider = self.provider
+        original_model = self.default_model
         tried = {original_provider}
 
-        for fb in self.FALLBACK_ORDER:
+        for fb in self.configured_fallback_order(original_provider):
             if fb in tried:
                 continue
             tried.add(fb)
@@ -488,10 +560,12 @@ class LLMProvider:
                 self.switch_provider(fb)
                 if not self.available:
                     continue
+                fallback_model = self.fallback_model_for(fb, model)
                 result = self.chat(
                     prompt,
                     system_prompt,
-                    model=model,
+                    model=fallback_model,
+                    max_tokens=max_tokens,
                     json_mode=True,
                 )
                 if result is None:
@@ -501,14 +575,22 @@ class LLMProvider:
                 text = re.sub(r"```\s*$", "", text)
                 try:
                     parsed = json.loads(text)
-                    self.switch_provider(original_provider)
+                    self.last_success_provider = fb
+                    self.last_success_model = fallback_model
+                    self.switch_provider(original_provider, model=original_model)
+                    self.last_success_provider = fb
+                    self.last_success_model = fallback_model
                     return parsed
                 except json.JSONDecodeError:
                     match = re.search(r"\[.*\]", text, re.DOTALL)
                     if match:
                         try:
                             parsed = json.loads(match.group(0))
-                            self.switch_provider(original_provider)
+                            self.last_success_provider = fb
+                            self.last_success_model = fallback_model
+                            self.switch_provider(original_provider, model=original_model)
+                            self.last_success_provider = fb
+                            self.last_success_model = fallback_model
                             return parsed
                         except json.JSONDecodeError:
                             pass
@@ -516,7 +598,9 @@ class LLMProvider:
             except Exception:
                 continue
 
-        self.switch_provider(original_provider)
+        self.switch_provider(original_provider, model=original_model)
+        self.last_success_provider = None
+        self.last_success_model = None
         return None
 
 

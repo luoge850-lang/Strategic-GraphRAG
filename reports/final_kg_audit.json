@@ -1,0 +1,978 @@
+{
+  "status": "PASS",
+  "doc_id": "2025-10-K",
+  "filename": "2025-10-K.pdf",
+  "checks": {
+    "has_claims": true,
+    "all_claims_have_sentence": true,
+    "all_claims_have_source": true,
+    "all_claims_have_target": true,
+    "all_claims_verbatim": true,
+    "page_alignment": true,
+    "text_alignment": true,
+    "all_claims_have_edge": true,
+    "edge_years_present": true,
+    "edge_pages_present": true,
+    "evidence_ids_aligned": true,
+    "document_reports_year": true,
+    "all_triples_validate": true,
+    "pdf_quote_alignment": true,
+    "claim_years_present": true,
+    "claim_temporal_scope_present": true
+  },
+  "claim_links": {
+    "claims": 68,
+    "sentences": 68,
+    "sources": 68,
+    "targets": 68,
+    "missing_sentence": 0,
+    "missing_source": 0,
+    "missing_target": 0,
+    "page_mismatch": 0,
+    "text_mismatch": 0
+  },
+  "edge_join": {
+    "claims": 68,
+    "claims_without_edge": 0,
+    "missing_year": 0,
+    "missing_page": 0,
+    "evidence_id_mismatch": 0
+  },
+  "document_year": {
+    "documents": 1,
+    "years": 1,
+    "linked_years": [
+      2025
+    ]
+  },
+  "entity_label_mentions": {
+    "Event": 7,
+    "RiskFactor": 33,
+    "FinancialMetric": 26,
+    "Company": 34,
+    "Market": 4,
+    "Product": 30,
+    "Region": 1,
+    "Strategy": 1
+  },
+  "relation_counts": {
+    "CAUSES": 6,
+    "DECREASES": 13,
+    "INCREASES": 13,
+    "OPERATES_IN": 4,
+    "PRODUCES": 30,
+    "EXPOSED_TO": 1,
+    "MITIGATES": 1
+  },
+  "relation_category_counts": {
+    "Event -> CAUSES -> RiskFactor": 2,
+    "RiskFactor -> DECREASES -> FinancialMetric": 10,
+    "Event -> DECREASES -> FinancialMetric": 2,
+    "RiskFactor -> INCREASES -> FinancialMetric": 10,
+    "Event -> INCREASES -> FinancialMetric": 3,
+    "Company -> OPERATES_IN -> Market": 4,
+    "Company -> PRODUCES -> Product": 30,
+    "Region -> EXPOSED_TO -> RiskFactor": 1,
+    "RiskFactor -> CAUSES -> RiskFactor": 3,
+    "RiskFactor -> CAUSES -> FinancialMetric": 1,
+    "RiskFactor -> DECREASES -> RiskFactor": 1,
+    "Strategy -> MITIGATES -> RiskFactor": 1
+  },
+  "verification_status_counts": {
+    "VERBATIM": 68
+  },
+  "evidence_page_coverage": {
+    "distinct_claim_pages": 25,
+    "first_claim_page": 3,
+    "last_claim_page": 44,
+    "claim_pages": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      9,
+      10,
+      11,
+      14,
+      15,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      39,
+      44
+    ]
+  },
+  "pdf_page_coverage": {
+    "status": "PASS",
+    "pdf": "data\\pdfs\\2025-10-K.pdf",
+    "pages": 130,
+    "pages_with_text": 130,
+    "pages_without_text": 0,
+    "pages_with_claim": 25,
+    "pages_without_claim": 105,
+    "claim_coverage_percent": 19.23,
+    "claim_page_numbers": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      9,
+      10,
+      11,
+      14,
+      15,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      39,
+      44
+    ],
+    "page_records": [
+      {
+        "page": 1,
+        "text_chars": 4944,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 2,
+        "text_chars": 1386,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 3,
+        "text_chars": 4024,
+        "claim_count": 1,
+        "claim_pages": true
+      },
+      {
+        "page": 4,
+        "text_chars": 5807,
+        "claim_count": 4,
+        "claim_pages": true
+      },
+      {
+        "page": 5,
+        "text_chars": 5134,
+        "claim_count": 4,
+        "claim_pages": true
+      },
+      {
+        "page": 6,
+        "text_chars": 5548,
+        "claim_count": 6,
+        "claim_pages": true
+      },
+      {
+        "page": 7,
+        "text_chars": 6158,
+        "claim_count": 4,
+        "claim_pages": true
+      },
+      {
+        "page": 8,
+        "text_chars": 6045,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 9,
+        "text_chars": 5489,
+        "claim_count": 2,
+        "claim_pages": true
+      },
+      {
+        "page": 10,
+        "text_chars": 5480,
+        "claim_count": 6,
+        "claim_pages": true
+      },
+      {
+        "page": 11,
+        "text_chars": 5585,
+        "claim_count": 1,
+        "claim_pages": true
+      },
+      {
+        "page": 12,
+        "text_chars": 4402,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 13,
+        "text_chars": 5460,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 14,
+        "text_chars": 3481,
+        "claim_count": 1,
+        "claim_pages": true
+      },
+      {
+        "page": 15,
+        "text_chars": 4756,
+        "claim_count": 4,
+        "claim_pages": true
+      },
+      {
+        "page": 16,
+        "text_chars": 4952,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 17,
+        "text_chars": 5799,
+        "claim_count": 4,
+        "claim_pages": true
+      },
+      {
+        "page": 18,
+        "text_chars": 4467,
+        "claim_count": 2,
+        "claim_pages": true
+      },
+      {
+        "page": 19,
+        "text_chars": 5744,
+        "claim_count": 2,
+        "claim_pages": true
+      },
+      {
+        "page": 20,
+        "text_chars": 6272,
+        "claim_count": 2,
+        "claim_pages": true
+      },
+      {
+        "page": 21,
+        "text_chars": 7365,
+        "claim_count": 3,
+        "claim_pages": true
+      },
+      {
+        "page": 22,
+        "text_chars": 6431,
+        "claim_count": 3,
+        "claim_pages": true
+      },
+      {
+        "page": 23,
+        "text_chars": 5386,
+        "claim_count": 2,
+        "claim_pages": true
+      },
+      {
+        "page": 24,
+        "text_chars": 6219,
+        "claim_count": 1,
+        "claim_pages": true
+      },
+      {
+        "page": 25,
+        "text_chars": 6303,
+        "claim_count": 1,
+        "claim_pages": true
+      },
+      {
+        "page": 26,
+        "text_chars": 6616,
+        "claim_count": 3,
+        "claim_pages": true
+      },
+      {
+        "page": 27,
+        "text_chars": 5865,
+        "claim_count": 5,
+        "claim_pages": true
+      },
+      {
+        "page": 28,
+        "text_chars": 7131,
+        "claim_count": 1,
+        "claim_pages": true
+      },
+      {
+        "page": 29,
+        "text_chars": 6715,
+        "claim_count": 2,
+        "claim_pages": true
+      },
+      {
+        "page": 30,
+        "text_chars": 6743,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 31,
+        "text_chars": 6997,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 32,
+        "text_chars": 5535,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 33,
+        "text_chars": 4809,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 34,
+        "text_chars": 3245,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 35,
+        "text_chars": 457,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 36,
+        "text_chars": 5200,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 37,
+        "text_chars": 6014,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 38,
+        "text_chars": 4118,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 39,
+        "text_chars": 5408,
+        "claim_count": 1,
+        "claim_pages": true
+      },
+      {
+        "page": 40,
+        "text_chars": 2383,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 41,
+        "text_chars": 2577,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 42,
+        "text_chars": 3341,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 43,
+        "text_chars": 3086,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 44,
+        "text_chars": 3983,
+        "claim_count": 3,
+        "claim_pages": true
+      },
+      {
+        "page": 45,
+        "text_chars": 4726,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 46,
+        "text_chars": 4133,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 47,
+        "text_chars": 3626,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 48,
+        "text_chars": 1769,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 49,
+        "text_chars": 1143,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 50,
+        "text_chars": 5550,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 51,
+        "text_chars": 3641,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 52,
+        "text_chars": 1090,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 53,
+        "text_chars": 836,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 54,
+        "text_chars": 1659,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 55,
+        "text_chars": 1949,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 56,
+        "text_chars": 2551,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 57,
+        "text_chars": 4580,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 58,
+        "text_chars": 5395,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 59,
+        "text_chars": 5507,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 60,
+        "text_chars": 5338,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 61,
+        "text_chars": 5405,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 62,
+        "text_chars": 2823,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 63,
+        "text_chars": 3129,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 64,
+        "text_chars": 2450,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 65,
+        "text_chars": 2365,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 66,
+        "text_chars": 2339,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 67,
+        "text_chars": 2219,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 68,
+        "text_chars": 2163,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 69,
+        "text_chars": 2769,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 70,
+        "text_chars": 2534,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 71,
+        "text_chars": 3156,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 72,
+        "text_chars": 2652,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 73,
+        "text_chars": 3728,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 74,
+        "text_chars": 4440,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 75,
+        "text_chars": 1804,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 76,
+        "text_chars": 3705,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 77,
+        "text_chars": 4314,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 78,
+        "text_chars": 3515,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 79,
+        "text_chars": 3034,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 80,
+        "text_chars": 1724,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 81,
+        "text_chars": 1477,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 82,
+        "text_chars": 1538,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 83,
+        "text_chars": 2634,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 84,
+        "text_chars": 3738,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 85,
+        "text_chars": 339,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 86,
+        "text_chars": 1353,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 87,
+        "text_chars": 1375,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 88,
+        "text_chars": 3145,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 89,
+        "text_chars": 3849,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 90,
+        "text_chars": 2759,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 91,
+        "text_chars": 3218,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 92,
+        "text_chars": 4467,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 93,
+        "text_chars": 4527,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 94,
+        "text_chars": 5365,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 95,
+        "text_chars": 5684,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 96,
+        "text_chars": 3373,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 97,
+        "text_chars": 3809,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 98,
+        "text_chars": 5140,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 99,
+        "text_chars": 4731,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 100,
+        "text_chars": 1076,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 101,
+        "text_chars": 3500,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 102,
+        "text_chars": 490,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 103,
+        "text_chars": 4175,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 104,
+        "text_chars": 4761,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 105,
+        "text_chars": 4930,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 106,
+        "text_chars": 5382,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 107,
+        "text_chars": 3230,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 108,
+        "text_chars": 3582,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 109,
+        "text_chars": 5140,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 110,
+        "text_chars": 4384,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 111,
+        "text_chars": 1499,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 112,
+        "text_chars": 3912,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 113,
+        "text_chars": 4537,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 114,
+        "text_chars": 4664,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 115,
+        "text_chars": 4263,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 116,
+        "text_chars": 4534,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 117,
+        "text_chars": 4464,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 118,
+        "text_chars": 4701,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 119,
+        "text_chars": 4150,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 120,
+        "text_chars": 3696,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 121,
+        "text_chars": 3917,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 122,
+        "text_chars": 685,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 123,
+        "text_chars": 4434,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 124,
+        "text_chars": 2520,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 125,
+        "text_chars": 430,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 126,
+        "text_chars": 717,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 127,
+        "text_chars": 3300,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 128,
+        "text_chars": 3313,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 129,
+        "text_chars": 1698,
+        "claim_count": 0,
+        "claim_pages": false
+      },
+      {
+        "page": 130,
+        "text_chars": 1727,
+        "claim_count": 0,
+        "claim_pages": false
+      }
+    ]
+  },
+  "pdf_alignment": {
+    "status": "PASS",
+    "checked": 68,
+    "quote_mismatches": 0,
+    "mismatches": [],
+    "claims_without_char_span": 0,
+    "missing_span_claim_ids": []
+  },
+  "temporal_audit": {
+    "claims_without_temporal_metadata": 0,
+    "claim_ids": []
+  },
+  "scoped_edge_audit": {
+    "scope": "coalesce(source_filing, filing) = filename",
+    "edge_instances": 68,
+    "unique_source_target_relation_edges": 47,
+    "edges_with_evidence_id": 68,
+    "edges_with_verbatim_claim": 68,
+    "edges_without_evidence_id": 0,
+    "edges_without_claim_node": 0,
+    "relation_counts": {
+      "DECREASES": 13,
+      "CAUSES": 6,
+      "INCREASES": 13,
+      "OPERATES_IN": 4,
+      "PRODUCES": 30,
+      "EXPOSED_TO": 1,
+      "MITIGATES": 1
+    },
+    "claim_doc_ids": {
+      "2025-10-K": 68
+    },
+    "unverified_edges": [],
+    "business_edge_instances": 68,
+    "strict_business_edges": 68,
+    "legacy_unverified_business_edges": 0,
+    "evidence_chain_edge_instances": 0
+  },
+  "invalid_triples": [],
+  "legacy_warning": {
+    "filing_edges": 68,
+    "legacy_unlinked_edges": 0
+  }
+}

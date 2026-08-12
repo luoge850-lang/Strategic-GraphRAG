@@ -10,7 +10,7 @@ Uses ChromaDB + Sentence-Transformers + LLM.
 
 import os
 import logging
-from typing import List, Tuple, Optional
+from typing import Any, Dict, List, Tuple, Optional
 
 import chromadb
 from chromadb.utils import embedding_functions
@@ -31,12 +31,14 @@ class VectorRAGBaseline:
     def __init__(
         self,
         db_path: str = "data/chroma_db",
-        collection_name: str = "nvidia_sec_filings",
+        collection_name: str = None,
         embedding_model: str = "all-MiniLM-L6-v2",
         model_name: str = "llama-3.3-70b-versatile",
     ):
         self.db_path = db_path
-        self.collection_name = collection_name
+        self.collection_name = collection_name or os.getenv(
+            "GRAPH_VECTOR_COLLECTION", "nvidia_sec_filings"
+        )
         self.model_name = model_name
 
         # ChromaDB
@@ -70,14 +72,73 @@ class VectorRAGBaseline:
 
     def retrieve(self, query: str, k: int = 5) -> List[str]:
         """Retrieve top-K chunks via semantic similarity."""
+        result = self.retrieve_with_metadata(query, k=k)
+        return [hit["document"] for hit in result["hits"]]
+
+    def retrieve_with_metadata(
+        self,
+        query: str,
+        k: int = 5,
+        source_filing: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Retrieve semantic chunks with scope and ranking diagnostics.
+
+        Hybrid retrieval must not silently use an unscoped legacy collection.
+        When a filing is requested, the collection must contain a
+        ``source_filing`` metadata field; otherwise the caller receives an
+        explicit ``UNSCOPED_COLLECTION`` status.
+        """
         if not self.collection or self.collection.count() == 0:
-            return []
+            return {"status": "EMPTY", "hits": [], "collection": self.collection_name}
+
+        kwargs: Dict[str, Any] = {
+            "query_texts": [query],
+            "n_results": k,
+            "include": ["documents", "metadatas", "distances"],
+        }
+        if source_filing:
+            kwargs["where"] = {"source_filing": source_filing}
+
         try:
-            results = self.collection.query(query_texts=[query], n_results=k)
-            return results["documents"][0] if results["documents"] else []
+            results = self.collection.query(**kwargs)
         except Exception as e:
+            if source_filing:
+                logger.warning(
+                    "Vector collection %s is not scoped for filing %s: %s",
+                    self.collection_name,
+                    source_filing,
+                    e,
+                )
+                return {
+                    "status": "UNSCOPED_COLLECTION",
+                    "hits": [],
+                    "collection": self.collection_name,
+                    "source_filing": source_filing,
+                }
             logger.error(f"Retrieval error: {e}")
-            return []
+            return {"status": "ERROR", "hits": [], "collection": self.collection_name}
+
+        documents = (results.get("documents") or [[]])[0] or []
+        metadatas = (results.get("metadatas") or [[]])[0] or []
+        distances = (results.get("distances") or [[]])[0] or []
+        hits = []
+        for rank, document in enumerate(documents, start=1):
+            metadata = metadatas[rank - 1] if rank - 1 < len(metadatas) else {}
+            distance = distances[rank - 1] if rank - 1 < len(distances) else None
+            hits.append({
+                "rank": rank,
+                "document": document,
+                "metadata": metadata or {},
+                "distance": distance,
+                "rank_score": round(1.0 / rank, 6),
+            })
+
+        return {
+            "status": "OK" if hits else "NO_HITS",
+            "hits": hits,
+            "collection": self.collection_name,
+            "source_filing": source_filing,
+        }
 
     def generate(self, query: str, context_chunks: List[str]) -> str:
         """Generate an answer from retrieved context chunks."""
@@ -103,8 +164,18 @@ Provide a concise, factual answer. Do not make up information not in the context
             return f"[Generation error: LLM call failed]"
         return result
 
-    def ask(self, query: str, k: int = 5) -> Tuple[str, List[str]]:
+    def ask(
+        self,
+        query: str,
+        k: int = 5,
+        source_filing: Optional[str] = None,
+    ) -> Tuple[str, List[str]]:
         """Full RAG pipeline: retrieve + generate."""
-        docs = self.retrieve(query, k)
+        retrieval = self.retrieve_with_metadata(
+            query,
+            k=k,
+            source_filing=source_filing,
+        )
+        docs = [hit["document"] for hit in retrieval["hits"]]
         answer = self.generate(query, docs)
         return answer, docs

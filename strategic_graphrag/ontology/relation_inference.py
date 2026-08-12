@@ -10,7 +10,7 @@ with strict financial semantics.
 """
 
 import re
-from typing import Optional, Tuple
+from typing import Dict, Optional, Set, Tuple
 
 from .entity_registry import norm_id
 
@@ -381,6 +381,25 @@ def _signal_decline(ctx: str) -> bool:
 # Downgrade-only: weak signals → POSSIBLE_RELATION, DISCLOSES, MENTIONS
 # Causal edges (CAUSES, MITIGATES, etc.) require EXPLICIT causal verb evidence
 
+def classify_causal_form(source_category: str, target_category: str) -> str:
+    """Describe whether a relation is direct, mediated, or structural.
+
+    This label prevents a direct risk-to-metric disclosure from being
+    presented as if a mechanism node had already been extracted.
+    """
+    if source_category in {"Regulation", "RegulationChange"}:
+        return "REGULATORY_CONSTRAINT_OR_DRIVER"
+    if source_category == "RiskFactor" and target_category == "FinancialMetric":
+        return "DIRECT_DISCLOSED_IMPACT"
+    if source_category == "Mechanism" or target_category == "Mechanism":
+        return "MECHANISM_MEDIATED"
+    if source_category in {"Event", "RiskEvent"}:
+        return "EVENT_LINK"
+    if source_category == "FinancialMetric" or target_category == "FinancialMetric":
+        return "FINANCIAL_RELATION"
+    return "STRUCTURAL_OR_EXPOSURE"
+
+
 VALID_RELATIONS = {
     # ── Causal (require explicit evidence) ──
     "CAUSES", "TRIGGERS", "AMPLIFIES",
@@ -438,6 +457,141 @@ ENTITY_CATEGORIES = {
     "Document", "Sentence", "EvidenceClaim",
 }
 
+# Domain/range constraints for the relations that participate in causal
+# retrieval.  The old validator checked that both labels existed, but that
+# still allowed accidental edges such as Product -> CAUSES -> Region.  These
+# rules intentionally remain conservative while preserving the combinations
+# already used by the single-filing baseline.
+RELATION_CATEGORY_RULES: Dict[str, Set[Tuple[str, str]]] = {
+    "CAUSES": {
+        ("Regulation", "RiskFactor"),
+        ("RegulationChange", "RiskFactor"),
+        ("MacroEvent", "RiskFactor"),
+        ("GeopoliticalEvent", "RiskFactor"),
+        ("Market", "RiskFactor"),
+        ("Event", "RiskFactor"),
+        ("RiskFactor", "RiskFactor"),
+        ("RiskFactor", "FinancialMetric"),
+        ("Mechanism", "RiskFactor"),
+        ("Mechanism", "FinancialMetric"),
+    },
+    "TRIGGERS": {
+        ("Regulation", "RiskFactor"), ("RegulationChange", "RiskFactor"),
+        ("MacroEvent", "RiskFactor"), ("GeopoliticalEvent", "RiskFactor"),
+        ("Event", "RiskFactor"), ("RiskFactor", "RiskFactor"),
+    },
+    "AMPLIFIES": {
+        ("RiskFactor", "RiskFactor"), ("RiskFactor", "FinancialMetric"),
+        ("Mechanism", "RiskFactor"), ("Mechanism", "FinancialMetric"),
+    },
+    "INCREASES": {
+        ("RiskFactor", "RiskFactor"), ("RiskFactor", "FinancialMetric"),
+        ("Mechanism", "RiskFactor"), ("Mechanism", "FinancialMetric"),
+        ("Market", "RiskFactor"), ("Market", "FinancialMetric"),
+        ("Event", "RiskFactor"), ("Event", "FinancialMetric"),
+        ("Regulation", "RiskFactor"), ("Regulation", "FinancialMetric"),
+    },
+    "DECREASES": {
+        ("RiskFactor", "RiskFactor"), ("RiskFactor", "FinancialMetric"),
+        ("Mechanism", "RiskFactor"), ("Mechanism", "FinancialMetric"),
+        ("Market", "RiskFactor"), ("Market", "FinancialMetric"),
+        ("Event", "RiskFactor"), ("Event", "FinancialMetric"),
+        ("Regulation", "RiskFactor"), ("Regulation", "FinancialMetric"),
+    },
+    "MITIGATES": {
+        ("Strategy", "RiskFactor"), ("Strategy", "FinancialMetric"),
+        ("MitigationAction", "RiskFactor"), ("MitigationAction", "FinancialMetric"),
+    },
+    "IMPLEMENTS": {
+        ("Company", "Strategy"), ("Company", "MitigationAction"),
+    },
+    "CONSTRAINS": {
+        ("Regulation", "Market"), ("Regulation", "RiskFactor"),
+        ("Regulation", "FinancialMetric"), ("RiskFactor", "Market"),
+        ("RiskFactor", "FinancialMetric"),
+    },
+    "EXPOSED_TO": {
+        ("Company", "RiskFactor"), ("BusinessSegment", "RiskFactor"),
+        ("Market", "RiskFactor"), ("Region", "RiskFactor"),
+    },
+    "AFFECTS_SEGMENT": {
+        ("RiskFactor", "BusinessSegment"), ("Event", "BusinessSegment"),
+        ("Market", "BusinessSegment"),
+    },
+    "CONSTRAINS_MARKET": {
+        ("Regulation", "Market"), ("RegulationChange", "Market"),
+        ("RiskFactor", "Market"),
+    },
+    "EXPOSED_THROUGH": {
+        ("Company", "Market"), ("Company", "Region"),
+        ("RiskFactor", "Mechanism"),
+    },
+    "IMPACTS": {
+        ("RiskFactor", "FinancialMetric"), ("Mechanism", "FinancialMetric"),
+        ("Event", "FinancialMetric"), ("Market", "FinancialMetric"),
+    },
+    "EXECUTES": {
+        ("Company", "Strategy"), ("Company", "MitigationAction"),
+    },
+    "ADDRESSES": {
+        ("Strategy", "RiskFactor"), ("MitigationAction", "RiskFactor"),
+    },
+    "OPERATES_IN": {
+        ("Company", "Market"), ("Company", "Region"),
+        ("BusinessSegment", "Market"), ("BusinessSegment", "Region"),
+    },
+    "PRODUCES": {
+        ("Company", "Product"), ("Company", "BusinessSegment"),
+        ("BusinessSegment", "Product"),
+    },
+    "COMPETES_WITH": {
+        ("Company", "Company"), ("Company", "Product"),
+        ("Product", "Company"), ("Product", "Product"),
+    },
+    "DEPENDS_ON": {
+        ("Company", "Company"), ("Company", "Product"),
+        ("Company", "Market"), ("Product", "Company"),
+        ("Product", "Product"), ("BusinessSegment", "Product"),
+        ("BusinessSegment", "Market"),
+    },
+    "REGULATED_BY": {
+        ("Company", "Regulation"), ("Product", "Regulation"),
+        ("Market", "Regulation"), ("BusinessSegment", "Regulation"),
+    },
+    "SUPPLIES_TO": {
+        ("Company", "Company"), ("Product", "Company"),
+        ("Company", "Market"), ("Product", "Market"),
+    },
+    "OCCURS_DURING": {
+        ("Event", "Year"), ("Event", "Quarter"),
+        ("RiskEvent", "Year"), ("RiskEvent", "Quarter"),
+    },
+    "PRECEDES": {
+        ("Event", "Event"), ("RiskEvent", "RiskEvent"),
+        ("Event", "RiskEvent"), ("RiskEvent", "Event"),
+    },
+    "REPORTED_IN": {
+        ("EvidenceClaim", "Document"), ("Document", "Year"),
+    },
+    "DISCLOSES": {
+        ("Document", "EvidenceClaim"),
+    },
+    "MENTIONS": {
+        ("EvidenceClaim", "Company"), ("EvidenceClaim", "Product"),
+        ("EvidenceClaim", "Market"), ("EvidenceClaim", "Region"),
+        ("EvidenceClaim", "RiskFactor"), ("EvidenceClaim", "FinancialMetric"),
+        ("EvidenceClaim", "Strategy"), ("EvidenceClaim", "Event"),
+    },
+    "BELONGS_TO": {
+        ("Sentence", "Document"), ("EvidenceClaim", "Document"),
+        ("Event", "Year"), ("RiskEvent", "Year"),
+    },
+    "SUPPORTS": {
+        ("Sentence", "EvidenceClaim"), ("Sentence", "RiskFactor"),
+        ("Sentence", "FinancialMetric"),
+    },
+}
+
 
 def validate_triple(
     source_category: str,
@@ -477,5 +631,12 @@ def validate_triple(
     # Prevent HAS_EVIDENCE from non-relationship sources
     if relation == "HAS_EVIDENCE":
         return False, "HAS_EVIDENCE must be attached to a relationship, not a node"
+
+    allowed_pairs = RELATION_CATEGORY_RULES.get(relation)
+    if allowed_pairs is not None and (source_category, target_category) not in allowed_pairs:
+        return False, (
+            f"Invalid category pair for {relation}: "
+            f"{source_category} -> {target_category}"
+        )
 
     return True, "OK"

@@ -208,6 +208,8 @@ class SchemaManager:
             "CREATE INDEX sentence_page IF NOT EXISTS FOR (n:Sentence) ON (n.page)",
             "CREATE INDEX sentence_section IF NOT EXISTS FOR (n:Sentence) ON (n.section)",
             "CREATE INDEX evidence_claim_page IF NOT EXISTS FOR (n:EvidenceClaim) ON (n.page)",
+            "CREATE FULLTEXT INDEX entity_fulltext IF NOT EXISTS FOR (n:Company|Product|Market|Region|Regulation|RiskFactor|Strategy|FinancialMetric|Event|Mechanism) ON EACH [n.name, n.description]",
+            "CREATE FULLTEXT INDEX evidence_fulltext IF NOT EXISTS FOR (n:Sentence) ON EACH [n.text]",
         ]
         return self._exec_many(stmts)
 
@@ -377,12 +379,143 @@ class SchemaManager:
             results["rel_counts"][rel_type] = r[0]["c"] if r else 0
         return results
 
-    def stats(self) -> Dict:
-        r = self._run("MATCH (n) WITH count(n) AS nodes MATCH ()-[r]->() RETURN nodes, count(r) AS rels")
+    def stats(self, source_filing: Optional[str] = None) -> Dict:
+        """Return graph statistics, optionally scoped to one filing."""
+        if source_filing:
+            # The dashboard calls this endpoint during initialisation.  The
+            # previous implementation performed one remote Neo4j round trip
+            # per label and relationship type, which made Aura latency add up
+            # to 10-20 seconds.  Gather the scoped edge sets once and derive
+            # all display counters locally.
+            params = {"source_filing": source_filing}
+            fast_rows = self._run(
+                """
+                CALL () {
+                    MATCH (n)-[r]->(m)
+                    WHERE coalesce(r.source_filing, r.filing, '') = $source_filing
+                    RETURN
+                        collect(DISTINCT {key: elementId(n), labels: labels(n)}) +
+                        collect(DISTINCT {key: elementId(m), labels: labels(m)}) AS all_nodes,
+                        count(r) AS total_rels
+                }
+                CALL () {
+                    MATCH (n)-[r]->(m)
+                    WHERE coalesce(r.source_filing, r.filing, '') = $source_filing
+                      AND NOT n:Sentence AND NOT m:Sentence
+                      AND r.evidence_id IS NOT NULL
+                      AND EXISTS {
+                          MATCH (claim:EvidenceClaim {id: r.evidence_id})
+                          WHERE claim.verification_status = 'VERBATIM'
+                      }
+                    RETURN
+                        collect(DISTINCT {key: elementId(n), labels: labels(n)}) +
+                        collect(DISTINCT {key: elementId(m), labels: labels(m)}) AS graph_nodes,
+                        collect({
+                            source: coalesce(n.id, n.doc_id, n.filename, elementId(n)),
+                            target: coalesce(m.id, m.doc_id, m.filename, elementId(m)),
+                            type: type(r),
+                            evidence_id: r.evidence_id
+                        }) AS graph_rels
+                }
+                RETURN all_nodes, total_rels, graph_nodes, graph_rels
+                """,
+                **params,
+            )
+            row = fast_rows[0] if fast_rows else {}
+            all_nodes = row.get("all_nodes", []) or []
+            graph_nodes = row.get("graph_nodes", []) or []
+            graph_rels = row.get("graph_rels", []) or []
+            unique_graph_nodes = {node.get("key"): node for node in graph_nodes}
+            unique_graph_rels = {
+                (
+                    rel.get("source", ""), rel.get("target", ""),
+                    rel.get("type", ""), rel.get("evidence_id", "") or "",
+                ): rel
+                for rel in graph_rels
+            }
+            stats = {
+                "total_nodes": len({node.get("key") for node in all_nodes}),
+                "total_rels": int(row.get("total_rels", 0) or 0),
+                "graph_nodes": len(unique_graph_nodes),
+                "graph_relationships": len(unique_graph_rels),
+                "by_label": {},
+                "by_relationship": {},
+            }
+            for node in unique_graph_nodes.values():
+                for label in node.get("labels", []) or []:
+                    stats["by_label"][label] = stats["by_label"].get(label, 0) + 1
+            for rel in unique_graph_rels.values():
+                rel_type = rel.get("type")
+                if rel_type:
+                    stats["by_relationship"][rel_type] = stats["by_relationship"].get(rel_type, 0) + 1
+            return stats
+        else:
+            rel_filter = ""
+            params = {}
+            r = self._run(
+                "MATCH (n) WITH count(n) AS nodes "
+                "MATCH ()-[r]->() RETURN nodes, count(r) AS rels"
+            )
         stats = {"total_nodes": r[0]["nodes"], "total_rels": r[0]["rels"]} if r else {}
+        # The storage totals include provenance/support nodes and their edges.
+        # The dashboard renders the entity graph without Sentence nodes, so
+        # expose that user-facing count explicitly instead of making the UI
+        # appear inconsistent with the graph canvas.
+        if source_filing:
+            visual_node_rows = self._run(
+                "MATCH (n)-[r]->(m) "
+                f"WHERE {rel_filter} AND NOT n:Sentence AND NOT m:Sentence "
+                "AND r.evidence_id IS NOT NULL "
+                "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
+                "WHERE claim.verification_status = 'VERBATIM' } "
+                "WITH collect(DISTINCT n) + collect(DISTINCT m) AS all_nodes "
+                "UNWIND all_nodes AS node RETURN count(DISTINCT node) AS c",
+                **params,
+            )
+            visual_rel_rows = self._run(
+                "MATCH (n)-[r]->(m) "
+                f"WHERE {rel_filter} AND NOT n:Sentence AND NOT m:Sentence "
+                "AND r.evidence_id IS NOT NULL "
+                "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
+                "WHERE claim.verification_status = 'VERBATIM' } "
+                "RETURN count(DISTINCT [coalesce(n.id, ''), "
+                "coalesce(m.id, ''), type(r), coalesce(r.evidence_id, '')]) AS c",
+                **params,
+            )
+        else:
+            visual_node_rows = self._run(
+                "MATCH (n)-[r]->(m) "
+                "WHERE NOT n:Sentence AND NOT m:Sentence "
+                "AND r.evidence_id IS NOT NULL "
+                "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
+                "WHERE claim.verification_status = 'VERBATIM' } "
+                "WITH collect(DISTINCT n) + collect(DISTINCT m) AS all_nodes "
+                "UNWIND all_nodes AS node RETURN count(DISTINCT node) AS c"
+            )
+            visual_rel_rows = self._run(
+                "MATCH (n)-[r]->(m) "
+                "WHERE NOT n:Sentence AND NOT m:Sentence "
+                "AND r.evidence_id IS NOT NULL "
+                "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
+                "WHERE claim.verification_status = 'VERBATIM' } "
+                "RETURN count(DISTINCT [coalesce(n.id, ''), "
+                "coalesce(m.id, ''), type(r), coalesce(r.evidence_id, '')]) AS c"
+            )
+        stats["graph_nodes"] = visual_node_rows[0]["c"] if visual_node_rows else 0
+        stats["graph_relationships"] = visual_rel_rows[0]["c"] if visual_rel_rows else 0
         stats["by_label"] = {}
         for label in NODE_LABELS:
-            r = self._run(f"MATCH (n:{label}) RETURN count(n) AS c")
+            if source_filing:
+                r = self._run(
+                    f"MATCH (n:{label})-[r]-(m) "
+                    f"WHERE {rel_filter} AND r.evidence_id IS NOT NULL "
+                    "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
+                    "WHERE claim.verification_status = 'VERBATIM' } "
+                    "RETURN count(DISTINCT n) AS c",
+                    **params,
+                )
+            else:
+                r = self._run(f"MATCH (n:{label}) RETURN count(n) AS c")
             if r and r[0]["c"] > 0:
                 stats["by_label"][label] = r[0]["c"]
         stats["by_relationship"] = {}
@@ -393,7 +526,17 @@ class SchemaManager:
         for rel_type in RELATIONSHIP_TYPES:
             if rel_type not in existing_types:
                 continue
-            r = self._run(f"MATCH ()-[r:{rel_type}]->() RETURN count(r) AS c")
+            if source_filing:
+                r = self._run(
+                    f"MATCH ()-[r:{rel_type}]->() "
+                    f"WHERE {rel_filter} AND r.evidence_id IS NOT NULL "
+                    "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
+                    "WHERE claim.verification_status = 'VERBATIM' } "
+                    "RETURN count(r) AS c",
+                    **params,
+                )
+            else:
+                r = self._run(f"MATCH ()-[r:{rel_type}]->() RETURN count(r) AS c")
             if r and r[0]["c"] > 0:
                 stats["by_relationship"][rel_type] = r[0]["c"]
         return stats

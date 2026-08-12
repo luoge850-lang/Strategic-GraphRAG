@@ -172,17 +172,17 @@ GEMINI_API_KEY=<YOUR_GEMINI_KEY>     # 本地配置，不提交真实密钥
 GEMINI_MODEL=gemini-2.5-flash
 
 # 辅助批量处理 — 免费
-GROQ_API_KEY=gsk_...         # 你的新 Groq key
+GROQ_API_KEY=<YOUR_GROQ_KEY>         # 本地配置，不提交真实密钥
 GROQ_MODEL=llama-3.3-70b-versatile
 
 # 实验阶段 — 后续充值 ¥20
-DEEPSEEK_API_KEY=sk-...      # 先注册，暂不充值
+DEEPSEEK_API_KEY=<YOUR_DEEPSEEK_KEY>      # 本地配置，不提交真实密钥
 
 # Neo4j（已完成）
-NEO4J_URI=neo4j+s://599da677.databases.neo4j.io
-NEO4J_USERNAME=599da677
+NEO4J_URI=neo4j+s://<your-instance>.databases.neo4j.io
+NEO4J_USERNAME=<your-neo4j-username>
 NEO4J_PASSWORD=<REDACTED_USE_LOCAL_ENV>
-NEO4J_DATABASE=599da677
+NEO4J_DATABASE=<your-database-name>
 ```
 
 ### 步骤 3：我可以帮你做的事

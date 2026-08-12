@@ -1,0 +1,41 @@
+{
+  "status": "SINGLE_PDF_STABLE_CANDIDATE",
+  "generated_at_utc": "2026-08-12T03:34:02.463179+00:00",
+  "source_filing": "2025-10-K.pdf",
+  "llm_provider": "deepseek",
+  "llm_model": "deepseek-v4-flash",
+  "dataset_status": "AUTO_GENERATED_REGRESSION_CANDIDATE_NOT_HUMAN_GOLD",
+  "evaluation_protocol": "hybrid retrieval, structural metrics only; LLM judge disabled",
+  "files_sha256": {
+    "pdf": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+    "kg_audit": "dcf8042bc6abd0541aa95aeb0c81d1436656a9e3a2e1cc056d792313fb2abc92",
+    "page_coverage": "8f05de08b2c685f33bb224b724747332b8b179e1835a326b3fcf99cddff8922e",
+    "pipeline_stats": "4bab48bd52ab6c00b9100b35c27aed2a0bc4dedeb776307f6161d05c75f9d8c0",
+    "standard_query_audit": "e1ef89c6ecca09d4b33e798841dcab19fdc735fc5a552d7b839550d26fa6aa29",
+    "golden_qa": "56fe46cb66f727b61334b071d8ab6c0a2bb693da0434d6fe34e4effe79e63b01",
+    "golden_results": "aed9c0d6e6a58967ab00df0afba5dfc31cfb900b13efdc6fc2d9b48122f46515"
+  },
+  "neo4j_snapshot": {
+    "claims": 68,
+    "filing_relationships": 68,
+    "storage_nodes": 56,
+    "fulltext_indexes": [
+      {
+        "name": "entity_fulltext",
+        "state": "ONLINE",
+        "populationPercent": 100.0
+      },
+      {
+        "name": "evidence_fulltext",
+        "state": "ONLINE",
+        "populationPercent": 100.0
+      }
+    ]
+  },
+  "limitations": [
+    "This is one NVIDIA 2025 10-K; it cannot establish cross-year trends.",
+    "Golden QA is automatically generated and must be human-reviewed before academic claims.",
+    "Faithfulness and Answer Relevance LLM-judge scores were not run in this candidate.",
+    "This candidate is not a production deployment or a final paper result."
+  ]
+}

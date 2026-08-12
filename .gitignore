@@ -42,6 +42,9 @@ data/evaluation/
 # Logs
 *.log
 
+# Local audit/runtime outputs; selected release reports are force-added.
+reports/
+
 # Pipeline artifacts (regenerated on each run)
 pipeline_stats.json
 test_answer.json
@@ -52,6 +55,8 @@ test_answer.json
 # Node (future frontend)
 node_modules/
 *.tsbuildinfo
+frontend/pnpm-lock.yaml
+frontend/pnpm-workspace.yaml
 
 # OS
 *.swp

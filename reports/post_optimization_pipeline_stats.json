@@ -1,0 +1,455 @@
+{
+  "files": [
+    {
+      "filename": "2025-10-K.pdf",
+      "year": 2025,
+      "total_pages": 130,
+      "target_pages": 37,
+      "triples_extracted": 68,
+      "triples_ingested": 68,
+      "llm": {
+        "calls": 107,
+        "successes": 107,
+        "failures": 0,
+        "accepted_triples": 248,
+        "routes": [
+          "deepseek/deepseek-v4-flash"
+        ]
+      },
+      "extraction_method_counts": {
+        "LLM_EXTRACTION": 21,
+        "RULE_EXTRACTION": 47
+      },
+      "page_stats": [
+        {
+          "page": 2,
+          "section": "Item 1A — Risk Factors",
+          "text_chars": 1338,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 1,
+          "llm_accepted_triples": 0,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 3,
+          "section": "Item 1A — Risk Factors",
+          "text_chars": 4024,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 2,
+          "llm_accepted_triples": 8,
+          "strict_triples": 1,
+          "evidence_spans": 1
+        },
+        {
+          "page": 4,
+          "section": "Item 1 — Business",
+          "text_chars": 5807,
+          "rule_candidates": 4,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 2,
+          "strict_triples": 4,
+          "evidence_spans": 4
+        },
+        {
+          "page": 5,
+          "section": "Item 1 — Business",
+          "text_chars": 5134,
+          "rule_candidates": 5,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 2,
+          "strict_triples": 4,
+          "evidence_spans": 4
+        },
+        {
+          "page": 6,
+          "section": "Item 1 — Business",
+          "text_chars": 5548,
+          "rule_candidates": 6,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 1,
+          "strict_triples": 6,
+          "evidence_spans": 6
+        },
+        {
+          "page": 7,
+          "section": "Item 1 — Business",
+          "text_chars": 6158,
+          "rule_candidates": 4,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 0,
+          "strict_triples": 4,
+          "evidence_spans": 4
+        },
+        {
+          "page": 8,
+          "section": "Item 1 — Business",
+          "text_chars": 6045,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 1,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 9,
+          "section": "Item 1 — Business",
+          "text_chars": 5489,
+          "rule_candidates": 3,
+          "llm_enabled": true,
+          "llm_calls": 4,
+          "llm_accepted_triples": 10,
+          "strict_triples": 2,
+          "evidence_spans": 2
+        },
+        {
+          "page": 10,
+          "section": "Item 1 — Business",
+          "text_chars": 5480,
+          "rule_candidates": 6,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 5,
+          "strict_triples": 6,
+          "evidence_spans": 6
+        },
+        {
+          "page": 11,
+          "section": "Item 1 — Business",
+          "text_chars": 5585,
+          "rule_candidates": 2,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 8,
+          "strict_triples": 1,
+          "evidence_spans": 1
+        },
+        {
+          "page": 12,
+          "section": "Item 1 — Business",
+          "text_chars": 4402,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 1,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 13,
+          "section": "Item 1 — Business",
+          "text_chars": 5460,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 3,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 14,
+          "section": "Item 1A — Risk Factors",
+          "text_chars": 3461,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 2,
+          "llm_accepted_triples": 8,
+          "strict_triples": 1,
+          "evidence_spans": 1
+        },
+        {
+          "page": 15,
+          "section": "Item 1A — Risk Factors",
+          "text_chars": 4753,
+          "rule_candidates": 2,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 5,
+          "strict_triples": 4,
+          "evidence_spans": 4
+        },
+        {
+          "page": 16,
+          "section": "Item 1 — Business",
+          "text_chars": 4952,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 13,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 17,
+          "section": "Item 1 — Business",
+          "text_chars": 5799,
+          "rule_candidates": 3,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 15,
+          "strict_triples": 4,
+          "evidence_spans": 4
+        },
+        {
+          "page": 18,
+          "section": "Item 1 — Business",
+          "text_chars": 4467,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 4,
+          "llm_accepted_triples": 13,
+          "strict_triples": 2,
+          "evidence_spans": 2
+        },
+        {
+          "page": 19,
+          "section": "Item 1 — Business",
+          "text_chars": 5744,
+          "rule_candidates": 6,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 10,
+          "strict_triples": 2,
+          "evidence_spans": 2
+        },
+        {
+          "page": 20,
+          "section": "Item 1 — Business",
+          "text_chars": 6272,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 10,
+          "strict_triples": 2,
+          "evidence_spans": 2
+        },
+        {
+          "page": 21,
+          "section": "Item 1 — Business",
+          "text_chars": 7365,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 4,
+          "llm_accepted_triples": 9,
+          "strict_triples": 3,
+          "evidence_spans": 3
+        },
+        {
+          "page": 22,
+          "section": "Item 1 — Business",
+          "text_chars": 6431,
+          "rule_candidates": 4,
+          "llm_enabled": true,
+          "llm_calls": 4,
+          "llm_accepted_triples": 11,
+          "strict_triples": 3,
+          "evidence_spans": 3
+        },
+        {
+          "page": 23,
+          "section": "Item 1 — Business",
+          "text_chars": 5386,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 6,
+          "strict_triples": 2,
+          "evidence_spans": 2
+        },
+        {
+          "page": 24,
+          "section": "Item 1 — Business",
+          "text_chars": 6219,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 16,
+          "strict_triples": 1,
+          "evidence_spans": 1
+        },
+        {
+          "page": 25,
+          "section": "Item 1 — Business",
+          "text_chars": 6303,
+          "rule_candidates": 1,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 8,
+          "strict_triples": 1,
+          "evidence_spans": 1
+        },
+        {
+          "page": 26,
+          "section": "Item 1 — Business",
+          "text_chars": 6616,
+          "rule_candidates": 2,
+          "llm_enabled": true,
+          "llm_calls": 4,
+          "llm_accepted_triples": 12,
+          "strict_triples": 3,
+          "evidence_spans": 3
+        },
+        {
+          "page": 27,
+          "section": "Item 1 — Business",
+          "text_chars": 5865,
+          "rule_candidates": 5,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 7,
+          "strict_triples": 5,
+          "evidence_spans": 5
+        },
+        {
+          "page": 28,
+          "section": "Item 1 — Business",
+          "text_chars": 7131,
+          "rule_candidates": 2,
+          "llm_enabled": true,
+          "llm_calls": 4,
+          "llm_accepted_triples": 13,
+          "strict_triples": 1,
+          "evidence_spans": 1
+        },
+        {
+          "page": 29,
+          "section": "Item 1 — Business",
+          "text_chars": 6715,
+          "rule_candidates": 2,
+          "llm_enabled": true,
+          "llm_calls": 4,
+          "llm_accepted_triples": 13,
+          "strict_triples": 2,
+          "evidence_spans": 2
+        },
+        {
+          "page": 32,
+          "section": "Item 1 — Business",
+          "text_chars": 5535,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 4,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 33,
+          "section": "Item 1 — Business",
+          "text_chars": 4807,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 5,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 34,
+          "section": "Item 1 — Business",
+          "text_chars": 3228,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 2,
+          "llm_accepted_triples": 3,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 39,
+          "section": "Item 1 — Business",
+          "text_chars": 5408,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 3,
+          "llm_accepted_triples": 13,
+          "strict_triples": 1,
+          "evidence_spans": 1
+        },
+        {
+          "page": 40,
+          "section": "Item 1 — Business",
+          "text_chars": 2353,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 1,
+          "llm_accepted_triples": 0,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 41,
+          "section": "Item 1 — Business",
+          "text_chars": 2560,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 2,
+          "llm_accepted_triples": 0,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 42,
+          "section": "Item 1 — Business",
+          "text_chars": 3318,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 2,
+          "llm_accepted_triples": 6,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 43,
+          "section": "Item 1 — Business",
+          "text_chars": 3054,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 2,
+          "llm_accepted_triples": 3,
+          "strict_triples": 0,
+          "evidence_spans": 0
+        },
+        {
+          "page": 44,
+          "section": "Item 1 — Business",
+          "text_chars": 3973,
+          "rule_candidates": 0,
+          "llm_enabled": true,
+          "llm_calls": 2,
+          "llm_accepted_triples": 4,
+          "strict_triples": 3,
+          "evidence_spans": 3
+        }
+      ],
+      "pages_with_strict_triples": 25,
+      "relations": {
+        "CAUSES": 6,
+        "PRODUCES": 30,
+        "OPERATES_IN": 4,
+        "EXPOSED_TO": 1,
+        "DECREASES": 13,
+        "INCREASES": 13,
+        "MITIGATES": 1
+      },
+      "entities": {
+        "RiskFactor": 33,
+        "FinancialMetric": 26,
+        "Company": 34,
+        "Product": 30,
+        "Market": 4,
+        "Region": 1,
+        "Event": 7,
+        "Strategy": 1
+      },
+      "status": "completed"
+    }
+  ]
+}

@@ -23,6 +23,20 @@ export interface QueryResult {
   intent: string;
   intent_display: string;
   answer: string;
+  structured_report?: {
+    format?: string;
+    status?: string;
+    executive_summary?: string;
+    claims?: Array<{
+      statement: string;
+      evidence_claim_ids: string[];
+      pages: number[];
+      fiscal_years: number[];
+      support_level?: string;
+    }>;
+    evidence_quality?: string;
+    limitations?: string;
+  };
   paths: CausalPath[];
   evidence_sentences: string[];
   metadata: {
@@ -36,6 +50,8 @@ export interface QueryResult {
 export interface GraphStats {
   total_nodes: number;
   total_relationships: number;
+  graph_nodes?: number;
+  graph_relationships?: number;
   by_label: Record<string, number>;
   by_relationship: Record<string, number>;
 }
@@ -50,6 +66,7 @@ export interface GEdge {
   source: string;
   target: string;
   type: string;
+  evidence_id?: string;
 }
 
 export interface Subgraph {

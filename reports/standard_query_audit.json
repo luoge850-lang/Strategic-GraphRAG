@@ -1,0 +1,2095 @@
+{
+  "dataset": "standard_single_pdf_queries",
+  "source_filing": "2025-10-K.pdf",
+  "pdf_pages": 130,
+  "provider": "deepseek",
+  "model": "deepseek-v4-flash",
+  "evaluated": 5,
+  "summary": {
+    "http_200": 5,
+    "verified_grounding": 3,
+    "citation_audit_pass": 5,
+    "errors": [],
+    "latency_ms": {
+      "p50": 12228.91,
+      "p95": 15086.39,
+      "mean": 9524.57
+    }
+  },
+  "rows": [
+    {
+      "question": "How do export controls impact NVIDIA revenue in China?",
+      "http_status": 200,
+      "answer": "Executive Summary\nExport controls directly threaten NVIDIA's revenue in China and globally, as the FY2025 10-K explicitly states they 'could substantially reduce our revenue' and have already 'negatively impacted demand.' The filing also links reduced demand to excess inventory and supply charges, but it does not quantify the actual revenue impact or provide China-specific figures.\n\nExport controls could substantially reduce NVIDIA's revenue by impacting its ability to serve overseas markets and provoking foreign government responses that disrupt supply chains and product availability worldwide.\n[EvidenceClaim: 5f63133fa4dba629_claim; p.26]\n\nThe possibility of additional export controls has already negatively impacted demand for NVIDIA's products, benefiting competitors offering less restricted alternatives.\n[EvidenceClaim: 40c3354abdd086b7_claim; p.26]\n\nReduced demand due to export controls could lead to excess inventory or related supply charges, adding financial strain beyond revenue loss.\n[EvidenceClaim: b3867b75d204bd40_claim; p.26]\n\nThe filing does not provide specific quantification of revenue impact in China, nor does it separate China-specific effects from global impacts, limiting the ability to assess the magnitude of the China revenue exposure.\n[EvidenceClaim: 5f63133fa4dba629_claim; 40c3354abdd086b7_claim; p.26]\n\nEvidence Quality\nThe evidence is explicit and direct: the filing uses causal language such as 'could substantially reduce our revenue' and 'has negatively impacted demand,' clearly linking export controls to revenue and demand. However, the evidence is limited to FY2025 and does not provide quantitative data or a China-specific breakdown. The causal chain from export controls to revenue is well-supported, but the magnitude and geographic specificity remain unquantified.\n\nLimitations\nThis filing cannot establish the actual dollar amount of revenue lost in China due to export controls, nor can it separate China-specific impacts from global effects. It also does not provide historical trends or forward-looking projections. Additional data such as segment revenue by geography, export license approval rates, and competitor market share changes would be needed to quantify the impact.",
+      "metadata": {
+        "total_candidates": 10,
+        "raw_candidates": 11,
+        "deduplicated_candidates": 10,
+        "top_paths": 5,
+        "anchors_used": [
+          "NVIDIA",
+          "REVENUE",
+          "EXPORT_CONTROLS",
+          "CHINA",
+          "NVIDIA_CORPORATION",
+          "CHIP_EXPORT_RESTRICTION",
+          "revenue",
+          "Revenue",
+          "US_CHIP_EXPORT_CONTROLS_2022",
+          "US Chip Export Controls (Oct 2022)",
+          "US_CHIP_EXPORT_CONTROLS_2023",
+          "US Chip Export Controls (Oct 2023)",
+          "CHINA_REVENUE",
+          "EXPORT_CONTROL"
+        ],
+        "avg_score": 0.4398,
+        "temporal": {
+          "status": "NOT_REQUESTED",
+          "requested": false,
+          "require_multi_year": false,
+          "requested_years": [],
+          "covered_years": [
+            2025
+          ],
+          "missing_requested_years": [],
+          "minimum_distinct_years": 0
+        },
+        "grounding": {
+          "status": "VERIFIED",
+          "cited_evidence_ids": [
+            "40c3354abdd086b7_claim",
+            "5f63133fa4dba629_claim",
+            "b3867b75d204bd40_claim"
+          ],
+          "cited_pages": [
+            26
+          ],
+          "cited_years": [
+            2025
+          ],
+          "unknown_evidence_ids": [],
+          "unknown_pages": [],
+          "unknown_years": [],
+          "claim_citation_mismatches": [],
+          "available_evidence_ids": [
+            "40c3354abdd086b7_claim",
+            "532442441743ee8c_claim",
+            "5f63133fa4dba629_claim",
+            "b3867b75d204bd40_claim",
+            "ba77d086d91dd4ab_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "available_pages": [
+            17,
+            18,
+            26
+          ],
+          "available_years": [
+            2025
+          ]
+        },
+        "llm": {
+          "configured_provider": "deepseek",
+          "configured_model": "deepseek-v4-flash",
+          "success_provider": "deepseek",
+          "success_model": "deepseek-v4-flash",
+          "fallback_configured": false
+        },
+        "source_filing": "2025-10-K.pdf",
+        "retrieval": {
+          "mode": "HYBRID",
+          "vector_status": "OK",
+          "vector_hits": 5,
+          "matched_paths": 4,
+          "fusion": "0.75_graph_score + 0.25_vector_page_rank",
+          "collection": "nvidia_sec_filings_active"
+        },
+        "latency_ms": {
+          "vector_retrieval_ms": 52.04,
+          "query_understanding_ms": 0.15,
+          "anchor_resolution_ms": 1295.03,
+          "graph_path_search_ms": 1210.84,
+          "scoring_rerank_ms": 244.22,
+          "llm_synthesis_ms": 5055.49,
+          "total_ms": 9740.09
+        }
+      },
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "b696e9786da3d1a0",
+          "semantic_fingerprint": "974c033ee5ed64f2",
+          "nodes": [
+            "CHIP_EXPORT_RESTRICTION",
+            "INVENTORY_RISK"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "RiskFactor"
+          ],
+          "relationships": [
+            "CAUSES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL"
+          ],
+          "evidence": [
+            "Reduced demand due to export controls could also lead to excess inventory or cause us to incur related supply charges."
+          ],
+          "pages": [
+            26
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "b3867b75d204bd40_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "STRUCTURAL_OR_EXPOSURE"
+          ],
+          "total_hops": 1,
+          "score": 0.4999288156804037,
+          "score_breakdown": {
+            "causal_strength": 1.0,
+            "completeness": 0.6,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.795,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 1.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Reduced demand due to export controls could also lead to excess inventory or cause us to incur related supply charges.",
+                "page": 26,
+                "year": 2025,
+                "evidence_id": "b3867b75d204bd40_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_002",
+          "fingerprint": "d0a926121437540f",
+          "semantic_fingerprint": "1e0bae5a842aecee",
+          "nodes": [
+            "CHIP_EXPORT_RESTRICTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "Additional export restrictions may not only impact our ability to serve overseas markets, but also provoke responses from foreign governments, including China, that negatively impact our supply chain or our ability to provide our products and services to customers in all markets worldwide, which could also substantially reduce our revenue."
+          ],
+          "pages": [
+            26
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "5f63133fa4dba629_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.4633109766646618,
+          "score_breakdown": {
+            "causal_strength": 0.5,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 1.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Additional export restrictions may not only impact our ability to serve overseas markets, but also provoke responses from foreign governments, including China, that negatively impact our supply chain or our ability to provide our products and services to customers in all markets worldwide, which could also substantially reduce our revenue.",
+                "page": 26,
+                "year": 2025,
+                "evidence_id": "5f63133fa4dba629_claim",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "The USG has already imposed export controls restricting certain gaming GPUs, and if the USG expands\nsuch controls to restrict additional gaming products, it may disrupt a significant portion of our supply and distribution chain and negatively impact sales of such\nproducts to markets outside China, including the U.S.",
+                "page": 28,
+                "year": 2025,
+                "evidence_id": "13d48d101b9c4f6c_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_001",
+          "fingerprint": "f6e1416bdda8b6c8",
+          "semantic_fingerprint": "8cde8c5b2adc98b2",
+          "nodes": [
+            "CHIP_EXPORT_RESTRICTION",
+            "DEMAND"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "The possibility of additional export controls has negatively impacted and may in the future negatively impact demand for our products, benefiting competitors that offer alternatives less likely to be restricted by further controls."
+          ],
+          "pages": [
+            26
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "40c3354abdd086b7_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.4631086131091069,
+          "score_breakdown": {
+            "causal_strength": 0.5,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 1.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "The possibility of additional export controls has negatively impacted and may in the future negatively impact demand for our products, benefiting competitors that offer alternatives less likely to be restricted by further controls.",
+                "page": 26,
+                "year": 2025,
+                "evidence_id": "40c3354abdd086b7_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_003",
+          "fingerprint": "c6e06d944099c13a",
+          "semantic_fingerprint": "7bf8e23d9c784424",
+          "nodes": [
+            "PRODUCT_TRANSITION_RISK",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL"
+          ],
+          "evidence": [
+            "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue."
+          ],
+          "pages": [
+            17
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "ba77d086d91dd4ab_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.39186691620800407,
+          "score_breakdown": {
+            "causal_strength": 1.0,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "ba77d086d91dd4ab_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_004",
+          "fingerprint": "bd99f43fad39d811",
+          "semantic_fingerprint": "7e8552a79fa4b61f",
+          "nodes": [
+            "COVID_19",
+            "SUPPLY_CHAIN_DISRUPTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Event",
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "CAUSES",
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL",
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+            "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+          ],
+          "pages": [
+            17,
+            18
+          ],
+          "years": [
+            2025,
+            2025
+          ],
+          "evidence_ids": [
+            "532442441743ee8c_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf",
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "EVENT_LINK",
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 2,
+          "score": 0.3809993504205954,
+          "score_breakdown": {
+            "causal_strength": 0.75,
+            "completeness": 0.85,
+            "temporal_coherence": 1.0,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.7143,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "532442441743ee8c_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ],
+            [
+              {
+                "evidence": "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+                "page": 18,
+                "year": 2025,
+                "evidence_id": "ef5cb00fabc754a2_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        }
+      ],
+      "evidence_sentences": [
+        "Reduced demand due to export controls could also lead to excess inventory or cause us to incur related supply charges.",
+        "Additional export restrictions may not only impact our ability to serve overseas markets, but also provoke responses from foreign governments, including China, that negatively impact our supply chain or our ability to provide our products and services to customers in all markets worldwide, which could also substantially reduce our revenue.",
+        "The possibility of additional export controls has negatively impacted and may in the future negatively impact demand for our products, benefiting competitors that offer alternatives less likely to be restricted by further controls.",
+        "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue.",
+        "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+        "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+      ],
+      "grounding": {
+        "status": "VERIFIED",
+        "cited_evidence_ids": [
+          "40c3354abdd086b7_claim",
+          "5f63133fa4dba629_claim",
+          "b3867b75d204bd40_claim"
+        ],
+        "cited_pages": [
+          26
+        ],
+        "cited_years": [
+          2025
+        ],
+        "unknown_evidence_ids": [],
+        "unknown_pages": [],
+        "unknown_years": [],
+        "claim_citation_mismatches": [],
+        "available_evidence_ids": [
+          "40c3354abdd086b7_claim",
+          "532442441743ee8c_claim",
+          "5f63133fa4dba629_claim",
+          "b3867b75d204bd40_claim",
+          "ba77d086d91dd4ab_claim",
+          "ef5cb00fabc754a2_claim"
+        ],
+        "available_pages": [
+          17,
+          18,
+          26
+        ],
+        "available_years": [
+          2025
+        ]
+      },
+      "cited_evidence_ids": [
+        "40c3354abdd086b7_claim",
+        "5f63133fa4dba629_claim",
+        "b3867b75d204bd40_claim"
+      ],
+      "claim_lookup": {
+        "requested": [
+          "40c3354abdd086b7_claim",
+          "5f63133fa4dba629_claim",
+          "b3867b75d204bd40_claim"
+        ],
+        "found": [
+          "40c3354abdd086b7_claim",
+          "5f63133fa4dba629_claim",
+          "b3867b75d204bd40_claim"
+        ],
+        "missing": []
+      },
+      "pdf_quote_audit": [
+        {
+          "claim_id": "40c3354abdd086b7_claim",
+          "page": 26,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        },
+        {
+          "claim_id": "5f63133fa4dba629_claim",
+          "page": 26,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        },
+        {
+          "claim_id": "b3867b75d204bd40_claim",
+          "page": 26,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        }
+      ],
+      "response_class": "grounded_answer",
+      "citation_audit_pass": true,
+      "error_type": null,
+      "wall_latency_ms": 12707.41
+    },
+    {
+      "question": "What supply-chain risks could affect NVIDIA financial performance?",
+      "http_status": 200,
+      "answer": "Executive Summary\nNVIDIA's FY2025 10-K identifies several supply-chain risks that could adversely affect financial performance, including export controls on gaming GPUs, supply constraints from natural disasters or pandemics, and product transition risks. The strongest evidence directly links export controls to potential revenue disruption, while supply-chain disruption is disclosed as a risk to revenue and financial results.\n\nExport controls restricting gaming GPUs could disrupt a significant portion of NVIDIA's supply and distribution chain and negatively impact sales of such products to markets outside China, including the U.S., which would reduce revenue.\n[EvidenceClaim: 13d48d101b9c4f6c_claim; p.28]\n\nSupply constraints caused by natural disasters or pandemics could lead to extended lead times, which the filing links to risks that could adversely affect revenue and financial results.\n[EvidenceClaim: 532442441743ee8c_claim; ef5cb00fabc754a2_claim; p.17, p.18]\n\nProduct transition risks, including qualification time for new products and customers anticipating transitions, can reduce or create volatility in revenue.\n[EvidenceClaim: ba77d086d91dd4ab_claim; p.17]\n\nSupply-chain disruption generally is disclosed as a risk that could adversely affect business operations, gross margin, revenue, and/or financial results.\n[EvidenceClaim: ef5cb00fabc754a2_claim; p.18]\n\nEvidence Quality\nThe evidence is a mix of direct and indirect support. The export control-to-revenue link is directly disclosed with explicit language about negative impact on sales. The natural disaster/pandemic-to-supply-chain-disruption link is explicitly causal, but the connection from supply-chain disruption to revenue is disclosed as an exposure rather than a confirmed impact. Product transition risk is directly stated as reducing or creating volatility in revenue. All evidence comes from a single fiscal year (FY2025), limiting temporal analysis.\n\nLimitations\nThe filing does not establish that any of these risks have actually materialized to reduce revenue — the language is forward-looking and describes potential impacts. The evidence does not quantify the potential revenue impact in dollar terms. The causal chain from natural disasters/pandemics to revenue is indirect: the filing states these events cause supply constraints, and separately states supply-chain risks could affect revenue, but does not explicitly link the two in a single causal statement. No evidence addresses the severity or likelihood of these risks materializing.",
+      "metadata": {
+        "total_candidates": 7,
+        "raw_candidates": 8,
+        "deduplicated_candidates": 7,
+        "top_paths": 5,
+        "anchors_used": [
+          "NVIDIA",
+          "NVIDIA_CORPORATION",
+          "NVIDIA Corporation",
+          "NVIDIA_ARM_TERMINATED",
+          "NVIDIA-ARM Acquisition Terminated",
+          "SUPPLY_CHAIN_RISK",
+          "REVENUE"
+        ],
+        "avg_score": 0.3946,
+        "temporal": {
+          "status": "NOT_REQUESTED",
+          "requested": false,
+          "require_multi_year": false,
+          "requested_years": [],
+          "covered_years": [
+            2025
+          ],
+          "missing_requested_years": [],
+          "minimum_distinct_years": 0
+        },
+        "grounding": {
+          "status": "VERIFIED",
+          "cited_evidence_ids": [
+            "13d48d101b9c4f6c_claim",
+            "532442441743ee8c_claim",
+            "ba77d086d91dd4ab_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "cited_pages": [
+            17,
+            18,
+            28
+          ],
+          "cited_years": [
+            2025
+          ],
+          "unknown_evidence_ids": [],
+          "unknown_pages": [],
+          "unknown_years": [],
+          "claim_citation_mismatches": [],
+          "available_evidence_ids": [
+            "13d48d101b9c4f6c_claim",
+            "532442441743ee8c_claim",
+            "b1b91d7fa2e07246_claim",
+            "ba77d086d91dd4ab_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "available_pages": [
+            17,
+            18,
+            28
+          ],
+          "available_years": [
+            2025
+          ]
+        },
+        "llm": {
+          "configured_provider": "deepseek",
+          "configured_model": "deepseek-v4-flash",
+          "success_provider": "deepseek",
+          "success_model": "deepseek-v4-flash",
+          "fallback_configured": false
+        },
+        "source_filing": "2025-10-K.pdf",
+        "retrieval": {
+          "mode": "HYBRID",
+          "vector_status": "OK",
+          "vector_hits": 5,
+          "matched_paths": 2,
+          "fusion": "0.75_graph_score + 0.25_vector_page_rank",
+          "collection": "nvidia_sec_filings_active"
+        },
+        "latency_ms": {
+          "vector_retrieval_ms": 45.25,
+          "query_understanding_ms": 0.39,
+          "anchor_resolution_ms": 1027.33,
+          "graph_path_search_ms": 956.42,
+          "scoring_rerank_ms": 205.16,
+          "llm_synthesis_ms": 5449.31,
+          "total_ms": 9250.6
+        }
+      },
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "1cbefb0a55a82089",
+          "semantic_fingerprint": "1e0bae5a842aecee",
+          "nodes": [
+            "CHIP_EXPORT_RESTRICTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "STRONG_ASSOCIATION"
+          ],
+          "evidence": [
+            "The USG has already imposed export controls restricting certain gaming GPUs, and if the USG expands\nsuch controls to restrict additional gaming products, it may disrupt a significant portion of our supply and distribution chain and negatively impact sales of such\nproducts to markets outside China, including the U.S."
+          ],
+          "pages": [
+            28
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "13d48d101b9c4f6c_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.49464456034046084,
+          "score_breakdown": {
+            "causal_strength": 0.7,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 1.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "The USG has already imposed export controls restricting certain gaming GPUs, and if the USG expands\nsuch controls to restrict additional gaming products, it may disrupt a significant portion of our supply and distribution chain and negatively impact sales of such\nproducts to markets outside China, including the U.S.",
+                "page": 28,
+                "year": 2025,
+                "evidence_id": "13d48d101b9c4f6c_claim",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Additional export restrictions may not only impact our ability to serve overseas markets, but also provoke responses from foreign governments, including China, that negatively impact our supply chain or our ability to provide our products and services to customers in all markets worldwide, which could also substantially reduce our revenue.",
+                "page": 26,
+                "year": 2025,
+                "evidence_id": "5f63133fa4dba629_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_002",
+          "fingerprint": "bd99f43fad39d811",
+          "semantic_fingerprint": "7e8552a79fa4b61f",
+          "nodes": [
+            "COVID_19",
+            "SUPPLY_CHAIN_DISRUPTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Event",
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "CAUSES",
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL",
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+            "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+          ],
+          "pages": [
+            17,
+            18
+          ],
+          "years": [
+            2025,
+            2025
+          ],
+          "evidence_ids": [
+            "532442441743ee8c_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf",
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "EVENT_LINK",
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 2,
+          "score": 0.3922314869472639,
+          "score_breakdown": {
+            "causal_strength": 0.75,
+            "completeness": 0.85,
+            "temporal_coherence": 1.0,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.7143,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "532442441743ee8c_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ],
+            [
+              {
+                "evidence": "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+                "page": 18,
+                "year": 2025,
+                "evidence_id": "ef5cb00fabc754a2_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_001",
+          "fingerprint": "c6e06d944099c13a",
+          "semantic_fingerprint": "7bf8e23d9c784424",
+          "nodes": [
+            "PRODUCT_TRANSITION_RISK",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL"
+          ],
+          "evidence": [
+            "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue."
+          ],
+          "pages": [
+            17
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "ba77d086d91dd4ab_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.39186548835751384,
+          "score_breakdown": {
+            "causal_strength": 1.0,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "ba77d086d91dd4ab_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_003",
+          "fingerprint": "2d58ac0afdf7f061",
+          "semantic_fingerprint": "232b60136bb396f9",
+          "nodes": [
+            "NATURAL_DISASTER",
+            "SUPPLY_CHAIN_DISRUPTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Event",
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "CAUSES",
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL",
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+            "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+          ],
+          "pages": [
+            17,
+            18
+          ],
+          "years": [
+            2025,
+            2025
+          ],
+          "evidence_ids": [
+            "b1b91d7fa2e07246_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf",
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "EVENT_LINK",
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 2,
+          "score": 0.380921457275705,
+          "score_breakdown": {
+            "causal_strength": 0.75,
+            "completeness": 0.85,
+            "temporal_coherence": 1.0,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.7143,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "b1b91d7fa2e07246_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ],
+            [
+              {
+                "evidence": "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+                "page": 18,
+                "year": 2025,
+                "evidence_id": "ef5cb00fabc754a2_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_004",
+          "fingerprint": "f59ef41264880a70",
+          "semantic_fingerprint": "4471d59ebe5cf144",
+          "nodes": [
+            "SUPPLY_CHAIN_DISRUPTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+          ],
+          "pages": [
+            18
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "ef5cb00fabc754a2_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.31320668184649614,
+          "score_breakdown": {
+            "causal_strength": 0.5,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+                "page": 18,
+                "year": 2025,
+                "evidence_id": "ef5cb00fabc754a2_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        }
+      ],
+      "evidence_sentences": [
+        "The USG has already imposed export controls restricting certain gaming GPUs, and if the USG expands\nsuch controls to restrict additional gaming products, it may disrupt a significant portion of our supply and distribution chain and negatively impact sales of such\nproducts to markets outside China, including the U.S.",
+        "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+        "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+        "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue.",
+        "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+        "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+        "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+      ],
+      "grounding": {
+        "status": "VERIFIED",
+        "cited_evidence_ids": [
+          "13d48d101b9c4f6c_claim",
+          "532442441743ee8c_claim",
+          "ba77d086d91dd4ab_claim",
+          "ef5cb00fabc754a2_claim"
+        ],
+        "cited_pages": [
+          17,
+          18,
+          28
+        ],
+        "cited_years": [
+          2025
+        ],
+        "unknown_evidence_ids": [],
+        "unknown_pages": [],
+        "unknown_years": [],
+        "claim_citation_mismatches": [],
+        "available_evidence_ids": [
+          "13d48d101b9c4f6c_claim",
+          "532442441743ee8c_claim",
+          "b1b91d7fa2e07246_claim",
+          "ba77d086d91dd4ab_claim",
+          "ef5cb00fabc754a2_claim"
+        ],
+        "available_pages": [
+          17,
+          18,
+          28
+        ],
+        "available_years": [
+          2025
+        ]
+      },
+      "cited_evidence_ids": [
+        "13d48d101b9c4f6c_claim",
+        "532442441743ee8c_claim",
+        "ba77d086d91dd4ab_claim",
+        "ef5cb00fabc754a2_claim"
+      ],
+      "claim_lookup": {
+        "requested": [
+          "13d48d101b9c4f6c_claim",
+          "532442441743ee8c_claim",
+          "ba77d086d91dd4ab_claim",
+          "ef5cb00fabc754a2_claim"
+        ],
+        "found": [
+          "13d48d101b9c4f6c_claim",
+          "532442441743ee8c_claim",
+          "ba77d086d91dd4ab_claim",
+          "ef5cb00fabc754a2_claim"
+        ],
+        "missing": []
+      },
+      "pdf_quote_audit": [
+        {
+          "claim_id": "13d48d101b9c4f6c_claim",
+          "page": 28,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        },
+        {
+          "claim_id": "532442441743ee8c_claim",
+          "page": 17,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        },
+        {
+          "claim_id": "ba77d086d91dd4ab_claim",
+          "page": 17,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        },
+        {
+          "claim_id": "ef5cb00fabc754a2_claim",
+          "page": 18,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        }
+      ],
+      "response_class": "grounded_answer",
+      "citation_audit_pass": true,
+      "error_type": null,
+      "wall_latency_ms": 12228.91
+    },
+    {
+      "question": "What products and markets are connected to NVIDIA revenue risk?",
+      "http_status": 200,
+      "answer": "Executive Summary\nNVIDIA's revenue risk is primarily connected to product transitions, government regulation of AI, and chip export restrictions, with the latter having a direct disclosed impact on sales of gaming GPUs and data center products. The filing also links supply chain disruptions from natural disasters and pandemics to potential revenue declines, though these are more general in nature.\n\nProduct transitions, including qualification time for new products, customer anticipation of transitions, and channel partners reducing inventory of prior architectures, can reduce or create volatility in revenue.\n[EvidenceClaim: ba77d086d91dd4ab_claim; p.17]\n\nCompliance with existing and proposed government regulation of AI, such as in the European Union, may increase the cost of related research and development and create additional reporting requirements, which could impact financial performance.\n[EvidenceClaim: 5a7f1c099e19c132_claim; p.29]\n\nUS government export controls on gaming GPUs have already been imposed, and if expanded to restrict additional gaming products, they could disrupt a significant portion of NVIDIA's supply and distribution chain and negatively impact sales of such products to markets outside China, including the U.S.\n[EvidenceClaim: 13d48d101b9c4f6c_claim; p.28]\n\nSupply chain disruptions caused by natural disasters or pandemics could lead to extended lead times, which may adversely affect NVIDIA's ability to meet customer demand and negatively impact revenue and financial results.\n[EvidenceClaim: 532442441743ee8c_claim; ef5cb00fabc754a2_claim; p.17, p.18]\n\nThe filing does not provide evidence that export controls have already reduced NVIDIA's actual revenue; it only states that they 'may' or 'could' negatively impact sales, indicating a forward-looking risk rather than a realized impact.\n[EvidenceClaim: 13d48d101b9c4f6c_claim; p.28]\n\nEvidence Quality\nThe evidence is primarily explicit in its causal language, with direct statements linking product transitions, government regulation, and export controls to potential revenue impacts. However, the supply chain disruption chain is more implied, as the link between natural disasters/pandemics and revenue is not directly stated but rather inferred through the impact on customer demand and supply chain scaling. The evidence is limited to fiscal year 2025, with no temporal comparison across years.\n\nLimitations\nThe filing cannot establish that any of these risks have actually materialized into revenue declines; it only discloses them as potential risks. The evidence does not quantify the potential revenue impact of export controls or product transitions. Additionally, the filing does not provide specific data on which products or markets are most exposed beyond the general mention of gaming GPUs and data center products. Further data, such as segment-level revenue breakdowns or historical impact analysis, would be needed to assess the actual materiality of these risks.",
+      "metadata": {
+        "total_candidates": 8,
+        "raw_candidates": 9,
+        "deduplicated_candidates": 8,
+        "top_paths": 5,
+        "anchors_used": [
+          "NVIDIA",
+          "REVENUE",
+          "NVIDIA_CORPORATION",
+          "revenue",
+          "Revenue",
+          "NVIDIA Corporation",
+          "COST_OF_REVENUE",
+          "Cost Of Revenue",
+          "R_AND_D_EXPENSE",
+          "NVIDIA_REVENUE_RISK",
+          "PRODUCT_MARKET_EXPOSURE"
+        ],
+        "avg_score": 0.3856,
+        "temporal": {
+          "status": "NOT_REQUESTED",
+          "requested": false,
+          "require_multi_year": false,
+          "requested_years": [],
+          "covered_years": [
+            2025
+          ],
+          "missing_requested_years": [],
+          "minimum_distinct_years": 0
+        },
+        "grounding": {
+          "status": "VERIFIED",
+          "cited_evidence_ids": [
+            "13d48d101b9c4f6c_claim",
+            "532442441743ee8c_claim",
+            "5a7f1c099e19c132_claim",
+            "ba77d086d91dd4ab_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "cited_pages": [
+            17,
+            18,
+            28,
+            29
+          ],
+          "cited_years": [
+            2025
+          ],
+          "unknown_evidence_ids": [],
+          "unknown_pages": [],
+          "unknown_years": [],
+          "claim_citation_mismatches": [],
+          "available_evidence_ids": [
+            "13d48d101b9c4f6c_claim",
+            "532442441743ee8c_claim",
+            "5a7f1c099e19c132_claim",
+            "b1b91d7fa2e07246_claim",
+            "ba77d086d91dd4ab_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "available_pages": [
+            17,
+            18,
+            28,
+            29
+          ],
+          "available_years": [
+            2025
+          ]
+        },
+        "llm": {
+          "configured_provider": "deepseek",
+          "configured_model": "deepseek-v4-flash",
+          "success_provider": "deepseek",
+          "success_model": "deepseek-v4-flash",
+          "fallback_configured": false
+        },
+        "source_filing": "2025-10-K.pdf",
+        "retrieval": {
+          "mode": "HYBRID",
+          "vector_status": "OK",
+          "vector_hits": 5,
+          "matched_paths": 1,
+          "fusion": "0.75_graph_score + 0.25_vector_page_rank",
+          "collection": "nvidia_sec_filings_active"
+        },
+        "latency_ms": {
+          "vector_retrieval_ms": 40.29,
+          "query_understanding_ms": 0.41,
+          "anchor_resolution_ms": 1405.29,
+          "graph_path_search_ms": 849.24,
+          "scoring_rerank_ms": 205.89,
+          "llm_synthesis_ms": 7456.21,
+          "total_ms": 11527.61
+        }
+      },
+      "paths": [
+        {
+          "path_id": "path_001",
+          "fingerprint": "c6e06d944099c13a",
+          "semantic_fingerprint": "7bf8e23d9c784424",
+          "nodes": [
+            "PRODUCT_TRANSITION_RISK",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL"
+          ],
+          "evidence": [
+            "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue."
+          ],
+          "pages": [
+            17
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "ba77d086d91dd4ab_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.39213117550844684,
+          "score_breakdown": {
+            "causal_strength": 1.0,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "ba77d086d91dd4ab_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_000",
+          "fingerprint": "f2baaf7b18552451",
+          "semantic_fingerprint": "aaea8997af2bbe41",
+          "nodes": [
+            "GOVERNMENTREGULATIONRISK",
+            "R_AND_D_EXPENSE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "INCREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL"
+          ],
+          "evidence": [
+            "Compliance with existing and\nproposed government regulation of AI, including in jurisdictions such as the European Union, may further increase the cost of related research and development,\nand create additional reporting and/or transparency requirements."
+          ],
+          "pages": [
+            29
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "5a7f1c099e19c132_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.3918645647046248,
+          "score_breakdown": {
+            "causal_strength": 1.0,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Compliance with existing and\nproposed government regulation of AI, including in jurisdictions such as the European Union, may further increase the cost of related research and development,\nand create additional reporting and/or transparency requirements.",
+                "page": 29,
+                "year": 2025,
+                "evidence_id": "5a7f1c099e19c132_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_002",
+          "fingerprint": "1cbefb0a55a82089",
+          "semantic_fingerprint": "1e0bae5a842aecee",
+          "nodes": [
+            "CHIP_EXPORT_RESTRICTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "STRONG_ASSOCIATION"
+          ],
+          "evidence": [
+            "The USG has already imposed export controls restricting certain gaming GPUs, and if the USG expands\nsuch controls to restrict additional gaming products, it may disrupt a significant portion of our supply and distribution chain and negatively impact sales of such\nproducts to markets outside China, including the U.S."
+          ],
+          "pages": [
+            28
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "13d48d101b9c4f6c_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.3820859360208367,
+          "score_breakdown": {
+            "causal_strength": 0.7,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.25
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "The USG has already imposed export controls restricting certain gaming GPUs, and if the USG expands\nsuch controls to restrict additional gaming products, it may disrupt a significant portion of our supply and distribution chain and negatively impact sales of such\nproducts to markets outside China, including the U.S.",
+                "page": 28,
+                "year": 2025,
+                "evidence_id": "13d48d101b9c4f6c_claim",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Additional export restrictions may not only impact our ability to serve overseas markets, but also provoke responses from foreign governments, including China, that negatively impact our supply chain or our ability to provide our products and services to customers in all markets worldwide, which could also substantially reduce our revenue.",
+                "page": 26,
+                "year": 2025,
+                "evidence_id": "5f63133fa4dba629_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_003",
+          "fingerprint": "bd99f43fad39d811",
+          "semantic_fingerprint": "7e8552a79fa4b61f",
+          "nodes": [
+            "COVID_19",
+            "SUPPLY_CHAIN_DISRUPTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Event",
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "CAUSES",
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL",
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+            "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+          ],
+          "pages": [
+            17,
+            18
+          ],
+          "years": [
+            2025,
+            2025
+          ],
+          "evidence_ids": [
+            "532442441743ee8c_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf",
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "EVENT_LINK",
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 2,
+          "score": 0.3810996668520663,
+          "score_breakdown": {
+            "causal_strength": 0.75,
+            "completeness": 0.85,
+            "temporal_coherence": 1.0,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.7143,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "532442441743ee8c_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ],
+            [
+              {
+                "evidence": "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+                "page": 18,
+                "year": 2025,
+                "evidence_id": "ef5cb00fabc754a2_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_004",
+          "fingerprint": "2d58ac0afdf7f061",
+          "semantic_fingerprint": "232b60136bb396f9",
+          "nodes": [
+            "NATURAL_DISASTER",
+            "SUPPLY_CHAIN_DISRUPTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Event",
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "CAUSES",
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL",
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+            "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+          ],
+          "pages": [
+            17,
+            18
+          ],
+          "years": [
+            2025,
+            2025
+          ],
+          "evidence_ids": [
+            "b1b91d7fa2e07246_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf",
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "EVENT_LINK",
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 2,
+          "score": 0.3808853604955859,
+          "score_breakdown": {
+            "causal_strength": 0.75,
+            "completeness": 0.85,
+            "temporal_coherence": 1.0,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.7143,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "b1b91d7fa2e07246_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ],
+            [
+              {
+                "evidence": "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+                "page": 18,
+                "year": 2025,
+                "evidence_id": "ef5cb00fabc754a2_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        }
+      ],
+      "evidence_sentences": [
+        "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue.",
+        "Compliance with existing and\nproposed government regulation of AI, including in jurisdictions such as the European Union, may further increase the cost of related research and development,\nand create additional reporting and/or transparency requirements.",
+        "The USG has already imposed export controls restricting certain gaming GPUs, and if the USG expands\nsuch controls to restrict additional gaming products, it may disrupt a significant portion of our supply and distribution chain and negatively impact sales of such\nproducts to markets outside China, including the U.S.",
+        "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+        "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+        "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+        "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+      ],
+      "grounding": {
+        "status": "VERIFIED",
+        "cited_evidence_ids": [
+          "13d48d101b9c4f6c_claim",
+          "532442441743ee8c_claim",
+          "5a7f1c099e19c132_claim",
+          "ba77d086d91dd4ab_claim",
+          "ef5cb00fabc754a2_claim"
+        ],
+        "cited_pages": [
+          17,
+          18,
+          28,
+          29
+        ],
+        "cited_years": [
+          2025
+        ],
+        "unknown_evidence_ids": [],
+        "unknown_pages": [],
+        "unknown_years": [],
+        "claim_citation_mismatches": [],
+        "available_evidence_ids": [
+          "13d48d101b9c4f6c_claim",
+          "532442441743ee8c_claim",
+          "5a7f1c099e19c132_claim",
+          "b1b91d7fa2e07246_claim",
+          "ba77d086d91dd4ab_claim",
+          "ef5cb00fabc754a2_claim"
+        ],
+        "available_pages": [
+          17,
+          18,
+          28,
+          29
+        ],
+        "available_years": [
+          2025
+        ]
+      },
+      "cited_evidence_ids": [
+        "13d48d101b9c4f6c_claim",
+        "532442441743ee8c_claim",
+        "5a7f1c099e19c132_claim",
+        "ba77d086d91dd4ab_claim",
+        "ef5cb00fabc754a2_claim"
+      ],
+      "claim_lookup": {
+        "requested": [
+          "13d48d101b9c4f6c_claim",
+          "532442441743ee8c_claim",
+          "5a7f1c099e19c132_claim",
+          "ba77d086d91dd4ab_claim",
+          "ef5cb00fabc754a2_claim"
+        ],
+        "found": [
+          "13d48d101b9c4f6c_claim",
+          "532442441743ee8c_claim",
+          "5a7f1c099e19c132_claim",
+          "ba77d086d91dd4ab_claim",
+          "ef5cb00fabc754a2_claim"
+        ],
+        "missing": []
+      },
+      "pdf_quote_audit": [
+        {
+          "claim_id": "13d48d101b9c4f6c_claim",
+          "page": 28,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        },
+        {
+          "claim_id": "532442441743ee8c_claim",
+          "page": 17,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        },
+        {
+          "claim_id": "5a7f1c099e19c132_claim",
+          "page": 29,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        },
+        {
+          "claim_id": "ba77d086d91dd4ab_claim",
+          "page": 17,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        },
+        {
+          "claim_id": "ef5cb00fabc754a2_claim",
+          "page": 18,
+          "quote_present": true,
+          "quote_matches_pdf_page": true,
+          "char_span_present": true,
+          "verification_status": "VERBATIM"
+        }
+      ],
+      "response_class": "grounded_answer",
+      "citation_audit_pass": true,
+      "error_type": null,
+      "wall_latency_ms": 15681.14
+    },
+    {
+      "question": "What mitigation strategies does NVIDIA disclose for identified risks?",
+      "http_status": 200,
+      "answer": "[INSUFFICIENT EVIDENCE] The knowledge graph does not contain sufficient causal pathways to answer this query. The graph may need additional SEC filings or a broader set of financial documents to build the necessary relationship network.\n\nSearched for: NVIDIA, NVIDIA_CORPORATION, NVIDIA Corporation, NVIDIA_ARM_TERMINATED, NVIDIA-ARM Acquisition Terminated, RISK_MITIGATION_STRATEGY, DISCLOSED_RISK",
+      "metadata": {
+        "total_candidates": 0,
+        "top_paths": 0,
+        "anchors_used": [
+          "NVIDIA",
+          "NVIDIA_CORPORATION",
+          "NVIDIA Corporation",
+          "NVIDIA_ARM_TERMINATED",
+          "NVIDIA-ARM Acquisition Terminated",
+          "RISK_MITIGATION_STRATEGY",
+          "DISCLOSED_RISK"
+        ],
+        "temporal": null,
+        "llm": {
+          "configured_provider": "deepseek",
+          "configured_model": "deepseek-v4-flash",
+          "success_provider": "deepseek",
+          "success_model": "deepseek-v4-flash",
+          "fallback_configured": false
+        }
+      },
+      "paths": [],
+      "evidence_sentences": [],
+      "grounding": {},
+      "cited_evidence_ids": [],
+      "claim_lookup": {
+        "requested": [],
+        "found": [],
+        "missing": []
+      },
+      "pdf_quote_audit": [],
+      "response_class": "abstention",
+      "citation_audit_pass": true,
+      "error_type": null,
+      "wall_latency_ms": 4104.82
+    },
+    {
+      "question": "How did NVIDIA revenue risk change from FY2023 to FY2025 according to the filing?",
+      "http_status": 200,
+      "answer": "[INSUFFICIENT TEMPORAL EVIDENCE] The requested comparison requires FY2023, FY2025, but the retrieved evidence covers FY2025. No cross-year trend or change conclusion was generated. Add the missing filing(s) or narrow the question to the available year.",
+      "metadata": {
+        "total_candidates": 5,
+        "top_paths": 5,
+        "anchors_used": [
+          "NVIDIA",
+          "REVENUE",
+          "NVIDIA_CORPORATION",
+          "FY2023",
+          "FY2025",
+          "revenue",
+          "Revenue",
+          "NVIDIA Corporation",
+          "COST_OF_REVENUE",
+          "Cost Of Revenue",
+          "NVIDIA_ARM_TERMINATED",
+          "RISK_CHANGE"
+        ],
+        "temporal": {
+          "status": "INSUFFICIENT_EVIDENCE",
+          "requested": true,
+          "require_multi_year": true,
+          "requested_years": [
+            2023,
+            2025
+          ],
+          "covered_years": [
+            2025
+          ],
+          "missing_requested_years": [
+            2023
+          ],
+          "minimum_distinct_years": 2
+        },
+        "llm": {
+          "configured_provider": "deepseek",
+          "configured_model": "deepseek-v4-flash",
+          "success_provider": "deepseek",
+          "success_model": "deepseek-v4-flash",
+          "fallback_configured": false
+        },
+        "grounding": {
+          "status": "NOT_APPLICABLE"
+        },
+        "retrieval": {
+          "mode": "HYBRID",
+          "vector_status": "OK",
+          "vector_hits": 5,
+          "matched_paths": 0,
+          "fusion": "0.75_graph_score + 0.25_vector_page_rank",
+          "collection": "nvidia_sec_filings_active"
+        }
+      },
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "c6e06d944099c13a",
+          "semantic_fingerprint": "7bf8e23d9c784424",
+          "nodes": [
+            "PRODUCT_TRANSITION_RISK",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL"
+          ],
+          "evidence": [
+            "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue."
+          ],
+          "pages": [
+            17
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "ba77d086d91dd4ab_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.3919092330764994,
+          "score_breakdown": {
+            "causal_strength": 1.0,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "ba77d086d91dd4ab_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_001",
+          "fingerprint": "bd99f43fad39d811",
+          "semantic_fingerprint": "7e8552a79fa4b61f",
+          "nodes": [
+            "COVID_19",
+            "SUPPLY_CHAIN_DISRUPTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Event",
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "CAUSES",
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL",
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+            "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+          ],
+          "pages": [
+            17,
+            18
+          ],
+          "years": [
+            2025,
+            2025
+          ],
+          "evidence_ids": [
+            "532442441743ee8c_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf",
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "EVENT_LINK",
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 2,
+          "score": 0.3809428627365324,
+          "score_breakdown": {
+            "causal_strength": 0.75,
+            "completeness": 0.85,
+            "temporal_coherence": 1.0,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.7143,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "532442441743ee8c_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ],
+            [
+              {
+                "evidence": "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+                "page": 18,
+                "year": 2025,
+                "evidence_id": "ef5cb00fabc754a2_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_002",
+          "fingerprint": "2d58ac0afdf7f061",
+          "semantic_fingerprint": "232b60136bb396f9",
+          "nodes": [
+            "NATURAL_DISASTER",
+            "SUPPLY_CHAIN_DISRUPTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Event",
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "CAUSES",
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "CONFIRMED_CAUSAL",
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+            "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+          ],
+          "pages": [
+            17,
+            18
+          ],
+          "years": [
+            2025,
+            2025
+          ],
+          "evidence_ids": [
+            "b1b91d7fa2e07246_claim",
+            "ef5cb00fabc754a2_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf",
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "EVENT_LINK",
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 2,
+          "score": 0.38088574477254206,
+          "score_breakdown": {
+            "causal_strength": 0.75,
+            "completeness": 0.85,
+            "temporal_coherence": 1.0,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.7143,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+                "page": 17,
+                "year": 2025,
+                "evidence_id": "b1b91d7fa2e07246_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ],
+            [
+              {
+                "evidence": "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+                "page": 18,
+                "year": 2025,
+                "evidence_id": "ef5cb00fabc754a2_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_003",
+          "fingerprint": "1cbefb0a55a82089",
+          "semantic_fingerprint": "1e0bae5a842aecee",
+          "nodes": [
+            "CHIP_EXPORT_RESTRICTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "STRONG_ASSOCIATION"
+          ],
+          "evidence": [
+            "The USG has already imposed export controls restricting certain gaming GPUs, and if the USG expands\nsuch controls to restrict additional gaming products, it may disrupt a significant portion of our supply and distribution chain and negatively impact sales of such\nproducts to markets outside China, including the U.S."
+          ],
+          "pages": [
+            28
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "13d48d101b9c4f6c_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.3446472493966152,
+          "score_breakdown": {
+            "causal_strength": 0.7,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "The USG has already imposed export controls restricting certain gaming GPUs, and if the USG expands\nsuch controls to restrict additional gaming products, it may disrupt a significant portion of our supply and distribution chain and negatively impact sales of such\nproducts to markets outside China, including the U.S.",
+                "page": 28,
+                "year": 2025,
+                "evidence_id": "13d48d101b9c4f6c_claim",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Additional export restrictions may not only impact our ability to serve overseas markets, but also provoke responses from foreign governments, including China, that negatively impact our supply chain or our ability to provide our products and services to customers in all markets worldwide, which could also substantially reduce our revenue.",
+                "page": 26,
+                "year": 2025,
+                "evidence_id": "5f63133fa4dba629_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_004",
+          "fingerprint": "f59ef41264880a70",
+          "semantic_fingerprint": "4471d59ebe5cf144",
+          "nodes": [
+            "SUPPLY_CHAIN_DISRUPTION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "RiskFactor",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "DECREASES"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_EXPOSURE"
+          ],
+          "evidence": [
+            "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+          ],
+          "pages": [
+            18
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "ef5cb00fabc754a2_claim"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "DIRECT_DISCLOSED_IMPACT"
+          ],
+          "total_hops": 1,
+          "score": 0.31308853686523996,
+          "score_breakdown": {
+            "causal_strength": 0.5,
+            "completeness": 0.85,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 1.0,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+                "page": 18,
+                "year": 2025,
+                "evidence_id": "ef5cb00fabc754a2_claim",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        }
+      ],
+      "evidence_sentences": [
+        "Qualification\ntime for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product\nintroductions can reduce, or create volatility in, our revenue.",
+        "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+        "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+        "Extended lead times may occur if\nwe experience other supply constraints caused by natural disasters, pandemics or other events.",
+        "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results",
+        "The USG has already imposed export controls restricting certain gaming GPUs, and if the USG expands\nsuch controls to restrict additional gaming products, it may disrupt a significant portion of our supply and distribution chain and negatively impact sales of such\nproducts to markets outside China, including the U.S.",
+        "We face risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+      ],
+      "grounding": {
+        "status": "NOT_APPLICABLE"
+      },
+      "cited_evidence_ids": [],
+      "claim_lookup": {
+        "requested": [],
+        "found": [],
+        "missing": []
+      },
+      "pdf_quote_audit": [],
+      "response_class": "abstention",
+      "citation_audit_pass": true,
+      "error_type": null,
+      "wall_latency_ms": 2900.57
+    }
+  ]
+}

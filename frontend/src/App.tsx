@@ -161,9 +161,12 @@ function StatsBar({
   result: QueryResult | null;
 }) {
   if (!stats) return null;
+  const graphNodes = stats.graph_nodes ?? stats.total_nodes;
+  const graphRelationships =
+    stats.graph_relationships ?? stats.total_relationships;
   const items = [
-    [stats.total_nodes.toLocaleString(), "Entities", "#1C1C1A"],
-    [stats.total_relationships.toLocaleString(), "Relations", "#4A4944"],
+    [graphNodes.toLocaleString(), "Graph Nodes", "#1C1C1A"],
+    [graphRelationships.toLocaleString(), "Graph Edges", "#4A4944"],
     [
       String(Object.keys(stats.by_label || {}).length),
       "Entity Types",
@@ -624,7 +627,7 @@ export default function App() {
                   onSelectNode={setSelectedNode}
                   selectedNode={selectedNode}
                 />
-                <NodeTooltip node={hoveredNode} />
+                <NodeTooltip node={hoveredNode || selectedNode} />
               </div>
             </div>
             <div className="src" style={{ marginTop: 8, paddingLeft: 4 }}>
@@ -811,6 +814,31 @@ export default function App() {
                 {/* ══════════════════════════════════════════════
                     SECONDARY: Paths + Evidence + Logic (collapsible grid)
                     ══════════════════════════════════════════════ */}
+                {result.structured_report?.claims && result.structured_report.claims.length > 0 && (
+                  <div className="card-mono reveal-card" style={{ border: "1px solid var(--grid)", background: "var(--paper)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                        EvidenceClaim citations
+                      </span>
+                      <span style={{ fontSize: 9, color: "var(--muted)" }}>
+                        {result.structured_report.status || "STRUCTURED"} · {result.structured_report.claims.length} claims
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      {result.structured_report.claims.slice(0, 8).map((claim, i) => (
+                        <div key={`${claim.evidence_claim_ids.join("-")}-${i}`} style={{ padding: "8px 10px", borderLeft: "2px solid var(--L3)", background: "rgba(28,28,26,0.02)" }}>
+                          <div style={{ fontSize: 11, lineHeight: 1.5 }}>{claim.statement}</div>
+                          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 4, fontSize: 9, color: "var(--muted)" }}>
+                            <span>Claim {claim.evidence_claim_ids.join(", ") || "?"}</span>
+                            <span>p.{claim.pages.join(", ") || "?"}</span>
+                            <span>{claim.support_level || "LIMITED"}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="grid2">
                   {/* Left column: Causal Paths */}
                   <CollapsibleCard title="Causal paths" badge={`${result.paths.length} of ${result.metadata.total_candidates}`} defaultOpen={true}>
@@ -908,7 +936,7 @@ export default function App() {
               textTransform: "uppercase",
             }}
           >
-            Strategic-GraphRAG v1.0 · Temporal Causal Knowledge Graph for
+            Strategic-GraphRAG v2 · Single-PDF Stable Candidate · Temporal Causal Knowledge Graph for
             Financial Risk Inference
           </p>
         </footer>
