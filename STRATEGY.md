@@ -138,7 +138,7 @@
 ```bash
 # .env 建议结构
 # 主力模型 — 批量提取 + 报告合成
-DEEPSEEK_API_KEY=sk-your-deepseek-key
+DEEPSEEK_API_KEY=your_deepseek_api_key_here
 DEEPSEEK_BASE_URL=https://api.deepseek.com
 
 # 开发调试 — 免费 1M 上下文

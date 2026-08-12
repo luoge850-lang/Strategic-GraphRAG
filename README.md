@@ -12,9 +12,9 @@ agentic planning are intentionally postponed.
 ## Current scope
 
 ```text
-PDF → SEC section detection → hybrid triple extraction → Neo4j
-    → temporal causal path retrieval → EvidenceClaim provenance
-    → FastAPI → React/Vite dashboard
+PDF -> SEC section detection -> hybrid triple extraction -> Neo4j
+    -> temporal causal path retrieval -> EvidenceClaim provenance
+    -> FastAPI -> React/Vite dashboard
 ```
 
 The main implementation is the `strategic_graphrag` package. The historical
@@ -24,7 +24,7 @@ entrypoint.
 ## Stabilized single-PDF contract
 
 The current active corpus is `2025-10-K.pdf`. `/query` defaults to the
-`hybrid` mode: filing-scoped Chroma retrieval is fused with verified Neo4j
+`hybrid` mode: filing-scoped vector retrieval is fused with verified Neo4j
 causal paths at the filing/page level. Use `retrieval_mode=graph` for the
 graph-only ablation, or `/query/vector` for the independent vector baseline.
 
@@ -108,6 +108,19 @@ The API exposes `/query`, `/evidence/{entity_id}`, and
 `/graph/temporal/{risk_id}` for manual end-to-end checks against the active
 Neo4j instance.
 
+## Demo preview
+
+The following screenshot is a real local run of the current single-filing
+candidate. It shows the interactive graph canvas and the filing-scoped query
+surface; it is a product preview, not a claim of production deployment.
+
+![Strategic-GraphRAG dashboard preview](docs/demo-dashboard.png)
+
+At the current snapshot, the dashboard exposes 54 graph nodes, 68 verified
+EvidenceClaim-backed edges, and a DeepSeek-backed report path for the active
+NVIDIA 2025 10-K. The repository intentionally keeps the corpus at one PDF
+until the ingestion and evidence contract are stable.
+
 Run the read-only single-filing contract check with:
 
 ```powershell
@@ -137,3 +150,30 @@ ablation experiments reproducible even when two paths have the same score.
 - Neo4j integration must be verified against the active database instance.
 - The one-PDF stabilization phase precedes the planned 12-document ingestion.
 - Agent planning and reflection are future work, not part of this version.
+
+## Current research and production position
+
+This version should be described as a reproducible single-document research
+baseline and portfolio demo. It demonstrates PDF-to-KG extraction, filing-level
+vector/graph retrieval, causal path ranking, abstention for unsupported
+cross-year questions, and EvidenceClaim provenance. It does not yet establish
+cross-document temporal reasoning, a human-validated benchmark, or production
+readiness.
+
+The next evidence-producing milestones are:
+
+1. Bind the Neo4j snapshot, PDF hash, QA hash, report hash, model, and commit in
+   every evaluation run.
+2. Replace the automatically generated QA candidate set with a deduplicated,
+   human-validated set containing answerable, multi-hop, negative, and temporal
+   questions.
+3. Report retrieval and generation metrics separately: context/evidence
+   recall and precision, citation validity, faithfulness, answer relevance,
+   abstention accuracy, and p50/p95 latency.
+4. Add multi-document temporal joins and either community-level global search
+   or an explicit argument for why filing-scoped local retrieval is preferable
+   for the target finance workflow.
+
+See `reports/stable_single_pdf_report.md` and
+`reports/stable_single_pdf_provenance.json` for the exact candidate scope and
+known limitations.
