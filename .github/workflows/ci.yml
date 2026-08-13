@@ -2,26 +2,33 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  python:
+  contracts:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install runtime dependencies
-        run: python -m pip install -r requirements.txt
-      - name: Compile Python modules
-        run: python -m compileall -q strategic_graphrag scripts
-      - name: Check diff whitespace
-        run: git diff --check
+          cache: pip
+      - name: Install focused test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install neo4j numpy python-dotenv pydantic requests pdfplumber pymupdf langchain-text-splitters nltk
+      - name: Compile Python
+        run: python -m compileall -q strategic_graphrag scripts tests
+      - name: Run focused contracts
+        run: python -m unittest discover -s tests -v
 
   frontend:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: frontend

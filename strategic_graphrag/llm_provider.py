@@ -86,7 +86,9 @@ class LLMProvider:
         from dotenv import load_dotenv
         load_dotenv()
 
-        self.provider = provider or os.getenv("LLM_PROVIDER", "gemini")
+        self.provider = str(
+            provider or os.getenv("LLM_PROVIDER", "deepseek")
+        ).strip().lower()
         if self.provider not in PROVIDER_CONFIG:
             raise ValueError(f"Unknown provider: {self.provider}. Options: {list(PROVIDER_CONFIG.keys())}")
 
@@ -96,10 +98,19 @@ class LLMProvider:
         # DeepSeek model must never leak into a Groq/Gemini fallback client.
         configured_model = os.getenv("LLM_MODEL", "").strip()
         known_models = set(PROVIDER_MODELS.get(self.provider, {}).values())
-        if model:
-            self.default_model = model
-        elif configured_model in known_models:
-            self.default_model = configured_model
+        requested_model = str(model or configured_model).strip()
+        if requested_model in known_models:
+            self.default_model = requested_model
+        elif requested_model:
+            # Never send a model identifier belonging to another provider.
+            # This protects a new provider run from a stale LLM_MODEL value.
+            logger.warning(
+                "Model %s is not registered for provider %s; using %s",
+                requested_model,
+                self.provider,
+                cfg["default_model"],
+            )
+            self.default_model = cfg["default_model"]
         else:
             self.default_model = cfg["default_model"]
         self.temperature = temperature
@@ -419,6 +430,11 @@ class LLMProvider:
 
     def get_model_name(self, tier: str = "default") -> str:
         return PROVIDER_MODELS.get(self.provider, {}).get(tier, self.default_model)
+
+    def get_task_model(self, task: str) -> str:
+        """Resolve a provider-safe model override for one pipeline task."""
+        configured = os.getenv(f"LLM_{str(task).upper()}_MODEL", "").strip()
+        return self.fallback_model_for(self.provider, configured or self.default_model)
 
     @classmethod
     def fallback_model_for(cls, provider: str, requested_model: str = None) -> str:

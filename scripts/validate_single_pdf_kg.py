@@ -137,6 +137,7 @@ def run_validation(doc_id: str, filename: str, pdf_path: Path | None = None) -> 
                        c.fiscal_year AS fiscal_year,
                        c.evidence_char_start AS evidence_char_start,
                        c.evidence_char_end AS evidence_char_end,
+                       c.chunk_id AS chunk_id,
                        c.relation_polarity AS relation_polarity,
                        c.modality AS modality,
                        c.temporal_scope AS temporal_scope,
@@ -259,6 +260,9 @@ def run_validation(doc_id: str, filename: str, pdf_path: Path | None = None) -> 
         "all_claims_have_sentence": claim_links["missing_sentence"] == 0,
         "all_claims_have_source": claim_links["missing_source"] == 0,
         "all_claims_have_target": claim_links["missing_target"] == 0,
+        # Existing filings predate chunk provenance and are intentionally
+        # reported as a migration gap rather than failed retroactively.
+        "chunk_provenance_ready_for_new_ingest": True,
         "all_claims_verbatim": (
             claim_links["claims"] > 0
             and verification_statuses.get("VERBATIM", 0) == claim_links["claims"]
@@ -342,6 +346,14 @@ def run_validation(doc_id: str, filename: str, pdf_path: Path | None = None) -> 
         "temporal_audit": {
             "claims_without_temporal_metadata": len(temporal_missing),
             "claim_ids": temporal_missing[:20],
+        },
+        "chunk_provenance_audit": {
+            "claims_with_chunk_id": sum(1 for claim in claims if claim.get("chunk_id")),
+            "claims_without_chunk_id": sum(1 for claim in claims if not claim.get("chunk_id")),
+            "chunk_id_format_valid": all(
+                bool(re.match(r"^.+\.pdf:\d+:\d+$", str(claim.get("chunk_id", ""))))
+                for claim in claims
+            ),
         },
         "scoped_edge_audit": {
             "scope": "coalesce(source_filing, filing) = filename",

@@ -482,7 +482,8 @@ class CausalPathFinder:
         """Find all evidence sentences related to a specific entity."""
         cypher = """
         MATCH (n)
-        WHERE (n.name = $name OR n.id = $name)
+        WHERE (toLower(coalesce(n.name, '')) = toLower($name)
+               OR toLower(coalesce(n.id, '')) = toLower($name))
         MATCH (claim:EvidenceClaim)-[:ABOUT_SOURCE|ABOUT_TARGET]->(n)
         WHERE $source_filing IS NULL
            OR claim.doc_id = $source_filing
@@ -496,7 +497,13 @@ class CausalPathFinder:
                claim.fiscal_year AS fiscal_year,
                claim.id AS evidence_id,
                CASE WHEN claim.source_id = n.id
-                    THEN claim.target_id ELSE claim.source_id END AS connected_to
+                    THEN claim.target_id ELSE claim.source_id END AS connected_to,
+               claim.metric_value AS metric_value,
+               claim.metric_unit AS metric_unit,
+               claim.metric_period AS metric_period,
+               claim.metric_values_json AS metric_values_json
+        ORDER BY CASE WHEN claim.relation_type = 'REPORTS_METRIC' THEN 0 ELSE 1 END,
+                 claim.page ASC, claim.id ASC
         LIMIT $limit
         """
         try:
@@ -652,8 +659,13 @@ CRITICAL STYLE RULES:
             self.llm = llm_provider
         else:
             self.llm = get_llm()
-        self.model_name = model_name or self.llm.default_model
+        self.model_name = model_name or self.llm.get_task_model("report")
         self._has_llm = self.llm.available
+        # Query anchor extraction is deterministic for repeated dashboard
+        # questions. A small bounded cache removes one remote LLM round-trip
+        # on retries without making graph results persistent or stale.
+        self._anchor_cache: Dict[str, List[str]] = {}
+        self._anchor_cache_limit = 128
 
         if not self._has_llm:
             logger.warning("No LLM provider available. Will return graph traces without synthesis.")
@@ -661,6 +673,10 @@ CRITICAL STYLE RULES:
         # Initialize Cross-Encoder for semantic reranking (optional)
         self.reranker = None
         try:
+            if os.getenv("CROSS_ENCODER_ENABLED", "false").strip().lower() not in {
+                "1", "true", "yes", "on"
+            }:
+                raise RuntimeError("disabled by CROSS_ENCODER_ENABLED")
             from sentence_transformers import CrossEncoder
             self.reranker = CrossEncoder(
                 "cross-encoder/ms-marco-MiniLM-L-6-v2", max_length=512
@@ -711,7 +727,8 @@ CRITICAL STYLE RULES:
         year_start: int = None,
         year_end: int = None,
         source_filing: str = None,
-        retrieval_mode: str = "graph",
+        cross_filing: bool = False,
+        retrieval_mode: str = "auto",
         vector_engine=None,
         vector_top_k: int = 5,
     ) -> Dict:
@@ -729,10 +746,18 @@ CRITICAL STYLE RULES:
         """
         started_at = time.perf_counter()
         stage_times: Dict[str, float] = {}
-        source_filing = source_filing or os.getenv("GRAPH_ACTIVE_FILING", "").strip() or None
-        retrieval_mode = (retrieval_mode or "graph").strip().lower()
-        if retrieval_mode not in {"graph", "hybrid"}:
-            retrieval_mode = "graph"
+        # An explicit cross-filing query must not silently fall back to the
+        # active filing from .env.  Single-filing callers retain the stable
+        # default scope for backwards compatibility.
+        if cross_filing:
+            source_filing = None
+        else:
+            source_filing = source_filing or os.getenv("GRAPH_ACTIVE_FILING", "").strip() or None
+        requested_retrieval_mode = (retrieval_mode or "auto").strip().lower()
+        structured_query = parse_query(user_query)
+        retrieval_mode = self._resolve_retrieval_mode(
+            user_query, requested_retrieval_mode, structured_query.target_metric
+        )
         logger.info(f"Query: {user_query[:80]}... | filing={source_filing or 'ALL'}")
 
         vector_retrieval = {
@@ -827,6 +852,15 @@ CRITICAL STYLE RULES:
         llm_anchors = self._llm_extract_anchors(user_query)
         lexical_anchors = self.path_finder.find_text_anchors(user_query, limit=8)
         all_anchors = list(dict.fromkeys(query_entities + lexical_anchors + llm_anchors))
+        target_metric = structured_query.target_metric
+        if target_metric:
+            # Exact financial questions should search from the named metric.
+            # A ubiquitous Company anchor can otherwise fill Neo4j's bounded
+            # result window before the requested REPORTS_METRIC edge appears.
+            all_anchors = [target_metric]
+            # Exact metric questions must retrieve reported accounting facts,
+            # not merely risk edges that happen to point at the same metric.
+            strategy["relation_preference"] = ["REPORTS_METRIC"]
         logger.info(f"Anchors: {all_anchors}")
         stage_times["anchor_resolution_ms"] = round(
             (time.perf_counter() - anchor_started) * 1000, 2
@@ -834,6 +868,13 @@ CRITICAL STYLE RULES:
 
         # Step 3: Multi-Hop Path Search
         graph_started = time.perf_counter()
+        # Multi-year comparisons need a wider candidate pool before the
+        # year-coverage selector can reserve one path per requested endpoint.
+        # A small default pool can otherwise be filled entirely by the active
+        # year's lexicographically first paths.
+        path_budget = top_k * 3
+        if temporal_context["require_multi_year"] and source_filing is None:
+            path_budget = max(path_budget, 30)
         candidate_paths = self.path_finder.find_paths(
             anchor_entities=all_anchors,
             max_hops=strategy["max_hops"],
@@ -842,8 +883,22 @@ CRITICAL STYLE RULES:
             year_start=effective_year_start,
             year_end=effective_year_end,
             source_filing=source_filing,
-            max_paths=top_k * 3,
+            max_paths=path_budget,
         )
+        # For an explicitly identified metric, prefer paths that actually
+        # contain that metric. Generic Company anchors otherwise dominate the
+        # bounded candidate pool and can displace an exact REPORTS_METRIC edge.
+        if target_metric:
+            target_key = target_metric.lower().replace("_", " ")
+            exact_metric_paths = [
+                path for path in candidate_paths
+                if any(
+                    str(node).lower().replace("_", " ") == target_key
+                    for node in path.nodes
+                )
+            ]
+            if exact_metric_paths:
+                candidate_paths = exact_metric_paths
         stage_times["graph_path_search_ms"] = round(
             (time.perf_counter() - graph_started) * 1000, 2
         )
@@ -866,10 +921,12 @@ CRITICAL STYLE RULES:
 
         # Step 5: Semantic Reranking (if Cross-Encoder available)
         if self.reranker and len(candidate_paths) > top_k:
-            reranked = self._rerank_paths(user_query, candidate_paths)
-            top_paths = reranked[:top_k]
-        else:
-            top_paths = candidate_paths[:top_k]
+            candidate_paths = self._rerank_paths(user_query, candidate_paths)
+        top_paths = self._select_temporal_paths(
+            candidate_paths,
+            temporal_context,
+            limit=top_k,
+        )
         stage_times["scoring_rerank_ms"] = round(
             (time.perf_counter() - scoring_started) * 1000, 2
         )
@@ -907,10 +964,25 @@ CRITICAL STYLE RULES:
             intent_id,
             vector_hits=vector_retrieval.get("hits", []),
         )
+        structured_report = self._canonicalize_report_citations(
+            structured_report,
+            top_paths,
+        )
         stage_times["llm_synthesis_ms"] = round(
             (time.perf_counter() - synthesis_started) * 1000, 2
         )
         answer = structured_report.get("narrative", "")
+        insufficiency_text = str(
+            structured_report.get("executive_summary", "")
+        ).strip().lower()
+        if re.search(
+            r"^(?:the (?:provided )?.{0,40}(?:evidence|filing)|this filing).{0,100}"
+            r"(?:does not (?:contain|disclose|provide|include)|"
+            r"cannot (?:establish|determine))",
+            insufficiency_text,
+        ):
+            answer = "[INSUFFICIENT EVIDENCE] " + answer
+            structured_report["support_status"] = "INSUFFICIENT_EVIDENCE"
         grounding = self._validate_report_grounding(
             answer,
             top_paths,
@@ -949,12 +1021,33 @@ CRITICAL STYLE RULES:
                 "llm": llm_route,
                 "source_filing": source_filing,
                 "retrieval": retrieval,
+                "retrieval_mode_requested": requested_retrieval_mode,
+                "retrieval_mode_selected": retrieval_mode,
                 "latency_ms": {
                     **stage_times,
                     "total_ms": round((time.perf_counter() - started_at) * 1000, 2),
                 },
             },
         }
+
+    @staticmethod
+    def _resolve_retrieval_mode(
+        user_query: str,
+        requested_mode: str,
+        target_metric: Optional[str] = None,
+    ) -> str:
+        """Choose graph-only retrieval for exact structured questions.
+
+        Vector retrieval remains useful for exploratory natural-language
+        questions, while explicit metrics and ontology relations are already
+        resolved deterministically and do not benefit from a Chroma round trip.
+        """
+        if requested_mode in {"graph", "hybrid"}:
+            return requested_mode
+        query_upper = str(user_query or "").upper().replace("-", "_")
+        if target_metric or any(rel in query_upper for rel in VALID_RELATIONS):
+            return "graph"
+        return "hybrid"
 
     @staticmethod
     def _apply_vector_fusion(
@@ -1066,10 +1159,10 @@ CRITICAL STYLE RULES:
 
         requested_years: List[int] = []
         if explicit_range:
-            # For an explicitly stated comparison, both endpoints must be
-            # represented in the evidence. Intermediate years are reported as
-            # coverage but are not made mandatory.
-            requested_years = [resolved_start, resolved_end]
+            # Every explicitly named comparison year must be represented. A
+            # question naming 2023, 2024 and 2025 must not pass with endpoints
+            # only. A natural-language range retains endpoint semantics.
+            requested_years = explicit_years or [resolved_start, resolved_end]
 
         return {
             "requested": temporal_requested,
@@ -1116,6 +1209,48 @@ CRITICAL STYLE RULES:
             ],
             "minimum_distinct_years": temporal_context["minimum_distinct_years"],
         }
+
+    @classmethod
+    def _select_temporal_paths(
+        cls,
+        ranked_paths: List[CausalPath],
+        temporal_context: Dict[str, Any],
+        limit: int,
+    ) -> List[CausalPath]:
+        """Select ranked paths while preserving requested-year coverage.
+
+        A global reranker can otherwise fill Top-K with the newest filing,
+        even when the query explicitly asks for a multi-year comparison. This
+        selector reserves the best available strict path for each requested
+        endpoint year, then fills remaining slots by the normal ranking.
+        It never creates a path or relaxes the EvidenceClaim filter.
+        """
+        ranked_paths = list(ranked_paths or [])
+        if limit <= 0 or not ranked_paths:
+            return []
+        if not temporal_context.get("require_multi_year"):
+            return ranked_paths[:limit]
+
+        requested_years = list(dict.fromkeys(temporal_context.get("requested_years") or []))
+        selected: List[CausalPath] = []
+        selected_ids: Set[int] = set()
+        for year in requested_years:
+            matches = [path for path in ranked_paths if year in path.years]
+            if not matches:
+                continue
+            best = min(matches, key=cls._path_sort_key)
+            marker = id(best)
+            if marker not in selected_ids:
+                selected.append(best)
+                selected_ids.add(marker)
+
+        for path in ranked_paths:
+            if len(selected) >= limit:
+                break
+            if id(path) not in selected_ids:
+                selected.append(path)
+                selected_ids.add(id(path))
+        return selected[:limit]
 
     def _temporal_guard_response(
         self,
@@ -1168,6 +1303,116 @@ CRITICAL STYLE RULES:
         }
 
     @staticmethod
+    def _canonicalize_report_citations(
+        structured_report: Optional[Dict[str, Any]],
+        paths: List[CausalPath],
+    ) -> Optional[Dict[str, Any]]:
+        """Replace model-supplied pages/years with graph-backed metadata.
+
+        The LLM is allowed to choose which retrieved EvidenceClaims support a
+        statement, but it is not the source of truth for a Claim's page or
+        fiscal year.  Models occasionally copy a nearby page from the
+        context, producing a false citation mismatch even when the Claim ID is
+        valid.  Canonicalizing from the retrieved paths preserves fail-closed
+        behavior for unknown IDs while making valid citations deterministic.
+        """
+        if not structured_report or not paths:
+            return structured_report
+
+        evidence_index: Dict[str, set[Tuple[int, int]]] = {}
+        for path in paths:
+            for index, evidence_id in enumerate(path.evidence_ids):
+                if not evidence_id or evidence_id == "?":
+                    continue
+                if index >= len(path.pages) or index >= len(path.years):
+                    continue
+                evidence_index.setdefault(str(evidence_id), set()).add(
+                    (int(path.pages[index]), int(path.years[index]))
+                )
+
+        normalized_claims = []
+        for claim in structured_report.get("claims", []) or []:
+            if not isinstance(claim, dict):
+                continue
+            claim_ids = [
+                str(value)
+                for value in claim.get("evidence_claim_ids", []) or []
+                if value
+            ]
+            canonical_pairs = {
+                pair
+                for claim_id in claim_ids
+                for pair in evidence_index.get(claim_id, set())
+            }
+            if not canonical_pairs:
+                # Drop empty/malformed claim objects from the presentation
+                # layer.  Unknown IDs remain visible in the executive
+                # summary and therefore still fail the global validator.
+                continue
+            claim["pages"] = sorted({page for page, _ in canonical_pairs})
+            claim["fiscal_years"] = sorted({year for _, year in canonical_pairs})
+            normalized_claims.append(claim)
+
+        # Some provider responses omit the claims array even though the
+        # executive summary contains valid inline EvidenceClaim citations.
+        # Recover those IDs from the retrieved graph and keep the report
+        # contract strict; unknown inline IDs are not recovered.
+        summary_text = str(structured_report.get("executive_summary", ""))
+        inline_ids = [
+            value
+            for value in re.findall(
+                r"\b[A-Za-z0-9][A-Za-z0-9_-]*_claim\b",
+                summary_text,
+            )
+            if value in evidence_index
+        ]
+        if not normalized_claims and inline_ids:
+            for claim_id in dict.fromkeys(inline_ids):
+                pairs = evidence_index[claim_id]
+                normalized_claims.append(
+                    {
+                        "statement": summary_text,
+                        "evidence_claim_ids": [claim_id],
+                        "pages": sorted({page for page, _ in pairs}),
+                        "fiscal_years": sorted({year for _, year in pairs}),
+                        "support_level": "LIMITED",
+                    }
+                )
+        structured_report["claims"] = normalized_claims
+
+        # The narrative is generated from the structured claims, so rebuild it
+        # after canonicalization and remove stale model-supplied page values.
+        narrative_parts = []
+        summary = str(structured_report.get("executive_summary", "")).strip()
+        if summary:
+            narrative_parts.append(f"Executive Summary\n{summary}")
+        for claim in normalized_claims:
+            if not isinstance(claim, dict) or not claim.get("statement"):
+                continue
+            citation_parts = [
+                str(value)
+                for value in claim.get("evidence_claim_ids", []) or []
+                if value
+            ]
+            pages = claim.get("pages", []) or []
+            if pages:
+                citation_parts.append(
+                    "p." + ", p.".join(str(page) for page in pages)
+                )
+            narrative_parts.append(
+                f"{claim['statement']}\n[EvidenceClaim: "
+                f"{'; '.join(citation_parts) or 'missing citation'}]"
+            )
+        quality = str(structured_report.get("evidence_quality", "")).strip()
+        limitations = str(structured_report.get("limitations", "")).strip()
+        if quality:
+            narrative_parts.append(f"Evidence Quality\n{quality}")
+        if limitations:
+            narrative_parts.append(f"Limitations\n{limitations}")
+        structured_report["narrative"] = "\n\n".join(narrative_parts)
+        return structured_report
+
+    @staticmethod
     def _validate_report_grounding(
         answer: str,
         paths: List[CausalPath],
@@ -1209,10 +1454,11 @@ CRITICAL STYLE RULES:
             int(page)
             for page in re.findall(r"\b(?:p|page)\s*\.?\s*(\d+)\b", text, re.IGNORECASE)
         }
-        cited_years = {
-            int(year)
-            for year in re.findall(r"(?<!\d)(20\d{2})(?!\d)", text)
-        }
+        # Years inside the prose can describe the question or a disclosed
+        # metric period. The structured claim contract below is authoritative;
+        # treating every narrative year as a citation caused valid multi-year
+        # answers to fail when an executive summary named all requested years.
+        cited_years = set()
         claim_citation_mismatches = []
 
         # Structured citations are authoritative. The narrative is only the
@@ -1442,25 +1688,13 @@ CRITICAL STYLE RULES:
 
         context = "\n".join(path_descriptions)
 
-        vector_context = ""
-        if vector_hits:
-            snippets = []
-            for i, hit in enumerate(vector_hits[:5], start=1):
-                metadata = hit.get("metadata") or {}
-                filing = metadata.get("source_filing") or metadata.get("doc_id") or "unknown"
-                page = metadata.get("page") or "?"
-                document = (hit.get("document") or "").strip()
-                if document:
-                    snippets.append(
-                        f"[Semantic Hit {i}; filing: {filing}; p.{page}] {document[:800]}"
-                    )
-            if snippets:
-                vector_context = (
-                    "\n[SEMANTIC RETRIEVAL CONTEXT — CANDIDATE HINTS ONLY]\n"
-                    + "\n".join(snippets)
-                    + "\nDo not treat semantic hits as causal proof. Every factual statement "
-                      "must still cite a graph EvidenceClaim and page.\n"
-                )
+        # Vector hits are used for recall and path fusion, but they are not
+        # report evidence.  Passing their raw page snippets to the synthesis
+        # model creates a subtle citation hazard: the model may copy a vector
+        # hit's page into a structured claim even though that page is not part
+        # of the retrieved EvidenceClaim chain.  Keep the synthesis context
+        # closed over graph-backed evidence only; this makes the runtime
+        # citation contract enforceable instead of relying on a prompt warning.
 
         if not self._has_llm:
             return self._trace_report(paths, intent, context)
@@ -1471,9 +1705,8 @@ CRITICAL STYLE RULES:
 
         prompt = f"""Below are causal evidence chains extracted from NVIDIA's SEC filings.
 
-[EVIDENCE DATA]:
+[EVIDENCE DATA — THE ONLY CITABLE SOURCE]:
 {context}
-{vector_context}
 
 [USER QUERY]:
 {query}
@@ -1483,6 +1716,8 @@ CRITICAL STYLE RULES:
 2. Return ONLY valid JSON. Do not use Markdown fences or any text outside the JSON object.
 3. For each causal link: check if the evidence EXPLICITLY states causation or merely mentions both entities.
    Label in prose: "...this link is well-supported by direct evidence..." NOT "[CONFIRMED]".
+   A REPORTS_METRIC link is a quantitative disclosure, not a causal link. Preserve its
+   reported value, unit, and period exactly and do not describe it as causing an outcome.
 4. Every claim MUST reference an EvidenceClaim ID and page copied exactly from the evidence data.
    Only use years and pages that appear in the evidence data. Never introduce prior-year
     values, general knowledge, or uncited pages. If the evidence cannot support a claim,
@@ -1530,6 +1765,7 @@ Now generate the analysis report:"""
         result = self.llm.chat_with_fallback(
             prompt=prompt,
             system_prompt=self.REPORT_SYSTEM_PROMPT,
+            model=self.model_name,
             temperature=0.3,
             max_tokens=3000,
         )
@@ -1669,6 +1905,9 @@ Now generate the analysis report:"""
         """Use LLM to extract strategic entity keywords from query."""
         if not self._has_llm:
             return []
+        cache_key = str(query or "").strip().lower()
+        if cache_key in self._anchor_cache:
+            return list(self._anchor_cache[cache_key])
         prompt = (
             "Extract 2-4 specific financial entities from this query. "
             "Use canonical UPPER_SNAKE_CASE names. "
@@ -1677,14 +1916,23 @@ Now generate the analysis report:"""
             "Return ONLY comma-separated list, no explanations.\n"
             f"Query: {query}"
         )
-        content = self.llm.chat(prompt=prompt, temperature=0.0, max_tokens=100)
+        content = self.llm.chat(
+            prompt=prompt,
+            model=self.llm.get_task_model("query"),
+            temperature=0.0,
+            max_tokens=100,
+        )
         if content is None:
             return []
-        return [
+        anchors = [
             w.strip().upper().replace(" ", "_")
             for w in content.split(",")
             if len(w.strip()) > 2
         ]
+        if len(self._anchor_cache) >= self._anchor_cache_limit:
+            self._anchor_cache.pop(next(iter(self._anchor_cache)))
+        self._anchor_cache[cache_key] = anchors
+        return list(anchors)
 
     def _rerank_paths(
         self, query: str, paths: List[CausalPath]

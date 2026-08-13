@@ -1,0 +1,12 @@
+{
+  "schema": "strategic-graphrag-incremental-plan/v1",
+  "unchanged": [
+    "2023-10-K.pdf",
+    "2024-10-K.pdf",
+    "2025-10-K.pdf"
+  ],
+  "changed": [],
+  "added": [],
+  "removed": [],
+  "requires_rebuild": []
+}

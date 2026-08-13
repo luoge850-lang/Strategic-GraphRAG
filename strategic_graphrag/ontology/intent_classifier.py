@@ -82,7 +82,9 @@ INTENT_REGISTRY: Dict[str, IntentSignature] = {
             "how much", "what percentage", "what is the revenue",
         ],
         entity_preference=["FinancialMetric", "RiskFactor", "Strategy", "Company"],
-        relation_preference=["INCREASES", "DECREASES", "CAUSES", "REPORTED_IN"],
+        relation_preference=[
+            "REPORTS_METRIC", "INCREASES", "DECREASES", "CAUSES", "REPORTED_IN"
+        ],
         temporal_required=True,
     ),
     "REGULATORY_ANALYSIS": IntentSignature(
@@ -261,7 +263,9 @@ def extract_financial_entities_from_query(query: str) -> List[str]:
     # Financial metrics
     metric_patterns = [
         r'\b(revenue|income|margin|profit|earnings|eps|cash flow|'
-        r'capex|operating cost|gross margin|net income|free cash flow|'
+        r'capex|operating cost|gross margin|gross profit|net income|'
+        r'operating income|sales general and administrative|sg&a|sg and a|'
+        r'total assets|current assets|free cash flow|'
         r'return on equity|ebitda)\b',
     ]
     for pat in metric_patterns:
@@ -289,6 +293,11 @@ def extract_financial_entities_from_query(query: str) -> List[str]:
 
     # Deduplicate and map to canonical knowledge graph entity IDs
     entities = list(dict.fromkeys(entities))
+
+    # Canonical multi-word metrics whose punctuation/wording is not handled
+    # reliably by the broad regex above.
+    if re.search(r"\b(?:sales[,]? general and administrative|sg\s*&\s*a|sg and a)\b", query, re.IGNORECASE):
+        entities.append("SG_AND_A_EXPENSE")
 
     # Map extracted query terms to canonical knowledge graph entity IDs
     from .entity_registry import CANONICAL_MAP, norm_id

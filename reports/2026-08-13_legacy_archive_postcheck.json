@@ -1,0 +1,17 @@
+{
+  "schema": "strategic-graphrag-legacy-archive/v1",
+  "generated_at_utc": "2026-08-13T05:09:17.711549+00:00",
+  "mode": "dry-run",
+  "active_filings": [
+    "2023-10-K.pdf",
+    "2024-10-K.pdf",
+    "2025-10-K.pdf"
+  ],
+  "graph": {
+    "legacy_edges": 0,
+    "legacy_nodes": 0,
+    "edges": [],
+    "nodes": []
+  },
+  "legacy_vector_collections": []
+}

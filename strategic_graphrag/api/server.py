@@ -19,13 +19,15 @@ import logging
 import hmac
 import time
 import uuid
-from collections import defaultdict, deque
+from collections import OrderedDict, defaultdict, deque
+from copy import deepcopy
 from typing import Optional, List, Dict, Literal
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from pathlib import Path
@@ -39,14 +41,14 @@ load_dotenv()
 app = FastAPI(
     title="Strategic-GraphRAG API",
     description="Temporal Causal Knowledge Graph Framework for Financial Risk Inference",
-    version="1.0.0",
+    version="3.0.0",
 )
 
 _cors_origins = [
     origin.strip()
     for origin in os.getenv(
         "CORS_ORIGINS",
-        "http://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:5173,http://localhost:5173",
+        "http://127.0.0.1:8000,http://localhost:8000,http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:4173,http://localhost:4173",
     ).split(",")
     if origin.strip()
 ]
@@ -71,6 +73,9 @@ _RATE_LIMIT_PER_MINUTE = max(
 )
 _RATE_BUCKETS = defaultdict(deque)
 _AUTH_EXEMPT_PATHS = {"/", "/health", "/docs", "/openapi.json", "/redoc"}
+_QUERY_CACHE_TTL_SECONDS = max(int(os.getenv("QUERY_CACHE_TTL_SECONDS", "300") or 300), 0)
+_QUERY_CACHE_MAX_ENTRIES = max(int(os.getenv("QUERY_CACHE_MAX_ENTRIES", "128") or 128), 1)
+_QUERY_CACHE = OrderedDict()
 
 
 @app.middleware("http")
@@ -212,6 +217,19 @@ def resolve_active_filing(requested: Optional[str] = None) -> Optional[str]:
     return requested or os.getenv("GRAPH_ACTIVE_FILING", "").strip() or None
 
 
+def resolve_source_filing(
+    requested: Optional[str],
+    cross_filing: bool,
+) -> Optional[str]:
+    """Resolve an explicit all-filings request without hiding it behind env.
+
+    The UI uses ``cross_filing=true`` for the all-years view.  A single-filing
+    request continues to fall back to GRAPH_ACTIVE_FILING for backwards
+    compatibility, while an explicit cross-filing request is always global.
+    """
+    return None if cross_filing else resolve_active_filing(requested)
+
+
 # =============================================================================
 # Request/Response Models
 # =============================================================================
@@ -230,11 +248,19 @@ class QueryRequest(BaseModel):
         max_length=200,
         description="Optional filing scope; defaults to GRAPH_ACTIVE_FILING",
     )
-    retrieval_mode: Literal["graph", "hybrid"] = Field(
-        default="hybrid",
-        description="Graph-only baseline or vector+graph hybrid retrieval",
+    retrieval_mode: Literal["auto", "graph", "hybrid"] = Field(
+        default="auto",
+        description="Adaptive, graph-only, or vector+graph hybrid retrieval",
     )
     vector_top_k: int = Field(default=5, ge=1, le=20)
+    cross_filing: bool = Field(
+        default=False,
+        description="Explicitly search all indexed filings; disabled by default",
+    )
+    use_cache: bool = Field(
+        default=True,
+        description="Reuse an identical successful query within the bounded TTL cache",
+    )
 
 
 class QueryResponse(BaseModel):
@@ -303,6 +329,22 @@ async def graphrag_query(req: QueryRequest):
     Returns structured causal analysis with evidence provenance.
     """
     try:
+        cache_key = json.dumps(
+            req.model_dump(exclude={"use_cache"}), sort_keys=True, ensure_ascii=False
+        )
+        now = time.monotonic()
+        cached = _QUERY_CACHE.get(cache_key) if req.use_cache else None
+        if cached and now - cached[0] <= _QUERY_CACHE_TTL_SECONDS:
+            result = deepcopy(cached[1])
+            result.setdefault("metadata", {})["cache"] = {
+                "hit": True,
+                "age_ms": round((now - cached[0]) * 1000, 2),
+                "ttl_seconds": _QUERY_CACHE_TTL_SECONDS,
+            }
+            _QUERY_CACHE.move_to_end(cache_key)
+            return QueryResponse(**result)
+        if cached:
+            _QUERY_CACHE.pop(cache_key, None)
         engine = get_graph_engine()
         year_start = req.year_start if req.year_start is not None else req.year_filter
         if req.year_end is not None and year_start is not None and req.year_end < year_start:
@@ -313,16 +355,28 @@ async def graphrag_query(req: QueryRequest):
                 vector_engine = get_vector_engine()
             except Exception as e:
                 logger.warning("Vector engine unavailable; continuing in degraded hybrid mode: %s", e)
-        result = engine.query(
+        result = await run_in_threadpool(
+            engine.query,
             req.question,
             top_k=req.max_paths,
             year_start=year_start,
             year_end=req.year_end,
-            source_filing=resolve_active_filing(req.source_filing),
+            source_filing=resolve_source_filing(req.source_filing, req.cross_filing),
+            cross_filing=req.cross_filing,
             retrieval_mode=req.retrieval_mode,
             vector_engine=vector_engine,
             vector_top_k=req.vector_top_k,
         )
+        result.setdefault("metadata", {})["cache"] = {
+            "hit": False,
+            "ttl_seconds": _QUERY_CACHE_TTL_SECONDS,
+        }
+        cacheable = not str(result.get("answer") or "").startswith("[CONNECTION ERROR]")
+        if req.use_cache and _QUERY_CACHE_TTL_SECONDS > 0 and cacheable:
+            _QUERY_CACHE[cache_key] = (time.monotonic(), deepcopy(result))
+            _QUERY_CACHE.move_to_end(cache_key)
+            while len(_QUERY_CACHE) > _QUERY_CACHE_MAX_ENTRIES:
+                _QUERY_CACHE.popitem(last=False)
         return QueryResponse(**result)
     except HTTPException:
         raise
@@ -341,7 +395,7 @@ async def vector_query(req: QueryRequest):
         answer, docs = engine.ask(
             req.question,
             k=5,
-            source_filing=resolve_active_filing(req.source_filing),
+            source_filing=resolve_source_filing(req.source_filing, req.cross_filing),
         )
         return VectorQueryResponse(query=req.question, answer=answer, documents=docs)
     except HTTPException:
@@ -352,14 +406,17 @@ async def vector_query(req: QueryRequest):
 
 
 @app.get("/graph/statistics", response_model=GraphStats)
-async def graph_statistics():
+async def graph_statistics(
+    source_filing: Optional[str] = Query(None, max_length=200),
+    cross_filing: bool = Query(False),
+):
     """
     Get knowledge graph statistics.
     """
     try:
         mgr = get_schema_manager()
-        source_filing = resolve_active_filing()
-        stats = mgr.stats(source_filing=source_filing)
+        scoped_filing = None if cross_filing else resolve_active_filing(source_filing)
+        stats = mgr.stats(source_filing=scoped_filing)
         return GraphStats(
             total_nodes=stats.get("total_nodes", 0),
             total_relationships=stats.get("total_rels", 0),
@@ -367,7 +424,7 @@ async def graph_statistics():
             graph_relationships=stats.get("graph_relationships", 0),
             by_label=stats.get("by_label", {}),
             by_relationship=stats.get("by_relationship", {}),
-            source_filing=source_filing,
+            source_filing=scoped_filing,
         )
     except HTTPException:
         raise
@@ -384,6 +441,7 @@ async def get_subgraph(
         max_length=200,
         description="Optional filing scope; defaults to GRAPH_ACTIVE_FILING",
     ),
+    cross_filing: bool = Query(False),
 ):
     """
     Get subgraph data for visualization (nodes + edges in JSON).
@@ -391,7 +449,7 @@ async def get_subgraph(
     Otherwise returns a representative sample of the full graph.
     """
     mgr = get_schema_manager()
-    source_filing = resolve_active_filing(source_filing)
+    source_filing = None if cross_filing else resolve_active_filing(source_filing)
     try:
         if entity:
             cypher = """
@@ -490,7 +548,12 @@ async def get_subgraph(
 
 
 @app.get("/evidence/{entity_id}")
-async def get_evidence(entity_id: str, limit: int = Query(10, ge=1, le=50)):
+async def get_evidence(
+    entity_id: str,
+    limit: int = Query(10, ge=1, le=50),
+    source_filing: Optional[str] = Query(None, max_length=200),
+    cross_filing: bool = Query(False),
+):
     """
     Get evidence sentences for a specific entity.
     """
@@ -499,7 +562,7 @@ async def get_evidence(entity_id: str, limit: int = Query(10, ge=1, le=50)):
         evidence = engine.path_finder.find_evidence_for_entity(
             entity_id,
             limit=limit,
-            source_filing=resolve_active_filing(),
+            source_filing=resolve_source_filing(source_filing, cross_filing),
         )
         return {"entity_id": entity_id, "evidence": evidence}
     except HTTPException:

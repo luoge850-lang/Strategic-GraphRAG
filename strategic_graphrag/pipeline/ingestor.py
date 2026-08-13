@@ -14,8 +14,8 @@ Key features:
 """
 
 import os
-import hashlib
 import logging
+import uuid
 from typing import Dict, List, Optional, Set, Tuple
 from collections import defaultdict
 
@@ -24,6 +24,7 @@ from neo4j.exceptions import Neo4jError, ServiceUnavailable, SessionExpired
 from dotenv import load_dotenv
 
 from ..ontology.entity_registry import norm_id, is_banned
+from ..provenance import evidence_identity
 from ..ontology.relation_inference import (
     VALID_RELATIONS,
     CAUSAL_STRENGTHS,
@@ -51,9 +52,13 @@ class GraphIngestor:
         self.user = user or os.getenv("NEO4J_USERNAME", "neo4j")
         self.password = password or os.getenv("NEO4J_PASSWORD", "password")
         self.driver = None
+        self.run_id = os.getenv("GRAPHRAG_RUN_ID", "") or uuid.uuid4().hex
+        self.prompt_version = os.getenv("GRAPHRAG_PROMPT_VERSION", "v2-evidence-claim-1")
+        self.llm_provider = os.getenv("LLM_PROVIDER", "unknown")
+        self.llm_model = os.getenv("LLM_MODEL", "unknown")
 
         # Track seen keys to deduplicate within a batch
-        self._seen_keys: Set[Tuple[str, str, str, int, int]] = set()
+        self._seen_keys: Set[Tuple[str, str, str, str, int, int, int, int]] = set()
         # Track entity write counts for stats
         self._entity_counts: Dict[str, int] = defaultdict(int)
         self._relation_counts: Dict[str, int] = defaultdict(int)
@@ -188,6 +193,7 @@ class GraphIngestor:
         page: int,
         year: int,
         section: str = "",
+        document_sha256: str = "",
     ) -> bool:
         """
         Write a single extracted triple to Neo4j as a native relationship.
@@ -211,9 +217,16 @@ class GraphIngestor:
         evidence = str(triple.get("evidence_sentence", ""))[:500]
         evidence_start = triple.get("evidence_char_start")
         evidence_end = triple.get("evidence_char_end")
+        chunk_id = str(triple.get("chunk_id", "")).strip()
         relation_polarity = str(triple.get("relation_polarity", "unknown")).strip().lower()
         modality = str(triple.get("modality", "disclosed")).strip().lower()
         temporal_scope = str(triple.get("temporal_scope", year)).strip()
+        filing_fiscal_year = int(year)
+        evidence_referenced_period = temporal_scope or f"FY{year}"
+        metric_value = str(triple.get("metric_value", "")).strip()
+        metric_unit = str(triple.get("metric_unit", "")).strip()
+        metric_period = str(triple.get("metric_period", "")).strip()
+        metric_values_json = str(triple.get("metric_values_json", "")).strip()
 
         # Pre-checks
         if not s_name or not t_name or not rel_type:
@@ -228,17 +241,27 @@ class GraphIngestor:
         # Dedup key
         s_id = norm_id(s_name)
         t_id = norm_id(t_name)
-        dedup_key = (s_id, rel_type, t_id, year, page)
+        dedup_key = (
+            filename, s_id, rel_type, t_id, year, page,
+            int(evidence_start or -1), int(evidence_end or -1),
+        )
         if dedup_key in self._seen_keys:
             return False
         self._seen_keys.add(dedup_key)
 
         # Evidence ID
-        eid = hashlib.md5(
-            f"{s_id}|{rel_type}|{t_id}|{year}|p{page}".encode()
-        ).hexdigest()[:16]
-        es_id = eid + "_es"
-        claim_id = eid + "_claim"
+        identity = evidence_identity(
+            document_sha256=document_sha256,
+            filename=filename,
+            page=page,
+            evidence_text=evidence,
+            source_id=s_id,
+            relation_type=rel_type,
+            target_id=t_id,
+        )
+        eid, es_id, claim_id = (
+            identity.relation_id, identity.sentence_id, identity.claim_id
+        )
 
         # Cypher: Create nodes + native relationship + evidence chain
         cypher = f"""
@@ -266,7 +289,15 @@ class GraphIngestor:
             r.evidence_char_end = $evidence_end,
             r.relation_polarity = $relation_polarity,
             r.modality = $modality,
-            r.temporal_scope = $temporal_scope
+            r.temporal_scope = $temporal_scope,
+            r.filing_fiscal_year = $filing_fiscal_year,
+            r.evidence_referenced_period = $evidence_referenced_period,
+            r.temporal_model_version = 'filing_year_plus_explicit_scope_v1',
+            r.document_sha256 = $document_sha256,
+            r.extraction_run_id = $run_id,
+            r.llm_provider = $llm_provider,
+            r.llm_model = $llm_model,
+            r.prompt_version = $prompt_version
 
         SET r.causal_strength = $cs,
             r.confidence = $conf,
@@ -281,7 +312,8 @@ class GraphIngestor:
             r.causal_form = $cf,
             r.evidence_id = $claim_id,
             r.source_filing = $file,
-            r.source_page = $pg
+            r.source_page = $pg,
+            r.chunk_id = $chunk_id
 
         // 3. Temporal anchors
         MERGE (y:Year {{year: $yr}})
@@ -322,6 +354,19 @@ class GraphIngestor:
             ,claim.relation_polarity = $relation_polarity
             ,claim.modality = $modality
             ,claim.temporal_scope = $temporal_scope
+            ,claim.filing_fiscal_year = $filing_fiscal_year
+            ,claim.evidence_referenced_period = $evidence_referenced_period
+            ,claim.temporal_model_version = 'filing_year_plus_explicit_scope_v1'
+            ,claim.document_sha256 = $document_sha256
+            ,claim.extraction_run_id = $run_id
+            ,claim.llm_provider = $llm_provider
+            ,claim.llm_model = $llm_model
+            ,claim.prompt_version = $prompt_version
+            ,claim.chunk_id = $chunk_id
+            ,claim.metric_value = $metric_value
+            ,claim.metric_unit = $metric_unit
+            ,claim.metric_period = $metric_period
+            ,claim.metric_values_json = $metric_values_json
         MERGE (claim)-[:SUPPORTED_BY]->(es)
         MERGE (claim)-[:ABOUT_SOURCE]->(s)
         MERGE (claim)-[:ABOUT_TARGET]->(t)
@@ -349,6 +394,18 @@ class GraphIngestor:
                     relation_polarity=relation_polarity,
                     modality=modality,
                     temporal_scope=temporal_scope,
+                    filing_fiscal_year=filing_fiscal_year,
+                    evidence_referenced_period=evidence_referenced_period,
+                    document_sha256="",
+                    run_id=self.run_id,
+                    llm_provider=self.llm_provider,
+                    llm_model=self.llm_model,
+                    prompt_version=self.prompt_version,
+                    chunk_id=chunk_id,
+                    metric_value=metric_value,
+                    metric_unit=metric_unit,
+                    metric_period=metric_period,
+                    metric_values_json=metric_values_json,
                     conf=self._calibrate_confidence(cs, "HYBRID", len(evidence), rel_type),
                     method="HYBRID",
                 )
@@ -367,6 +424,7 @@ class GraphIngestor:
         pages: List[int],
         year: int,
         sections: List[str] = None,
+        document_sha256: str = "",
     ) -> int:
         """
         Write a batch of triples from one filing to Neo4j using UNWIND for
@@ -406,22 +464,35 @@ class GraphIngestor:
             t_id = norm_id(t_name)
             pg = pages[min(i, len(pages) - 1)] if pages else page0
             sec = sections[min(i, len(sections) - 1)] if sections else sec0
-            dedup_key = (s_id, rel_type, t_id, year, pg)
+            evidence_start = triple.get("evidence_char_start")
+            evidence_end = triple.get("evidence_char_end")
+            dedup_key = (
+                filename, s_id, rel_type, t_id, year, pg,
+                int(evidence_start or -1), int(evidence_end or -1),
+            )
             if dedup_key in self._seen_keys:
                 continue
             self._seen_keys.add(dedup_key)
 
-            eid = hashlib.md5(
-                f"{s_id}|{rel_type}|{t_id}|{year}|p{pg}".encode()
-            ).hexdigest()[:16]
-            es_id = eid + "_es"
-            claim_id = eid + "_claim"
+            identity = evidence_identity(
+                document_sha256=document_sha256,
+                filename=filename,
+                page=pg,
+                evidence_text=evidence,
+                source_id=s_id,
+                relation_type=rel_type,
+                target_id=t_id,
+            )
+            eid, es_id, claim_id = (
+                identity.relation_id, identity.sentence_id, identity.claim_id
+            )
 
             extraction_method = str(
                 triple.get("extraction_method", "HYBRID")
             ).upper()
-            evidence_start = triple.get("evidence_char_start")
-            evidence_end = triple.get("evidence_char_end")
+            temporal_scope = str(triple.get("temporal_scope", year)).strip()
+            filing_fiscal_year = int(year)
+            evidence_referenced_period = temporal_scope or f"FY{year}"
             conf = self._calibrate_confidence(
                 cs, extraction_method, len(evidence), rel_type
             )
@@ -435,7 +506,8 @@ class GraphIngestor:
                 "method": extraction_method,
                 "causal_form": causal_form,
                 "evidence_start": evidence_start,
-                "evidence_end": evidence_end,
+                    "evidence_end": evidence_end,
+                    "chunk_id": str(triple.get("chunk_id", "")).strip(),
                 "relation_polarity": str(
                     triple.get("relation_polarity", "unknown")
                 ).strip().lower(),
@@ -445,8 +517,21 @@ class GraphIngestor:
                 "temporal_scope": str(
                     triple.get("temporal_scope", year)
                 ).strip(),
+                "filing_fiscal_year": filing_fiscal_year,
+                "evidence_referenced_period": evidence_referenced_period,
                 "yr": year, "pg": pg, "file": filename,
                 "sec": sec, "doc_id": doc_id,
+                "document_sha256": document_sha256,
+                "run_id": self.run_id,
+                "llm_provider": self.llm_provider,
+                "llm_model": self.llm_model,
+                "prompt_version": self.prompt_version,
+                "metric_value": str(triple.get("metric_value", "")).strip(),
+                "metric_unit": str(triple.get("metric_unit", "")).strip(),
+                "metric_period": str(triple.get("metric_period", "")).strip(),
+                "metric_values_json": str(
+                    triple.get("metric_values_json", "")
+                ).strip(),
             })
 
         if not batch_params:
@@ -498,9 +583,22 @@ class GraphIngestor:
                             r.relation_polarity = row.relation_polarity,
                             r.modality = row.modality,
                             r.temporal_scope = row.temporal_scope,
+                            r.filing_fiscal_year = row.filing_fiscal_year,
+                            r.evidence_referenced_period = row.evidence_referenced_period,
+                            r.temporal_model_version = 'filing_year_plus_explicit_scope_v1',
+                            r.document_sha256 = row.document_sha256,
+                            r.extraction_run_id = row.run_id,
+                            r.llm_provider = row.llm_provider,
+                            r.llm_model = row.llm_model,
+                            r.prompt_version = row.prompt_version,
                             r.evidence_id = row.claim_id,
                             r.source_filing = row.file,
-                            r.source_page = row.pg
+                            r.source_page = row.pg,
+                            r.chunk_id = row.chunk_id,
+                            r.metric_value = row.metric_value,
+                            r.metric_unit = row.metric_unit,
+                            r.metric_period = row.metric_period,
+                            r.metric_values_json = row.metric_values_json
 
                         MERGE (y:Year {{year: row.yr}})
                         MERGE (s)-[:OBSERVED_IN]->(y)
@@ -537,6 +635,19 @@ class GraphIngestor:
                             claim.relation_polarity = row.relation_polarity,
                             claim.modality = row.modality,
                             claim.temporal_scope = row.temporal_scope
+                            ,claim.filing_fiscal_year = row.filing_fiscal_year
+                            ,claim.evidence_referenced_period = row.evidence_referenced_period
+                            ,claim.temporal_model_version = 'filing_year_plus_explicit_scope_v1'
+                            ,claim.document_sha256 = row.document_sha256
+                            ,claim.extraction_run_id = row.run_id
+                            ,claim.llm_provider = row.llm_provider
+                            ,claim.llm_model = row.llm_model
+                            ,claim.prompt_version = row.prompt_version
+                            ,claim.chunk_id = row.chunk_id
+                            ,claim.metric_value = row.metric_value
+                            ,claim.metric_unit = row.metric_unit
+                            ,claim.metric_period = row.metric_period
+                            ,claim.metric_values_json = row.metric_values_json
                         MERGE (claim)-[:SUPPORTED_BY]->(es)
                         MERGE (claim)-[:ABOUT_SOURCE]->(s)
                         MERGE (claim)-[:ABOUT_TARGET]->(t)
@@ -559,7 +670,16 @@ class GraphIngestor:
                             r.relation_polarity = row.relation_polarity,
                             r.modality = row.modality,
                             r.temporal_scope = row.temporal_scope,
-                            r.evidence_id = row.claim_id
+                            r.evidence_id = row.claim_id,
+                            r.filing_fiscal_year = row.filing_fiscal_year,
+                            r.evidence_referenced_period = row.evidence_referenced_period,
+                            r.temporal_model_version = 'filing_year_plus_explicit_scope_v1',
+                            r.document_sha256 = row.document_sha256,
+                            r.extraction_run_id = row.run_id,
+                            r.llm_provider = row.llm_provider,
+                            r.llm_model = row.llm_model,
+                            r.prompt_version = row.prompt_version
+                            ,r.chunk_id = row.chunk_id
                         """
                         session.run(cypher, batch=group)
                         total_ingested += len(group)
@@ -643,7 +763,8 @@ class GraphIngestor:
 
     def create_document_node(self, filename: str, doc_type: str = "10-K",
                               filing_date: str = "", fiscal_year: int = None,
-                              total_pages: int = 0) -> bool:
+                              total_pages: int = 0,
+                              document_sha256: str = "") -> bool:
         """Create/update a Document node for a source filing."""
         doc_id = filename.replace(".pdf", "")
         try:
@@ -654,11 +775,20 @@ class GraphIngestor:
                         d.doc_type = $dt,
                         d.filing_date = $fd,
                         d.fiscal_year = $fy,
-                        d.total_pages = $tp
+                        d.total_pages = $tp,
+                        d.pdf_sha256 = $document_sha256,
+                        d.temporal_model_version = 'filing_year_plus_explicit_scope_v1',
+                        d.extraction_run_id = $run_id,
+                        d.llm_provider = $llm_provider,
+                        d.llm_model = $llm_model,
+                        d.prompt_version = $prompt_version
                     MERGE (y:Year {year: $fy})
                     MERGE (d)-[:REPORTS]->(y)
                 """, doc_id=doc_id, fn=filename, dt=doc_type,
-                   fd=filing_date, fy=fiscal_year, tp=total_pages)
+                   fd=filing_date, fy=fiscal_year, tp=total_pages,
+                   document_sha256=document_sha256, run_id=self.run_id,
+                   llm_provider=self.llm_provider, llm_model=self.llm_model,
+                   prompt_version=self.prompt_version)
             return True
         except Neo4jError as e:
             logger.warning(f"Document node error: {e}")

@@ -82,11 +82,26 @@ export interface EvidenceItem {
   evidence_id?: string;
   fiscal_year?: number;
   connected_to: string | null;
+  metric_value?: string;
+  metric_unit?: string;
+  metric_period?: string;
+  metric_values_json?: string;
 }
 
 export interface EvidenceResult {
   entity_id: string;
   evidence: EvidenceItem[];
+}
+
+export type FilingScope =
+  | "all"
+  | "2023-10-K.pdf"
+  | "2024-10-K.pdf"
+  | "2025-10-K.pdf";
+
+function applyScope(params: URLSearchParams, scope?: FilingScope) {
+  if (scope === "all") params.set("cross_filing", "true");
+  else if (scope) params.set("source_filing", scope);
 }
 
 /* ── API ── */
@@ -95,10 +110,13 @@ export async function postQuery(
   max = 10,
   yearStart?: number,
   yearEnd?: number,
+  scope: FilingScope = "all",
 ): Promise<QueryResult> {
   const body: Record<string, unknown> = { question: q, max_paths: max };
   if (yearStart !== undefined) body.year_start = yearStart;
   if (yearEnd !== undefined) body.year_end = yearEnd;
+  body.cross_filing = scope === "all";
+  if (scope !== "all") body.source_filing = scope;
   const r = await fetch(`${B}/query`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -108,19 +126,23 @@ export async function postQuery(
   return r.json();
 }
 
-export async function getStats(): Promise<GraphStats> {
-  const r = await fetch(`${B}/graph/statistics`);
+export async function getStats(scope: FilingScope = "all"): Promise<GraphStats> {
+  const p = new URLSearchParams();
+  applyScope(p, scope);
+  const r = await fetch(`${B}/graph/statistics?${p}`);
   if (!r.ok) throw new Error(`Stats ${r.status}`);
   return r.json();
 }
 
 export async function getSubgraph(
   entity?: string,
-  limit = 120
+  limit = 120,
+  scope: FilingScope = "all",
 ): Promise<Subgraph> {
   const p = new URLSearchParams();
   if (entity) p.set("entity", entity);
   p.set("limit", String(limit));
+  applyScope(p, scope);
   const r = await fetch(`${B}/graph/subgraph?${p}`);
   if (!r.ok) throw new Error(`Subgraph ${r.status}`);
   return r.json();
@@ -128,9 +150,12 @@ export async function getSubgraph(
 
 export async function getEvidence(
   entityId: string,
-  limit = 5
+  limit = 5,
+  scope: FilingScope = "all",
 ): Promise<EvidenceResult> {
-  const r = await fetch(`${B}/evidence/${entityId}?limit=${limit}`);
+  const p = new URLSearchParams({ limit: String(limit) });
+  applyScope(p, scope);
+  const r = await fetch(`${B}/evidence/${encodeURIComponent(entityId)}?${p}`);
   if (!r.ok) throw new Error(`Evidence ${r.status}`);
   return r.json();
 }

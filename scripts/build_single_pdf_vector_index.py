@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
-"""Build a filing-scoped Chroma index for the current single-PDF baseline.
+"""Build a filing-scoped Chroma index for one or more selected filings.
 
-This script deliberately accepts one PDF only.  The metadata contract
-(``source_filing`` + ``page``) is required by Hybrid Retrieval so semantic
-chunks can be joined back to graph evidence without cross-filing leakage.
+This script accepts one or more explicitly selected PDFs.  The metadata
+contract (``source_filing`` + ``page``) is required by Hybrid Retrieval so
+semantic chunks can be joined back to graph evidence without cross-filing
+leakage.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
+import sys
 from pathlib import Path
 from typing import Dict, List
 
@@ -18,6 +21,10 @@ import chromadb
 import fitz
 from chromadb.utils import embedding_functions
 from dotenv import load_dotenv
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
 from strategic_graphrag.pipeline.text_splitter import RecursiveTextSplitter
 
 
@@ -51,13 +58,16 @@ def build_index(pdf_path: Path, db_path: Path, collection_name: str) -> Dict[str
         for page_index, page in enumerate(document, start=1):
             page_text = clean_text(page.get_text("text"))
             for chunk_index, chunk in enumerate(chunk_page(page_text)):
+                chunk_id = f"{source_filing}:{page_index}:{chunk_index}"
                 documents.append(chunk)
                 metadatas.append({
                     "source_filing": source_filing,
                     "doc_id": source_filing,
                     "page": page_index,
+                    "chunk_id": chunk_id,
+                    "chunk_index": chunk_index,
                 })
-                ids.append(f"{source_filing}:{page_index}:{chunk_index}")
+                ids.append(chunk_id)
 
     if not documents:
         raise ValueError(f"No text chunks extracted from {pdf_path}")
@@ -87,8 +97,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--pdf",
+        dest="pdfs",
         type=Path,
-        default=Path("data/pdfs/2025-10-K.pdf"),
+        action="append",
+        default=None,
+        help="PDF to index; repeat for selected filings only",
     )
     parser.add_argument(
         "--db-path",
@@ -99,8 +112,24 @@ def main() -> None:
         "--collection",
         default=os.getenv("GRAPH_VECTOR_COLLECTION", "nvidia_sec_filings_active"),
     )
+    parser.add_argument(
+        "--replace-collection",
+        action="store_true",
+        help="Delete and recreate the named collection before indexing the selected PDFs",
+    )
     args = parser.parse_args()
-    print(build_index(args.pdf, args.db_path, args.collection))
+    pdfs = args.pdfs or [Path("data/pdfs/2025-10-K.pdf")]
+    if args.replace_collection:
+        client = chromadb.PersistentClient(path=str(args.db_path))
+        try:
+            client.delete_collection(args.collection)
+        except Exception:
+            pass
+    results = [
+        build_index(pdf, args.db_path, args.collection)
+        for pdf in pdfs
+    ]
+    print(json.dumps({"files": results, "collection": args.collection}, indent=2))
 
 
 if __name__ == "__main__":

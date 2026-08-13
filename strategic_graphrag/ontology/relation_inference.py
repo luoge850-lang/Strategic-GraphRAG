@@ -20,6 +20,8 @@ from .entity_registry import norm_id
 
 POSITIVE_METRICS = {
     "REVENUE", "GROSS_MARGIN", "OPERATING_MARGIN", "NET_INCOME",
+    "GROSS_PROFIT", "OPERATING_INCOME", "TOTAL_ASSETS",
+    "TOTAL_CURRENT_ASSETS", "TOTAL_SHAREHOLDERS_EQUITY",
     "CASH_FLOW", "FREE_CASH_FLOW", "EARNINGS_PER_SHARE",
     "RETURN_ON_EQUITY", "MARKET_VALUE", "EBITDA", "CURRENT_RATIO",
 }
@@ -413,7 +415,7 @@ VALID_RELATIONS = {
     "OPERATES_IN", "PRODUCES", "COMPETES_WITH", "DEPENDS_ON",
     "REGULATED_BY", "SUPPLIES_TO",
     # ── Temporal ──
-    "OCCURS_DURING", "PRECEDES", "REPORTED_IN",
+    "OCCURS_DURING", "PRECEDES", "REPORTED_IN", "REPORTS_METRIC",
     # ── Evidence ──
     "HAS_EVIDENCE", "BELONGS_TO", "SUPPORTS",
     # ── Downgrade relations (weak/uncertain signals) ──
@@ -572,6 +574,9 @@ RELATION_CATEGORY_RULES: Dict[str, Set[Tuple[str, str]]] = {
     },
     "REPORTED_IN": {
         ("EvidenceClaim", "Document"), ("Document", "Year"),
+    },
+    "REPORTS_METRIC": {
+        ("Company", "FinancialMetric"),
     },
     "DISCLOSES": {
         ("Document", "EvidenceClaim"),

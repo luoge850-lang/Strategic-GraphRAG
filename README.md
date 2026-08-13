@@ -1,69 +1,91 @@
-# Strategic-GraphRAG v2
+# Strategic-GraphRAG v3
 
-Evidence-grounded temporal causal GraphRAG for NVIDIA SEC filings.
+Evidence-grounded GraphRAG for NVIDIA's fiscal 2023, 2024, and 2025 10-K
+filings. The project turns SEC PDFs into a strict Neo4j evidence graph,
+combines graph traversal with filing-scoped vector retrieval, and returns
+structured answers whose citations can be joined back to verbatim PDF text.
 
-This repository is the second implementation phase of the original
-[Strategic-GraphRAG](https://github.com/luoge850-lang/Strategic-GraphRAG)
-project. The current stabilization scope deliberately uses one NVIDIA SEC PDF
-until ingestion, ontology, temporal filtering, evidence provenance, and the
-interactive query path are reliable. Multi-document ingestion, evaluation, and
-agentic planning are intentionally postponed.
+![Strategic-GraphRAG dashboard](docs/demo-dashboard-v3.png)
 
-## Current scope
+## Verified scope
+
+| Filing | Pages | Strict EvidenceClaims | Evidence pages | Vector chunks |
+|---|---:|---:|---:|---:|
+| 2023 10-K | 169 | 126 | 44 | 730 |
+| 2024 10-K | 96 | 129 | 41 | 461 |
+| 2025 10-K | 130 | 128 | 43 | 634 |
+| **Total** | **395** | **383** | **128 filing-page pairs** | **1,825** |
+
+The active graph has 383 strict business edges, each linked to a `VERBATIM`
+EvidenceClaim with filing, page, section, chunk, source entity, target entity,
+and relation metadata. All 383 claims use content-derived `claim_v2_*` IDs.
+The post-migration audit found 49 valid same-filing two-hop paths and zero
+invalid strict paths.
+
+Legacy storage is now physically isolated: the post-clean check found zero
+out-of-scope business edges, zero old evidence nodes, and zero old Chroma
+collections. A complete local recovery archive was created before deletion but
+is intentionally not committed because it contains embeddings and extracted
+filing text.
+
+## Architecture
 
 ```text
-PDF -> SEC section detection -> hybrid triple extraction -> Neo4j
-    -> temporal causal path retrieval -> EvidenceClaim provenance
-    -> FastAPI -> React/Vite dashboard
+Three allowlisted 10-K PDFs
+  -> page parsing and SEC section detection
+  -> overlapping text chunks plus financial-table rows
+  -> rules + DeepSeek Flash extraction
+  -> ontology, quote/span, and entity validation
+  -> Neo4j business edge + EvidenceClaim + Sentence provenance
+  -> Chroma semantic chunks
+  -> adaptive graph/hybrid retrieval
+  -> grounded structured synthesis
+  -> FastAPI + React/Vite evidence UI
 ```
 
-The main implementation is the `strategic_graphrag` package. The historical
-`src/step1~7` scripts are retained for reference and are not the v2 execution
-entrypoint.
+Key implementation decisions:
 
-## Stabilized single-PDF contract
+- Exact metric questions route to `REPORTS_METRIC` facts rather than risk edges.
+- Exploratory questions use graph + vector retrieval; explicit metric or
+  ontology-relation questions can skip the vector round trip.
+- Every synthesized citation is checked against the returned path evidence.
+- Repeated disclosures across years are connected by 99 derived
+  `NEXT_DISCLOSURE` links. These mean disclosure order only, not intensification,
+  decline, or real-world causal change.
+- Identical successful API requests can use a bounded TTL cache. Responses
+  expose `cache.hit`, selected retrieval mode, and per-stage latency so cached
+  and uncached performance are not mixed.
+- An incremental planner compares PDF SHA-256 values before rebuilding. The
+  current plan reports all three PDFs unchanged and `requires_rebuild=[]`.
 
-The current active corpus is `2025-10-K.pdf`. `/query` defaults to the
-`hybrid` mode: filing-scoped vector retrieval is fused with verified Neo4j
-causal paths at the filing/page level. Use `retrieval_mode=graph` for the
-graph-only ablation, or `/query/vector` for the independent vector baseline.
+## Demonstrated query
 
-The runtime refuses unsupported temporal comparisons when the retrieved
-evidence does not cover the requested fiscal years. Generated reports are
-also checked against the exact EvidenceClaim IDs, pages, and years before they
-are returned. A failed check is reported as `GROUNDING FAILURE`.
+`Compare revenue in 2023, 2024, and 2025`
 
-The current ontology is an evidence-grounded single-filing baseline. Direct
-`RiskFactor -> FinancialMetric` impacts are labeled
-`DIRECT_DISCLOSED_IMPACT`; mechanism-mediated reasoning is an extension target,
-not a completed claim of this frozen version.
+The current engine retrieves three `REPORTS_METRIC` claims and reports:
 
-## Quick start
+- FY2023: $26,974 million (`p.86`)
+- FY2024: $60,922 million (`p.79`)
+- FY2025: $130,497 million (`p.80`)
+
+The response was grounding-verified and used one stable EvidenceClaim ID per
+filing. It does not infer the causes of revenue growth from those accounting
+facts alone.
+
+## Run locally
+
+Python 3.11 or 3.12 is recommended. Python 3.14 can emit compatibility warnings
+from some LangChain/Pydantic dependencies.
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+Copy-Item .env.example .env
+uvicorn strategic_graphrag.api.server:app --host 127.0.0.1 --port 8000
 ```
 
-Create `.env` from `.env.example`, then initialize the Neo4j schema:
-
-```powershell
-python -m strategic_graphrag.schema.manager --init
-python -m strategic_graphrag.pipeline.pipeline --pdf_dir data/pdfs
-uvicorn strategic_graphrag.api.server:app --reload
-```
-
-The pipeline refuses to process more than one PDF by default. After the
-single-filing graph and evidence contract has been reviewed, opt in explicitly
-with `--allow_multiple_pdfs`.
-
-To rebuild the same filing after changing extraction rules, add
-`--replace_existing_filing`. It is disabled by default because it deletes only
-that filing's evidence and relationships before ingestion; shared entity and
-Year nodes are preserved.
-
-For the frontend:
+Build the frontend:
 
 ```powershell
 cd frontend
@@ -71,109 +93,74 @@ npm install
 npm run build
 ```
 
-The API serves `frontend/dist/index.html` when the Vite build exists and falls
-back to `frontend/public/index.html` during development.
+FastAPI serves `frontend/dist` at `http://127.0.0.1:8000/`. Configure Neo4j,
+DeepSeek, the active vector collection, CORS, optional API authentication, rate
+limits, cache TTL, and Cross-Encoder behavior in `.env`; never commit `.env`.
 
-Build the filing-scoped vector index before using the default hybrid mode:
-
-```powershell
-python scripts/build_single_pdf_vector_index.py
-```
-
-For a containerized run, configure `.env` and use:
+## Reproducibility and checks
 
 ```powershell
-docker build -t strategic-graphrag .
-docker run --env-file .env -p 8000:8000 strategic-graphrag
+python -m unittest discover -s tests -v
+python -m compileall -q strategic_graphrag scripts tests
+python scripts/plan_incremental_update.py `
+  --manifest reports/2026-08-13_corpus_manifest.json `
+  --output reports/incremental_plan.json
+python scripts/audit_strict_chains.py --output reports/strict_chains.json
+cd frontend
+npm run build
 ```
 
-Set `API_AUTH_ENABLED=true` and a real `API_KEY` outside local development.
-`CORS_ORIGINS`, `RATE_LIMIT_PER_MINUTE`, `GRAPH_ACTIVE_FILING`, and
-`LLM_FALLBACK_PROVIDERS` are also deployment controls.
+The current release passed 10 focused Python contracts, Python compilation,
+frontend TypeScript/Vite production build, Neo4j/Chroma post-clean checks, stable
+ID consistency, strict path validation, API health, and browser rendering. The
+largest JavaScript chunk is about 422 kB after splitting React, Motion,
+vis-data, and vis-network.
 
-## Temporal and evidence contract
+One uncached three-year revenue request took 11.20 seconds inside the engine in
+the final local check; a prior cold-start request took 13.65 seconds. A repeated
+cached request returned in about 9 ms wall time. These are development-machine
+observations, not benchmark guarantees.
 
-Every extracted graph edge should carry:
+## Research status and honest limitations
 
-- `year`
-- `source_filing`
-- `source_page`
-- `evidence_id`
+This is a strong engineering candidate, not yet a completed research result:
 
-Every evidence item is represented by an `EvidenceClaim` node connected to the
-exact source sentence and both endpoint entities. LLM evidence is accepted
-only when it is a verbatim normalized span of the input text.
+- Extraction precision/recall has not been measured on a human-annotated
+  relation set. Page coverage is not the same as extraction recall.
+- The existing 38-item auto-generated QA file is stale after the evidence-ID
+  migration and is not a valid Golden QA benchmark. Per project scope, no new
+  manual Golden QA was created in this release.
+- The five-question end-to-end suite was not rerun after the final migration
+  because sending 2023/2024 evidence to the external LLM was not authorized for
+  that audit. One explicit three-year metric query and browser flow were tested.
+- Filing disclosures support attributed relationships; they do not prove
+  counterfactual causality, effect size, probability, or investment outcomes.
+- `NEXT_DISCLOSURE` is a provenance-preserving time index, not full temporal
+  reasoning. A calibrated change classifier and temporal benchmark remain open.
+- API authentication is configurable but disabled in the local demo. It must be
+  enabled with restricted CORS before public deployment.
+- DeepSeek Flash is an external processor. Production use needs documented data
+  governance, consent, retention, and provider-failure behavior.
 
-The API exposes `/query`, `/evidence/{entity_id}`, and
-`/graph/temporal/{risk_id}` for manual end-to-end checks against the active
-Neo4j instance.
+See [the v3 engineering audit](reports/2026-08-13_v3_release_audit.md) and the
+[machine-readable corpus manifest](reports/2026-08-13_corpus_manifest.json).
 
-## Demo preview
+## Next research milestones
 
-The following screenshot is a real local run of the current single-filing
-candidate. It shows the interactive graph canvas and the filing-scoped query
-surface; it is a product preview, not a claim of production deployment.
+1. Label a stratified relation-extraction set and report entity/relation
+   precision, recall, F1, and error categories.
+2. Build a 30-50 question human Golden QA set with stable evidence IDs and
+   unanswerable cases; report retrieval Recall@K, Precision@K, faithfulness,
+   answer relevance, abstention accuracy, and latency distributions.
+3. Add an evidence-grounded temporal change classifier with labels such as
+   new, continued, intensified, mitigated, and resolved; evaluate it separately
+   from disclosure ordering.
+4. Run graph-only, vector-only, hybrid, reranker, and evidence-guard ablations.
+5. Containerize and deploy behind authentication, restricted CORS, observability,
+   request timeouts, and cost controls.
 
-![Strategic-GraphRAG dashboard preview](docs/demo-dashboard.png)
+## License and data
 
-At the current snapshot, the dashboard exposes 54 graph nodes, 68 verified
-EvidenceClaim-backed edges, and a DeepSeek-backed report path for the active
-NVIDIA 2025 10-K. The repository intentionally keeps the corpus at one PDF
-until the ingestion and evidence contract are stable.
-
-Run the read-only single-filing contract check with:
-
-```powershell
-python scripts/validate_single_pdf_kg.py --doc_id 2025-10-K --filename 2025-10-K.pdf
-```
-
-The check verifies EvidenceClaim links, source/target entities, exact text and
-page alignment, relation IDs, years, verbatim verification status, and ontology
-validation. It also reports the source/target category matrix for each
-relation, which is useful for reviewing extraction errors before adding more
-filings.
-
-Path results expose a stable `fingerprint` derived from the ordered nodes,
-relations, years, pages, and EvidenceClaim IDs. This makes later ranking and
-ablation experiments reproducible even when two paths have the same score.
-
-## Limitations of this freeze
-
-- The current benchmark and legacy experiment artifacts are not paper results.
-- `data/evaluation/golden_qa_v2.jsonl` is an automatically generated regression
-  candidate set, not a human-confirmed Golden Dataset. It must be reviewed,
-  deduplicated, and expanded with realistic negative questions before academic
-  claims are made.
-- `reports/golden_qa_v2_results.json` reports structural retrieval metrics only;
-  LLM-judge Faithfulness and Answer Relevance were not enabled in this run.
-- The current single filing cannot establish cross-year temporal trends.
-- Neo4j integration must be verified against the active database instance.
-- The one-PDF stabilization phase precedes the planned 12-document ingestion.
-- Agent planning and reflection are future work, not part of this version.
-
-## Current research and production position
-
-This version should be described as a reproducible single-document research
-baseline and portfolio demo. It demonstrates PDF-to-KG extraction, filing-level
-vector/graph retrieval, causal path ranking, abstention for unsupported
-cross-year questions, and EvidenceClaim provenance. It does not yet establish
-cross-document temporal reasoning, a human-validated benchmark, or production
-readiness.
-
-The next evidence-producing milestones are:
-
-1. Bind the Neo4j snapshot, PDF hash, QA hash, report hash, model, and commit in
-   every evaluation run.
-2. Replace the automatically generated QA candidate set with a deduplicated,
-   human-validated set containing answerable, multi-hop, negative, and temporal
-   questions.
-3. Report retrieval and generation metrics separately: context/evidence
-   recall and precision, citation validity, faithfulness, answer relevance,
-   abstention accuracy, and p50/p95 latency.
-4. Add multi-document temporal joins and either community-level global search
-   or an explicit argument for why filing-scoped local retrieval is preferable
-   for the target finance workflow.
-
-See `reports/stable_single_pdf_report.md` and
-`reports/stable_single_pdf_provenance.json` for the exact candidate scope and
-known limitations.
+Code is intended for academic and portfolio use. SEC filings, model APIs, and
+third-party libraries retain their own licenses and terms. PDFs, vector stores,
+credentials, and large local audit archives are excluded from Git.

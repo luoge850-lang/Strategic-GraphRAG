@@ -9,6 +9,7 @@ import {
   Subgraph,
   CausalPath,
   GNode,
+  FilingScope,
 } from "./lib/api";
 import { fmtLabel, nodeLabelStyle } from "./lib/graph";
 import GraphCanvas from "./components/GraphCanvas";
@@ -91,6 +92,13 @@ const PROMPTS = [
   "How does NVIDIA mitigate supply chain risks?",
   "What risks does NVIDIA face in the China market?",
   "How do supply chain disruptions affect NVIDIA margins?",
+];
+
+const FILING_OPTIONS: Array<{ value: FilingScope; label: string }> = [
+  { value: "2025-10-K.pdf", label: "FY2025 · 10-K" },
+  { value: "2024-10-K.pdf", label: "FY2024 · 10-K" },
+  { value: "2023-10-K.pdf", label: "FY2023 · 10-K" },
+  { value: "all", label: "All verified filings" },
 ];
 
 /* ═══════════════════════════════════════════════════════
@@ -336,16 +344,19 @@ export default function App() {
   const [selectedPath, setSelectedPath] = useState(0);
   const [hoveredNode, setHoveredNode] = useState<GNode | null>(null);
   const [selectedNode, setSelectedNode] = useState<GNode | null>(null);
+  // The demo should show the verified multi-year graph on first load.  Users
+  // can still switch to a single filing from the scope selector below.
+  const [scope, setScope] = useState<FilingScope>("all");
 
   const graphContainerRef = useRef<HTMLDivElement>(null);
   const [graphDim, setGraphDim] = useState({ w: 900, h: 560 });
 
   /* ── Load data ── */
   useEffect(() => {
-    getStats()
+    getStats(scope)
       .then(setStats)
       .catch(() => {});
-    getSubgraph(undefined, 500)
+    getSubgraph(undefined, 500, scope)
       .then((d) => {
         console.log(
           "Graph:",
@@ -357,7 +368,7 @@ export default function App() {
         setSubgraph(d);
       })
       .catch((e) => console.error("Subgraph error:", e));
-  }, []);
+  }, [scope]);
 
   /* ── Measure graph container ── */
   useEffect(() => {
@@ -379,7 +390,7 @@ export default function App() {
     setLoading(true);
     setError("");
     try {
-      const r = await postQuery(q.trim());
+      const r = await postQuery(q.trim(), 10, undefined, undefined, scope);
       setResult(r);
       setSelectedPath(0);
       const hn = new Set<string>();
@@ -393,7 +404,7 @@ export default function App() {
       });
       setHlNodes(hn);
       setHlEdges(he);
-      getStats()
+      getStats(scope)
         .then(setStats)
         .catch(() => {});
     } catch (e) {
@@ -401,7 +412,7 @@ export default function App() {
     } finally {
       setLoading(false);
     }
-  }, [q, loading]);
+  }, [q, loading, scope]);
 
   const clearResults = useCallback(() => {
     setResult(null);
@@ -627,11 +638,11 @@ export default function App() {
                   onSelectNode={setSelectedNode}
                   selectedNode={selectedNode}
                 />
-                <NodeTooltip node={hoveredNode || selectedNode} />
+                <NodeTooltip node={hoveredNode || selectedNode} scope={scope} />
               </div>
             </div>
             <div className="src" style={{ marginTop: 8, paddingLeft: 4 }}>
-              KNOWLEDGE GRAPH · SEC FILINGS · NVIDIA 2025 10-K · {subgraph?.nodes?.length || 0} NODES
+              KNOWLEDGE GRAPH · SEC FILINGS · {FILING_OPTIONS.find((item) => item.value === scope)?.label || "Filing"} · {subgraph?.nodes?.length || 0} NODES
             </div>
           </section>
 
@@ -642,6 +653,27 @@ export default function App() {
               <div className="sub">
                 Natural language queries resolved against the causal graph ·
                 every answer backed by evidence
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "14px 0 12px" }}>
+                <label htmlFor="filing-scope" style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--muted)" }}>
+                  Filing scope
+                </label>
+                <select
+                  id="filing-scope"
+                  value={scope}
+                  onChange={(e) => setScope(e.target.value as FilingScope)}
+                  disabled={loading}
+                  className="input-mono"
+                  style={{ width: "auto", minWidth: 190, padding: "8px 32px 8px 10px", fontSize: 11 }}
+                >
+                  {FILING_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+                <span style={{ fontSize: 10, color: "var(--muted)" }}>
+                  {scope === "all" ? "Cross-year mode" : "Single-filing mode"}
+                </span>
               </div>
 
               <div style={{ position: "relative", marginBottom: 12 }}>
@@ -806,7 +838,7 @@ export default function App() {
                       })}
                     </div>
                     <div className="src" style={{ marginTop: 16 }}>
-                      SYNTHESIS REPORT · {result.intent_display} · NVIDIA 2025 10-K
+                      SYNTHESIS REPORT · {result.intent_display} · {FILING_OPTIONS.find((item) => item.value === scope)?.label || "Filing"}
                     </div>
                   </motion.div>
                 )}
@@ -936,7 +968,7 @@ export default function App() {
               textTransform: "uppercase",
             }}
           >
-            Strategic-GraphRAG v2 · Single-PDF Stable Candidate · Temporal Causal Knowledge Graph for
+            Strategic-GraphRAG v3 · Three-Filing Evidence Candidate · Temporal Causal Knowledge Graph for
             Financial Risk Inference
           </p>
         </footer>

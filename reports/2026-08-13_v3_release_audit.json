@@ -1,0 +1,47 @@
+{
+  "release": "v3-three-filing-evidence-candidate",
+  "date": "2026-08-13",
+  "verdict": "ENGINEERING_CANDIDATE_PASS_WITH_RESEARCH_AND_DEPLOYMENT_LIMITATIONS",
+  "corpus": {
+    "filings": ["2023-10-K.pdf", "2024-10-K.pdf", "2025-10-K.pdf"],
+    "pdf_pages": 395,
+    "strict_claims": 383,
+    "strict_business_edges": 383,
+    "vector_chunks": 1825,
+    "stable_id_version": "v2"
+  },
+  "graph_quality": {
+    "stable_claim_ids": 383,
+    "stable_id_collisions": 0,
+    "strict_two_hop_chains": 49,
+    "invalid_strict_chains": 0,
+    "legacy_edges_after_cleanup": 0,
+    "legacy_evidence_nodes_after_cleanup": 0,
+    "legacy_vector_collections_after_cleanup": 0,
+    "next_disclosure_links": 99,
+    "next_disclosure_semantics": "disclosure order only; not causal evolution"
+  },
+  "verification": {
+    "focused_python_tests": {"passed": 10, "failed": 0},
+    "python_compile": "PASS",
+    "frontend_build": "PASS",
+    "browser_render": "PASS",
+    "api_health": "PASS",
+    "three_year_revenue_query": {
+      "status": "PASS",
+      "relations": ["REPORTS_METRIC", "REPORTS_METRIC", "REPORTS_METRIC"],
+      "years": [2023, 2024, 2025],
+      "values_usd_millions": [26974, 60922, 130497],
+      "grounding": "VERIFIED",
+      "engine_latency_ms": 11197.06
+    }
+  },
+  "not_completed": [
+    "human relation extraction labels and precision/recall/F1",
+    "new human Golden QA",
+    "final five-question external-LLM audit for 2023/2024 evidence",
+    "full temporal change reasoning",
+    "ablation study",
+    "public production deployment"
+  ]
+}

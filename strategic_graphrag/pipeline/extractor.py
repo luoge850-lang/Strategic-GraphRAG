@@ -77,7 +77,14 @@ def _best_alias_span(text: str, aliases: Set[str]) -> Tuple[int, int]:
     for alias in aliases:
         if not alias:
             continue
-        pattern = rf"(?<!\w){re.escape(alias)}(?!\w)"
+        # Filing table labels commonly insert commas ("sales, general and
+        # administrative") while ontology aliases are punctuation-free.
+        # Match the same word sequence across benign separators without
+        # weakening whole-word boundaries.
+        words = re.findall(r"[a-z0-9]+", alias.lower())
+        if not words:
+            continue
+        pattern = rf"(?<!\w){r'[\s,./&-]+'.join(map(re.escape, words))}(?!\w)"
         match = re.search(pattern, text)
         if match:
             matches.append((len(alias), match.start(), match.end()))
@@ -127,7 +134,7 @@ class TripleExtractor:
         else:
             self.llm = get_llm(provider=provider, model=model_name)
 
-        self.model_name = model_name or self.llm.default_model
+        self.model_name = model_name or self.llm.get_task_model("extraction")
         self._llm_enabled = self.llm.available
         self.llm_calls = 0
         self.llm_successes = 0
@@ -721,7 +728,10 @@ class TripleExtractor:
                         "apply", "practice", "invest in"],
     }
 
-    STRUCTURAL_RELATIONS = {"OPERATES_IN", "PRODUCES", "COMPETES_WITH", "DEPENDS_ON"}
+    STRUCTURAL_RELATIONS = {
+        "OPERATES_IN", "PRODUCES", "COMPETES_WITH", "DEPENDS_ON",
+        "REPORTS_METRIC",
+    }
 
     @classmethod
     def _evidence_supports_relation(
@@ -745,6 +755,10 @@ class TripleExtractor:
 
         source_position, source_end = _best_alias_span(text, _entity_aliases(source_name))
         target_position, target_end = _best_alias_span(text, _entity_aliases(target_name))
+        if relation == "REPORTS_METRIC" and target_position >= 0:
+            # The company is the filing owner; the row itself is the strict
+            # evidence unit and must contain the metric plus numeric value.
+            return True, "TABLE_ROW_COMPANY_CONTEXT"
         if source_position < 0 or target_position < 0:
             return False, "ENTITY_NOT_PRESENT_IN_EVIDENCE"
 

@@ -145,6 +145,8 @@
         "COST_OF_REVENUE": {"metric_type": "COST", "description": "Cost of goods sold / cost of revenue"},
         "R_AND_D_EXPENSE": {"metric_type": "COST", "description": "Research and development expenditure"},
         "SG_AND_A_EXPENSE": {"metric_type": "COST", "description": "Selling, general and administrative expense"},
+        "PRETAX_INCOME": {"metric_type": "PROFIT", "description": "Income before income tax"},
+        "INCOME_TAX_EXPENSE": {"metric_type": "COST", "description": "Income tax expense or provision"},
         "CAPEX": {"metric_type": "COST", "description": "Capital expenditures"},
         "EARNINGS_PER_SHARE": {"metric_type": "VALUATION", "description": "Diluted earnings per share"},
         "RETURN_ON_EQUITY": {"metric_type": "EFFICIENCY", "description": "Net income / shareholders' equity"},
@@ -225,6 +227,9 @@
             "doc_id": {"type": "string", "required": true},
             "source_id": {"type": "string", "required": true},
             "target_id": {"type": "string", "required": true},
+            "chunk_id": {"type": "string", "required": false},
+            "evidence_char_start": {"type": "integer", "required": false},
+            "evidence_char_end": {"type": "integer", "required": false},
             "verification_status": {
               "type": "string", "required": true,
               "enum": ["VERBATIM", "REVIEW_REQUIRED", "REJECTED"]
@@ -285,6 +290,13 @@
       "OCCURS_DURING": {"source": ["Event", "RiskFactor"], "target": ["Year", "Quarter"], "semantics": "Event occurs during a time period"},
       "PRECEDES": {"source": ["Event", "RiskFactor"], "target": ["Event", "RiskFactor"], "semantics": "Temporal ordering"},
       "REPORTED_IN": {"source": ["RiskFactor", "Strategy", "FinancialMetric"], "target": ["Year"], "semantics": "Finding is reported in a fiscal year"}
+    },
+    "financial_disclosure": {
+      "REPORTS_METRIC": {
+        "source": ["Company"],
+        "target": ["FinancialMetric"],
+        "semantics": "Company filing discloses a quantitative financial metric; this is not a causal edge"
+      }
     },
     "evidential": {
       "HAS_EVIDENCE": {"source": ["EXPOSED_TO", "CAUSES", "MITIGATES", "AMPLIFIES", "INCREASES", "DECREASES", "TRIGGERS", "AGGRAVATES"], "target": ["Sentence"], "semantics": "Relationship has sentence-level evidence"},

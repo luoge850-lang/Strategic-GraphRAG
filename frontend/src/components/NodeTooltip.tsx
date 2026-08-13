@@ -1,27 +1,41 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { getEvidence, EvidenceItem, GNode } from "../lib/api";
+import { getEvidence, EvidenceItem, GNode, FilingScope } from "../lib/api";
 import { fmtLabel, nodeColor } from "../lib/graph";
 
 interface Props {
   node: GNode | null;
+  scope: FilingScope;
 }
 
-export default function NodeTooltip({ node }: Props) {
+export default function NodeTooltip({ node, scope }: Props) {
   const [evidence, setEvidence] = useState<EvidenceItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const requestId = useRef(0);
 
   useEffect(() => {
     if (!node) {
+      requestId.current += 1;
       setEvidence([]);
+      setError("");
       return;
     }
+    const currentRequest = ++requestId.current;
+    setEvidence([]);
+    setError("");
     setLoading(true);
-    getEvidence(node.id, 5)
-      .then((r) => setEvidence(r.evidence || []))
-      .catch(() => setEvidence([]))
-      .finally(() => setLoading(false));
-  }, [node?.id]);
+    getEvidence(node.id, 5, scope)
+      .then((r) => {
+        if (currentRequest === requestId.current) setEvidence(r.evidence || []);
+      })
+      .catch(() => {
+        if (currentRequest === requestId.current) setError("Evidence request failed");
+      })
+      .finally(() => {
+        if (currentRequest === requestId.current) setLoading(false);
+      });
+  }, [node?.id, scope]);
 
   if (!node) return null;
 
@@ -211,6 +225,20 @@ export default function NodeTooltip({ node }: Props) {
                     {ev.fiscal_year ? ` · FY${ev.fiscal_year}` : ""}
                   </p>
                 )}
+                {ev.metric_value && (
+                  <p
+                    style={{
+                      fontSize: 8.5,
+                      color: "var(--L1)",
+                      margin: "4px 0 0",
+                      fontWeight: 600,
+                    }}
+                  >
+                    Disclosed value: {ev.metric_value}
+                    {ev.metric_unit ? ` · ${ev.metric_unit}` : ""}
+                    {ev.metric_period ? ` · FY ${ev.metric_period}` : ""}
+                  </p>
+                )}
               </div>
             ))}
           </div>
@@ -238,7 +266,7 @@ export default function NodeTooltip({ node }: Props) {
               marginTop: 4,
             }}
           >
-            No evidence on file
+            {error || "No verified evidence on file"}
           </p>
         )}
       </motion.div>

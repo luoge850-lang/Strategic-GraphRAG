@@ -61,7 +61,7 @@ def _fetch_claims(claim_ids: list[str], filename: str) -> dict[str, dict[str, An
                 WHERE c.id IN $ids
                   AND c.doc_id = replace($filename, '.pdf', '')
                 RETURN c.id AS id, c.text AS text,
-                       c.page AS page, c.year AS year,
+                       c.page AS page, coalesce(c.fiscal_year, c.year) AS year,
                        c.evidence_char_start AS char_start,
                        c.evidence_char_end AS char_end,
                        c.verification_status AS verification_status

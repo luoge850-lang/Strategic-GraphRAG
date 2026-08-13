@@ -33,7 +33,7 @@ class VectorRAGBaseline:
         db_path: str = "data/chroma_db",
         collection_name: str = None,
         embedding_model: str = "all-MiniLM-L6-v2",
-        model_name: str = "llama-3.3-70b-versatile",
+        model_name: str = None,
     ):
         self.db_path = db_path
         self.collection_name = collection_name or os.getenv(
@@ -52,6 +52,7 @@ class VectorRAGBaseline:
         # LLM via unified provider
         from ..llm_provider import get_llm
         self.llm = get_llm()
+        self.model_name = self.model_name or self.llm.get_task_model("report")
         self._has_llm = self.llm.available
         if not self._has_llm:
             logger.warning("No LLM provider — synthesis disabled")
@@ -84,9 +85,8 @@ class VectorRAGBaseline:
         """Retrieve semantic chunks with scope and ranking diagnostics.
 
         Hybrid retrieval must not silently use an unscoped legacy collection.
-        When a filing is requested, the collection must contain a
-        ``source_filing`` metadata field; otherwise the caller receives an
-        explicit ``UNSCOPED_COLLECTION`` status.
+        When a filing is requested, the collection is filtered by its
+        ``source_filing`` metadata field and failures are reported explicitly.
         """
         if not self.collection or self.collection.count() == 0:
             return {"status": "EMPTY", "hits": [], "collection": self.collection_name}
@@ -104,16 +104,17 @@ class VectorRAGBaseline:
         except Exception as e:
             if source_filing:
                 logger.warning(
-                    "Vector collection %s is not scoped for filing %s: %s",
+                    "Scoped vector retrieval failed for collection %s and filing %s: %s",
                     self.collection_name,
                     source_filing,
                     e,
                 )
                 return {
-                    "status": "UNSCOPED_COLLECTION",
+                    "status": "ERROR",
                     "hits": [],
                     "collection": self.collection_name,
                     "source_filing": source_filing,
+                    "error": type(e).__name__,
                 }
             logger.error(f"Retrieval error: {e}")
             return {"status": "ERROR", "hits": [], "collection": self.collection_name}
@@ -159,7 +160,12 @@ Provide a concise, factual answer. Do not make up information not in the context
         if not self._has_llm:
             return f"[LLM unavailable]\n\nRelevant excerpts:\n{context[:2000]}"
 
-        result = self.llm.chat(prompt=prompt, temperature=0.1, max_tokens=1000)
+        result = self.llm.chat(
+            prompt=prompt,
+            model=self.model_name,
+            temperature=0.1,
+            max_tokens=1000,
+        )
         if result is None:
             return f"[Generation error: LLM call failed]"
         return result
