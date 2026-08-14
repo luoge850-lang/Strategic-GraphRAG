@@ -1,6 +1,6 @@
 {
   "schema": "strategic-graphrag-corpus-manifest/v2",
-  "generated_at_utc": "2026-08-14T05:52:23.645947+00:00",
+  "generated_at_utc": "2026-08-14T05:57:54.707902+00:00",
   "corpus_id": "nvidia-10k-2023-2025-v3",
   "active_filings": [
     {
@@ -58,7 +58,7 @@
   },
   "pipeline": {
     "prompt_version": "v2-evidence-claim-1",
-    "source_tree_sha256": "d117786611523a11fcb9eaa09de6d4cd2073c8262414bc64bdaa5b62ff2b297c"
+    "source_tree_sha256": "bbee6584f747ab25c0b98cd12970c3320b0ef245a5174f2050f7a7ba039bf47f"
   },
   "runtime": {
     "python": "3.12.13",
@@ -72,7 +72,7 @@
   },
   "git": {
     "branch": "codex/v3-three-filing-evidence-graphrag",
-    "release_source_commit": "ac17e0bb04be63242df2d45ccfb9bdfbf6c7a185",
+    "release_source_commit": "6ff08685f3353f31b48df083cb845f8aced7f05b",
     "dirty": false
   },
   "evaluation": {
