@@ -425,17 +425,20 @@ class SchemaManager:
               AND ($source_filing IS NULL OR
                    coalesce(rel.source_filing, rel.filing, '') = $source_filing)
             RETURN
-                collect(DISTINCT {key: elementId(source), labels: labels(source)}) +
-                collect(DISTINCT {key: elementId(target), labels: labels(target)}) AS nodes,
+                collect(DISTINCT {key: coalesce(source.id, elementId(source)), labels: labels(source)}) +
+                collect(DISTINCT {key: coalesce(target.id, elementId(target)), labels: labels(target)}) AS nodes,
                 collect({type: type(rel), evidence_id: claim.id}) AS relationships
             """,
             source_filing=source_filing,
         )
         row = rows[0] if rows else {}
-        unique_nodes = {
-            item.get("key"): item for item in (row.get("nodes") or [])
-            if item.get("key")
-        }
+        unique_nodes: Dict[str, Dict] = {}
+        for item in row.get("nodes") or []:
+            key = item.get("key")
+            if not key:
+                continue
+            current = unique_nodes.setdefault(key, {"key": key, "labels": []})
+            current["labels"] = sorted(set(current["labels"]) | set(item.get("labels") or []))
         relationships = row.get("relationships") or []
         by_label: Dict[str, int] = {}
         by_relationship: Dict[str, int] = {}
