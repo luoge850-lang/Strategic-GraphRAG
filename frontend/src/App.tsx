@@ -339,6 +339,8 @@ export default function App() {
   const [stats, setStats] = useState<GraphStats | null>(null);
   const [error, setError] = useState("");
   const [subgraph, setSubgraph] = useState<Subgraph | null>(null);
+  const [graphLoading, setGraphLoading] = useState(true);
+  const [graphError, setGraphError] = useState("");
   const [hlNodes, setHlNodes] = useState<Set<string>>(new Set());
   const [hlEdges, setHlEdges] = useState<Set<string>>(new Set());
   const [selectedPath, setSelectedPath] = useState(0);
@@ -353,9 +355,11 @@ export default function App() {
 
   /* ── Load data ── */
   useEffect(() => {
+    setGraphLoading(true);
+    setGraphError("");
     getStats(scope)
       .then(setStats)
-      .catch(() => {});
+      .catch((e) => setGraphError(`Statistics unavailable: ${e instanceof Error ? e.message : "request failed"}`));
     getSubgraph(undefined, 500, scope)
       .then((d) => {
         console.log(
@@ -366,8 +370,13 @@ export default function App() {
           "edges"
         );
         setSubgraph(d);
+        setGraphLoading(false);
       })
-      .catch((e) => console.error("Subgraph error:", e));
+      .catch((e) => {
+        console.error("Subgraph error:", e);
+        setGraphError(`Graph unavailable: ${e instanceof Error ? e.message : "request failed"}`);
+        setGraphLoading(false);
+      });
   }, [scope]);
 
   /* ── Measure graph container ── */
@@ -629,6 +638,16 @@ export default function App() {
                 className="card-graph-inner"
                 style={{ height: 560, position: "relative" }}
               >
+                {graphLoading && (
+                  <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", zIndex: 3, background: "rgba(247,246,242,0.88)", fontSize: 11, color: "var(--muted)" }}>
+                    Loading verified EvidenceClaim graph…
+                  </div>
+                )}
+                {graphError && !graphLoading && (
+                  <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", zIndex: 3, background: "rgba(247,246,242,0.94)", padding: 24, textAlign: "center", fontSize: 11, color: "#8a3030" }}>
+                    {graphError}. Reload the page after /health/ready reports ready.
+                  </div>
+                )}
                 <GraphCanvas
                   subgraph={subgraph}
                   hlNodes={hlNodes}

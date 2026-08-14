@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.metadata
 import json
 import os
 import subprocess
@@ -12,6 +13,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from neo4j import GraphDatabase
+import chromadb
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -37,6 +39,33 @@ def git_value(*args: str) -> str:
     return result.stdout.strip()
 
 
+def source_tree_sha256() -> str:
+    digest = hashlib.sha256()
+    tracked = git_value("ls-files").splitlines()
+    for relative in sorted(tracked):
+        if not (
+            relative.startswith(("strategic_graphrag/", "frontend/src/", "scripts/", "tests/"))
+            or relative.startswith("requirements")
+            or relative in {".env.example", "README.md"}
+        ):
+            continue
+        path = ROOT / relative
+        if path.is_file():
+            digest.update(relative.encode("utf-8"))
+            digest.update(path.read_bytes())
+    return digest.hexdigest()
+
+
+def package_versions() -> dict[str, str]:
+    result = {}
+    for name in ("neo4j", "chromadb", "onnxruntime", "fastapi", "sentence-transformers"):
+        try:
+            result[name] = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            result[name] = "NOT_INSTALLED"
+    return result
+
+
 def main() -> None:
     output = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "corpus_manifest.json"
     load_dotenv(ROOT / ".env", override=True)
@@ -57,10 +86,25 @@ def main() -> None:
                 """,
                 filings=[path.name for path in ACTIVE_PDFS],
             )]
+            temporal = dict(session.run(
+                """
+                OPTIONAL MATCH ()-[next:NEXT_DISCLOSURE]->()
+                WITH count(next) AS disclosure_links
+                OPTIONAL MATCH (change:TemporalChange {model_version:'observed_change_v1'})
+                RETURN disclosure_links, count(change) AS temporal_changes,
+                       sum(CASE WHEN change.quantitative=true THEN 1 ELSE 0 END) AS quantitative_changes
+                """
+            ).single() or {})
     finally:
         driver.close()
+    collection_name = os.getenv("GRAPH_VECTOR_COLLECTION", "nvidia_sec_filings_active")
+    client = chromadb.PersistentClient(path=str(ROOT / "data/chroma_db"))
+    try:
+        vector_count = client.get_collection(collection_name).count()
+    except Exception:
+        vector_count = 0
     manifest = {
-        "schema": "strategic-graphrag-corpus-manifest/v1",
+        "schema": "strategic-graphrag-corpus-manifest/v2",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "corpus_id": "nvidia-10k-2023-2025-v3",
         "active_filings": [
@@ -68,20 +112,37 @@ def main() -> None:
             for path in ACTIVE_PDFS
         ],
         "graph_inventory": rows,
+        "temporal_inventory": temporal,
         "claim_id_version": "v2",
         "ontology_sha256": sha256(ROOT / "strategic_graphrag" / "ontology" / "financial_ontology.json"),
         "provider": os.getenv("LLM_PROVIDER"),
         "extraction_model": os.getenv("LLM_EXTRACTION_MODEL") or os.getenv("LLM_MODEL"),
         "query_model": os.getenv("LLM_QUERY_MODEL") or os.getenv("LLM_MODEL"),
         "report_model": os.getenv("LLM_REPORT_MODEL") or os.getenv("LLM_MODEL"),
-        "embedding_model": os.getenv("GRAPH_EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
-        "vector_collection": os.getenv("GRAPH_VECTOR_COLLECTION", "nvidia_sec_filings_active"),
+        "embedding": {
+            "backend": os.getenv("GRAPH_EMBEDDING_BACKEND", "sentence_transformers"),
+            "model": os.getenv("GRAPH_EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
+            "collection": collection_name,
+            "chunk_count": vector_count,
+        },
+        "pipeline": {
+            "prompt_version": os.getenv("GRAPHRAG_PROMPT_VERSION", "v2-evidence-claim-1"),
+            "source_tree_sha256": source_tree_sha256(),
+        },
+        "runtime": {
+            "python": sys.version.split()[0],
+            "packages": package_versions(),
+        },
         "git": {
             "branch": git_value("branch", "--show-current"),
-            "head": git_value("rev-parse", "HEAD"),
+            "release_source_commit": git_value("rev-parse", "HEAD"),
             "dirty": bool(git_value("status", "--porcelain")),
         },
-        "evaluation_status": "NO_CURRENT_HUMAN_GOLDEN_QA",
+        "evaluation": {
+            "extraction_baseline": "reports/2026-08-14_extraction_quality_baseline.json",
+            "human_annotation_status": "UNLABELED_STRATIFIED_SAMPLE",
+            "golden_qa_status": "NO_CURRENT_HUMAN_GOLDEN_QA",
+        },
     }
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")

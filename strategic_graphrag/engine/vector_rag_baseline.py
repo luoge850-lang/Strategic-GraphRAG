@@ -32,7 +32,7 @@ class VectorRAGBaseline:
         self,
         db_path: str = "data/chroma_db",
         collection_name: str = None,
-        embedding_model: str = "all-MiniLM-L6-v2",
+        embedding_model: str = None,
         model_name: str = None,
     ):
         self.db_path = db_path
@@ -40,12 +40,31 @@ class VectorRAGBaseline:
             "GRAPH_VECTOR_COLLECTION", "nvidia_sec_filings"
         )
         self.model_name = model_name
+        self.embedding_model = embedding_model or os.getenv(
+            "GRAPH_EMBEDDING_MODEL", "all-MiniLM-L6-v2"
+        )
+        self.embedding_backend = os.getenv(
+            "GRAPH_EMBEDDING_BACKEND", "chroma_onnx"
+        ).strip().lower()
 
         # ChromaDB
         self.client = chromadb.PersistentClient(path=db_path)
-        self.embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-            model_name=embedding_model
-        )
+        if self.embedding_backend == "sentence_transformers":
+            # Production inference uses the pinned local model cache and must
+            # not add Hugging Face network retries to request latency.
+            os.environ.setdefault("HF_HUB_OFFLINE", "1")
+            os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+            self.embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
+                model_name=self.embedding_model
+            )
+        elif self.embedding_backend == "chroma_onnx":
+            # Chroma's ONNX MiniLM backend keeps Hybrid retrieval independent
+            # from PyTorch/Sentence-Transformers at service startup.
+            self.embedding_fn = embedding_functions.DefaultEmbeddingFunction()
+        else:
+            raise ValueError(
+                "GRAPH_EMBEDDING_BACKEND must be chroma_onnx or sentence_transformers"
+            )
         self.collection = None
         self._init_collection()
 
@@ -139,6 +158,19 @@ class VectorRAGBaseline:
             "hits": hits,
             "collection": self.collection_name,
             "source_filing": source_filing,
+            "embedding_backend": self.embedding_backend,
+            "embedding_model": self.embedding_model,
+        }
+
+    def diagnostics(self) -> Dict[str, Any]:
+        """Return machine-readable readiness without invoking the LLM."""
+        count = self.collection.count() if self.collection is not None else 0
+        return {
+            "ready": count > 0,
+            "collection": self.collection_name,
+            "count": count,
+            "embedding_backend": self.embedding_backend,
+            "embedding_model": self.embedding_model,
         }
 
     def generate(self, query: str, context_chunks: List[str]) -> str:

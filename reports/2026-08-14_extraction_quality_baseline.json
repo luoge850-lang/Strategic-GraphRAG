@@ -1,0 +1,47 @@
+{
+  "schema": "strategic-graphrag-extraction-quality/v1",
+  "generated_at_utc": "2026-08-14T05:26:53.483496+00:00",
+  "scope": [
+    "2023-10-K",
+    "2024-10-K",
+    "2025-10-K"
+  ],
+  "claim_count": 383,
+  "automated_metrics": {
+    "verbatim_page_match_rate": 1.0,
+    "required_provenance_completeness": 1.0,
+    "exactly_one_linked_business_edge_rate": 1.0,
+    "duplicate_excess_claims": 0
+  },
+  "distribution": {
+    "by_filing": {
+      "2023-10-K": 126,
+      "2024-10-K": 129,
+      "2025-10-K": 128
+    },
+    "by_section": {
+      "Item 1 - Business": 79,
+      "Item 1A - Risk Factors": 109,
+      "Item 7 - Management's Discussion and Analysis": 93,
+      "Item 8/15 - Financial Statements and Schedules": 102
+    },
+    "by_extraction_method": {
+      "RULE_EXTRACTION": 169,
+      "LLM_EXTRACTION": 92,
+      "TABLE_EXTRACTION": 122
+    }
+  },
+  "semantic_metrics": {
+    "entity_precision": "NOT_MEASURED",
+    "relation_precision": "NOT_MEASURED",
+    "evidence_support_precision": "NOT_MEASURED",
+    "relation_recall": "NOT_MEASURED",
+    "reason": "Independent labels are required; automated self-scoring would inflate quality."
+  },
+  "annotation_sample": {
+    "path": "evaluation\\annotation\\extraction_sample_v1.jsonl",
+    "rows": 60,
+    "labeled": 0,
+    "seed": 20260814
+  }
+}

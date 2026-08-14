@@ -1,6 +1,7 @@
 ﻿# =============================================================================
 # Strategic-GraphRAG: Runtime Dependencies
-# Single-PDF stabilization scope; evaluation and local-model extras are optional.
+# Core API/runtime dependencies. Heavy local-model and legacy dashboard extras
+# live in requirements-optional.txt so Hybrid does not require PyTorch.
 # =============================================================================
 
 # --- Graph database and LLM providers ---
@@ -14,15 +15,12 @@ pdfplumber>=0.11
 pymupdf>=1.24
 langchain-text-splitters>=0.3
 
-# --- Vector and reranking ---
+# --- Vector retrieval (Chroma's ONNX MiniLM backend) ---
 chromadb>=0.5
-sentence-transformers>=3.0
 
 # --- API and dashboard ---
 fastapi>=0.110
 uvicorn>=0.30
-streamlit>=1.35
-pyvis>=0.3.2
 
 # --- Utilities ---
 python-dotenv>=1.0
@@ -30,7 +28,3 @@ numpy>=1.24
 pydantic>=2.0
 nltk>=3.8
 certifi>=2024.0
-
-# --- Optional local-model support ---
-# torch>=2.2
-# transformers>=4.40

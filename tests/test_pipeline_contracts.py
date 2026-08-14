@@ -128,6 +128,12 @@ class PipelineContractTests(unittest.TestCase):
             ),
             "hybrid",
         )
+        self.assertEqual(
+            GraphRAGEngine._resolve_retrieval_mode(
+                "How do export controls impact NVIDIA revenue?", "auto", "REVENUE"
+            ),
+            "hybrid",
+        )
 
     def test_incremental_plan_only_rebuilds_changed_files(self):
         manifest = {

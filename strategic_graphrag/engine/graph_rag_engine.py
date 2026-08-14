@@ -311,6 +311,46 @@ class CausalPathFinder:
             logger.info("Entity full-text lookup unavailable: %s", type(exc).__name__)
             return []
 
+    def find_vector_evidence_anchors(
+        self, vector_hits: List[Dict[str, Any]], limit: int = 12
+    ) -> List[str]:
+        """Join semantic filing/page hits back to strict EvidenceClaim entities."""
+        pages = []
+        for hit in vector_hits or []:
+            metadata = hit.get("metadata") or {}
+            filing = metadata.get("source_filing") or metadata.get("doc_id")
+            try:
+                page = int(metadata.get("page"))
+            except (TypeError, ValueError):
+                continue
+            if filing and page > 0:
+                pages.append({"doc_id": str(filing).removesuffix(".pdf"), "page": page})
+        if not pages:
+            return []
+        try:
+            with self.driver.session() as session:
+                rows = session.run(
+                    """
+                    UNWIND $pages AS item
+                    MATCH (claim:EvidenceClaim {doc_id:item.doc_id, page:item.page})
+                    WHERE claim.verification_status='VERBATIM'
+                    RETURN claim.source_id AS source_id, claim.target_id AS target_id,
+                           count(*) AS support
+                    ORDER BY support DESC LIMIT $limit
+                    """,
+                    pages=pages,
+                    limit=int(limit),
+                )
+                anchors = []
+                for row in rows:
+                    for value in (row.get("source_id"), row.get("target_id")):
+                        if value and value not in anchors:
+                            anchors.append(str(value))
+                return anchors[:limit]
+        except Exception as exc:
+            logger.info("Vector evidence anchor join unavailable: %s", type(exc).__name__)
+            return []
+
     def find_paths(
         self,
         anchor_entities: List[str],
@@ -851,9 +891,17 @@ CRITICAL STYLE RULES:
         # Add LLM-extracted anchors
         llm_anchors = self._llm_extract_anchors(user_query)
         lexical_anchors = self.path_finder.find_text_anchors(user_query, limit=8)
-        all_anchors = list(dict.fromkeys(query_entities + lexical_anchors + llm_anchors))
+        vector_anchors = self.path_finder.find_vector_evidence_anchors(
+            vector_retrieval.get("hits", []), limit=12
+        ) if retrieval_mode == "hybrid" else []
+        all_anchors = list(dict.fromkeys(query_entities + lexical_anchors + vector_anchors + llm_anchors))
         target_metric = structured_query.target_metric
-        if target_metric:
+        metric_only = bool(target_metric) and not re.search(
+            r"\b(affect|impact|cause|risk|control|constraint|exposure|supply chain|why|how)\b",
+            user_query,
+            re.IGNORECASE,
+        )
+        if metric_only:
             # Exact financial questions should search from the named metric.
             # A ubiquitous Company anchor can otherwise fill Neo4j's bounded
             # result window before the requested REPORTS_METRIC edge appears.
@@ -1045,7 +1093,12 @@ CRITICAL STYLE RULES:
         if requested_mode in {"graph", "hybrid"}:
             return requested_mode
         query_upper = str(user_query or "").upper().replace("-", "_")
-        if target_metric or any(rel in query_upper for rel in VALID_RELATIONS):
+        causal_or_exploratory = re.search(
+            r"\b(affect|impact|cause|risk|control|constraint|exposure|supply chain|why|how)\b",
+            str(user_query or ""),
+            re.IGNORECASE,
+        )
+        if (target_metric and not causal_or_exploratory) or any(rel in query_upper for rel in VALID_RELATIONS):
             return "graph"
         return "hybrid"
 
@@ -1113,7 +1166,7 @@ CRITICAL STYLE RULES:
             )
 
         diagnostics.update({
-            "mode": "HYBRID",
+            "mode": "HYBRID" if matched else "HYBRID_CONTEXT_ONLY",
             "matched_paths": matched,
             "fusion": "0.75_graph_score + 0.25_vector_page_rank",
         })

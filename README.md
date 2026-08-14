@@ -11,10 +11,10 @@ structured answers whose citations can be joined back to verbatim PDF text.
 
 | Filing | Pages | Strict EvidenceClaims | Evidence pages | Vector chunks |
 |---|---:|---:|---:|---:|
-| 2023 10-K | 169 | 126 | 44 | 730 |
-| 2024 10-K | 96 | 129 | 41 | 461 |
-| 2025 10-K | 130 | 128 | 43 | 634 |
-| **Total** | **395** | **383** | **128 filing-page pairs** | **1,825** |
+| 2023 10-K | 169 | 126 | 44 | 678 |
+| 2024 10-K | 96 | 129 | 41 | 425 |
+| 2025 10-K | 130 | 128 | 43 | 583 |
+| **Total** | **395** | **383** | **128 filing-page pairs** | **1,686** |
 
 The active graph has 383 strict business edges, each linked to a `VERBATIM`
 EvidenceClaim with filing, page, section, chunk, source entity, target entity,
@@ -45,13 +45,15 @@ Three allowlisted 10-K PDFs
 
 Key implementation decisions:
 
-- Exact metric questions route to `REPORTS_METRIC` facts rather than risk edges.
-- Exploratory questions use graph + vector retrieval; explicit metric or
-  ontology-relation questions can skip the vector round trip.
+- Exact metric-only questions route to `REPORTS_METRIC` facts. Causal questions
+  that mention a metric remain Hybrid so vector evidence pages can expand graph
+  anchors before path search.
 - Every synthesized citation is checked against the returned path evidence.
 - Repeated disclosures across years are connected by 99 derived
-  `NEXT_DISCLOSURE` links. These mean disclosure order only, not intensification,
-  decline, or real-world causal change.
+  `NEXT_DISCLOSURE` links. A separate `observed_change_v1` layer connects the
+  same EvidenceClaim pairs through 99 `TemporalChange` nodes: 22 comparable
+  quantitative metric changes, 13 non-comparable metric pairs, and 64 repeated
+  narrative disclosures. It does not infer resolution from omission.
 - Identical successful API requests can use a bounded TTL cache. Responses
   expose `cache.hit`, selected retrieval mode, and per-stage latency so cached
   and uncached performance are not mixed.
@@ -80,7 +82,7 @@ from some LangChain/Pydantic dependencies.
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -r requirements-hybrid.txt
 Copy-Item .env.example .env
 uvicorn strategic_graphrag.api.server:app --host 127.0.0.1 --port 8000
 ```
@@ -100,61 +102,64 @@ limits, cache TTL, and Cross-Encoder behavior in `.env`; never commit `.env`.
 ## Reproducibility and checks
 
 ```powershell
-python -m unittest discover -s tests -v
+python -m pytest -q
+python scripts/check_runtime.py
 python -m compileall -q strategic_graphrag scripts tests
 python scripts/plan_incremental_update.py `
-  --manifest reports/2026-08-13_corpus_manifest.json `
+  --manifest reports/2026-08-14_corpus_manifest.json `
   --output reports/incremental_plan.json
 python scripts/audit_strict_chains.py --output reports/strict_chains.json
 cd frontend
 npm run build
 ```
 
-The current release passed 10 focused Python contracts, Python compilation,
+The current release passed 14 focused Python contracts, Python compilation,
 frontend TypeScript/Vite production build, Neo4j/Chroma post-clean checks, stable
 ID consistency, strict path validation, API health, and browser rendering. The
 largest JavaScript chunk is about 422 kB after splitting React, Motion,
 vis-data, and vis-network.
 
-One uncached three-year revenue request took 11.20 seconds inside the engine in
-the final local check; a prior cold-start request took 13.65 seconds. A repeated
-cached request returned in about 9 ms wall time. These are development-machine
-observations, not benchmark guarantees.
+In the final local check, liveness returned in 5-22 ms, the all-filing graph
+loaded in 1.04 s cold / 12 ms cached, and a real uncached Hybrid export-control
+query completed in 16.07 s (29.68 ms vector retrieval; 8.39 s LLM synthesis).
+These are development observations, not benchmark guarantees.
 
 ## Research status and honest limitations
 
 This is a strong engineering candidate, not yet a completed research result:
 
-- Extraction precision/recall has not been measured on a human-annotated
-  relation set. Page coverage is not the same as extraction recall.
+- Automated provenance checks passed for all 383 claims: 100% declared-page
+  verbatim match, 100% required provenance completeness, one linked business
+  edge per claim, and zero exact duplicates. Semantic extraction precision and
+  recall remain `NOT_MEASURED`; a deterministic 60-claim stratified annotation
+  sample is prepared but intentionally unlabeled.
 - The existing 38-item auto-generated QA file is stale after the evidence-ID
   migration and is not a valid Golden QA benchmark. Per project scope, no new
   manual Golden QA was created in this release.
-- The five-question end-to-end suite was not rerun after the final migration
-  because sending 2023/2024 evidence to the external LLM was not authorized for
-  that audit. One explicit three-year metric query and browser flow were tested.
+- A real DeepSeek Flash Hybrid query and the corresponding browser flow were
+  tested across all three filings. This is a smoke test, not a Golden QA score.
 - Filing disclosures support attributed relationships; they do not prove
   counterfactual causality, effect size, probability, or investment outcomes.
-- `NEXT_DISCLOSURE` is a provenance-preserving time index, not full temporal
-  reasoning. A calibrated change classifier and temporal benchmark remain open.
+- `observed_change_v1` provides transaction-time and valid-period fields plus
+  defensible numeric deltas. Narrative intensified/mitigated/resolved labels
+  and an independently labeled temporal benchmark remain open.
 - API authentication is configurable but disabled in the local demo. It must be
   enabled with restricted CORS before public deployment.
 - DeepSeek Flash is an external processor. Production use needs documented data
   governance, consent, retention, and provider-failure behavior.
 
-See [the v3 engineering audit](reports/2026-08-13_v3_release_audit.md) and the
-[machine-readable corpus manifest](reports/2026-08-13_corpus_manifest.json).
+See [the P0/P1 acceptance audit](reports/2026-08-14_p0_p1_acceptance.md) and the
+[machine-readable corpus manifest](reports/2026-08-14_corpus_manifest.json).
 
 ## Next research milestones
 
-1. Label a stratified relation-extraction set and report entity/relation
+1. Label the prepared stratified relation-extraction set and report entity/relation
    precision, recall, F1, and error categories.
 2. Build a 30-50 question human Golden QA set with stable evidence IDs and
    unanswerable cases; report retrieval Recall@K, Precision@K, faithfulness,
    answer relevance, abstention accuracy, and latency distributions.
-3. Add an evidence-grounded temporal change classifier with labels such as
-   new, continued, intensified, mitigated, and resolved; evaluate it separately
-   from disclosure ordering.
+3. Extend observed numeric changes with independently labeled narrative states
+   such as new, intensified, mitigated, and resolved; evaluate them separately.
 4. Run graph-only, vector-only, hybrid, reranker, and evidence-guard ablations.
 5. Containerize and deploy behind authentication, restricted CORS, observability,
    request timeouts, and cost controls.

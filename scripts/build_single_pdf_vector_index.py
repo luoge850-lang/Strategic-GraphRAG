@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Dict, List
 
 import chromadb
-import fitz
+import pymupdf as fitz
 from chromadb.utils import embedding_functions
 from dotenv import load_dotenv
 
@@ -73,10 +73,18 @@ def build_index(pdf_path: Path, db_path: Path, collection_name: str) -> Dict[str
         raise ValueError(f"No text chunks extracted from {pdf_path}")
 
     embedding_model = os.getenv("GRAPH_EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+    embedding_backend = os.getenv("GRAPH_EMBEDDING_BACKEND", "chroma_onnx").strip().lower()
     client = chromadb.PersistentClient(path=str(db_path))
-    embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-        model_name=embedding_model
-    )
+    if embedding_backend == "chroma_onnx":
+        embedding_fn = embedding_functions.DefaultEmbeddingFunction()
+    elif embedding_backend == "sentence_transformers":
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
+        os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+        embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name=embedding_model
+        )
+    else:
+        raise ValueError("GRAPH_EMBEDDING_BACKEND must be chroma_onnx or sentence_transformers")
     collection = client.get_or_create_collection(
         name=collection_name,
         embedding_function=embedding_fn,
@@ -89,6 +97,8 @@ def build_index(pdf_path: Path, db_path: Path, collection_name: str) -> Dict[str
         "chunks": len(documents),
         "collection": collection_name,
         "collection_count": collection.count(),
+        "embedding_backend": embedding_backend,
+        "embedding_model": embedding_model,
     }
 
 

@@ -2,6 +2,16 @@
 // same-origin and exposes these routes at the root.
 const B = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "/api" : "");
 
+async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}, timeoutMs = 15000) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(input, { ...init, signal: controller.signal });
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
 export interface CausalPath {
   path_id: string;
   nodes: string[];
@@ -117,11 +127,11 @@ export async function postQuery(
   if (yearEnd !== undefined) body.year_end = yearEnd;
   body.cross_filing = scope === "all";
   if (scope !== "all") body.source_filing = scope;
-  const r = await fetch(`${B}/query`, {
+  const r = await fetchWithTimeout(`${B}/query`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
-  });
+  }, 120000);
   if (!r.ok) throw new Error(`Query ${r.status}`);
   return r.json();
 }
@@ -129,7 +139,7 @@ export async function postQuery(
 export async function getStats(scope: FilingScope = "all"): Promise<GraphStats> {
   const p = new URLSearchParams();
   applyScope(p, scope);
-  const r = await fetch(`${B}/graph/statistics?${p}`);
+  const r = await fetchWithTimeout(`${B}/graph/statistics?${p}`);
   if (!r.ok) throw new Error(`Stats ${r.status}`);
   return r.json();
 }
@@ -143,7 +153,7 @@ export async function getSubgraph(
   if (entity) p.set("entity", entity);
   p.set("limit", String(limit));
   applyScope(p, scope);
-  const r = await fetch(`${B}/graph/subgraph?${p}`);
+  const r = await fetchWithTimeout(`${B}/graph/subgraph?${p}`);
   if (!r.ok) throw new Error(`Subgraph ${r.status}`);
   return r.json();
 }
@@ -155,7 +165,7 @@ export async function getEvidence(
 ): Promise<EvidenceResult> {
   const p = new URLSearchParams({ limit: String(limit) });
   applyScope(p, scope);
-  const r = await fetch(`${B}/evidence/${encodeURIComponent(entityId)}?${p}`);
+  const r = await fetchWithTimeout(`${B}/evidence/${encodeURIComponent(entityId)}?${p}`);
   if (!r.ok) throw new Error(`Evidence ${r.status}`);
   return r.json();
 }
@@ -175,7 +185,7 @@ export async function getTemporalEvolution(
   riskId: string,
   limit = 20,
 ): Promise<TemporalEvent[]> {
-  const r = await fetch(`${B}/graph/temporal/${encodeURIComponent(riskId)}?limit=${limit}`);
+  const r = await fetchWithTimeout(`${B}/graph/temporal/${encodeURIComponent(riskId)}?limit=${limit}`);
   if (!r.ok) throw new Error(`Temporal ${r.status}`);
   return r.json();
 }

@@ -1,0 +1,21 @@
+{
+  "schema": "strategic-graphrag-temporal-change/v1",
+  "generated_at_utc": "2026-08-14T05:50:13.799774+00:00",
+  "model_version": "observed_change_v1",
+  "mode": "apply",
+  "input_disclosure_links": 99,
+  "change_nodes": 99,
+  "applied": 99,
+  "by_change_type": {
+    "CONTINUED_DISCLOSURE": 58,
+    "RECURRED_DISCLOSURE": 6,
+    "METRIC_DECREASED": 3,
+    "METRIC_INCREASED": 19,
+    "METRIC_NOT_COMPARABLE": 13
+  },
+  "guardrails": [
+    "no resolution from absence",
+    "no narrative direction without explicit comparable values",
+    "every change links two VERBATIM EvidenceClaims"
+  ]
+}

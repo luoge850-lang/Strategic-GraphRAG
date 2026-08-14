@@ -18,7 +18,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 from dotenv import load_dotenv
-from neo4j import GraphDatabase
+from neo4j import GraphDatabase, Query, READ_ACCESS
 from neo4j.exceptions import Neo4jError, ServiceUnavailable
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -44,7 +44,7 @@ NODE_LABELS = [
     "Strategy",                                               # Layer 3
     "FinancialMetric",                                        # Layer 4
     "Year", "Quarter", "Event",                              # Layer 5
-    "Document", "Sentence", "EvidenceClaim",                # Layer 6
+    "Document", "Sentence", "EvidenceClaim", "TemporalChange", # Layer 6/temporal
     "Mechanism",                                              # Bridge
 ]
 
@@ -87,6 +87,9 @@ RELATIONSHIP_TYPES = {
     "SUPPORTED_BY": "Evidence claim is supported by a sentence",
     "ABOUT_SOURCE": "Evidence claim identifies the source entity",
     "ABOUT_TARGET": "Evidence claim identifies the target entity",
+    "NEXT_DISCLOSURE": "Same normalized claim in a later filing",
+    "HAS_TEMPORAL_CHANGE": "Earlier claim anchors an observed change",
+    "CHANGES_TO": "Observed change points to the later claim",
     # Downgrade relations (v2.0: weak/uncertain signals)
     "DISCLOSES": "Document discloses entity (no causal claim)",
     "MENTIONS": "Document mentions entity",
@@ -124,11 +127,26 @@ class SchemaManager:
         self.uri = uri or os.getenv("NEO4J_URI", "bolt://localhost:7687")
         self.user = user or os.getenv("NEO4J_USERNAME", "neo4j")
         self.password = password or os.getenv("NEO4J_PASSWORD", "password")
+        self.database = os.getenv("NEO4J_DATABASE", "neo4j")
+        self.query_timeout = max(float(os.getenv("NEO4J_QUERY_TIMEOUT_SECONDS", "8")), 0.5)
         self.driver = None
 
     def connect(self) -> bool:
         try:
-            self.driver = GraphDatabase.driver(self.uri, auth=(self.user, self.password))
+            self.driver = GraphDatabase.driver(
+                self.uri,
+                auth=(self.user, self.password),
+                max_connection_pool_size=max(
+                    int(os.getenv("NEO4J_POOL_SIZE", "8")), 1
+                ),
+                connection_acquisition_timeout=max(
+                    float(os.getenv("NEO4J_ACQUISITION_TIMEOUT_SECONDS", "5")), 0.5
+                ),
+                max_transaction_retry_time=max(
+                    float(os.getenv("NEO4J_MAX_RETRY_SECONDS", "3")), 0.0
+                ),
+                keep_alive=True,
+            )
             self.driver.verify_connectivity()
             logger.info(f"Connected to Neo4j: {self.uri}")
             return True
@@ -141,8 +159,21 @@ class SchemaManager:
             self.driver.close()
 
     def _run(self, cypher, **params):
-        with self.driver.session() as session:
-            return [r.data() for r in session.run(cypher, **params)]
+        with self.driver.session(database=self.database) as session:
+            query = Query(cypher, timeout=self.query_timeout)
+            return [r.data() for r in session.run(query, **params)]
+
+    def _read(self, cypher, **params):
+        with self.driver.session(
+            database=self.database,
+            default_access_mode=READ_ACCESS,
+        ) as session:
+            query = Query(
+                cypher,
+                timeout=self.query_timeout,
+                metadata={"app": "strategic-graphrag", "operation": "read"},
+            )
+            return [r.data() for r in session.run(query, **params)]
 
     def _exec_many(self, statements: List[str]) -> int:
         count = 0
@@ -383,166 +414,46 @@ class SchemaManager:
         return results
 
     def stats(self, source_filing: Optional[str] = None) -> Dict:
-        """Return graph statistics, optionally scoped to one filing."""
-        if source_filing:
-            # The dashboard calls this endpoint during initialisation.  The
-            # previous implementation performed one remote Neo4j round trip
-            # per label and relationship type, which made Aura latency add up
-            # to 10-20 seconds.  Gather the scoped edge sets once and derive
-            # all display counters locally.
-            params = {"source_filing": source_filing}
-            fast_rows = self._run(
-                """
-                CALL () {
-                    MATCH (n)-[r]->(m)
-                    WHERE coalesce(r.source_filing, r.filing, '') = $source_filing
-                    RETURN
-                        collect(DISTINCT {key: elementId(n), labels: labels(n)}) +
-                        collect(DISTINCT {key: elementId(m), labels: labels(m)}) AS all_nodes,
-                        count(r) AS total_rels
-                }
-                CALL () {
-                    MATCH (n)-[r]->(m)
-                    WHERE coalesce(r.source_filing, r.filing, '') = $source_filing
-                      AND NOT n:Sentence AND NOT m:Sentence
-                      AND r.evidence_id IS NOT NULL
-                      AND EXISTS {
-                          MATCH (claim:EvidenceClaim {id: r.evidence_id})
-                          WHERE claim.verification_status = 'VERBATIM'
-                      }
-                    RETURN
-                        collect(DISTINCT {key: elementId(n), labels: labels(n)}) +
-                        collect(DISTINCT {key: elementId(m), labels: labels(m)}) AS graph_nodes,
-                        collect({
-                            source: coalesce(n.id, n.doc_id, n.filename, elementId(n)),
-                            target: coalesce(m.id, m.doc_id, m.filename, elementId(m)),
-                            type: type(r),
-                            evidence_id: r.evidence_id
-                        }) AS graph_rels
-                }
-                RETURN all_nodes, total_rels, graph_nodes, graph_rels
-                """,
-                **params,
-            )
-            row = fast_rows[0] if fast_rows else {}
-            all_nodes = row.get("all_nodes", []) or []
-            graph_nodes = row.get("graph_nodes", []) or []
-            graph_rels = row.get("graph_rels", []) or []
-            unique_graph_nodes = {node.get("key"): node for node in graph_nodes}
-            unique_graph_rels = {
-                (
-                    rel.get("source", ""), rel.get("target", ""),
-                    rel.get("type", ""), rel.get("evidence_id", "") or "",
-                ): rel
-                for rel in graph_rels
-            }
-            stats = {
-                "total_nodes": len({node.get("key") for node in all_nodes}),
-                "total_rels": int(row.get("total_rels", 0) or 0),
-                "graph_nodes": len(unique_graph_nodes),
-                "graph_relationships": len(unique_graph_rels),
-                "by_label": {},
-                "by_relationship": {},
-            }
-            for node in unique_graph_nodes.values():
-                for label in node.get("labels", []) or []:
-                    stats["by_label"][label] = stats["by_label"].get(label, 0) + 1
-            for rel in unique_graph_rels.values():
-                rel_type = rel.get("type")
-                if rel_type:
-                    stats["by_relationship"][rel_type] = stats["by_relationship"].get(rel_type, 0) + 1
-            return stats
-        else:
-            rel_filter = ""
-            params = {}
-            r = self._run(
-                "MATCH (n) WITH count(n) AS nodes "
-                "MATCH ()-[r]->() RETURN nodes, count(r) AS rels"
-            )
-        stats = {"total_nodes": r[0]["nodes"], "total_rels": r[0]["rels"]} if r else {}
-        # The storage totals include provenance/support nodes and their edges.
-        # The dashboard renders the entity graph without Sentence nodes, so
-        # expose that user-facing count explicitly instead of making the UI
-        # appear inconsistent with the graph canvas.
-        if source_filing:
-            visual_node_rows = self._run(
-                "MATCH (n)-[r]->(m) "
-                f"WHERE {rel_filter} AND NOT n:Sentence AND NOT m:Sentence "
-                "AND r.evidence_id IS NOT NULL "
-                "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
-                "WHERE claim.verification_status = 'VERBATIM' } "
-                "WITH collect(DISTINCT n) + collect(DISTINCT m) AS all_nodes "
-                "UNWIND all_nodes AS node RETURN count(DISTINCT node) AS c",
-                **params,
-            )
-            visual_rel_rows = self._run(
-                "MATCH (n)-[r]->(m) "
-                f"WHERE {rel_filter} AND NOT n:Sentence AND NOT m:Sentence "
-                "AND r.evidence_id IS NOT NULL "
-                "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
-                "WHERE claim.verification_status = 'VERBATIM' } "
-                "RETURN count(DISTINCT [coalesce(n.id, ''), "
-                "coalesce(m.id, ''), type(r), coalesce(r.evidence_id, '')]) AS c",
-                **params,
-            )
-        else:
-            visual_node_rows = self._run(
-                "MATCH (n)-[r]->(m) "
-                "WHERE NOT n:Sentence AND NOT m:Sentence "
-                "AND r.evidence_id IS NOT NULL "
-                "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
-                "WHERE claim.verification_status = 'VERBATIM' } "
-                "WITH collect(DISTINCT n) + collect(DISTINCT m) AS all_nodes "
-                "UNWIND all_nodes AS node RETURN count(DISTINCT node) AS c"
-            )
-            visual_rel_rows = self._run(
-                "MATCH (n)-[r]->(m) "
-                "WHERE NOT n:Sentence AND NOT m:Sentence "
-                "AND r.evidence_id IS NOT NULL "
-                "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
-                "WHERE claim.verification_status = 'VERBATIM' } "
-                "RETURN count(DISTINCT [coalesce(n.id, ''), "
-                "coalesce(m.id, ''), type(r), coalesce(r.evidence_id, '')]) AS c"
-            )
-        stats["graph_nodes"] = visual_node_rows[0]["c"] if visual_node_rows else 0
-        stats["graph_relationships"] = visual_rel_rows[0]["c"] if visual_rel_rows else 0
-        stats["by_label"] = {}
-        for label in NODE_LABELS:
-            if source_filing:
-                r = self._run(
-                    f"MATCH (n:{label})-[r]-(m) "
-                    f"WHERE {rel_filter} AND r.evidence_id IS NOT NULL "
-                    "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
-                    "WHERE claim.verification_status = 'VERBATIM' } "
-                    "RETURN count(DISTINCT n) AS c",
-                    **params,
-                )
-            else:
-                r = self._run(f"MATCH (n:{label}) RETURN count(n) AS c")
-            if r and r[0]["c"] > 0:
-                stats["by_label"][label] = r[0]["c"]
-        stats["by_relationship"] = {}
-        existing_types = {
-            row["relationshipType"]
-            for row in self._run("CALL db.relationshipTypes()")
+        """Return strict EvidenceClaim graph statistics in one Aura round trip."""
+        rows = self._read(
+            """
+            MATCH (claim:EvidenceClaim)-[:ABOUT_SOURCE]->(source)
+            MATCH (claim)-[:ABOUT_TARGET]->(target)
+            MATCH (source)-[rel]->(target)
+            WHERE rel.evidence_id = claim.id
+              AND claim.verification_status = 'VERBATIM'
+              AND ($source_filing IS NULL OR
+                   coalesce(rel.source_filing, rel.filing, '') = $source_filing)
+            RETURN
+                collect(DISTINCT {key: elementId(source), labels: labels(source)}) +
+                collect(DISTINCT {key: elementId(target), labels: labels(target)}) AS nodes,
+                collect({type: type(rel), evidence_id: claim.id}) AS relationships
+            """,
+            source_filing=source_filing,
+        )
+        row = rows[0] if rows else {}
+        unique_nodes = {
+            item.get("key"): item for item in (row.get("nodes") or [])
+            if item.get("key")
         }
-        for rel_type in RELATIONSHIP_TYPES:
-            if rel_type not in existing_types:
-                continue
-            if source_filing:
-                r = self._run(
-                    f"MATCH ()-[r:{rel_type}]->() "
-                    f"WHERE {rel_filter} AND r.evidence_id IS NOT NULL "
-                    "AND EXISTS { MATCH (claim:EvidenceClaim {id:r.evidence_id}) "
-                    "WHERE claim.verification_status = 'VERBATIM' } "
-                    "RETURN count(r) AS c",
-                    **params,
-                )
-            else:
-                r = self._run(f"MATCH ()-[r:{rel_type}]->() RETURN count(r) AS c")
-            if r and r[0]["c"] > 0:
-                stats["by_relationship"][rel_type] = r[0]["c"]
-        return stats
+        relationships = row.get("relationships") or []
+        by_label: Dict[str, int] = {}
+        by_relationship: Dict[str, int] = {}
+        for node in unique_nodes.values():
+            for label in node.get("labels") or []:
+                by_label[label] = by_label.get(label, 0) + 1
+        for relationship in relationships:
+            rel_type = relationship.get("type")
+            if rel_type:
+                by_relationship[rel_type] = by_relationship.get(rel_type, 0) + 1
+        return {
+            "total_nodes": len(unique_nodes),
+            "total_rels": len(relationships),
+            "graph_nodes": len(unique_nodes),
+            "graph_relationships": len(relationships),
+            "by_label": by_label,
+            "by_relationship": by_relationship,
+        }
 
 
 # ── CLI ──

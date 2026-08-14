@@ -1,0 +1,4 @@
+# Production Hybrid retrieval profile. Installs the local semantic embedding
+# backend in addition to the core API/runtime dependencies.
+-r requirements.txt
+sentence-transformers>=3.0
