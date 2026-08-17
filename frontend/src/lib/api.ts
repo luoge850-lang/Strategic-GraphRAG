@@ -109,6 +109,13 @@ export type FilingScope =
   | "2024-10-K.pdf"
   | "2025-10-K.pdf";
 
+export type RetrievalMode =
+  | "auto"
+  | "vector"
+  | "graph"
+  | "hybrid"
+  | "hybrid_temporal";
+
 function applyScope(params: URLSearchParams, scope?: FilingScope) {
   if (scope === "all") params.set("cross_filing", "true");
   else if (scope) params.set("source_filing", scope);
@@ -121,8 +128,15 @@ export async function postQuery(
   yearStart?: number,
   yearEnd?: number,
   scope: FilingScope = "all",
+  retrievalMode: RetrievalMode = "auto",
+  synthesize = true,
 ): Promise<QueryResult> {
-  const body: Record<string, unknown> = { question: q, max_paths: max };
+  const body: Record<string, unknown> = {
+    question: q,
+    max_paths: max,
+    retrieval_mode: retrievalMode,
+    synthesize,
+  };
   if (yearStart !== undefined) body.year_start = yearStart;
   if (yearEnd !== undefined) body.year_end = yearEnd;
   body.cross_filing = scope === "all";

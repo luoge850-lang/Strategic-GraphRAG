@@ -43,7 +43,7 @@ load_dotenv()
 app = FastAPI(
     title="Strategic-GraphRAG API",
     description="Temporal Causal Knowledge Graph Framework for Financial Risk Inference",
-    version="3.0.0",
+    version="3.1.0",
 )
 
 _cors_origins = [
@@ -349,9 +349,9 @@ class QueryRequest(BaseModel):
         max_length=200,
         description="Optional filing scope; defaults to GRAPH_ACTIVE_FILING",
     )
-    retrieval_mode: Literal["auto", "graph", "hybrid"] = Field(
+    retrieval_mode: Literal["auto", "vector", "graph", "hybrid", "hybrid_temporal"] = Field(
         default="auto",
-        description="Adaptive, graph-only, or vector+graph hybrid retrieval",
+        description="Adaptive router or one of four comparable retrieval baselines",
     )
     vector_top_k: int = Field(default=5, ge=1, le=20)
     cross_filing: bool = Field(
@@ -361,6 +361,10 @@ class QueryRequest(BaseModel):
     use_cache: bool = Field(
         default=True,
         description="Reuse an identical successful query within the bounded TTL cache",
+    )
+    synthesize: bool = Field(
+        default=True,
+        description="When false, run retrieval and return evidence traces without sending context to an external LLM",
     )
 
 
@@ -419,6 +423,39 @@ class TemporalChangeResponse(BaseModel):
     semantics: str
 
 
+class FinancialObservationResponse(BaseModel):
+    id: str
+    company_id: str
+    metric_id: str
+    fiscal_period: str
+    fiscal_year: int
+    value: float
+    raw_value: str
+    unit: str
+    source_filing: str
+    page: int
+    claim_id: str
+    table_name: str
+    statement_type: str
+
+
+class TemporalFactResponse(BaseModel):
+    id: str
+    fact_key: str
+    source_id: str
+    relation_type: str
+    target_id: str
+    source_filing: str
+    page: int
+    valid_from: Optional[str] = None
+    valid_to: Optional[str] = None
+    recorded_from: str
+    recorded_to: Optional[str] = None
+    is_current_record: bool
+    invalidation_status: str
+    claim_id: str
+
+
 class SubgraphRequest(BaseModel):
     entity_ids: List[str] = Field(default_factory=list, description="Focus entity IDs")
     max_nodes: int = Field(default=50, ge=10, le=200)
@@ -468,7 +505,7 @@ async def graphrag_query(req: QueryRequest):
         if req.year_end is not None and year_start is not None and req.year_end < year_start:
             raise HTTPException(status_code=422, detail="year_end must be >= year_start")
         vector_engine = None
-        if req.retrieval_mode == "hybrid":
+        if req.retrieval_mode in {"auto", "vector", "hybrid", "hybrid_temporal"}:
             try:
                 vector_engine = get_vector_engine()
             except Exception as e:
@@ -484,6 +521,7 @@ async def graphrag_query(req: QueryRequest):
             retrieval_mode=req.retrieval_mode,
             vector_engine=vector_engine,
             vector_top_k=req.vector_top_k,
+            synthesize=req.synthesize,
         )
         result.setdefault("metadata", {})["cache"] = {
             "hit": False,
@@ -756,6 +794,82 @@ async def temporal_changes(entity_id: str, limit: int = Query(50, ge=1, le=200))
         return rows
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get(
+    "/graph/financial-observations/{metric_id}",
+    response_model=List[FinancialObservationResponse],
+)
+async def financial_observations(
+    metric_id: str,
+    year_start: Optional[int] = Query(None, ge=1900, le=2100),
+    year_end: Optional[int] = Query(None, ge=1900, le=2100),
+    limit: int = Query(100, ge=1, le=500),
+):
+    """Return period-specific numeric observations with claim provenance."""
+    if year_start is not None and year_end is not None and year_end < year_start:
+        raise HTTPException(status_code=422, detail="year_end must be >= year_start")
+    rows = await run_in_threadpool(
+        get_schema_manager()._read,
+        """
+        MATCH (observation:FinancialObservation)-[:OBSERVES_METRIC]->(metric:FinancialMetric)
+        MATCH (observation)-[:SUPPORTED_BY_CLAIM]->(claim:EvidenceClaim)
+        WHERE (metric.id=$metric_id OR toLower(metric.name)=toLower($metric_id))
+          AND ($year_start IS NULL OR observation.fiscal_year >= $year_start)
+          AND ($year_end IS NULL OR observation.fiscal_year <= $year_end)
+        RETURN observation.id AS id, observation.company_id AS company_id,
+               observation.metric_id AS metric_id,
+               observation.fiscal_period AS fiscal_period,
+               observation.fiscal_year AS fiscal_year,
+               observation.value AS value, observation.raw_value AS raw_value,
+               observation.unit AS unit, observation.source_filing AS source_filing,
+               observation.page AS page, claim.id AS claim_id,
+               observation.table_name AS table_name,
+               observation.statement_type AS statement_type
+        ORDER BY fiscal_year, source_filing, page, id LIMIT $limit
+        """,
+        metric_id=metric_id,
+        year_start=year_start,
+        year_end=year_end,
+        limit=limit,
+    )
+    return rows
+
+
+@app.get(
+    "/graph/temporal-facts/{entity_id}",
+    response_model=List[TemporalFactResponse],
+)
+async def temporal_facts(
+    entity_id: str,
+    current_only: bool = Query(False),
+    limit: int = Query(100, ge=1, le=500),
+):
+    """Return bitemporal disclosure versions without deleting history."""
+    rows = await run_in_threadpool(
+        get_schema_manager()._read,
+        """
+        MATCH (fact:TemporalFact {model_version:'bitemporal_fact_v2'})
+        MATCH (fact)-[:SUPPORTED_BY_CLAIM]->(claim:EvidenceClaim)
+        WHERE (toLower(fact.source_id) CONTAINS toLower($entity_id)
+            OR toLower(fact.target_id) CONTAINS toLower($entity_id))
+          AND (NOT $current_only OR fact.is_current_record=true)
+        RETURN fact.id AS id, fact.fact_key AS fact_key,
+               fact.source_id AS source_id, fact.relation_type AS relation_type,
+               fact.target_id AS target_id, fact.source_filing AS source_filing,
+               fact.page AS page, fact.valid_from AS valid_from,
+               fact.valid_to AS valid_to, toString(fact.recorded_from) AS recorded_from,
+               toString(fact.recorded_to) AS recorded_to,
+               fact.is_current_record AS is_current_record,
+               fact.invalidation_status AS invalidation_status,
+               claim.id AS claim_id
+        ORDER BY fact.disclosure_order, fact.page, fact.id LIMIT $limit
+        """,
+        entity_id=entity_id,
+        current_only=current_only,
+        limit=limit,
+    )
+    return rows
 
 
 @app.get("/health/live")

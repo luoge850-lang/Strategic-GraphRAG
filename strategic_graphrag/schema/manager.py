@@ -44,7 +44,8 @@ NODE_LABELS = [
     "Strategy",                                               # Layer 3
     "FinancialMetric",                                        # Layer 4
     "Year", "Quarter", "Event",                              # Layer 5
-    "Document", "Sentence", "EvidenceClaim", "TemporalChange", # Layer 6/temporal
+    "Document", "Sentence", "EvidenceClaim", "FinancialObservation",
+    "TemporalFact", "TemporalChange", # Layer 6/temporal
     "Mechanism",                                              # Bridge
 ]
 
@@ -90,6 +91,14 @@ RELATIONSHIP_TYPES = {
     "NEXT_DISCLOSURE": "Same normalized claim in a later filing",
     "HAS_TEMPORAL_CHANGE": "Earlier claim anchors an observed change",
     "CHANGES_TO": "Observed change points to the later claim",
+    "CHANGES_TO_FACT": "Observed change points to the later temporal fact",
+    "HAS_FINANCIAL_OBSERVATION": "Company owns a period-specific metric observation",
+    "OBSERVES_METRIC": "Observation identifies its canonical financial metric",
+    "SUPPORTED_BY_CLAIM": "Observation or temporal fact is supported by a claim",
+    "DISCLOSED_IN": "Observation or temporal fact was disclosed in a document",
+    "VALID_DURING": "Observation is valid for a fiscal period",
+    "NEXT_VERSION": "Temporal fact points to its later disclosure version",
+    "INVALIDATED_BY": "Temporal fact was superseded by a later version",
     # Downgrade relations (v2.0: weak/uncertain signals)
     "DISCLOSES": "Document discloses entity (no causal claim)",
     "MENTIONS": "Document mentions entity",
@@ -105,6 +114,7 @@ FINANCIAL_METRICS_REGISTRY = {
     "REVENUE": ("REVENUE", "POSITIVE"),
     "GROSS_MARGIN": ("PROFIT", "POSITIVE"),
     "OPERATING_MARGIN": ("PROFIT", "POSITIVE"),
+    "NET_MARGIN": ("PROFIT", "POSITIVE"),
     "NET_INCOME": ("PROFIT", "POSITIVE"),
     "CASH_FLOW": ("CASH_FLOW", "POSITIVE"),
     "FREE_CASH_FLOW": ("CASH_FLOW", "POSITIVE"),
@@ -114,6 +124,10 @@ FINANCIAL_METRICS_REGISTRY = {
     "COST_OF_REVENUE": ("COST", "NEGATIVE"),
     "R_AND_D_EXPENSE": ("COST", "NEGATIVE"),
     "SG_AND_A_EXPENSE": ("COST", "NEGATIVE"),
+    "COST_OF_REVENUE_RATIO": ("RATIO", "NEGATIVE"),
+    "OPERATING_EXPENSE_RATIO": ("RATIO", "NEGATIVE"),
+    "R_AND_D_RATIO": ("RATIO", "NEGATIVE"),
+    "SG_AND_A_RATIO": ("RATIO", "NEGATIVE"),
     "PRETAX_INCOME": ("PROFIT", "POSITIVE"),
     "INCOME_TAX_EXPENSE": ("COST", "NEGATIVE"),
     "CAPEX": ("COST", "NEGATIVE"),
@@ -216,6 +230,9 @@ class SchemaManager:
             "CREATE CONSTRAINT business_segment_id IF NOT EXISTS FOR (n:BusinessSegment) REQUIRE n.id IS UNIQUE",
             "CREATE CONSTRAINT mitigation_action_id IF NOT EXISTS FOR (n:MitigationAction) REQUIRE n.id IS UNIQUE",
             "CREATE CONSTRAINT evidence_claim_id IF NOT EXISTS FOR (n:EvidenceClaim) REQUIRE n.id IS UNIQUE",
+            "CREATE CONSTRAINT financial_observation_id IF NOT EXISTS FOR (n:FinancialObservation) REQUIRE n.id IS UNIQUE",
+            "CREATE CONSTRAINT temporal_fact_id IF NOT EXISTS FOR (n:TemporalFact) REQUIRE n.id IS UNIQUE",
+            "CREATE CONSTRAINT temporal_change_id IF NOT EXISTS FOR (n:TemporalChange) REQUIRE n.id IS UNIQUE",
             # Relationship property constraints (Neo4j 5.7+)
             "CREATE CONSTRAINT causes_cs IF NOT EXISTS FOR ()-[r:CAUSES]-() REQUIRE r.causal_strength IS NOT NULL",
             "CREATE CONSTRAINT triggers_cs IF NOT EXISTS FOR ()-[r:TRIGGERS]-() REQUIRE r.causal_strength IS NOT NULL",
@@ -242,6 +259,10 @@ class SchemaManager:
             "CREATE INDEX sentence_page IF NOT EXISTS FOR (n:Sentence) ON (n.page)",
             "CREATE INDEX sentence_section IF NOT EXISTS FOR (n:Sentence) ON (n.section)",
             "CREATE INDEX evidence_claim_page IF NOT EXISTS FOR (n:EvidenceClaim) ON (n.page)",
+            "CREATE INDEX financial_observation_metric_year IF NOT EXISTS FOR (n:FinancialObservation) ON (n.metric_id, n.fiscal_year)",
+            "CREATE INDEX financial_observation_filing IF NOT EXISTS FOR (n:FinancialObservation) ON (n.source_filing)",
+            "CREATE INDEX temporal_fact_key IF NOT EXISTS FOR (n:TemporalFact) ON (n.fact_key)",
+            "CREATE INDEX temporal_fact_current IF NOT EXISTS FOR (n:TemporalFact) ON (n.is_current_record)",
             "CREATE FULLTEXT INDEX entity_fulltext IF NOT EXISTS FOR (n:Company|Product|Market|Region|Regulation|RiskFactor|Strategy|FinancialMetric|Event|Mechanism) ON EACH [n.name, n.description]",
             "CREATE FULLTEXT INDEX evidence_fulltext IF NOT EXISTS FOR (n:Sentence) ON EACH [n.text]",
         ]

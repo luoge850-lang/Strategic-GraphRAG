@@ -1,0 +1,1195 @@
+{
+  "schema": "strategic-graphrag-retrieval-baselines/v1",
+  "generated_at_utc": "2026-08-17T02:19:32.694123+00:00",
+  "modes": [
+    "vector",
+    "graph",
+    "hybrid",
+    "hybrid_temporal"
+  ],
+  "question_count": 1,
+  "run_count": 4,
+  "records": [
+    {
+      "question": "How did NVIDIA revenue change between 2023 and 2025?",
+      "mode": "vector",
+      "intent": "VECTOR_BASELINE",
+      "answer": "Table of Contents Revenue Revenue by Reportable Segments Year Ended January 29, 2023 January 30, 2022 $ Change % Change ($ in millions) Compute & Networking $ 15,068 $ 11,046 $ 4,022 36 % Graphics 11,906 15,868 (3,962) (25)% Total $ 26,974 $ 26,914 $ 60 — % Compute & Networking - The year-on-year increase was led by growth from hyperscale customers and also reflects purchases made by several CSP partners to support multi-year cloud service agreements for our new NVIDIA AI cloud service offerings and our research and development activities. The increase was also related to the growth in Automotive. CMP contributed an insignificant amount in fiscal year 2023 compared to $550 million in fiscal year 2022. Graphics - The year-on-year decrease primarily reflects lower sell-in to partners to help reduce channel inventory levels as global macroeconomic conditions and COVID-19 related disruptions in China weighed on gaming demand. Concentration of Revenue Revenue from sales to customers outside of the United States accounted for 69% and 84% of total revenue for fiscal years 2023 and 2022, respectively. The decline in revenue outside the U.S\n\nTable of Contents NVIDIA Corporation and Subsidiaries Notes to the Consolidated Financial Statements (Continued) Deferred Revenue The following table shows the changes in short- and long-term deferred revenue during fiscal years 2025 and 2024: Jan 26, 2025 Jan 28, 2024 (In millions) Balance at beginning of period $ 1,337 $ 572 Deferred revenue additions (1) 5,083 2,038 Revenue recognized (2) (4,607) (1,273) Balance at end of period $ 1,813 $ 1,337 (1) Deferred revenue additions includes $3.6 billion and $783 million related to customer advances for fiscal years 2025 and 2024, respectively. (2) Revenue recognized includes $3.7 billion and $585 million related to customer advances for fiscal years 2025 and 2024, respectively. We recognized revenue of $729 million and $338 million in fiscal years 2025 and 2024, respectively, that were included in the prior year end deferred revenue balance. As of January 26, 2025, revenue related to remaining performance obligations from contracts greater than one year in length was $1.7 billion, which includes $1.6 billion from deferred revenue and $151 million which has not yet been billed nor recognized as revenue\n\n. Fueled by the sustained demand for exceptional 3D graphics and the scale of the gaming market, NVIDIA has leveraged its GPU architecture to create platforms for scientific computing, AI, data science, AV, robotics, and digital twin applications. Our two operating segments are \"Compute & Networking\" and \"Graphics.\" Refer to Note 16 of the Notes to the Consolidated Financial Statements in Part IV, Item 15 of this Annual Report on Form 10-K for additional information. Headquartered in Santa Clara, California, NVIDIA was incorporated in California in April 1993 and reincorporated in Delaware in April 1998. Recent Developments, Future Objectives and Challenges Demand and Supply Revenue growth in fiscal year 2025 was driven by data center compute and networking platforms for accelerated computing and AI solutions. Demand for our Hopper architecture drove our significant growth for the full year. We began shipping production systems of the Blackwell architecture in the fourth quarter of fiscal year 2025. Demand estimates for our products, applications, and services can be incorrect and create volatility in our revenue or supply levels\n\n. Our two operating segments are \"Compute & Networking\" and \"Graphics.\" Refer to Note 17 of the Notes to the Consolidated Financial Statements in Part IV, Item 15 of this Annual Report on Form 10-K for additional information. Headquartered in Santa Clara, California, NVIDIA was incorporated in California in April 1993 and reincorporated in Delaware in April 1998. Recent Developments, Future Objectives and Challenges Demand and Supply, Product Transitions, and New Products and Business Models Demand for our data center systems and products surged in fiscal year 2024. Entering fiscal year 2025, we are gathering customer demand indications across several product transitions. We have demand visibility for our new data center products ramping later in fiscal year 2025. We have increased our supply and capacity purchases with existing suppliers, added new vendors and entered into prepaid manufacturing and capacity agreements. These increased purchase volumes, the number of suppliers, and the integration of new vendors into our supply chain may create more complexity and execution risk\n\n. Cash, cash equivalents and marketable securities were $13.30 billion. During fiscal year 2023, we returned $10.44 billion to shareholders in the form of share repurchases and cash dividends. As of the end of fiscal year 2023, we had $7.23 billion remaining under our share repurchase authorization through December 2023. Market Platform Highlights Data Center revenue for fiscal year 2023 was $15.01 billion, up 41% from fiscal year 2022. The strong growth in Data Center revenue was influenced by hyperscaler and cloud usage of our accelerated computing platforms and networking portfolio. In Data Center, we announced the NVIDIA Hopper GPU architecture and began ramping the first products based on the architecture, including the NVIDIA H100 Tensor Core GPU. The NVIDIA OVX server reference design launched for digital twins and other Omniverse applications. We completed two new large language models for cloud AI services — NVIDIA NeMo LLM and NVIDIA BioNeMo LLM. Additionally, we announced the NVIDIA Spectrum-4 end-to-end 400Gbps networking platform and began shipping Quantum-2 in December 2022. Gaming revenue for fiscal year 2023 was $9.07 billion, down 27% from fiscal year 2022",
+      "paths": [],
+      "evidence_sentences": [
+        "Table of Contents Revenue Revenue by Reportable Segments Year Ended January 29, 2023 January 30, 2022 $ Change % Change ($ in millions) Compute & Networking $ 15,068 $ 11,046 $ 4,022 36 % Graphics 11,906 15,868 (3,962) (25)% Total $ 26,974 $ 26,914 $ 60 — % Compute & Networking - The year-on-year increase was led by growth from hyperscale customers and also reflects purchases made by several CSP partners to support multi-year cloud service agreements for our new NVIDIA AI cloud service offerings and our research and development activities. The increase was also related to the growth in Automotive. CMP contributed an insignificant amount in fiscal year 2023 compared to $550 million in fiscal year 2022. Graphics - The year-on-year decrease primarily reflects lower sell-in to partners to help reduce channel inventory levels as global macroeconomic conditions and COVID-19 related disruptions in China weighed on gaming demand. Concentration of Revenue Revenue from sales to customers outside of the United States accounted for 69% and 84% of total revenue for fiscal years 2023 and 2022, respectively. The decline in revenue outside the U.S",
+        "Table of Contents NVIDIA Corporation and Subsidiaries Notes to the Consolidated Financial Statements (Continued) Deferred Revenue The following table shows the changes in short- and long-term deferred revenue during fiscal years 2025 and 2024: Jan 26, 2025 Jan 28, 2024 (In millions) Balance at beginning of period $ 1,337 $ 572 Deferred revenue additions (1) 5,083 2,038 Revenue recognized (2) (4,607) (1,273) Balance at end of period $ 1,813 $ 1,337 (1) Deferred revenue additions includes $3.6 billion and $783 million related to customer advances for fiscal years 2025 and 2024, respectively. (2) Revenue recognized includes $3.7 billion and $585 million related to customer advances for fiscal years 2025 and 2024, respectively. We recognized revenue of $729 million and $338 million in fiscal years 2025 and 2024, respectively, that were included in the prior year end deferred revenue balance. As of January 26, 2025, revenue related to remaining performance obligations from contracts greater than one year in length was $1.7 billion, which includes $1.6 billion from deferred revenue and $151 million which has not yet been billed nor recognized as revenue",
+        ". Fueled by the sustained demand for exceptional 3D graphics and the scale of the gaming market, NVIDIA has leveraged its GPU architecture to create platforms for scientific computing, AI, data science, AV, robotics, and digital twin applications. Our two operating segments are \"Compute & Networking\" and \"Graphics.\" Refer to Note 16 of the Notes to the Consolidated Financial Statements in Part IV, Item 15 of this Annual Report on Form 10-K for additional information. Headquartered in Santa Clara, California, NVIDIA was incorporated in California in April 1993 and reincorporated in Delaware in April 1998. Recent Developments, Future Objectives and Challenges Demand and Supply Revenue growth in fiscal year 2025 was driven by data center compute and networking platforms for accelerated computing and AI solutions. Demand for our Hopper architecture drove our significant growth for the full year. We began shipping production systems of the Blackwell architecture in the fourth quarter of fiscal year 2025. Demand estimates for our products, applications, and services can be incorrect and create volatility in our revenue or supply levels",
+        ". Our two operating segments are \"Compute & Networking\" and \"Graphics.\" Refer to Note 17 of the Notes to the Consolidated Financial Statements in Part IV, Item 15 of this Annual Report on Form 10-K for additional information. Headquartered in Santa Clara, California, NVIDIA was incorporated in California in April 1993 and reincorporated in Delaware in April 1998. Recent Developments, Future Objectives and Challenges Demand and Supply, Product Transitions, and New Products and Business Models Demand for our data center systems and products surged in fiscal year 2024. Entering fiscal year 2025, we are gathering customer demand indications across several product transitions. We have demand visibility for our new data center products ramping later in fiscal year 2025. We have increased our supply and capacity purchases with existing suppliers, added new vendors and entered into prepaid manufacturing and capacity agreements. These increased purchase volumes, the number of suppliers, and the integration of new vendors into our supply chain may create more complexity and execution risk",
+        ". Cash, cash equivalents and marketable securities were $13.30 billion. During fiscal year 2023, we returned $10.44 billion to shareholders in the form of share repurchases and cash dividends. As of the end of fiscal year 2023, we had $7.23 billion remaining under our share repurchase authorization through December 2023. Market Platform Highlights Data Center revenue for fiscal year 2023 was $15.01 billion, up 41% from fiscal year 2022. The strong growth in Data Center revenue was influenced by hyperscaler and cloud usage of our accelerated computing platforms and networking portfolio. In Data Center, we announced the NVIDIA Hopper GPU architecture and began ramping the first products based on the architecture, including the NVIDIA H100 Tensor Core GPU. The NVIDIA OVX server reference design launched for digital twins and other Omniverse applications. We completed two new large language models for cloud AI services — NVIDIA NeMo LLM and NVIDIA BioNeMo LLM. Additionally, we announced the NVIDIA Spectrum-4 end-to-end 400Gbps networking platform and began shipping Quantum-2 in December 2022. Gaming revenue for fiscal year 2023 was $9.07 billion, down 27% from fiscal year 2022"
+      ],
+      "structured_report": {
+        "format": "vector_baseline_v1",
+        "status": "OK",
+        "executive_summary": "Table of Contents Revenue Revenue by Reportable Segments Year Ended January 29, 2023 January 30, 2022 $ Change % Change ($ in millions) Compute & Networking $ 15,068 $ 11,046 $ 4,022 36 % Graphics 11,906 15,868 (3,962) (25)% Total $ 26,974 $ 26,914 $ 60 — % Compute & Networking - The year-on-year increase was led by growth from hyperscale customers and also reflects purchases made by several CSP partners to support multi-year cloud service agreements for our new NVIDIA AI cloud service offerings and our research and development activities. The increase was also related to the growth in Automotive. CMP contributed an insignificant amount in fiscal year 2023 compared to $550 million in fiscal year 2022. Graphics - The year-on-year decrease primarily reflects lower sell-in to partners to help reduce channel inventory levels as global macroeconomic conditions and COVID-19 related disruptions in China weighed on gaming demand. Concentration of Revenue Revenue from sales to customers outside of the United States accounted for 69% and 84% of total revenue for fiscal years 2023 and 2022, respectively. The decline in revenue outside the U.S\n\nTable of Contents NVIDIA Corporation and Subsidiaries Notes to the Consolidated Financial Statements (Continued) Deferred Revenue The following table shows the changes in short- and long-term deferred revenue during fiscal years 2025 and 2024: Jan 26, 2025 Jan 28, 2024 (In millions) Balance at beginning of period $ 1,337 $ 572 Deferred revenue additions (1) 5,083 2,038 Revenue recognized (2) (4,607) (1,273) Balance at end of period $ 1,813 $ 1,337 (1) Deferred revenue additions includes $3.6 billion and $783 million related to customer advances for fiscal years 2025 and 2024, respectively. (2) Revenue recognized includes $3.7 billion and $585 million related to customer advances for fiscal years 2025 and 2024, respectively. We recognized revenue of $729 million and $338 million in fiscal years 2025 and 2024, respectively, that were included in the prior year end deferred revenue balance. As of January 26, 2025, revenue related to remaining performance obligations from contracts greater than one year in length was $1.7 billion, which includes $1.6 billion from deferred revenue and $151 million which has not yet been billed nor recognized as revenue\n\n. Fueled by the sustained demand for exceptional 3D graphics and the scale of the gaming market, NVIDIA has leveraged its GPU architecture to create platforms for scientific computing, AI, data science, AV, robotics, and digital twin applications. Our two operating segments are \"Compute & Networking\" and \"Graphics.\" Refer to Note 16 of the Notes to the Consolidated Financial Statements in Part IV, Item 15 of this Annual Report on Form 10-K for additional information. Headquartered in Santa Clara, California, NVIDIA was incorporated in California in April 1993 and reincorporated in Delaware in April 1998. Recent Developments, Future Objectives and Challenges Demand and Supply Revenue growth in fiscal year 2025 was driven by data center compute and networking platforms for accelerated computing and AI solutions. Demand for our Hopper architecture drove our significant growth for the full year. We began shipping production systems of the Blackwell architecture in the fourth quarter of fiscal year 2025. Demand estimates for our products, applications, and services can be incorrect and create volatility in our revenue or supply levels\n\n. Our two operating segments are \"Compute & Networking\" and \"Graphics.\" Refer to Note 17 of the Notes to the Consolidated Financial Statements in Part IV, Item 15 of this Annual Report on Form 10-K for additional information. Headquartered in Santa Clara, California, NVIDIA was incorporated in California in April 1993 and reincorporated in Delaware in April 1998. Recent Developments, Future Objectives and Challenges Demand and Supply, Product Transitions, and New Products and Business Models Demand for our data center systems and products surged in fiscal year 2024. Entering fiscal year 2025, we are gathering customer demand indications across several product transitions. We have demand visibility for our new data center products ramping later in fiscal year 2025. We have increased our supply and capacity purchases with existing suppliers, added new vendors and entered into prepaid manufacturing and capacity agreements. These increased purchase volumes, the number of suppliers, and the integration of new vendors into our supply chain may create more complexity and execution risk\n\n. Cash, cash equivalents and marketable securities were $13.30 billion. During fiscal year 2023, we returned $10.44 billion to shareholders in the form of share repurchases and cash dividends. As of the end of fiscal year 2023, we had $7.23 billion remaining under our share repurchase authorization through December 2023. Market Platform Highlights Data Center revenue for fiscal year 2023 was $15.01 billion, up 41% from fiscal year 2022. The strong growth in Data Center revenue was influenced by hyperscaler and cloud usage of our accelerated computing platforms and networking portfolio. In Data Center, we announced the NVIDIA Hopper GPU architecture and began ramping the first products based on the architecture, including the NVIDIA H100 Tensor Core GPU. The NVIDIA OVX server reference design launched for digital twins and other Omniverse applications. We completed two new large language models for cloud AI services — NVIDIA NeMo LLM and NVIDIA BioNeMo LLM. Additionally, we announced the NVIDIA Spectrum-4 end-to-end 400Gbps networking platform and began shipping Quantum-2 in December 2022. Gaming revenue for fiscal year 2023 was $9.07 billion, down 27% from fiscal year 2022",
+        "claims": [],
+        "evidence_quality": "Chunk-level citations only; no graph path or EvidenceClaim guarantee.",
+        "limitations": "This control baseline cannot establish multi-hop or temporal graph reasoning."
+      },
+      "router": {
+        "mode": "vector",
+        "confidence": 1.0,
+        "reason": "explicit_api_selection",
+        "use_vector": true,
+        "use_graph": false,
+        "use_temporal": false,
+        "use_ppr": false
+      },
+      "retrieval": {
+        "status": "OK",
+        "hits": [
+          {
+            "rank": 1,
+            "document": "Table of Contents Revenue Revenue by Reportable Segments Year Ended January 29, 2023 January 30, 2022 $ Change % Change ($ in millions) Compute & Networking $ 15,068 $ 11,046 $ 4,022 36 % Graphics 11,906 15,868 (3,962) (25)% Total $ 26,974 $ 26,914 $ 60 — % Compute & Networking - The year-on-year increase was led by growth from hyperscale customers and also reflects purchases made by several CSP partners to support multi-year cloud service agreements for our new NVIDIA AI cloud service offerings and our research and development activities. The increase was also related to the growth in Automotive. CMP contributed an insignificant amount in fiscal year 2023 compared to $550 million in fiscal year 2022. Graphics - The year-on-year decrease primarily reflects lower sell-in to partners to help reduce channel inventory levels as global macroeconomic conditions and COVID-19 related disruptions in China weighed on gaming demand. Concentration of Revenue Revenue from sales to customers outside of the United States accounted for 69% and 84% of total revenue for fiscal years 2023 and 2022, respectively. The decline in revenue outside the U.S",
+            "metadata": {
+              "source_filing": "2023-10-K.pdf",
+              "doc_id": "2023-10-K.pdf",
+              "chunk_id": "2023-10-K.pdf:42:0",
+              "page": 42,
+              "chunk_index": 0
+            },
+            "distance": 0.2777783274650574,
+            "rank_score": 1.0
+          },
+          {
+            "rank": 2,
+            "document": "Table of Contents NVIDIA Corporation and Subsidiaries Notes to the Consolidated Financial Statements (Continued) Deferred Revenue The following table shows the changes in short- and long-term deferred revenue during fiscal years 2025 and 2024: Jan 26, 2025 Jan 28, 2024 (In millions) Balance at beginning of period $ 1,337 $ 572 Deferred revenue additions (1) 5,083 2,038 Revenue recognized (2) (4,607) (1,273) Balance at end of period $ 1,813 $ 1,337 (1) Deferred revenue additions includes $3.6 billion and $783 million related to customer advances for fiscal years 2025 and 2024, respectively. (2) Revenue recognized includes $3.7 billion and $585 million related to customer advances for fiscal years 2025 and 2024, respectively. We recognized revenue of $729 million and $338 million in fiscal years 2025 and 2024, respectively, that were included in the prior year end deferred revenue balance. As of January 26, 2025, revenue related to remaining performance obligations from contracts greater than one year in length was $1.7 billion, which includes $1.6 billion from deferred revenue and $151 million which has not yet been billed nor recognized as revenue",
+            "metadata": {
+              "doc_id": "2025-10-K.pdf",
+              "chunk_id": "2025-10-K.pdf:71:0",
+              "chunk_index": 0,
+              "source_filing": "2025-10-K.pdf",
+              "page": 71
+            },
+            "distance": 0.28741371631622314,
+            "rank_score": 0.5
+          },
+          {
+            "rank": 3,
+            "document": ". Fueled by the sustained demand for exceptional 3D graphics and the scale of the gaming market, NVIDIA has leveraged its GPU architecture to create platforms for scientific computing, AI, data science, AV, robotics, and digital twin applications. Our two operating segments are \"Compute & Networking\" and \"Graphics.\" Refer to Note 16 of the Notes to the Consolidated Financial Statements in Part IV, Item 15 of this Annual Report on Form 10-K for additional information. Headquartered in Santa Clara, California, NVIDIA was incorporated in California in April 1993 and reincorporated in Delaware in April 1998. Recent Developments, Future Objectives and Challenges Demand and Supply Revenue growth in fiscal year 2025 was driven by data center compute and networking platforms for accelerated computing and AI solutions. Demand for our Hopper architecture drove our significant growth for the full year. We began shipping production systems of the Blackwell architecture in the fourth quarter of fiscal year 2025. Demand estimates for our products, applications, and services can be incorrect and create volatility in our revenue or supply levels",
+            "metadata": {
+              "chunk_id": "2025-10-K.pdf:36:1",
+              "source_filing": "2025-10-K.pdf",
+              "page": 36,
+              "doc_id": "2025-10-K.pdf",
+              "chunk_index": 1
+            },
+            "distance": 0.3368649482727051,
+            "rank_score": 0.333333
+          },
+          {
+            "rank": 4,
+            "document": ". Our two operating segments are \"Compute & Networking\" and \"Graphics.\" Refer to Note 17 of the Notes to the Consolidated Financial Statements in Part IV, Item 15 of this Annual Report on Form 10-K for additional information. Headquartered in Santa Clara, California, NVIDIA was incorporated in California in April 1993 and reincorporated in Delaware in April 1998. Recent Developments, Future Objectives and Challenges Demand and Supply, Product Transitions, and New Products and Business Models Demand for our data center systems and products surged in fiscal year 2024. Entering fiscal year 2025, we are gathering customer demand indications across several product transitions. We have demand visibility for our new data center products ramping later in fiscal year 2025. We have increased our supply and capacity purchases with existing suppliers, added new vendors and entered into prepaid manufacturing and capacity agreements. These increased purchase volumes, the number of suppliers, and the integration of new vendors into our supply chain may create more complexity and execution risk",
+            "metadata": {
+              "source_filing": "2024-10-K.pdf",
+              "page": 34,
+              "doc_id": "2024-10-K.pdf",
+              "chunk_index": 1,
+              "chunk_id": "2024-10-K.pdf:34:1"
+            },
+            "distance": 0.3371133804321289,
+            "rank_score": 0.25
+          },
+          {
+            "rank": 5,
+            "document": ". Cash, cash equivalents and marketable securities were $13.30 billion. During fiscal year 2023, we returned $10.44 billion to shareholders in the form of share repurchases and cash dividends. As of the end of fiscal year 2023, we had $7.23 billion remaining under our share repurchase authorization through December 2023. Market Platform Highlights Data Center revenue for fiscal year 2023 was $15.01 billion, up 41% from fiscal year 2022. The strong growth in Data Center revenue was influenced by hyperscaler and cloud usage of our accelerated computing platforms and networking portfolio. In Data Center, we announced the NVIDIA Hopper GPU architecture and began ramping the first products based on the architecture, including the NVIDIA H100 Tensor Core GPU. The NVIDIA OVX server reference design launched for digital twins and other Omniverse applications. We completed two new large language models for cloud AI services — NVIDIA NeMo LLM and NVIDIA BioNeMo LLM. Additionally, we announced the NVIDIA Spectrum-4 end-to-end 400Gbps networking platform and began shipping Quantum-2 in December 2022. Gaming revenue for fiscal year 2023 was $9.07 billion, down 27% from fiscal year 2022",
+            "metadata": {
+              "source_filing": "2023-10-K.pdf",
+              "doc_id": "2023-10-K.pdf",
+              "chunk_id": "2023-10-K.pdf:38:2",
+              "page": 38,
+              "chunk_index": 2
+            },
+            "distance": 0.33907002210617065,
+            "rank_score": 0.2
+          }
+        ],
+        "collection": "nvidia_sec_filings_active",
+        "source_filing": null,
+        "embedding_backend": "sentence_transformers",
+        "embedding_model": "all-MiniLM-L6-v2"
+      },
+      "temporal_fusion": null,
+      "ppr": null,
+      "latency_ms": {
+        "vector_retrieval_ms": 35.55,
+        "total_ms": 35.87
+      }
+    },
+    {
+      "question": "How did NVIDIA revenue change between 2023 and 2025?",
+      "mode": "graph",
+      "intent": "TEMPORAL_TREND",
+      "answer": "Executive Summary\nGraph evidence trace for intent TEMPORAL_TREND.\n\nTotal revenue $ 26,974 $ 26,914 $ 16,675\n[EvidenceClaim: claim_v2_9a6b37c4064843a33e996177; p.86]\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nTotal revenue $ 60,922 $ 26,974 $ 26,914\n[EvidenceClaim: claim_v2_267cc9f2fb71d24ba78c5392; p.79]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.",
+      "paths": [
+        {
+          "path_id": "path_001",
+          "fingerprint": "069d92db45014998",
+          "semantic_fingerprint": "de18d122c03f05be",
+          "nodes": [
+            "NVIDIA_CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 26,974 $ 26,914 $ 16,675"
+          ],
+          "pages": [
+            86
+          ],
+          "years": [
+            2023
+          ],
+          "evidence_ids": [
+            "claim_v2_9a6b37c4064843a33e996177"
+          ],
+          "filings": [
+            "2023-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4783,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6,
+            "hop_efficiency": 0.8333
+          },
+          "duplicate_count": 3,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 26,974 $ 26,914 $ 16,675",
+                "page": 86,
+                "year": 2023,
+                "evidence_id": "claim_v2_9a6b37c4064843a33e996177",
+                "filing": "2023-10-K.pdf"
+              },
+              {
+                "evidence": "Total revenue $ 26,974 $ 26,914 $ 16,675",
+                "page": 85,
+                "year": 2023,
+                "evidence_id": "claim_v2_9bbfe190701a50198484e5cf",
+                "filing": "2023-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 26,974 $ 26,914 $ 16,675",
+                "page": 54,
+                "year": 2023,
+                "evidence_id": "claim_v2_81152fc586862fe1b62df9c8",
+                "filing": "2023-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_000",
+          "fingerprint": "2079eef3746bf433",
+          "semantic_fingerprint": "ff31b783dfef1cc5",
+          "nodes": [
+            "NVIDIA_CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 130,497 $ 60,922 $ 26,974"
+          ],
+          "pages": [
+            80
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_5754bc5fe845e1af9976af76"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4787,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6025,
+            "hop_efficiency": 0.8333
+          },
+          "duplicate_count": 7,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 80,
+                "year": 2025,
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 79,
+                "year": 2025,
+                "evidence_id": "claim_v2_797d4eafb08fe69336e3f6d7",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_2a950d7f9562c107d1ad0320",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 130,497 $ 60,922 Up 114%",
+                "page": 38,
+                "year": 2025,
+                "evidence_id": "claim_v2_05dacf3f65d6f55eb5210c91",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_002",
+          "fingerprint": "df91a25f47cab0b6",
+          "semantic_fingerprint": "911355d27411ef3d",
+          "nodes": [
+            "NVIDIA_CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 60,922 $ 26,974 $ 26,914"
+          ],
+          "pages": [
+            79
+          ],
+          "years": [
+            2024
+          ],
+          "evidence_ids": [
+            "claim_v2_267cc9f2fb71d24ba78c5392"
+          ],
+          "filings": [
+            "2024-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4783,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6,
+            "hop_efficiency": 0.8333
+          },
+          "duplicate_count": 6,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 60,922 $ 26,974 $ 26,914",
+                "page": 79,
+                "year": 2024,
+                "evidence_id": "claim_v2_267cc9f2fb71d24ba78c5392",
+                "filing": "2024-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 60,922 $ 26,974 $ 26,914",
+                "page": 50,
+                "year": 2024,
+                "evidence_id": "claim_v2_3a39dc4ef695ccc52ead5710",
+                "filing": "2024-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 60,922 $ 26,974 Up 126%",
+                "page": 36,
+                "year": 2024,
+                "evidence_id": "claim_v2_6d4fca119cde8454e9d0fd6e",
+                "filing": "2024-10-K.pdf"
+              }
+            ]
+          ]
+        }
+      ],
+      "evidence_sentences": [
+        "Total revenue $ 26,974 $ 26,914 $ 16,675",
+        "Total revenue $ 130,497 $ 60,922 $ 26,974",
+        "Total revenue $ 60,922 $ 26,974 $ 26,914"
+      ],
+      "structured_report": {
+        "format": "evidence_claim_v1",
+        "status": "RETRIEVAL_ONLY",
+        "executive_summary": "Graph evidence trace for intent TEMPORAL_TREND.",
+        "claims": [
+          {
+            "statement": "Total revenue $ 26,974 $ 26,914 $ 16,675",
+            "evidence_claim_ids": [
+              "claim_v2_9a6b37c4064843a33e996177"
+            ],
+            "pages": [
+              86
+            ],
+            "fiscal_years": [
+              2023
+            ],
+            "support_level": "VERIFIED_TRACE"
+          },
+          {
+            "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+            "evidence_claim_ids": [
+              "claim_v2_5754bc5fe845e1af9976af76"
+            ],
+            "pages": [
+              80
+            ],
+            "fiscal_years": [
+              2025
+            ],
+            "support_level": "VERIFIED_TRACE"
+          },
+          {
+            "statement": "Total revenue $ 60,922 $ 26,974 $ 26,914",
+            "evidence_claim_ids": [
+              "claim_v2_267cc9f2fb71d24ba78c5392"
+            ],
+            "pages": [
+              79
+            ],
+            "fiscal_years": [
+              2024
+            ],
+            "support_level": "VERIFIED_TRACE"
+          }
+        ],
+        "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+        "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+        "narrative": "Executive Summary\nGraph evidence trace for intent TEMPORAL_TREND.\n\nTotal revenue $ 26,974 $ 26,914 $ 16,675\n[EvidenceClaim: claim_v2_9a6b37c4064843a33e996177; p.86]\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nTotal revenue $ 60,922 $ 26,974 $ 26,914\n[EvidenceClaim: claim_v2_267cc9f2fb71d24ba78c5392; p.79]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records."
+      },
+      "router": {
+        "mode": "graph",
+        "confidence": 1.0,
+        "reason": "explicit_api_selection",
+        "use_vector": false,
+        "use_graph": true,
+        "use_temporal": false,
+        "use_ppr": false
+      },
+      "retrieval": {
+        "mode": "GRAPH_ONLY",
+        "vector_status": "NOT_REQUESTED",
+        "vector_hits": 0,
+        "matched_paths": 0,
+        "fusion": "none",
+        "collection": null
+      },
+      "temporal_fusion": {
+        "enabled": false,
+        "matched_claims": 0,
+        "matched_paths": 0,
+        "model_version": "bitemporal_fact_v2"
+      },
+      "ppr": {
+        "enabled": false,
+        "ranked_entities": []
+      },
+      "latency_ms": {
+        "vector_retrieval_ms": 0.0,
+        "query_understanding_ms": 0.59,
+        "anchor_resolution_ms": 1632.15,
+        "graph_path_search_ms": 3893.77,
+        "scoring_rerank_ms": 1.81,
+        "llm_synthesis_ms": 0.33,
+        "total_ms": 10119.42
+      }
+    },
+    {
+      "question": "How did NVIDIA revenue change between 2023 and 2025?",
+      "mode": "hybrid",
+      "intent": "TEMPORAL_TREND",
+      "answer": "Executive Summary\nGraph evidence trace for intent TEMPORAL_TREND.\n\nTotal revenue $ 26,974 $ 26,914 $ 16,675\n[EvidenceClaim: claim_v2_9a6b37c4064843a33e996177; p.86]\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nTotal revenue $ 60,922 $ 26,974 $ 26,914\n[EvidenceClaim: claim_v2_267cc9f2fb71d24ba78c5392; p.79]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.",
+      "paths": [
+        {
+          "path_id": "path_001",
+          "fingerprint": "069d92db45014998",
+          "semantic_fingerprint": "de18d122c03f05be",
+          "nodes": [
+            "NVIDIA_CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 26,974 $ 26,914 $ 16,675"
+          ],
+          "pages": [
+            86
+          ],
+          "years": [
+            2023
+          ],
+          "evidence_ids": [
+            "claim_v2_9a6b37c4064843a33e996177"
+          ],
+          "filings": [
+            "2023-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.3587,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 3,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 26,974 $ 26,914 $ 16,675",
+                "page": 86,
+                "year": 2023,
+                "evidence_id": "claim_v2_9a6b37c4064843a33e996177",
+                "filing": "2023-10-K.pdf"
+              },
+              {
+                "evidence": "Total revenue $ 26,974 $ 26,914 $ 16,675",
+                "page": 85,
+                "year": 2023,
+                "evidence_id": "claim_v2_9bbfe190701a50198484e5cf",
+                "filing": "2023-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 26,974 $ 26,914 $ 16,675",
+                "page": 54,
+                "year": 2023,
+                "evidence_id": "claim_v2_81152fc586862fe1b62df9c8",
+                "filing": "2023-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_000",
+          "fingerprint": "2079eef3746bf433",
+          "semantic_fingerprint": "ff31b783dfef1cc5",
+          "nodes": [
+            "NVIDIA_CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 130,497 $ 60,922 $ 26,974"
+          ],
+          "pages": [
+            80
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_5754bc5fe845e1af9976af76"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.359,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6025,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 7,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 80,
+                "year": 2025,
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 79,
+                "year": 2025,
+                "evidence_id": "claim_v2_797d4eafb08fe69336e3f6d7",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_2a950d7f9562c107d1ad0320",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 130,497 $ 60,922 Up 114%",
+                "page": 38,
+                "year": 2025,
+                "evidence_id": "claim_v2_05dacf3f65d6f55eb5210c91",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_002",
+          "fingerprint": "df91a25f47cab0b6",
+          "semantic_fingerprint": "911355d27411ef3d",
+          "nodes": [
+            "NVIDIA_CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 60,922 $ 26,974 $ 26,914"
+          ],
+          "pages": [
+            79
+          ],
+          "years": [
+            2024
+          ],
+          "evidence_ids": [
+            "claim_v2_267cc9f2fb71d24ba78c5392"
+          ],
+          "filings": [
+            "2024-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.3587,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0
+          },
+          "duplicate_count": 6,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 60,922 $ 26,974 $ 26,914",
+                "page": 79,
+                "year": 2024,
+                "evidence_id": "claim_v2_267cc9f2fb71d24ba78c5392",
+                "filing": "2024-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 60,922 $ 26,974 $ 26,914",
+                "page": 50,
+                "year": 2024,
+                "evidence_id": "claim_v2_3a39dc4ef695ccc52ead5710",
+                "filing": "2024-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 60,922 $ 26,974 Up 126%",
+                "page": 36,
+                "year": 2024,
+                "evidence_id": "claim_v2_6d4fca119cde8454e9d0fd6e",
+                "filing": "2024-10-K.pdf"
+              }
+            ]
+          ]
+        }
+      ],
+      "evidence_sentences": [
+        "Total revenue $ 26,974 $ 26,914 $ 16,675",
+        "Total revenue $ 130,497 $ 60,922 $ 26,974",
+        "Total revenue $ 60,922 $ 26,974 $ 26,914"
+      ],
+      "structured_report": {
+        "format": "evidence_claim_v1",
+        "status": "RETRIEVAL_ONLY",
+        "executive_summary": "Graph evidence trace for intent TEMPORAL_TREND.",
+        "claims": [
+          {
+            "statement": "Total revenue $ 26,974 $ 26,914 $ 16,675",
+            "evidence_claim_ids": [
+              "claim_v2_9a6b37c4064843a33e996177"
+            ],
+            "pages": [
+              86
+            ],
+            "fiscal_years": [
+              2023
+            ],
+            "support_level": "VERIFIED_TRACE"
+          },
+          {
+            "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+            "evidence_claim_ids": [
+              "claim_v2_5754bc5fe845e1af9976af76"
+            ],
+            "pages": [
+              80
+            ],
+            "fiscal_years": [
+              2025
+            ],
+            "support_level": "VERIFIED_TRACE"
+          },
+          {
+            "statement": "Total revenue $ 60,922 $ 26,974 $ 26,914",
+            "evidence_claim_ids": [
+              "claim_v2_267cc9f2fb71d24ba78c5392"
+            ],
+            "pages": [
+              79
+            ],
+            "fiscal_years": [
+              2024
+            ],
+            "support_level": "VERIFIED_TRACE"
+          }
+        ],
+        "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+        "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+        "narrative": "Executive Summary\nGraph evidence trace for intent TEMPORAL_TREND.\n\nTotal revenue $ 26,974 $ 26,914 $ 16,675\n[EvidenceClaim: claim_v2_9a6b37c4064843a33e996177; p.86]\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nTotal revenue $ 60,922 $ 26,974 $ 26,914\n[EvidenceClaim: claim_v2_267cc9f2fb71d24ba78c5392; p.79]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records."
+      },
+      "router": {
+        "mode": "hybrid",
+        "confidence": 1.0,
+        "reason": "explicit_api_selection",
+        "use_vector": true,
+        "use_graph": true,
+        "use_temporal": false,
+        "use_ppr": true
+      },
+      "retrieval": {
+        "mode": "HYBRID_CONTEXT_ONLY",
+        "vector_status": "OK",
+        "vector_hits": 5,
+        "matched_paths": 0,
+        "fusion": "0.75_graph_score + 0.25_vector_page_rank",
+        "collection": "nvidia_sec_filings_active"
+      },
+      "temporal_fusion": {
+        "enabled": false,
+        "matched_claims": 0,
+        "matched_paths": 0,
+        "model_version": "bitemporal_fact_v2"
+      },
+      "ppr": {
+        "enabled": true,
+        "ranked_entities": [
+          {
+            "entity_id": "nvidia_corporation",
+            "ppr_score": 0.26239243
+          },
+          {
+            "entity_id": "operating_cost",
+            "ppr_score": 0.05598731
+          },
+          {
+            "entity_id": "revenue",
+            "ppr_score": 0.05020573
+          },
+          {
+            "entity_id": "gpu",
+            "ppr_score": 0.04524915
+          },
+          {
+            "entity_id": "cost_of_revenue",
+            "ppr_score": 0.03016635
+          },
+          {
+            "entity_id": "omniverse_platform",
+            "ppr_score": 0.02786808
+          },
+          {
+            "entity_id": "r_and_d_expense",
+            "ppr_score": 0.02650817
+          },
+          {
+            "entity_id": "product_transition_risk",
+            "ppr_score": 0.02391112
+          },
+          {
+            "entity_id": "data_center_market",
+            "ppr_score": 0.0205115
+          },
+          {
+            "entity_id": "gaming_market",
+            "ppr_score": 0.0205115
+          },
+          {
+            "entity_id": "h100tensorcoregpu",
+            "ppr_score": 0.0205115
+          },
+          {
+            "entity_id": "quadronvidiartxgpus",
+            "ppr_score": 0.0205115
+          }
+        ]
+      },
+      "latency_ms": {
+        "vector_retrieval_ms": 20.88,
+        "query_understanding_ms": 0.11,
+        "anchor_resolution_ms": 1403.76,
+        "graph_path_search_ms": 1809.94,
+        "scoring_rerank_ms": 1.86,
+        "llm_synthesis_ms": 0.08,
+        "total_ms": 3907.19
+      }
+    },
+    {
+      "question": "How did NVIDIA revenue change between 2023 and 2025?",
+      "mode": "hybrid_temporal",
+      "intent": "TEMPORAL_TREND",
+      "answer": "Executive Summary\nGraph evidence trace for intent TEMPORAL_TREND.\n\nTotal revenue $ 26,974 $ 26,914 $ 16,675\n[EvidenceClaim: claim_v2_9a6b37c4064843a33e996177; p.86]\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nTotal revenue $ 60,922 $ 26,974 $ 26,914\n[EvidenceClaim: claim_v2_267cc9f2fb71d24ba78c5392; p.79]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.",
+      "paths": [
+        {
+          "path_id": "path_001",
+          "fingerprint": "069d92db45014998",
+          "semantic_fingerprint": "de18d122c03f05be",
+          "nodes": [
+            "NVIDIA_CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 26,974 $ 26,914 $ 16,675"
+          ],
+          "pages": [
+            86
+          ],
+          "years": [
+            2023
+          ],
+          "evidence_ids": [
+            "claim_v2_9a6b37c4064843a33e996177"
+          ],
+          "filings": [
+            "2023-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4249,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0,
+            "bitemporal_fact": 0.8
+          },
+          "duplicate_count": 3,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 26,974 $ 26,914 $ 16,675",
+                "page": 86,
+                "year": 2023,
+                "evidence_id": "claim_v2_9a6b37c4064843a33e996177",
+                "filing": "2023-10-K.pdf"
+              },
+              {
+                "evidence": "Total revenue $ 26,974 $ 26,914 $ 16,675",
+                "page": 85,
+                "year": 2023,
+                "evidence_id": "claim_v2_9bbfe190701a50198484e5cf",
+                "filing": "2023-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 26,974 $ 26,914 $ 16,675",
+                "page": 54,
+                "year": 2023,
+                "evidence_id": "claim_v2_81152fc586862fe1b62df9c8",
+                "filing": "2023-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_000",
+          "fingerprint": "2079eef3746bf433",
+          "semantic_fingerprint": "ff31b783dfef1cc5",
+          "nodes": [
+            "NVIDIA_CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 130,497 $ 60,922 $ 26,974"
+          ],
+          "pages": [
+            80
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_5754bc5fe845e1af9976af76"
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4551,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6025,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0,
+            "bitemporal_fact": 1.0
+          },
+          "duplicate_count": 7,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 80,
+                "year": 2025,
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 79,
+                "year": 2025,
+                "evidence_id": "claim_v2_797d4eafb08fe69336e3f6d7",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_2a950d7f9562c107d1ad0320",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 130,497 $ 60,922 Up 114%",
+                "page": 38,
+                "year": 2025,
+                "evidence_id": "claim_v2_05dacf3f65d6f55eb5210c91",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ]
+        },
+        {
+          "path_id": "path_002",
+          "fingerprint": "df91a25f47cab0b6",
+          "semantic_fingerprint": "911355d27411ef3d",
+          "nodes": [
+            "NVIDIA_CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 60,922 $ 26,974 $ 26,914"
+          ],
+          "pages": [
+            79
+          ],
+          "years": [
+            2024
+          ],
+          "evidence_ids": [
+            "claim_v2_267cc9f2fb71d24ba78c5392"
+          ],
+          "filings": [
+            "2024-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4249,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6,
+            "hop_efficiency": 0.8333,
+            "vector_page_rank": 0.0,
+            "bitemporal_fact": 0.8
+          },
+          "duplicate_count": 6,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 60,922 $ 26,974 $ 26,914",
+                "page": 79,
+                "year": 2024,
+                "evidence_id": "claim_v2_267cc9f2fb71d24ba78c5392",
+                "filing": "2024-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 60,922 $ 26,974 $ 26,914",
+                "page": 50,
+                "year": 2024,
+                "evidence_id": "claim_v2_3a39dc4ef695ccc52ead5710",
+                "filing": "2024-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 60,922 $ 26,974 Up 126%",
+                "page": 36,
+                "year": 2024,
+                "evidence_id": "claim_v2_6d4fca119cde8454e9d0fd6e",
+                "filing": "2024-10-K.pdf"
+              }
+            ]
+          ]
+        }
+      ],
+      "evidence_sentences": [
+        "Total revenue $ 26,974 $ 26,914 $ 16,675",
+        "Total revenue $ 130,497 $ 60,922 $ 26,974",
+        "Total revenue $ 60,922 $ 26,974 $ 26,914"
+      ],
+      "structured_report": {
+        "format": "evidence_claim_v1",
+        "status": "RETRIEVAL_ONLY",
+        "executive_summary": "Graph evidence trace for intent TEMPORAL_TREND.",
+        "claims": [
+          {
+            "statement": "Total revenue $ 26,974 $ 26,914 $ 16,675",
+            "evidence_claim_ids": [
+              "claim_v2_9a6b37c4064843a33e996177"
+            ],
+            "pages": [
+              86
+            ],
+            "fiscal_years": [
+              2023
+            ],
+            "support_level": "VERIFIED_TRACE"
+          },
+          {
+            "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+            "evidence_claim_ids": [
+              "claim_v2_5754bc5fe845e1af9976af76"
+            ],
+            "pages": [
+              80
+            ],
+            "fiscal_years": [
+              2025
+            ],
+            "support_level": "VERIFIED_TRACE"
+          },
+          {
+            "statement": "Total revenue $ 60,922 $ 26,974 $ 26,914",
+            "evidence_claim_ids": [
+              "claim_v2_267cc9f2fb71d24ba78c5392"
+            ],
+            "pages": [
+              79
+            ],
+            "fiscal_years": [
+              2024
+            ],
+            "support_level": "VERIFIED_TRACE"
+          }
+        ],
+        "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+        "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+        "narrative": "Executive Summary\nGraph evidence trace for intent TEMPORAL_TREND.\n\nTotal revenue $ 26,974 $ 26,914 $ 16,675\n[EvidenceClaim: claim_v2_9a6b37c4064843a33e996177; p.86]\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nTotal revenue $ 60,922 $ 26,974 $ 26,914\n[EvidenceClaim: claim_v2_267cc9f2fb71d24ba78c5392; p.79]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records."
+      },
+      "router": {
+        "mode": "hybrid_temporal",
+        "confidence": 1.0,
+        "reason": "explicit_api_selection",
+        "use_vector": true,
+        "use_graph": true,
+        "use_temporal": true,
+        "use_ppr": true
+      },
+      "retrieval": {
+        "mode": "HYBRID_CONTEXT_ONLY",
+        "vector_status": "OK",
+        "vector_hits": 5,
+        "matched_paths": 0,
+        "fusion": "0.75_graph_score + 0.25_vector_page_rank",
+        "collection": "nvidia_sec_filings_active"
+      },
+      "temporal_fusion": {
+        "enabled": true,
+        "matched_claims": 10,
+        "matched_paths": 16,
+        "model_version": "bitemporal_fact_v2"
+      },
+      "ppr": {
+        "enabled": true,
+        "ranked_entities": [
+          {
+            "entity_id": "nvidia_corporation",
+            "ppr_score": 0.26239243
+          },
+          {
+            "entity_id": "operating_cost",
+            "ppr_score": 0.05598731
+          },
+          {
+            "entity_id": "revenue",
+            "ppr_score": 0.05020573
+          },
+          {
+            "entity_id": "gpu",
+            "ppr_score": 0.04524915
+          },
+          {
+            "entity_id": "cost_of_revenue",
+            "ppr_score": 0.03016635
+          },
+          {
+            "entity_id": "omniverse_platform",
+            "ppr_score": 0.02786808
+          },
+          {
+            "entity_id": "r_and_d_expense",
+            "ppr_score": 0.02650817
+          },
+          {
+            "entity_id": "product_transition_risk",
+            "ppr_score": 0.02391112
+          },
+          {
+            "entity_id": "data_center_market",
+            "ppr_score": 0.0205115
+          },
+          {
+            "entity_id": "gaming_market",
+            "ppr_score": 0.0205115
+          },
+          {
+            "entity_id": "h100tensorcoregpu",
+            "ppr_score": 0.0205115
+          },
+          {
+            "entity_id": "quadronvidiartxgpus",
+            "ppr_score": 0.0205115
+          }
+        ]
+      },
+      "latency_ms": {
+        "vector_retrieval_ms": 17.67,
+        "query_understanding_ms": 0.1,
+        "anchor_resolution_ms": 1071.62,
+        "graph_path_search_ms": 804.92,
+        "scoring_rerank_ms": 259.25,
+        "llm_synthesis_ms": 0.09,
+        "total_ms": 2408.92
+      }
+    }
+  ]
+}

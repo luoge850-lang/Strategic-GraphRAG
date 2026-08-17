@@ -346,6 +346,7 @@ class KnowledgeGraphPipeline:
                     )
                     for triple in table_triples:
                         triple["_source"] = "table"
+                        triple["statement_type"] = section_id
                     page_triples.extend(table_triples)
 
                 # ── Rule extraction on FULL page text ──

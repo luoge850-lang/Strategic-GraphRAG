@@ -10,7 +10,9 @@ from strategic_graphrag.pipeline.financial_table_extractor import (
 from strategic_graphrag.pipeline.pipeline import KnowledgeGraphPipeline
 from strategic_graphrag.ontology.intent_classifier import extract_financial_entities_from_query
 from strategic_graphrag.engine.query_understanding import parse_query
-from strategic_graphrag.engine.graph_rag_engine import GraphRAGEngine
+from strategic_graphrag.engine.graph_rag_engine import CausalPath, GraphRAGEngine
+from strategic_graphrag.engine.retrieval import QueryRouter, personalized_pagerank
+from strategic_graphrag.schema.financial_observation import build_financial_observations
 from strategic_graphrag.provenance import evidence_identity, normalize_evidence
 from scripts.plan_incremental_update import build_plan
 
@@ -120,7 +122,7 @@ class PipelineContractTests(unittest.TestCase):
             GraphRAGEngine._resolve_retrieval_mode(
                 "Compare revenue in 2023 and 2025", "auto", "REVENUE"
             ),
-            "graph",
+            "hybrid_temporal",
         )
         self.assertEqual(
             GraphRAGEngine._resolve_retrieval_mode(
@@ -128,6 +130,105 @@ class PipelineContractTests(unittest.TestCase):
             ),
             "hybrid",
         )
+
+    def test_four_baselines_are_explicitly_routable(self):
+        for mode in ("vector", "graph", "hybrid", "hybrid_temporal"):
+            decision = QueryRouter.route("test question", mode)
+            self.assertEqual(decision.mode, mode)
+            self.assertEqual(decision.confidence, 1.0)
+        self.assertEqual(
+            QueryRouter.route("How did revenue change between 2023 and 2025?", "auto", "REVENUE").mode,
+            "hybrid_temporal",
+        )
+
+    def test_ppr_discovers_bridge_without_reversing_path_semantics(self):
+        scores = personalized_pagerank(
+            [("EXPORT_CONTROL", "MARKET_ACCESS"), ("MARKET_ACCESS", "REVENUE")],
+            ["EXPORT_CONTROL"],
+        )
+        self.assertGreater(scores["MARKET_ACCESS"], 0)
+        self.assertAlmostEqual(sum(scores.values()), 1.0, places=6)
+
+    def test_metric_claim_expands_to_period_observations(self):
+        triple = {
+            "relation": "REPORTS_METRIC",
+            "target": "REVENUE",
+            "metric_unit": "USD millions",
+            "metric_values_json": json.dumps([
+                {"period": "2025", "value": "130,497"},
+                {"period": "2024", "value": "60,922"},
+            ]),
+            "table_name": "Consolidated Statements of Income",
+            "row_label": "Revenue",
+            "statement_type": "FINANCIAL_STATEMENTS",
+        }
+        observations = build_financial_observations(
+            triple,
+            claim_id="claim_v2_example",
+            company_id="NVIDIA_CORPORATION",
+            metric_id="REVENUE",
+            source_filing="2025-10-K.pdf",
+            page=91,
+            filing_year=2025,
+            section="FINANCIAL_STATEMENTS",
+        )
+        self.assertEqual(len(observations), 2)
+        self.assertEqual(observations[0]["fiscal_year"], 2025)
+        self.assertEqual(observations[0]["value"], 130497.0)
+        self.assertEqual(observations[0]["currency"], "USD")
+        self.assertEqual(observations[0]["scale"], "millions")
+        self.assertEqual(observations[0]["claim_id"], "claim_v2_example")
+
+    def test_percentage_only_rows_are_not_misread_as_currency(self):
+        revenue = build_financial_observations(
+            {
+                "relation": "REPORTS_METRIC",
+                "target": "REVENUE",
+                "metric_unit": "USD millions",
+                "metric_values_json": json.dumps([{"period": "2024", "value": "100.0"}]),
+                "evidence_sentence": "Revenue 100.0 % 100.0 %",
+            },
+            claim_id="claim_revenue_ratio",
+            company_id="nvidia_corporation",
+            metric_id="revenue",
+            source_filing="2024-10-K.pdf",
+            page=39,
+            filing_year=2024,
+            section="MD_AND_A",
+        )
+        self.assertEqual(revenue, [])
+        net_margin = build_financial_observations(
+            {
+                "relation": "REPORTS_METRIC",
+                "target": "NET_INCOME",
+                "metric_unit": "USD millions",
+                "metric_values_json": json.dumps([{"period": "2024", "value": "48.9"}]),
+                "evidence_sentence": "Net income 48.9 % 16.2 %",
+            },
+            claim_id="claim_net_margin",
+            company_id="nvidia_corporation",
+            metric_id="net_income",
+            source_filing="2024-10-K.pdf",
+            page=39,
+            filing_year=2024,
+            section="MD_AND_A",
+        )
+        self.assertEqual(net_margin[0]["metric_id"], "net_margin")
+        self.assertEqual(net_margin[0]["unit"], "percent")
+        legacy_path = CausalPath(
+            path_id="legacy",
+            nodes=["NVIDIA_CORPORATION", "REVENUE"],
+            node_labels=["Company", "FinancialMetric"],
+            relationships=["REPORTS_METRIC"],
+            causal_strengths=["DISCLOSED_ONLY"],
+            evidence=["Revenue 100.0 % 100.0 %"],
+            pages=[39],
+            years=[2024],
+            evidence_ids=["claim_revenue_ratio"],
+            filings=["2024-10-K.pdf"],
+            total_hops=1,
+        )
+        self.assertTrue(GraphRAGEngine._is_percentage_denominator_path(legacy_path))
         self.assertEqual(
             GraphRAGEngine._resolve_retrieval_mode(
                 "How do export controls impact NVIDIA revenue?", "auto", "REVENUE"

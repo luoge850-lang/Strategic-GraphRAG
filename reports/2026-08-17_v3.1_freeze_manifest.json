@@ -1,0 +1,76 @@
+{
+  "schema": "strategic-graphrag-freeze-manifest/v1",
+  "release": "v3.1.0-bitemporal-retrieval-baseline",
+  "frozen_at_utc": "2026-08-17T03:00:00Z",
+  "corpus_id": "nvidia-10k-2023-2025-v3",
+  "scope": {
+    "company": "NVIDIA Corporation",
+    "filings": [
+      {
+        "filename": "2023-10-K.pdf",
+        "sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+        "pages": 169,
+        "strict_evidence_claims": 126
+      },
+      {
+        "filename": "2024-10-K.pdf",
+        "sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+        "pages": 96,
+        "strict_evidence_claims": 129
+      },
+      {
+        "filename": "2025-10-K.pdf",
+        "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+        "pages": 130,
+        "strict_evidence_claims": 128
+      }
+    ],
+    "total_pages": 395,
+    "strict_business_edges": 383,
+    "logical_business_nodes": 130,
+    "vector_chunks": 1686
+  },
+  "models": {
+    "llm_provider": "deepseek",
+    "llm_model": "deepseek-v4-flash",
+    "embedding_backend": "sentence_transformers",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "vector_collection": "nvidia_sec_filings_active",
+    "financial_observation_model": "financial_observation_v1",
+    "bitemporal_model": "bitemporal_fact_v2"
+  },
+  "materialized_models": {
+    "metric_claims": 122,
+    "financial_observations": 237,
+    "temporal_facts": 383,
+    "temporal_changes": 99,
+    "active_current_facts": 124,
+    "superseded_disclosure_facts": 259
+  },
+  "retrieval_baselines": [
+    "vector",
+    "graph",
+    "hybrid",
+    "hybrid_temporal"
+  ],
+  "verification": {
+    "python_tests": 20,
+    "frontend_typecheck": "PASS",
+    "frontend_production_build": "PASS",
+    "api_readiness": "PASS",
+    "browser_rendering": "PASS",
+    "cross_filing_revenue_paths": 3,
+    "cross_filing_revenue_years": [2023, 2024, 2025],
+    "percentage_denominator_leak": false
+  },
+  "research_status": {
+    "extraction_semantic_quality": "NOT_MEASURED",
+    "human_golden_qa": "NOT_AVAILABLE",
+    "baseline_accuracy_comparison": "NOT_RUN",
+    "claim": "reproducible engineering baseline, not a completed research result"
+  },
+  "git": {
+    "source_branch": "codex/v3-three-filing-evidence-graphrag",
+    "tag": "v3.1.0-bitemporal-retrieval-baseline"
+  }
+}

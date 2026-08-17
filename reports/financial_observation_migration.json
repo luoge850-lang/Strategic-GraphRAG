@@ -1,0 +1,13 @@
+{
+  "schema": "strategic-graphrag-financial-observation/v1",
+  "generated_at_utc": "2026-08-17T02:06:53.944265+00:00",
+  "mode": "apply",
+  "metric_claims": 122,
+  "financial_observations": 237,
+  "applied": 237,
+  "guardrails": [
+    "one observation per claim, metric, period, value, and unit",
+    "every observation links to a verbatim EvidenceClaim",
+    "fiscal-year granularity is preserved without fabricated calendar dates"
+  ]
+}

@@ -1,4 +1,4 @@
-# Strategic-GraphRAG v3
+# Strategic-GraphRAG v3.1
 
 Evidence-grounded GraphRAG for NVIDIA's fiscal 2023, 2024, and 2025 10-K
 filings. The project turns SEC PDFs into a strict Neo4j evidence graph,
@@ -38,7 +38,8 @@ Three allowlisted 10-K PDFs
   -> ontology, quote/span, and entity validation
   -> Neo4j business edge + EvidenceClaim + Sentence provenance
   -> Chroma semantic chunks
-  -> adaptive graph/hybrid retrieval
+  -> query router -> Vector / Graph / Hybrid / Hybrid+Temporal
+  -> directed path search + personalized PageRank (PPR)
   -> grounded structured synthesis
   -> FastAPI + React/Vite evidence UI
 ```
@@ -49,11 +50,22 @@ Key implementation decisions:
   that mention a metric remain Hybrid so vector evidence pages can expand graph
   anchors before path search.
 - Every synthesized citation is checked against the returned path evidence.
-- Repeated disclosures across years are connected by 99 derived
-  `NEXT_DISCLOSURE` links. A separate `observed_change_v1` layer connects the
-  same EvidenceClaim pairs through 99 `TemporalChange` nodes: 22 comparable
-  quantitative metric changes, 13 non-comparable metric pairs, and 64 repeated
-  narrative disclosures. It does not infer resolution from omission.
+- Financial-table claims are normalized into 237 period-specific
+  `FinancialObservation` nodes linked to company, metric, filing, fiscal year,
+  and the exact supporting `EvidenceClaim`. Percentage-of-revenue denominator
+  rows are excluded from amount retrieval; genuine percentage rows are mapped
+  to margin/ratio metrics.
+- All 383 strict claims are represented as `TemporalFact` versions using
+  separate valid-time and recorded-time fields. The current
+  `bitemporal_fact_v2` migration marks 124 versions `ACTIVE_CURRENT` and 259
+  `SUPERSEDED_DISCLOSURE`; supersession means a later disclosure version exists,
+  not that the earlier real-world assertion became false.
+- The 99 `TemporalChange` nodes now link fact versions and supporting claims:
+  58 continued, 6 recurred, 19 metric increases, 3 metric decreases, and 13
+  non-comparable metric changes. The model never infers resolution from silence.
+- `QueryRouter` exposes four reproducible modes: `vector`, `graph`, `hybrid`,
+  and `hybrid_temporal`. Hybrid modes use vector-to-graph anchor expansion and
+  PPR; Hybrid+Temporal additionally scores bitemporal fact matches.
 - Identical successful API requests can use a bounded TTL cache. Responses
   expose `cache.hit`, selected retrieval mode, and per-stage latency so cached
   and uncached performance are not mixed.
@@ -109,20 +121,29 @@ python scripts/plan_incremental_update.py `
   --manifest reports/2026-08-14_corpus_manifest.json `
   --output reports/incremental_plan.json
 python scripts/audit_strict_chains.py --output reports/strict_chains.json
+python scripts/migrate_financial_observations.py --apply
+python scripts/build_temporal_change_model.py --apply
+python scripts/run_retrieval_baselines.py `
+  --question "How did NVIDIA revenue change between 2023 and 2025?" `
+  --cross-filing `
+  --output reports/retrieval_baselines_smoke.json
 cd frontend
 npm run build
 ```
 
-The current release passed 14 focused Python contracts, Python compilation,
+The current release passed 20 focused Python contracts, Python compilation,
 frontend TypeScript/Vite production build, Neo4j/Chroma post-clean checks, stable
 ID consistency, strict path validation, API health, and browser rendering. The
 largest JavaScript chunk is about 422 kB after splitting React, Motion,
 vis-data, and vis-network.
 
-In the final local check, liveness returned in 5-22 ms, the all-filing graph
-loaded in 1.04 s cold / 12 ms cached, and a real uncached Hybrid export-control
-query completed in 16.07 s (29.68 ms vector retrieval; 8.39 s LLM synthesis).
-These are development observations, not benchmark guarantees.
+In the latest local check, the all-filing statistics endpoint took 4.07 s cold
+and 5-19 ms cached; the visualization subgraph took 1.44 s cold and 25-32 ms
+cached. A retrieval-only cross-filing smoke test returned three strict revenue
+paths for 2023-2025 in Graph, Hybrid, and Hybrid+Temporal modes. Single-run
+latencies were 10.12 s, 3.91 s, and 2.41 s respectively; Vector retrieval took
+35.87 ms. Aura cold starts and cache effects make these development
+observations, not benchmark guarantees.
 
 ## Research status and honest limitations
 
@@ -140,9 +161,14 @@ This is a strong engineering candidate, not yet a completed research result:
   tested across all three filings. This is a smoke test, not a Golden QA score.
 - Filing disclosures support attributed relationships; they do not prove
   counterfactual causality, effect size, probability, or investment outcomes.
-- `observed_change_v1` provides transaction-time and valid-period fields plus
-  defensible numeric deltas. Narrative intensified/mitigated/resolved labels
-  and an independently labeled temporal benchmark remain open.
+- `bitemporal_fact_v2` separates valid and recorded time and supports explicit
+  invalidation/supersession links. Migrated records use a labeled migration
+  timestamp because the historical database-write time is unknown. Narrative
+  intensified/mitigated/resolved labels and an independently labeled temporal
+  benchmark remain open.
+- The four retrieval modes are implemented and smoke-tested, but they are not
+  yet accuracy baselines: a labeled QA/evidence set is still required for
+  Recall@K, Precision@K, faithfulness, answer relevance, and significance tests.
 - API authentication is configurable but disabled in the local demo. It must be
   enabled with restricted CORS before public deployment.
 - DeepSeek Flash is an external processor. Production use needs documented data
@@ -150,6 +176,9 @@ This is a strong engineering candidate, not yet a completed research result:
 
 See [the P0/P1 acceptance audit](reports/2026-08-14_p0_p1_acceptance.md) and the
 [machine-readable corpus manifest](reports/2026-08-14_corpus_manifest.json).
+The current frozen baseline is documented in the
+[v3.1 release notes](reports/2026-08-17_v3.1_release_notes.md) and
+[v3.1 freeze manifest](reports/2026-08-17_v3.1_freeze_manifest.json).
 
 ## Next research milestones
 
@@ -160,7 +189,8 @@ See [the P0/P1 acceptance audit](reports/2026-08-14_p0_p1_acceptance.md) and the
    answer relevance, abstention accuracy, and latency distributions.
 3. Extend observed numeric changes with independently labeled narrative states
    such as new, intensified, mitigated, and resolved; evaluate them separately.
-4. Run graph-only, vector-only, hybrid, reranker, and evidence-guard ablations.
+4. Evaluate the four implemented retrieval baselines, then add reranker and
+   evidence-guard ablations only after the main-model benchmark is stable.
 5. Containerize and deploy behind authentication, restricted CORS, observability,
    request timeouts, and cost controls.
 

@@ -34,6 +34,7 @@ from dotenv import load_dotenv
 
 from ..ontology.intent_classifier import classify_intent, get_retrieval_strategy, extract_financial_entities_from_query
 from .query_understanding import parse_query
+from .retrieval import Neo4jPPRRetriever, QueryRouter
 from ..ontology.relation_inference import VALID_RELATIONS, CAUSAL_STRENGTHS, detect_causal_strength
 
 load_dotenv()
@@ -559,6 +560,75 @@ class CausalPathFinder:
             logger.warning(f"Evidence search error: {e}")
             return []
 
+    def find_metric_disclosures(
+        self,
+        metric_id: str,
+        year_start: Optional[int] = None,
+        year_end: Optional[int] = None,
+        source_filing: Optional[str] = None,
+        limit: int = 100,
+    ) -> List[CausalPath]:
+        """Fetch strict one-hop metric facts without generic-path starvation."""
+        cypher = """
+        MATCH (company:Company)-[r:REPORTS_METRIC]->(metric:FinancialMetric)
+        WHERE (toUpper(replace(coalesce(metric.id, ''), ' ', '_')) = $metric_id
+               OR toUpper(replace(coalesce(metric.name, ''), ' ', '_')) = $metric_id)
+          AND ($year_start IS NULL OR r.year >= $year_start)
+          AND ($year_end IS NULL OR r.year <= $year_end)
+          AND ($source_filing IS NULL
+               OR coalesce(r.source_filing, r.filing, '') = $source_filing)
+          AND r.evidence_id IS NOT NULL
+          AND size(trim(coalesce(r.evidence_sentence, ''))) >= 20
+          AND EXISTS {
+              MATCH (claim:EvidenceClaim {id: r.evidence_id})
+              WHERE claim.verification_status = 'VERBATIM'
+          }
+        RETURN
+          [coalesce(company.name, company.id), coalesce(metric.name, metric.id)] AS node_names,
+          ['Company', 'FinancialMetric'] AS node_labels,
+          ['REPORTS_METRIC'] AS relationships,
+          [coalesce(r.causal_strength, 'DISCLOSED_ONLY')] AS causal_strengths,
+          [coalesce(r.evidence_sentence, '')] AS evidence,
+          [coalesce(r.page, 0)] AS pages,
+          [coalesce(r.year, 0)] AS years,
+          [coalesce(r.evidence_id, '')] AS evidence_ids,
+          [coalesce(r.source_filing, r.filing, '')] AS filings,
+          [coalesce(r.causal_form, 'FINANCIAL_RELATION')] AS causal_forms,
+          1 AS hops
+        ORDER BY r.year ASC, r.evidence_id ASC
+        LIMIT $limit
+        """
+        try:
+            with self.driver.session() as session:
+                records = list(session.run(
+                    cypher,
+                    metric_id=metric_id.upper().replace(" ", "_"),
+                    year_start=year_start,
+                    year_end=year_end,
+                    source_filing=source_filing,
+                    limit=limit,
+                ))
+        except Neo4jError as exc:
+            logger.warning("Direct metric retrieval failed: %s", exc)
+            return []
+        return [
+            CausalPath(
+                path_id=f"metric_{index:03d}",
+                nodes=record["node_names"],
+                node_labels=record["node_labels"],
+                relationships=record["relationships"],
+                causal_strengths=record["causal_strengths"],
+                evidence=record["evidence"],
+                pages=record["pages"],
+                years=record["years"],
+                evidence_ids=record["evidence_ids"],
+                filings=record["filings"],
+                causal_forms=record["causal_forms"],
+                total_hops=1,
+            )
+            for index, record in enumerate(records)
+        ]
+
     def find_temporal_evolution(
         self,
         risk_name: str,
@@ -692,6 +762,7 @@ CRITICAL STYLE RULES:
         # Initialize components
         self.path_finder = CausalPathFinder(self.driver)
         self.path_scorer = PathScorer()
+        self.ppr_retriever = Neo4jPPRRetriever(self.driver)
 
         # Initialize LLM via unified provider
         from ..llm_provider import get_llm
@@ -752,6 +823,7 @@ CRITICAL STYLE RULES:
                 keep_alive=True,
             )
             self.path_finder.driver = self.driver
+            self.ppr_retriever.driver = self.driver
             try:
                 self.driver.verify_connectivity()
                 logger.info("Neo4j reconnected successfully")
@@ -771,6 +843,7 @@ CRITICAL STYLE RULES:
         retrieval_mode: str = "auto",
         vector_engine=None,
         vector_top_k: int = 5,
+        synthesize: bool = True,
     ) -> Dict:
         """
         Execute the complete GraphRAG inference pipeline.
@@ -795,9 +868,10 @@ CRITICAL STYLE RULES:
             source_filing = source_filing or os.getenv("GRAPH_ACTIVE_FILING", "").strip() or None
         requested_retrieval_mode = (retrieval_mode or "auto").strip().lower()
         structured_query = parse_query(user_query)
-        retrieval_mode = self._resolve_retrieval_mode(
+        router_decision = QueryRouter.route(
             user_query, requested_retrieval_mode, structured_query.target_metric
         )
+        retrieval_mode = router_decision.mode
         logger.info(f"Query: {user_query[:80]}... | filing={source_filing or 'ALL'}")
 
         vector_retrieval = {
@@ -807,7 +881,7 @@ CRITICAL STYLE RULES:
             "source_filing": source_filing,
         }
         vector_started = time.perf_counter()
-        if retrieval_mode == "hybrid":
+        if router_decision.use_vector:
             try:
                 if vector_engine is None:
                     from .vector_rag_baseline import VectorRAGBaseline
@@ -829,6 +903,18 @@ CRITICAL STYLE RULES:
         stage_times["vector_retrieval_ms"] = round(
             (time.perf_counter() - vector_started) * 1000, 2
         )
+
+        if retrieval_mode == "vector":
+            return self._vector_baseline_response(
+                user_query,
+                vector_retrieval,
+                vector_engine,
+                router_decision.to_dict(),
+                started_at,
+                stage_times,
+                source_filing,
+                synthesize,
+            )
 
         # Pre-flight: ensure Neo4j is connected
         if not self._ensure_connection():
@@ -893,7 +979,7 @@ CRITICAL STYLE RULES:
         lexical_anchors = self.path_finder.find_text_anchors(user_query, limit=8)
         vector_anchors = self.path_finder.find_vector_evidence_anchors(
             vector_retrieval.get("hits", []), limit=12
-        ) if retrieval_mode == "hybrid" else []
+        ) if router_decision.use_vector else []
         all_anchors = list(dict.fromkeys(query_entities + lexical_anchors + vector_anchors + llm_anchors))
         target_metric = structured_query.target_metric
         metric_only = bool(target_metric) and not re.search(
@@ -909,7 +995,30 @@ CRITICAL STYLE RULES:
             # Exact metric questions must retrieve reported accounting facts,
             # not merely risk edges that happen to point at the same metric.
             strategy["relation_preference"] = ["REPORTS_METRIC"]
+        elif temporal_context["requested"] and target_metric:
+            # Temporal metric questions must retain the strict accounting edge
+            # even when the broad intent classifier prefers PRECEDES or
+            # REPORTED_IN structural relationships. Those structural edges do
+            # not carry EvidenceClaim IDs and are intentionally excluded from
+            # answer paths.
+            strategy["relation_preference"] = list(dict.fromkeys(
+                ["REPORTS_METRIC"] + strategy["relation_preference"]
+            ))
         logger.info(f"Anchors: {all_anchors}")
+        ppr_results: List[Dict[str, Any]] = []
+        if router_decision.use_ppr and all_anchors:
+            try:
+                ppr_results = self.ppr_retriever.rank(
+                    all_anchors,
+                    source_filing=source_filing,
+                    year_start=effective_year_start,
+                    year_end=effective_year_end,
+                    limit=12,
+                )
+                ppr_anchors = [item["entity_id"] for item in ppr_results]
+                all_anchors = list(dict.fromkeys(all_anchors + ppr_anchors))
+            except Exception as exc:
+                logger.warning("PPR retrieval unavailable: %s", type(exc).__name__)
         stage_times["anchor_resolution_ms"] = round(
             (time.perf_counter() - anchor_started) * 1000, 2
         )
@@ -933,6 +1042,13 @@ CRITICAL STYLE RULES:
             source_filing=source_filing,
             max_paths=path_budget,
         )
+        if target_metric and temporal_context["require_multi_year"]:
+            candidate_paths.extend(self.path_finder.find_metric_disclosures(
+                target_metric,
+                year_start=effective_year_start,
+                year_end=effective_year_end,
+                source_filing=source_filing,
+            ))
         # For an explicitly identified metric, prefer paths that actually
         # contain that metric. Generic Company anchors otherwise dominate the
         # bounded candidate pool and can displace an exact REPORTS_METRIC edge.
@@ -947,16 +1063,35 @@ CRITICAL STYLE RULES:
             ]
             if exact_metric_paths:
                 candidate_paths = exact_metric_paths
+        # Percentage-of-revenue tables often contain the denominator row
+        # ``Revenue 100%``.  Historical graph versions mapped that row to the
+        # REVENUE amount node.  Keep its EvidenceClaim for auditability, but do
+        # not allow it to compete with actual currency observations.
+        candidate_paths = [
+            path for path in candidate_paths
+            if not self._is_percentage_denominator_path(path)
+        ]
         stage_times["graph_path_search_ms"] = round(
             (time.perf_counter() - graph_started) * 1000, 2
         )
 
         if not candidate_paths:
-            return self._fallback_response(
+            fallback = self._fallback_response(
                 user_query,
                 all_anchors,
                 temporal_context=temporal_context,
             )
+            fallback.setdefault("metadata", {}).update({
+                "baseline": retrieval_mode,
+                "router": router_decision.to_dict(),
+                "retrieval": vector_retrieval,
+                "ppr": {"enabled": router_decision.use_ppr, "ranked_entities": ppr_results},
+                "latency_ms": {
+                    **stage_times,
+                    "total_ms": round((time.perf_counter() - started_at) * 1000, 2),
+                },
+            })
+            return fallback
 
         # Step 4: Score Paths
         scoring_started = time.perf_counter()
@@ -964,6 +1099,12 @@ CRITICAL STYLE RULES:
             self.path_scorer.score_path(path)
         raw_candidate_count = len(candidate_paths)
         retrieval = self._apply_vector_fusion(candidate_paths, vector_retrieval)
+        temporal_fusion = self._apply_temporal_fact_fusion(
+            candidate_paths,
+            enabled=router_decision.use_temporal,
+            year_start=effective_year_start,
+            year_end=effective_year_end,
+        )
         candidate_paths = self._deduplicate_paths(candidate_paths)
         candidate_paths.sort(key=self._path_sort_key)
 
@@ -1006,12 +1147,20 @@ CRITICAL STYLE RULES:
 
         # Step 7: LLM Synthesis
         synthesis_started = time.perf_counter()
-        structured_report = self._synthesize_report(
-            user_query,
-            top_paths,
-            intent_id,
-            vector_hits=vector_retrieval.get("hits", []),
-        )
+        if synthesize:
+            structured_report = self._synthesize_report(
+                user_query,
+                top_paths,
+                intent_id,
+                vector_hits=vector_retrieval.get("hits", []),
+            )
+        else:
+            structured_report = self._trace_report(
+                top_paths,
+                intent_id,
+                "Retrieval-only mode: external LLM synthesis was disabled.",
+                status="RETRIEVAL_ONLY",
+            )
         structured_report = self._canonicalize_report_citations(
             structured_report,
             top_paths,
@@ -1069,6 +1218,13 @@ CRITICAL STYLE RULES:
                 "llm": llm_route,
                 "source_filing": source_filing,
                 "retrieval": retrieval,
+                "temporal_fusion": temporal_fusion,
+                "router": router_decision.to_dict(),
+                "ppr": {
+                    "enabled": router_decision.use_ppr,
+                    "ranked_entities": ppr_results,
+                },
+                "baseline": retrieval_mode,
                 "retrieval_mode_requested": requested_retrieval_mode,
                 "retrieval_mode_selected": retrieval_mode,
                 "latency_ms": {
@@ -1090,17 +1246,117 @@ CRITICAL STYLE RULES:
         questions, while explicit metrics and ontology relations are already
         resolved deterministically and do not benefit from a Chroma round trip.
         """
-        if requested_mode in {"graph", "hybrid"}:
-            return requested_mode
-        query_upper = str(user_query or "").upper().replace("-", "_")
-        causal_or_exploratory = re.search(
-            r"\b(affect|impact|cause|risk|control|constraint|exposure|supply chain|why|how)\b",
-            str(user_query or ""),
-            re.IGNORECASE,
-        )
-        if (target_metric and not causal_or_exploratory) or any(rel in query_upper for rel in VALID_RELATIONS):
-            return "graph"
-        return "hybrid"
+        return QueryRouter.route(user_query, requested_mode, target_metric).mode
+
+    def _vector_baseline_response(
+        self,
+        query: str,
+        retrieval: Dict[str, Any],
+        vector_engine,
+        router: Dict[str, Any],
+        started_at: float,
+        stage_times: Dict[str, float],
+        source_filing: Optional[str],
+        synthesize: bool,
+    ) -> Dict[str, Any]:
+        """Return the vector-only control group using the common API contract."""
+        hits = retrieval.get("hits", []) or []
+        documents = [hit.get("document", "") for hit in hits if hit.get("document")]
+        if synthesize and vector_engine is not None and documents:
+            answer = vector_engine.generate(query, documents)
+        elif documents:
+            answer = "\n\n".join(documents[:5])
+        else:
+            answer = "[INSUFFICIENT EVIDENCE] No vector chunks were retrieved."
+        citations = []
+        for hit in hits:
+            metadata = hit.get("metadata") or {}
+            citations.append({
+                "rank": hit.get("rank"),
+                "source_filing": metadata.get("source_filing") or metadata.get("doc_id"),
+                "page": metadata.get("page"),
+                "chunk_id": metadata.get("chunk_id"),
+            })
+        return {
+            "query": query,
+            "intent": "VECTOR_BASELINE",
+            "intent_display": "Vector RAG Baseline",
+            "answer": answer,
+            "structured_report": {
+                "format": "vector_baseline_v1",
+                "status": retrieval.get("status", "UNKNOWN"),
+                "executive_summary": answer,
+                "claims": [],
+                "evidence_quality": "Chunk-level citations only; no graph path or EvidenceClaim guarantee.",
+                "limitations": "This control baseline cannot establish multi-hop or temporal graph reasoning.",
+            },
+            "paths": [],
+            "evidence_sentences": documents[:20],
+            "metadata": {
+                "baseline": "vector",
+                "synthesis_enabled": synthesize,
+                "router": router,
+                "source_filing": source_filing,
+                "retrieval": retrieval,
+                "vector_citations": citations,
+                "latency_ms": {
+                    **stage_times,
+                    "total_ms": round((time.perf_counter() - started_at) * 1000, 2),
+                },
+            },
+        }
+
+    def _apply_temporal_fact_fusion(
+        self,
+        paths: List[CausalPath],
+        *,
+        enabled: bool,
+        year_start: Optional[int],
+        year_end: Optional[int],
+    ) -> Dict[str, Any]:
+        """Boost paths whose evidence resolves to bitemporal fact versions."""
+        diagnostics = {
+            "enabled": enabled,
+            "matched_claims": 0,
+            "matched_paths": 0,
+            "model_version": "bitemporal_fact_v2",
+        }
+        if not enabled or not paths:
+            return diagnostics
+        evidence_ids = sorted({claim_id for path in paths for claim_id in path.evidence_ids if claim_id})
+        if not evidence_ids:
+            return diagnostics
+        try:
+            with self.driver.session() as session:
+                rows = list(session.run(
+                    """
+                    MATCH (fact:TemporalFact)-[:SUPPORTED_BY_CLAIM]->(claim:EvidenceClaim)
+                    WHERE claim.id IN $claim_ids AND fact.model_version='bitemporal_fact_v2'
+                      AND ($year_start IS NULL OR fact.disclosure_order >= $year_start)
+                      AND ($year_end IS NULL OR fact.disclosure_order <= $year_end)
+                    RETURN claim.id AS claim_id, fact.is_current_record AS current,
+                           fact.invalidation_status AS status
+                    """,
+                    claim_ids=evidence_ids,
+                    year_start=year_start,
+                    year_end=year_end,
+                ))
+        except Exception as exc:
+            diagnostics["error"] = type(exc).__name__
+            return diagnostics
+        fact_scores = {
+            str(row["claim_id"]): 1.0 if row.get("current") else 0.8
+            for row in rows
+        }
+        diagnostics["matched_claims"] = len(fact_scores)
+        for path in paths:
+            scores = [fact_scores[claim_id] for claim_id in path.evidence_ids if claim_id in fact_scores]
+            temporal_score = sum(scores) / len(scores) if scores else 0.0
+            path.score_breakdown["bitemporal_fact"] = round(temporal_score, 4)
+            if temporal_score:
+                diagnostics["matched_paths"] += 1
+                path.aggregate_score = round(0.85 * path.aggregate_score + 0.15 * temporal_score, 4)
+        return diagnostics
 
     @staticmethod
     def _apply_vector_fusion(
@@ -2046,6 +2302,28 @@ Now generate the analysis report:"""
         for index, path in enumerate(unique_paths):
             path.path_id = f"path_{index:03d}"
         return unique_paths
+
+    @staticmethod
+    def _is_percentage_denominator_path(path: CausalPath) -> bool:
+        """Reject legacy Revenue=100% rows from amount retrieval.
+
+        This is deliberately narrow: other percentage metrics such as gross
+        margin remain valid observations and are not filtered here.
+        """
+        for hop, relation in enumerate(path.relationships):
+            if relation != "REPORTS_METRIC":
+                continue
+            adjacent = path.nodes[hop:hop + 2]
+            if not any(str(node).lower() == "revenue" for node in adjacent):
+                continue
+            evidence = path.evidence[hop] if hop < len(path.evidence) else ""
+            if "$" not in evidence and re.search(
+                r"\brevenue\b.{0,40}\b100(?:\.0+)?\s*%",
+                evidence,
+                flags=re.IGNORECASE,
+            ):
+                return True
+        return False
 
     @staticmethod
     def _path_sort_key(path: CausalPath) -> Tuple:

@@ -206,6 +206,26 @@ def _is_percentage_table(page_text: str) -> bool:
     )
 
 
+def _table_name(page_text: str, evidence: str) -> str:
+    """Recover the nearest human-readable table heading above a metric row."""
+    lines = [line.strip() for line in str(page_text or "").splitlines() if line.strip()]
+    target = _normalise(evidence)
+    row_index = next(
+        (index for index, line in enumerate(lines) if _normalise(line) == target),
+        len(lines),
+    )
+    rejected = re.compile(
+        r"^(year|years) ended$|^\$\s*%$|^\(?\$ in |^20\d{2}(?:\s+20\d{2})*",
+        re.IGNORECASE,
+    )
+    for line in reversed(lines[max(0, row_index - 12):row_index]):
+        if rejected.search(line) or _NUMBER_RE.search(line):
+            continue
+        if 4 <= len(line) <= 120:
+            return line
+    return "UNKNOWN_TABLE"
+
+
 def _unit(page_text: str, row_text: str) -> str:
     context = f"{page_text}\n{row_text}".lower()
     value_text = re.sub(
@@ -268,6 +288,20 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 metric_id = "GROSS_MARGIN"
             elif percentage_table and metric_id == "OPERATING_INCOME":
                 metric_id = "OPERATING_MARGIN"
+            elif percentage_table and metric_id == "NET_INCOME":
+                metric_id = "NET_MARGIN"
+            elif percentage_table and metric_id == "COST_OF_REVENUE":
+                metric_id = "COST_OF_REVENUE_RATIO"
+            elif percentage_table and metric_id == "OPERATING_COST":
+                metric_id = "OPERATING_EXPENSE_RATIO"
+            elif percentage_table and metric_id == "R_AND_D_EXPENSE":
+                metric_id = "R_AND_D_RATIO"
+            elif percentage_table and metric_id == "SG_AND_A_EXPENSE":
+                metric_id = "SG_AND_A_RATIO"
+            elif percentage_table and metric_id == "REVENUE":
+                # Revenue=100% is the denominator of this presentation, not
+                # an amount or a growth metric.
+                continue
             evidence = _find_exact_row(page_text, row_text, metric_alias)
             if len(evidence) < 20:
                 continue
@@ -313,5 +347,9 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 "metric_value": values[0],
                 "metric_unit": _unit(page_text, evidence),
                 "metric_period": str(periods[0]) if periods else str(filing_year),
+                "table_name": _table_name(page_text, evidence),
+                "row_label": metric_alias,
+                "statement_type": "FINANCIAL_TABLE",
+                "comparability_status": "UNASSESSED",
             })
     return triples

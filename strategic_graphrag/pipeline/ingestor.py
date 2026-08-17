@@ -25,6 +25,7 @@ from dotenv import load_dotenv
 
 from ..ontology.entity_registry import norm_id, is_banned
 from ..provenance import evidence_identity
+from ..schema.financial_observation import build_financial_observations
 from ..ontology.relation_inference import (
     VALID_RELATIONS,
     CAUSAL_STRENGTHS,
@@ -262,6 +263,16 @@ class GraphIngestor:
         eid, es_id, claim_id = (
             identity.relation_id, identity.sentence_id, identity.claim_id
         )
+        financial_observations = build_financial_observations(
+            triple,
+            claim_id=claim_id,
+            company_id=s_id,
+            metric_id=t_id,
+            source_filing=filename,
+            page=page,
+            filing_year=year,
+            section=section,
+        )
 
         # Cypher: Create nodes + native relationship + evidence chain
         cypher = f"""
@@ -323,7 +334,8 @@ class GraphIngestor:
         MERGE (d:Document {{doc_id: $doc_id}})
         ON CREATE SET
             d.filename = $file,
-            d.fiscal_year = $yr
+            d.fiscal_year = $yr,
+            d.ingested_at = datetime()
         MERGE (d)-[:REPORTS]->(y)
 
         // 5. Sentence and claim-level provenance.  Neo4j relationships cannot
@@ -367,9 +379,26 @@ class GraphIngestor:
             ,claim.metric_unit = $metric_unit
             ,claim.metric_period = $metric_period
             ,claim.metric_values_json = $metric_values_json
+            ,claim.recorded_from = coalesce(claim.recorded_from, datetime())
         MERGE (claim)-[:SUPPORTED_BY]->(es)
         MERGE (claim)-[:ABOUT_SOURCE]->(s)
         MERGE (claim)-[:ABOUT_TARGET]->(t)
+
+        // One row-level claim can disclose several period-specific values.
+        FOREACH (item IN $financial_observations |
+            MERGE (observation:FinancialObservation {{id: item.id}})
+            SET observation += item,
+                observation.recorded_from = coalesce(observation.recorded_from, datetime()),
+                observation.recorded_to = null,
+                observation.is_current_record = true,
+                observation.model_version = 'financial_observation_v1'
+            MERGE (period_year:Year {{year: item.fiscal_year}})
+            MERGE (s)-[:HAS_FINANCIAL_OBSERVATION]->(observation)
+            MERGE (observation)-[:OBSERVES_METRIC]->(t)
+            MERGE (observation)-[:SUPPORTED_BY_CLAIM]->(claim)
+            MERGE (observation)-[:DISCLOSED_IN]->(d)
+            MERGE (observation)-[:VALID_DURING]->(period_year)
+        )
 
         // Store evidence reference on the relationship
         SET r.evidence_id = $claim_id,
@@ -396,7 +425,7 @@ class GraphIngestor:
                     temporal_scope=temporal_scope,
                     filing_fiscal_year=filing_fiscal_year,
                     evidence_referenced_period=evidence_referenced_period,
-                    document_sha256="",
+                document_sha256=document_sha256,
                     run_id=self.run_id,
                     llm_provider=self.llm_provider,
                     llm_model=self.llm_model,
@@ -406,6 +435,7 @@ class GraphIngestor:
                     metric_unit=metric_unit,
                     metric_period=metric_period,
                     metric_values_json=metric_values_json,
+                    financial_observations=financial_observations,
                     conf=self._calibrate_confidence(cs, "HYBRID", len(evidence), rel_type),
                     method="HYBRID",
                 )
@@ -532,6 +562,16 @@ class GraphIngestor:
                 "metric_values_json": str(
                     triple.get("metric_values_json", "")
                 ).strip(),
+                "financial_observations": build_financial_observations(
+                    triple,
+                    claim_id=claim_id,
+                    company_id=s_id,
+                    metric_id=t_id,
+                    source_filing=filename,
+                    page=pg,
+                    filing_year=year,
+                    section=sec,
+                ),
             })
 
         if not batch_params:
@@ -606,7 +646,8 @@ class GraphIngestor:
                         MERGE (d:Document {{doc_id: row.doc_id}})
                         ON CREATE SET
                             d.filename = row.file,
-                            d.fiscal_year = row.yr
+                            d.fiscal_year = row.yr,
+                            d.ingested_at = datetime()
                         MERGE (d)-[:REPORTS]->(y)
 
                         MERGE (es:Sentence {{id: row.es_id}})
@@ -648,9 +689,25 @@ class GraphIngestor:
                             ,claim.metric_unit = row.metric_unit
                             ,claim.metric_period = row.metric_period
                             ,claim.metric_values_json = row.metric_values_json
+                            ,claim.recorded_from = coalesce(claim.recorded_from, datetime())
                         MERGE (claim)-[:SUPPORTED_BY]->(es)
                         MERGE (claim)-[:ABOUT_SOURCE]->(s)
                         MERGE (claim)-[:ABOUT_TARGET]->(t)
+
+                        FOREACH (item IN row.financial_observations |
+                            MERGE (observation:FinancialObservation {{id: item.id}})
+                            SET observation += item,
+                                observation.recorded_from = coalesce(observation.recorded_from, datetime()),
+                                observation.recorded_to = null,
+                                observation.is_current_record = true,
+                                observation.model_version = 'financial_observation_v1'
+                            MERGE (period_year:Year {{year: item.fiscal_year}})
+                            MERGE (s)-[:HAS_FINANCIAL_OBSERVATION]->(observation)
+                            MERGE (observation)-[:OBSERVES_METRIC]->(t)
+                            MERGE (observation)-[:SUPPORTED_BY_CLAIM]->(claim)
+                            MERGE (observation)-[:DISCLOSED_IN]->(d)
+                            MERGE (observation)-[:VALID_DURING]->(period_year)
+                        )
 
                         SET r.source_filing = row.file,
                             r.source_page = row.pg,

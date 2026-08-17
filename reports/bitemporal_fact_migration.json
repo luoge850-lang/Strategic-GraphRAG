@@ -1,0 +1,30 @@
+{
+  "schema": "strategic-graphrag-bitemporal-facts/v2",
+  "generated_at_utc": "2026-08-17T02:06:54.602763+00:00",
+  "model_version": "bitemporal_fact_v2",
+  "mode": "apply",
+  "evidence_claims": 383,
+  "temporal_facts": 383,
+  "applied_facts": 383,
+  "input_disclosure_links": 99,
+  "change_nodes": 99,
+  "applied_changes": 99,
+  "by_change_type": {
+    "CONTINUED_DISCLOSURE": 58,
+    "RECURRED_DISCLOSURE": 6,
+    "METRIC_DECREASED": 3,
+    "METRIC_INCREASED": 19,
+    "METRIC_NOT_COMPARABLE": 13
+  },
+  "by_invalidation_status": {
+    "SUPERSEDED_DISCLOSURE": 259,
+    "ACTIVE_CURRENT": 124
+  },
+  "guardrails": [
+    "valid time and recorded time are separate",
+    "migration timestamps are labeled instead of fabricated",
+    "no resolution from absence",
+    "superseded disclosure does not mean real-world falsity",
+    "every fact and change links to verbatim EvidenceClaims"
+  ]
+}
