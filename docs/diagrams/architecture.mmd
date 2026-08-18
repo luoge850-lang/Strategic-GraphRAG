@@ -1,0 +1,16 @@
+flowchart LR
+  subgraph Offline["Offline build"]
+    A["NVIDIA 10-K PDFs"] --> B["Parse and chunk"]
+    B --> C["Extract and validate"]
+    C --> D["Neo4j evidence graph"]
+    C --> E["Chroma semantic index"]
+  end
+  subgraph Online["Online query"]
+    Q["User question"] --> R["QueryRouter"]
+    R --> T["Vector / Graph / Hybrid / Temporal"]
+    T --> G["Path scoring and provenance"]
+    G --> S["Grounded synthesis"]
+    S --> U["FastAPI + React/Vite UI"]
+  end
+  D --> T
+  E --> T
