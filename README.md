@@ -30,19 +30,12 @@ filing text.
 
 ## Architecture
 
-```text
-Three allowlisted 10-K PDFs
-  -> page parsing and SEC section detection
-  -> overlapping text chunks plus financial-table rows
-  -> rules + DeepSeek Flash extraction
-  -> ontology, quote/span, and entity validation
-  -> Neo4j business edge + EvidenceClaim + Sentence provenance
-  -> Chroma semantic chunks
-  -> query router -> Vector / Graph / Hybrid / Hybrid+Temporal
-  -> directed path search + personalized PageRank (PPR)
-  -> grounded structured synthesis
-  -> FastAPI + React/Vite evidence UI
-```
+<p align="center">
+  <img src="docs/diagrams/architecture.svg" alt="Strategic-GraphRAG evidence-first architecture" width="100%" />
+</p>
+
+> The SVG is the primary portfolio view. The editable source is available at
+> [`docs/diagrams/architecture.mmd`](docs/diagrams/architecture.mmd).
 
 Key implementation decisions:
 
@@ -85,6 +78,22 @@ The current engine retrieves three `REPORTS_METRIC` claims and reports:
 The response was grounding-verified and used one stable EvidenceClaim ID per
 filing. It does not infer the causes of revenue growth from those accounting
 facts alone.
+
+## Evaluation status
+
+The current release reports engineering and provenance checks separately from
+semantic quality:
+
+| Evaluation track | Current status |
+|---|---|
+| Evidence integrity | 383/383 declared-page verbatim matches; 383/383 required provenance records; zero exact duplicates |
+| Strict graph paths | 49 valid same-filing two-hop paths; zero invalid strict paths in the post-clean audit |
+| Retrieval modes | Vector, Graph, Hybrid, and Hybrid+Temporal implemented and smoke-tested |
+| Semantic extraction quality | `NOT_MEASURED`; a labeled precision/recall/F1 study is still required |
+| Answer quality | Human Golden QA, faithfulness, relevance, and abstention accuracy remain open |
+
+The numbers above should be read as release-scope engineering evidence, not as
+a claim of universal semantic accuracy or counterfactual causal inference.
 
 ## Run locally
 
