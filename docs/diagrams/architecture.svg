@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="760" viewBox="0 0 1500 760" role="img" aria-labelledby="title desc">
+  <title id="title">Strategic-GraphRAG architecture</title>
+  <desc id="desc">An evidence-grounded GraphRAG pipeline from NVIDIA 10-K PDFs through extraction, Neo4j and Chroma storage, retrieval, provenance validation, and a FastAPI React interface.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title{font:700 28px Inter,Segoe UI,Arial,sans-serif;fill:#0f172a}
+      .subtitle{font:400 15px Inter,Segoe UI,Arial,sans-serif;fill:#475569}
+      .lane{font:700 13px Inter,Segoe UI,Arial,sans-serif;letter-spacing:1.7px;fill:#334155}
+      .node-title{font:700 16px Inter,Segoe UI,Arial,sans-serif;fill:#0f172a}
+      .node-body{font:400 13px Inter,Segoe UI,Arial,sans-serif;fill:#475569}
+      .chip{font:700 11px Inter,Segoe UI,Arial,sans-serif;letter-spacing:.7px}
+      .edge{stroke:#64748b;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+      .dashed{stroke-dasharray:7 7}
+    </style>
+  </defs>
+  <rect width="1500" height="760" rx="24" fill="#ffffff"/>
+  <rect x="24" y="24" width="1452" height="712" rx="20" fill="#f8fafc" stroke="#e2e8f0"/>
+  <text x="58" y="70" class="title">Strategic-GraphRAG · evidence-first architecture</text>
+  <text x="58" y="98" class="subtitle">Offline evidence construction feeds filing-scoped retrieval and citation-checked synthesis.</text>
+
+  <rect x="50" y="126" width="1400" height="258" rx="18" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="78" y="158" class="lane">OFFLINE BUILD · REPRODUCIBLE CORPUS PREPARATION</text>
+  <rect x="78" y="190" width="190" height="112" rx="14" fill="#ffffff" stroke="#60a5fa" stroke-width="2" filter="url(#shadow)"/>
+  <text x="98" y="224" class="node-title">NVIDIA 10-K PDFs</text>
+  <text x="98" y="248" class="node-body">3 filings · 395 pages</text>
+  <text x="98" y="270" class="node-body">SHA-256 manifest</text>
+  <rect x="98" y="278" width="111" height="18" rx="9" fill="#dbeafe"/>
+  <text x="109" y="291" class="chip" fill="#1d4ed8">SOURCE-LOCKED</text>
+
+  <path d="M268 246 H304" class="edge"/>
+  <rect x="304" y="190" width="190" height="112" rx="14" fill="#ffffff" stroke="#60a5fa" stroke-width="2" filter="url(#shadow)"/>
+  <text x="324" y="224" class="node-title">Parse &amp; chunk</text>
+  <text x="324" y="248" class="node-body">Page / SEC sections</text>
+  <text x="324" y="270" class="node-body">Tables + text chunks</text>
+  <rect x="324" y="278" width="106" height="18" rx="9" fill="#dbeafe"/>
+  <text x="335" y="291" class="chip" fill="#1d4ed8">PAGE-AWARE</text>
+
+  <path d="M494 246 H530" class="edge"/>
+  <rect x="530" y="190" width="210" height="112" rx="14" fill="#ffffff" stroke="#60a5fa" stroke-width="2" filter="url(#shadow)"/>
+  <text x="550" y="224" class="node-title">Extract &amp; validate</text>
+  <text x="550" y="248" class="node-body">Rules + DeepSeek</text>
+  <text x="550" y="270" class="node-body">Ontology, quote, entity checks</text>
+  <rect x="550" y="278" width="110" height="18" rx="9" fill="#dbeafe"/>
+  <text x="561" y="291" class="chip" fill="#1d4ed8">STRICT CLAIMS</text>
+
+  <path d="M740 246 H780" class="edge"/>
+  <rect x="780" y="178" width="230" height="132" rx="14" fill="#ffffff" stroke="#14b8a6" stroke-width="2" filter="url(#shadow)"/>
+  <text x="802" y="214" class="node-title">Neo4j evidence graph</text>
+  <text x="802" y="238" class="node-body">Business edges + EvidenceClaim</text>
+  <text x="802" y="260" class="node-body">TemporalFact + provenance</text>
+  <rect x="802" y="276" width="148" height="18" rx="9" fill="#ccfbf1"/>
+  <text x="813" y="289" class="chip" fill="#0f766e">383 VERIFIED CLAIMS</text>
+
+  <path d="M740 270 C760 270 760 335 780 335" class="edge"/>
+  <rect x="780" y="318" width="230" height="52" rx="14" fill="#ffffff" stroke="#14b8a6" stroke-width="2" filter="url(#shadow)"/>
+  <text x="802" y="350" class="node-title">Chroma semantic index</text>
+
+  <rect x="50" y="412" width="1400" height="284" rx="18" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="78" y="444" class="lane">ONLINE QUERY · ROUTE, RETRIEVE, GROUND, EXPLAIN</text>
+  <rect x="78" y="490" width="190" height="112" rx="14" fill="#ffffff" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+  <text x="98" y="524" class="node-title">User question</text>
+  <text x="98" y="548" class="node-body">Metric, causal, or</text>
+  <text x="98" y="568" class="node-body">temporal comparison</text>
+  <rect x="98" y="576" width="86" height="18" rx="9" fill="#dcfce7"/>
+  <text x="109" y="589" class="chip" fill="#15803d">INPUT</text>
+
+  <path d="M268 546 H304" class="edge"/>
+  <rect x="304" y="490" width="190" height="112" rx="14" fill="#ffffff" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+  <text x="324" y="524" class="node-title">QueryRouter</text>
+  <text x="324" y="548" class="node-body">Vector · Graph · Hybrid</text>
+  <text x="324" y="568" class="node-body">Hybrid + Temporal</text>
+  <rect x="324" y="576" width="93" height="18" rx="9" fill="#dcfce7"/>
+  <text x="335" y="589" class="chip" fill="#15803d">FOUR MODES</text>
+
+  <path d="M494 546 H530" class="edge"/>
+  <path d="M895 310 C895 410 590 430 590 490" class="edge dashed"/>
+  <path d="M1010 344 C1010 420 630 430 630 490" class="edge dashed"/>
+  <rect x="530" y="490" width="210" height="112" rx="14" fill="#ffffff" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+  <text x="550" y="524" class="node-title">Evidence retrieval</text>
+  <text x="550" y="548" class="node-body">Anchor expansion + PPR</text>
+  <text x="550" y="568" class="node-body">Same-filing path guards</text>
+  <rect x="550" y="576" width="115" height="18" rx="9" fill="#dcfce7"/>
+  <text x="561" y="589" class="chip" fill="#15803d">PROVENANCE-FIRST</text>
+
+  <path d="M740 546 H780" class="edge"/>
+  <rect x="780" y="490" width="210" height="112" rx="14" fill="#ffffff" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+  <text x="800" y="524" class="node-title">Grounded synthesis</text>
+  <text x="800" y="548" class="node-body">Structured answer + citations</text>
+  <text x="800" y="568" class="node-body">Citation join-back check</text>
+  <rect x="800" y="576" width="95" height="18" rx="9" fill="#dcfce7"/>
+  <text x="811" y="589" class="chip" fill="#15803d">ABSTAINABLE</text>
+
+  <path d="M990 546 H1030" class="edge"/>
+  <rect x="1030" y="490" width="210" height="112" rx="14" fill="#ffffff" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1050" y="524" class="node-title">FastAPI service</text>
+  <text x="1050" y="548" class="node-body">Latency + cache metadata</text>
+  <text x="1050" y="568" class="node-body">Stable JSON response</text>
+  <rect x="1050" y="576" width="111" height="18" rx="9" fill="#dcfce7"/>
+  <text x="1061" y="589" class="chip" fill="#15803d">OBSERVABLE</text>
+
+  <path d="M1240 546 H1280" class="edge"/>
+  <rect x="1280" y="490" width="150" height="112" rx="14" fill="#ffffff" stroke="#22c55e" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1300" y="524" class="node-title">React / Vite UI</text>
+  <text x="1300" y="548" class="node-body">Evidence pages</text>
+  <text x="1300" y="568" class="node-body">Traceable answer</text>
+  <rect x="1300" y="576" width="65" height="18" rx="9" fill="#dcfce7"/>
+  <text x="1311" y="589" class="chip" fill="#15803d">DEMO</text>
+
+  <rect x="1080" y="650" width="330" height="24" rx="12" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="1100" y="667" class="chip" fill="#c2410c">ENGINEERING EVIDENCE ≠ UNIVERSAL QA</text>
+</svg>
