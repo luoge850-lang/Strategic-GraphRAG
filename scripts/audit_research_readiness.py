@@ -101,6 +101,36 @@ def _status_counts(rows: list[dict[str, Any]]) -> dict[str, int]:
     return dict(sorted(counts.items()))
 
 
+def _human_gold_invalid_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return compact validation errors for rows claiming to be human gold."""
+
+    invalid: list[dict[str, Any]] = []
+    for row in rows:
+        missing: list[str] = []
+        if row.get("review_status") != "HUMAN_REVIEWED":
+            missing.append("review_status")
+        if not str(row.get("reviewer") or "").strip():
+            missing.append("reviewer")
+        if not str(row.get("reference_answer") or "").strip():
+            missing.append("reference_answer")
+        if not isinstance(row.get("answerable"), bool):
+            missing.append("answerable")
+        if not isinstance(row.get("requires_abstention"), bool):
+            missing.append("requires_abstention")
+        evidence_ids = row.get("gold_evidence_ids")
+        if not isinstance(evidence_ids, list):
+            missing.append("gold_evidence_ids")
+        elif row.get("answerable") is True and not evidence_ids:
+            missing.append("gold_evidence_ids(nonempty for answerable row)")
+        if not isinstance(row.get("relevant_evidence_grades"), dict):
+            missing.append("relevant_evidence_grades")
+        if row.get("answerable") is False and row.get("requires_abstention") is not True:
+            missing.append("requires_abstention(true for unanswerable row)")
+        if missing:
+            invalid.append({"id": row.get("id"), "missing": missing})
+    return invalid
+
+
 def audit(root: Path = ROOT) -> dict[str, Any]:
     checks: list[dict[str, Any]] = []
     facts: dict[str, Any] = {}
@@ -283,6 +313,7 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
         row.get("review_status") == "HUMAN_REVIEWED" for row in human_golden_rows
     )
     human_answerable = sum(row.get("answerable") is True for row in human_golden_rows)
+    human_invalid_rows = _human_gold_invalid_rows(human_golden_rows)
     human_source = (
         str(human_golden_path.relative_to(root))
         if human_golden_path.exists()
@@ -294,6 +325,8 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
         "status_counts": _status_counts(human_golden_rows),
         "human_reviewed": human_reviewed,
         "answerable": human_answerable,
+        "invalid_rows": len(human_invalid_rows),
+        "invalid_examples": human_invalid_rows[:5],
     }
     facts["human_gold"] = human_gold_facts
     facts["golden_qa"] = human_gold_facts
@@ -302,16 +335,20 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
         "human_golden_qa_available",
         human_golden_path.exists()
         and len(human_golden_rows) >= 30
-        and human_reviewed == len(human_golden_rows),
+        and human_reviewed == len(human_golden_rows)
+        and not human_invalid_rows,
         {
             "source": human_source,
             "rows": len(human_golden_rows),
             "status_counts": _status_counts(human_golden_rows),
+            "invalid_rows": len(human_invalid_rows),
+            "invalid_examples": human_invalid_rows[:5],
         },
         {
             "source": "evaluation/golden_qa_human_v1.jsonl",
             "minimum_rows": 30,
             "all_rows": "HUMAN_REVIEWED",
+            "all_core_fields": "valid",
         },
         note="Only the separate human file can satisfy this check; the candidate file is never human gold.",
     )

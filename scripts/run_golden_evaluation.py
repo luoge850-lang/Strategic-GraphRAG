@@ -44,6 +44,42 @@ def _mean(values: List[Optional[float]]) -> Optional[float]:
     return round(statistics.mean(usable), 4) if usable else None
 
 
+def _gold_evidence_ids(item: Dict[str, Any]) -> Set[str]:
+    """Read human gold IDs, while retaining compatibility with the old draft schema."""
+
+    if "gold_evidence_ids" in item:
+        values = item.get("gold_evidence_ids") or []
+    else:
+        values = item.get("evidence_claim_ids") or []
+    return {str(value) for value in values if value}
+
+
+def _gold_pages(item: Dict[str, Any]) -> Set[int]:
+    """Read human gold pages, falling back to the legacy candidate field."""
+
+    values = item.get("gold_pages") if "gold_pages" in item else item.get("pages")
+    return {int(page) for page in (values or []) if str(page).isdigit()}
+
+
+def _source_filing(item: Dict[str, Any]) -> Optional[str]:
+    return item.get("source_filing") or item.get("candidate_source_filing")
+
+
+def _answerable(item: Dict[str, Any]) -> bool:
+    if item.get("answerable") is not None:
+        return bool(item.get("answerable"))
+    return bool(item.get("candidate_answerable", True))
+
+
+def _dataset_status(dataset: List[Dict[str, Any]]) -> str:
+    statuses = {row.get("review_status") for row in dataset}
+    if dataset and statuses == {"HUMAN_REVIEWED"}:
+        return "HUMAN_REVIEWED"
+    if dataset and statuses == {"AUTO_GENERATED_REGRESSION_CANDIDATE"}:
+        return "AUTO_GENERATED_REGRESSION_CANDIDATE_NOT_HUMAN_GOLD"
+    return "MIXED_OR_UNREVIEWED"
+
+
 def _retrieved_ids(result: Dict[str, Any]) -> Set[str]:
     return {
         str(evidence_id)
@@ -129,7 +165,7 @@ def evaluate(
                     "max_paths": 5,
                     "retrieval_mode": "hybrid",
                     "vector_top_k": 5,
-                    "source_filing": item.get("source_filing"),
+                    "source_filing": _source_filing(item),
                 },
                 timeout=180,
             )
@@ -142,13 +178,13 @@ def evaluate(
                 results.append(row)
                 continue
 
-            gold_ids = set(item.get("evidence_claim_ids", []) or [])
-            gold_pages = {int(page) for page in item.get("pages", []) or [] if str(page).isdigit()}
+            gold_ids = _gold_evidence_ids(item)
+            gold_pages = _gold_pages(item)
             retrieved_ids = _retrieved_ids(payload)
             retrieved_pages = _retrieved_pages(payload)
             overlap_ids = gold_ids & retrieved_ids
             overlap_pages = gold_pages & retrieved_pages
-            answerable = bool(item.get("answerable", True))
+            answerable = _answerable(item)
             row.update(
                 {
                     "answerable": answerable,
@@ -176,8 +212,8 @@ def evaluate(
     judge_rows = [row.get("judge") for row in answerable_rows if isinstance(row.get("judge"), dict) and "faithfulness" in row["judge"]]
     latency = [row["latency_ms"] for row in results if "latency_ms" in row]
     return {
-        "dataset": "golden_qa_v2",
-        "dataset_status": "AUTO_GENERATED_REGRESSION_CANDIDATE_NOT_HUMAN_GOLD",
+        "dataset": "golden_qa",
+        "dataset_status": _dataset_status(dataset),
         "source_filing": "2025-10-K.pdf",
         "evaluation_protocol": "hybrid retrieval, structural metrics only; LLM judge disabled",
         "dataset_size": len(dataset),

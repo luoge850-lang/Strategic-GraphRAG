@@ -78,7 +78,13 @@ class ResearchReadinessAuditTests(unittest.TestCase):
             rows = [
                 {
                     "id": f"GQ-{index:03d}",
+                    "reference_answer": "A reviewed answer.",
+                    "gold_evidence_ids": [f"claim-{index}"],
+                    "relevant_evidence_grades": {f"claim-{index}": 2},
                     "answerable": index % 2 == 0,
+                    "requires_abstention": index % 2 != 0,
+                    "reviewer": "reviewer_a",
+                    "review_notes": "Reviewed against the filing.",
                     "review_status": "HUMAN_REVIEWED",
                 }
                 for index in range(1, 31)
@@ -105,3 +111,23 @@ class ResearchReadinessAuditTests(unittest.TestCase):
                 report["facts"]["human_gold"]["status_counts"],
                 {"HUMAN_REVIEWED": 30},
             )
+            self.assertEqual(report["facts"]["human_gold"]["invalid_rows"], 0)
+
+    def test_review_status_alone_cannot_satisfy_human_qa(self):
+        with tempfile.TemporaryDirectory() as directory:
+            temp_root = Path(directory)
+            human_path = temp_root / "evaluation" / "golden_qa_human_v1.jsonl"
+            human_path.parent.mkdir(parents=True)
+            rows = [
+                {"id": f"GQ-{index:03d}", "review_status": "HUMAN_REVIEWED"}
+                for index in range(1, 31)
+            ]
+            human_path.write_text(
+                "".join(json.dumps(row) + "\n" for row in rows),
+                encoding="utf-8",
+            )
+
+            report = audit(temp_root)
+
+            self.assertIn("human_golden_qa_available", report["blocking_failures"])
+            self.assertEqual(report["facts"]["human_gold"]["invalid_rows"], 30)

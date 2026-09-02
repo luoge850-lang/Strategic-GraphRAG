@@ -21,6 +21,7 @@ DEFAULT_OUTPUT = ROOT / "evaluation" / "golden_qa_human_v1.jsonl"
 HUMAN_FIELDS = (
     "reference_answer",
     "gold_evidence_ids",
+    "gold_pages",
     "relevant_evidence_grades",
     "answerable",
     "requires_abstention",
@@ -52,6 +53,7 @@ def _blank_human_row(candidate: dict[str, Any]) -> dict[str, Any]:
         **candidate_fields,
         "reference_answer": "",
         "gold_evidence_ids": [],
+        "gold_pages": [],
         "relevant_evidence_grades": {},
         "answerable": None,
         "requires_abstention": None,

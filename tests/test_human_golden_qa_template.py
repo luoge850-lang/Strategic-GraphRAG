@@ -64,6 +64,7 @@ class HumanGoldenQATemplateTests(unittest.TestCase):
 
             self.assertEqual(reviewed_rows[0]["reference_answer"], "")
             self.assertEqual(reviewed_rows[0]["gold_evidence_ids"], [])
+            self.assertEqual(reviewed_rows[0]["gold_pages"], [])
             self.assertEqual(reviewed_rows[0]["relevant_evidence_grades"], {})
             self.assertIsNone(reviewed_rows[0]["answerable"])
             self.assertIsNone(reviewed_rows[0]["requires_abstention"])
