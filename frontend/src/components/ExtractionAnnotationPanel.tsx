@@ -49,7 +49,7 @@ function AnnotationGuide() {
       }}
     >
       <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-        <h2 style={{ margin: 0, fontSize: 15 }}>人工判断指南</h2>
+        <h2 style={{ margin: 0, fontSize: 15 }}>标注判断指南</h2>
         <span className="badge-dashed" style={{ fontSize: 8.5 }}>不需要金融背景</span>
       </div>
       <p style={{ fontSize: 11.5, lineHeight: 1.7, margin: "10px 0 14px", color: "var(--L1)" }}>
@@ -250,9 +250,9 @@ export default function ExtractionAnnotationPanel() {
   return (
     <section style={{ paddingTop: 100, paddingBottom: 40 }}>
       <div className="pagehead">
-        <h1>人工抽取标注</h1>
+        <h1>抽取标注工作台</h1>
         <p>
-          对抽取样本逐条核验。页面已直接提供完整证据文本，你不需要自己搜索 PDF；请根据当前证据填写判断。
+          默认样本是 GPT-5.6/Sol 辅助完成的 AI 辅助工作集，可继续人工复核，但当前结果不属于独立人类 Golden QA。页面已直接提供完整证据文本，你不需要自己搜索 PDF；请根据当前证据填写判断。
         </p>
       </div>
 
@@ -261,7 +261,7 @@ export default function ExtractionAnnotationPanel() {
       <div className="card-mono" style={{ border: "2px solid var(--ink)", borderLeft: "5px solid var(--ink)", marginBottom: 18, background: "rgba(28,28,26,0.045)" }}>
         <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase" }}>研究诚信说明</div>
         <p style={{ margin: "7px 0 0", fontSize: 11.5, lineHeight: 1.65, color: "var(--L1)" }}>
-          本轮 30 条数据由 GPT-5.6/Sol 辅助标注，当前属于 AI 辅助工作集，可人工复核，但不能直接作为独立人类 Golden QA。未来若建立人类金标准，需要另行人工复核或双人独立标注，并记录一致性。
+          默认的 2025_post_repair_human_v1 共 30 条数据，由 GPT-5.6/Sol 辅助标注，当前属于 AI 辅助工作集，可人工复核，但不能直接作为独立人类 Golden QA。切换到历史 v2 或 baseline 时仅供查看；未来若建立人类金标准，需要另行人工复核或双人独立标注，并记录一致性。
         </p>
       </div>
 
@@ -275,7 +275,7 @@ export default function ExtractionAnnotationPanel() {
             onChange={(event) => changeSample(event.target.value as ExtractionSampleKey)}
           >
           <option value="2025_post_repair_human_v1">2025 修复后 30 条 · AI 辅助工作集（可人工复核，非独立人类 Golden QA）</option>
-          <option value="2025_post_repair_v2">2025 修复后 30 条 · 历史预填审计（只读，不计入人工复核工作集）</option>
+          <option value="2025_post_repair_v2">2025 修复后 30 条 · 历史预填审计（只读，不属于独立人类 Golden QA）</option>
           <option value="baseline">baseline 60 · 历史基线（只读）</option>
           </select>
         </label>
@@ -356,9 +356,9 @@ export default function ExtractionAnnotationPanel() {
 
           <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 2fr)", gap: 12, marginBottom: 16 }}>
             <label style={{ fontSize: 10, color: "var(--muted)" }}>
-              标注人（完成时必填）
+              标注来源（完成时必填）
               <input className="input-mono" disabled={readOnly} placeholder="例如 annotator_01" style={{ marginTop: 6, fontSize: 11 }} value={draft.annotator} onChange={(event) => { setDraft({ ...draft, annotator: event.target.value }); setSaveState("dirty"); }} />
-              <span style={{ display: "block", marginTop: 4, lineHeight: 1.5 }}>可使用化名；四项判断和标注人都填写后才会标记为 LABELED。</span>
+              <span style={{ display: "block", marginTop: 4, lineHeight: 1.5 }}>可使用化名；四项判断和标注来源都填写后才会标记为 LABELED。</span>
             </label>
             <label style={{ fontSize: 10, color: "var(--muted)" }}>
               缺失的金标准关系（每行一项）
@@ -371,7 +371,7 @@ export default function ExtractionAnnotationPanel() {
           </label>
 
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-            <div style={{ fontSize: 10, color: saveState === "error" ? "#8a3030" : "var(--muted)" }}>{message || (readOnly ? "当前历史样本仅供查看，不能提交修改" : complete ? "四项判断和标注人已填写" : hasAllLabels ? "四项判断已填，请先填写标注人后才能标记为已完成" : "可保存未完成的部分标注")}</div>
+            <div style={{ fontSize: 10, color: saveState === "error" ? "#8a3030" : "var(--muted)" }}>{message || (readOnly ? "当前历史样本仅供查看，不能提交修改" : complete ? "四项判断和标注来源已填写" : hasAllLabels ? "四项判断已填，请先填写标注来源后才能标记为已完成" : "可保存未完成的部分标注")}</div>
             <div style={{ display: "flex", gap: 7 }}>
               <button className="btn-outline" disabled={index === 0 || saveState === "saving"} onClick={() => move(-1)}>上一条</button>
               <button className="btn-ink" disabled={readOnly || saveState === "saving" || saveState === "idle" || saveState === "saved"} onClick={save}>{saveState === "saving" ? "保存中…" : "保存标注"}</button>

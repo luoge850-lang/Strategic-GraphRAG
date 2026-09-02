@@ -279,3 +279,78 @@ export async function patchExtractionSample(
   if (!r.ok) throw new Error(`Annotation save ${r.status}`);
   return r.json();
 }
+
+export type GoldenQAStatus = "HUMAN_REVIEW_PENDING" | "IN_PROGRESS" | "HUMAN_REVIEWED";
+
+export interface GoldenQARow {
+  id: string;
+  question: string;
+  candidate_question_type?: string;
+  candidate_difficulty?: string;
+  candidate_expected_answer?: string;
+  candidate_atomic_facts?: string[];
+  candidate_answerable?: boolean;
+  candidate_source_filing?: string;
+  candidate_evidence_claim_ids?: string[];
+  candidate_supporting_triples?: Array<Record<string, string>>;
+  candidate_pages?: number[];
+  candidate_years?: Array<number | null>;
+  reference_answer: string;
+  gold_evidence_ids: string[];
+  gold_pages: number[];
+  relevant_evidence_grades: Record<string, number>;
+  answerable: boolean | null;
+  requires_abstention: boolean | null;
+  reviewer: string;
+  review_notes: string;
+  review_status: GoldenQAStatus;
+}
+
+export interface GoldenQAResponse {
+  rows: GoldenQARow[];
+  total: number;
+  reviewed: number;
+  pending: number;
+}
+
+export interface GoldenQAPatch {
+  reference_answer?: string;
+  gold_evidence_ids?: string[];
+  gold_pages?: number[];
+  relevant_evidence_grades?: Record<string, number>;
+  answerable?: boolean | null;
+  requires_abstention?: boolean | null;
+  reviewer?: string;
+  review_notes?: string;
+  review_status?: GoldenQAStatus;
+}
+
+export interface GoldenQAPatchResponse {
+  row: GoldenQARow;
+  total: number;
+  reviewed: number;
+  pending: number;
+}
+
+export async function getGoldenQA(): Promise<GoldenQAResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/golden-qa`);
+  if (!r.ok) throw new Error(`Golden QA ${r.status}`);
+  return r.json();
+}
+
+export async function patchGoldenQA(
+  qaId: string,
+  patch: GoldenQAPatch,
+): Promise<GoldenQAPatchResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/golden-qa/${encodeURIComponent(qaId)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  if (!r.ok) {
+    const payload = await r.json().catch(() => null);
+    const detail = payload?.detail || `Golden QA save ${r.status}`;
+    throw new Error(detail);
+  }
+  return r.json();
+}

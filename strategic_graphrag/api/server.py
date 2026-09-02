@@ -31,7 +31,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.concurrency import run_in_threadpool
-from pydantic import BaseModel, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -183,6 +183,9 @@ EXTRACTION_SAMPLE_PATHS = {
 }
 HUMAN_EXTRACTION_SAMPLE_KEY = "2025_post_repair_human_v1"
 _EXTRACTION_SAMPLE_LOCK = threading.Lock()
+GOLDEN_QA_PATH = PROJECT_ROOT / "evaluation" / "golden_qa_human_v1.jsonl"
+_GOLDEN_QA_LOCK = threading.Lock()
+_GOLDEN_QA_STATUSES = {"HUMAN_REVIEW_PENDING", "IN_PROGRESS", "HUMAN_REVIEWED"}
 
 
 _ANNOTATION_LABEL_FIELDS = (
@@ -313,6 +316,176 @@ def update_extraction_sample(
             if temp_path is not None and temp_path.exists():
                 temp_path.unlink()
 
+    return updated_row, rows
+
+
+def read_golden_qa(path: Optional[Path] = None) -> List[Dict]:
+    """Read the independent human Golden QA work file."""
+    qa_path = path or GOLDEN_QA_PATH
+    with qa_path.open("r", encoding="utf-8", newline="") as handle:
+        rows = []
+        for line_number, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Invalid JSON on Golden QA line {line_number}") from exc
+            if not isinstance(row, dict):
+                raise ValueError(f"Golden QA line {line_number} is not an object")
+            rows.append(row)
+    return rows
+
+
+def golden_qa_summary(rows: List[Dict]) -> Dict[str, int]:
+    reviewed = sum(row.get("review_status") == "HUMAN_REVIEWED" for row in rows)
+    return {"total": len(rows), "reviewed": reviewed, "pending": len(rows) - reviewed}
+
+
+def _validate_golden_qa_row(row: Dict) -> None:
+    """Validate fields required before a row can become human Golden QA."""
+    if row.get("review_status") != "HUMAN_REVIEWED":
+        return
+    missing = []
+    if not str(row.get("reviewer") or "").strip():
+        missing.append("reviewer")
+    if not str(row.get("reference_answer") or "").strip():
+        missing.append("reference_answer")
+    if not isinstance(row.get("answerable"), bool):
+        missing.append("answerable")
+    if not isinstance(row.get("requires_abstention"), bool):
+        missing.append("requires_abstention")
+    evidence_ids = row.get("gold_evidence_ids")
+    if not isinstance(evidence_ids, list) or any(
+        not isinstance(value, str) or not value.strip() for value in evidence_ids
+    ):
+        missing.append("gold_evidence_ids")
+    gold_pages = row.get("gold_pages")
+    if not isinstance(gold_pages, list) or any(
+        not isinstance(value, int) or isinstance(value, bool) or value <= 0
+        for value in gold_pages
+    ):
+        missing.append("gold_pages")
+    grades = row.get("relevant_evidence_grades")
+    if not isinstance(grades, dict) or any(
+        not isinstance(value, int) or isinstance(value, bool) or value not in {0, 1, 2}
+        for value in grades.values()
+    ):
+        missing.append("relevant_evidence_grades")
+    if isinstance(evidence_ids, list) and isinstance(grades, dict) and not set(evidence_ids).issubset(grades):
+        missing.append("relevant_evidence_grades(missing gold IDs)")
+    if row.get("answerable") is True:
+        if not evidence_ids:
+            missing.append("gold_evidence_ids(nonempty for answerable row)")
+        if not gold_pages:
+            missing.append("gold_pages(nonempty for answerable row)")
+        if row.get("requires_abstention") is not False:
+            missing.append("requires_abstention(false for answerable row)")
+    if row.get("answerable") is False and row.get("requires_abstention") is not True:
+        missing.append("requires_abstention(true for unanswerable row)")
+    if missing:
+        raise ValueError(
+            "Cannot mark Golden QA as HUMAN_REVIEWED; missing or invalid: "
+            f"{sorted(set(missing))}"
+        )
+
+
+def update_golden_qa(
+    qa_id: str,
+    updates: Dict,
+    path: Optional[Path] = None,
+) -> tuple[Dict, List[Dict]]:
+    """Update only the independent human QA file with an atomic replacement."""
+    allowed = {
+        "reference_answer",
+        "gold_evidence_ids",
+        "gold_pages",
+        "relevant_evidence_grades",
+        "answerable",
+        "requires_abstention",
+        "reviewer",
+        "review_notes",
+        "review_status",
+    }
+    unknown = set(updates) - allowed
+    if unknown:
+        raise ValueError(f"Unsupported Golden QA fields: {sorted(unknown)}")
+    if "review_status" in updates and updates["review_status"] not in _GOLDEN_QA_STATUSES:
+        raise ValueError(f"review_status must be one of: {sorted(_GOLDEN_QA_STATUSES)}")
+    if "gold_evidence_ids" in updates and (
+        not isinstance(updates["gold_evidence_ids"], list)
+        or any(
+            not isinstance(value, str) or not value.strip()
+            for value in updates["gold_evidence_ids"]
+        )
+    ):
+        raise ValueError("gold_evidence_ids must be a string array")
+    if "gold_pages" in updates and (
+        not isinstance(updates["gold_pages"], list)
+        or any(
+            not isinstance(value, int) or isinstance(value, bool) or value <= 0
+            for value in updates["gold_pages"]
+        )
+    ):
+        raise ValueError("gold_pages must be an integer array")
+    if "relevant_evidence_grades" in updates:
+        grades = updates["relevant_evidence_grades"]
+        if not isinstance(grades, dict) or any(
+            not isinstance(key, str)
+            or not isinstance(value, int)
+            or isinstance(value, bool)
+            or value not in {0, 1, 2}
+            for key, value in grades.items()
+        ):
+            raise ValueError("relevant_evidence_grades must map string IDs to 0, 1, or 2")
+    for field in ("answerable", "requires_abstention"):
+        if field in updates and updates[field] is not None and not isinstance(updates[field], bool):
+            raise ValueError(f"{field} must be true, false, or null")
+
+    qa_path = path or GOLDEN_QA_PATH
+    with _GOLDEN_QA_LOCK:
+        with qa_path.open("r", encoding="utf-8", newline="") as handle:
+            raw_lines = handle.readlines()
+        updated_row = None
+        updated_lines = []
+        rows = []
+        for line in raw_lines:
+            if not line.strip():
+                updated_lines.append(line)
+                continue
+            row = json.loads(line)
+            if not isinstance(row, dict):
+                raise ValueError("Golden QA contains a non-object row")
+            if row.get("id") == qa_id:
+                row.update(updates)
+                _validate_golden_qa_row(row)
+                updated_row = row
+                line_ending = "\r\n" if line.endswith("\r\n") else "\n" if line.endswith("\n") else ""
+                updated_lines.append(json.dumps(row, ensure_ascii=False) + line_ending)
+            else:
+                updated_lines.append(line)
+            rows.append(row)
+        if updated_row is None:
+            raise KeyError(qa_id)
+        temp_path = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                encoding="utf-8",
+                newline="",
+                dir=str(qa_path.parent),
+                prefix=f".{qa_path.name}.",
+                suffix=".tmp",
+                delete=False,
+            ) as handle:
+                temp_path = Path(handle.name)
+                handle.writelines(updated_lines)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temp_path, qa_path)
+        finally:
+            if temp_path is not None and temp_path.exists():
+                temp_path.unlink()
     return updated_row, rows
 
 
@@ -615,8 +788,21 @@ class ExtractionAnnotationPatch(BaseModel):
     annotator: Optional[StrictStr] = None
     notes: Optional[StrictStr] = None
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
+
+
+class GoldenQAPatch(BaseModel):
+    reference_answer: Optional[StrictStr] = None
+    gold_evidence_ids: Optional[List[StrictStr]] = None
+    gold_pages: Optional[List[int]] = None
+    relevant_evidence_grades: Optional[Dict[StrictStr, int]] = None
+    answerable: Optional[StrictBool] = None
+    requires_abstention: Optional[StrictBool] = None
+    reviewer: Optional[StrictStr] = None
+    review_notes: Optional[StrictStr] = None
+    review_status: Optional[StrictStr] = None
+
+    model_config = ConfigDict(extra="forbid")
 
 
 # =============================================================================
@@ -639,6 +825,16 @@ async def root():
 @app.get("/annotation/")
 async def annotation_page():
     """Serve the standalone annotation UI without exposing it in the main demo nav."""
+    index_path = get_frontend_index()
+    if index_path.exists():
+        return FileResponse(index_path)
+    raise HTTPException(status_code=404, detail="Frontend build not found")
+
+
+@app.get("/golden-qa")
+@app.get("/golden-qa/")
+async def golden_qa_page():
+    """Serve the standalone human Golden QA review UI."""
     index_path = get_frontend_index()
     if index_path.exists():
         return FileResponse(index_path)
@@ -689,6 +885,32 @@ async def patch_extraction_sample(
     except OSError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
     return {"sample": sample, "row": updated_row, **extraction_sample_summary(rows)}
+
+
+@app.get("/evaluation/golden-qa")
+async def get_golden_qa():
+    try:
+        rows = read_golden_qa()
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Golden QA file not found")
+    except (ValueError, OSError) as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+    return {"rows": rows, **golden_qa_summary(rows)}
+
+
+@app.patch("/evaluation/golden-qa/{qa_id}")
+async def patch_golden_qa(qa_id: str, req: GoldenQAPatch):
+    try:
+        updated_row, rows = update_golden_qa(qa_id, req.model_dump(exclude_unset=True))
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Golden QA file not found")
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Golden QA item not found: {qa_id}")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except OSError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    return {"row": updated_row, **golden_qa_summary(rows)}
 
 
 @app.post("/query", response_model=QueryResponse)

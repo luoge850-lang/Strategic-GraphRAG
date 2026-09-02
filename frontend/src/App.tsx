@@ -15,6 +15,7 @@ import { fmtLabel, nodeLabelStyle } from "./lib/graph";
 import GraphCanvas from "./components/GraphCanvas";
 import NodeTooltip from "./components/NodeTooltip";
 import ExtractionAnnotationPanel from "./components/ExtractionAnnotationPanel";
+import GoldenQAReviewPanel from "./components/GoldenQAReviewPanel";
 
 /* ═══════════════════════════════════════════════════════
    Error Boundary
@@ -471,6 +472,47 @@ export default function App() {
     | undefined;
 
   const isAnnotationRoute = ["/annotation", "/annotation/"].includes(window.location.pathname.toLowerCase());
+  const isGoldenQARoute = ["/golden-qa", "/golden-qa/"].includes(window.location.pathname.toLowerCase());
+
+  if (isGoldenQARoute) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "var(--paper)",
+          fontFamily: "'Inter', sans-serif",
+          paddingBottom: 60,
+        }}
+      >
+        <nav
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: 14,
+            pointerEvents: "none",
+          }}
+        >
+          <div className="nav-mono" style={{ pointerEvents: "auto", display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>Strategic-GraphRAG</span>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/annotation"; }} style={{ fontSize: 10 }}>
+              抽取标注
+            </button>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/"; }} style={{ fontSize: 10 }}>
+              返回 Demo
+            </button>
+          </div>
+        </nav>
+        <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 36px" }}>
+          <GoldenQAReviewPanel />
+        </main>
+      </div>
+    );
+  }
 
   if (isAnnotationRoute) {
     return (
@@ -497,6 +539,9 @@ export default function App() {
         >
           <div className="nav-mono" style={{ pointerEvents: "auto", display: "flex", alignItems: "center", gap: 12 }}>
             <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>Strategic-GraphRAG</span>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/golden-qa"; }} style={{ fontSize: 10 }}>
+              Golden QA
+            </button>
             <button className="btn-ghost" onClick={() => { window.location.href = "/"; }} style={{ fontSize: 10 }}>
               返回 Demo
             </button>

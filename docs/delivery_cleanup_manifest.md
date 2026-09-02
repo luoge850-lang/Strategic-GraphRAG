@@ -59,10 +59,24 @@ copy or restore it from Git; no remote branch or external message was created.
 
 - `.venv/` is the only canonical Python environment for this delivery and is
   expected to use Python 3.12.
-- The root `venv/` is a legacy environment using Python 3.14. Before archiving
-  or deleting it, confirm that no active workflow, script, or user task still
-  depends on it; do not treat it as interchangeable with `.venv/`.
+- The root `venv/` was confirmed as a legacy Python 3.14 environment and moved
+  to `archive/legacy-venv-2026-09-02/`; the canonical `.venv/` remains in place.
+  It was archived rather than deleted so it can be recovered if an old local
+  script unexpectedly depends on it.
 - Git-history deletions and untracked files must not be restored or deleted by
   a one-click bulk action. Classify each item individually, record whether it
   is current, historical, generated, or user-owned, and then choose the
   recoverable action for that item.
+
+## Golden QA artifacts retained — 2026-09-02
+
+- `data/evaluation/golden_qa_v2.jsonl` remains the generated candidate set. It
+  is useful for reproducibility and regression comparison, but its labels are
+  not treated as human truth.
+- `evaluation/golden_qa_human_v1.jsonl` is the independent human-review work
+  file. It starts blank and becomes a usable Golden QA set only row by row
+  after a reviewer records the answerability decision, reference answer,
+  evidence IDs, pages, and reviewer identity.
+- The original extraction samples, frozen filing artifacts, graph snapshots,
+  and audit reports remain preserved because they are required to reproduce
+  and explain earlier measurements. They are not disposable cache files.
