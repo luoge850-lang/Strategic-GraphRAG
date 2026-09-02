@@ -398,6 +398,7 @@ class LLMProvider:
         system_prompt: str = "",
         model: str = None,
         max_tokens: int = None,
+        temperature: float = None,
     ) -> Optional[dict]:
         """Chat with forced JSON, return parsed dict or None."""
         text = self.chat(
@@ -405,6 +406,7 @@ class LLMProvider:
             system_prompt=system_prompt,
             model=model,
             max_tokens=max_tokens,
+            temperature=temperature,
             json_mode=True,
         )
         if text is None:
@@ -548,10 +550,15 @@ class LLMProvider:
         system_prompt: str = "",
         model: str = None,
         max_tokens: int = None,
+        temperature: float = None,
     ) -> Optional[dict]:
         """extract_json with automatic provider fallback."""
         result = self.extract_json(
-            prompt, system_prompt, model=model, max_tokens=max_tokens
+            prompt,
+            system_prompt,
+            model=model,
+            max_tokens=max_tokens,
+            temperature=temperature,
         )
         if result is not None:
             self.last_success_provider = self.provider
@@ -582,6 +589,7 @@ class LLMProvider:
                     system_prompt,
                     model=fallback_model,
                     max_tokens=max_tokens,
+                    temperature=temperature,
                     json_mode=True,
                 )
                 if result is None:

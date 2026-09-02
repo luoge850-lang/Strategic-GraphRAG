@@ -216,6 +216,7 @@ class GraphIngestor:
         causal_form = classify_causal_form(s_cat, t_cat)
         cs = str(triple.get("causal_strength", "DISCLOSED_EXPOSURE")).upper()
         evidence = str(triple.get("evidence_sentence", ""))[:500]
+        table_context = str(triple.get("table_context", ""))[:500]
         evidence_start = triple.get("evidence_char_start")
         evidence_end = triple.get("evidence_char_end")
         chunk_id = str(triple.get("chunk_id", "")).strip()
@@ -288,6 +289,7 @@ class GraphIngestor:
             r.causal_strength = $cs,
             r.confidence = $conf,
             r.evidence_sentence = $ev,
+            r.table_context = $table_context,
             r.year = $yr,
             r.page = $pg,
             r.filing = $file,
@@ -313,6 +315,7 @@ class GraphIngestor:
         SET r.causal_strength = $cs,
             r.confidence = $conf,
             r.evidence_sentence = $ev,
+            r.table_context = $table_context,
             r.year = $yr,
             r.page = $pg,
             r.filing = $file,
@@ -379,6 +382,7 @@ class GraphIngestor:
             ,claim.metric_unit = $metric_unit
             ,claim.metric_period = $metric_period
             ,claim.metric_values_json = $metric_values_json
+            ,claim.table_context = $table_context
             ,claim.recorded_from = coalesce(claim.recorded_from, datetime())
         MERGE (claim)-[:SUPPORTED_BY]->(es)
         MERGE (claim)-[:ABOUT_SOURCE]->(s)
@@ -435,6 +439,7 @@ class GraphIngestor:
                     metric_unit=metric_unit,
                     metric_period=metric_period,
                     metric_values_json=metric_values_json,
+                    table_context=table_context,
                     financial_observations=financial_observations,
                     conf=self._calibrate_confidence(cs, "HYBRID", len(evidence), rel_type),
                     method="HYBRID",
@@ -480,6 +485,7 @@ class GraphIngestor:
             causal_form = classify_causal_form(s_cat, t_cat)
             cs = str(triple.get("causal_strength", "DISCLOSED_EXPOSURE")).upper()
             evidence = str(triple.get("evidence_sentence", ""))[:500]
+            table_context = str(triple.get("table_context", ""))[:500]
 
             if not s_name or not t_name or not rel_type:
                 continue
@@ -532,7 +538,7 @@ class GraphIngestor:
                 "t_id": t_id, "t_name": t_name, "t_cat": t_cat,
                 "eid": eid, "es_id": es_id, "rel_type": rel_type,
                 "claim_id": claim_id,
-                "cs": cs, "ev": evidence, "conf": conf,
+                "cs": cs, "ev": evidence, "table_context": table_context, "conf": conf,
                 "method": extraction_method,
                 "causal_form": causal_form,
                 "evidence_start": evidence_start,
@@ -610,6 +616,7 @@ class GraphIngestor:
                             r.causal_strength = row.cs,
                             r.confidence = row.conf,
                             r.evidence_sentence = row.ev,
+                            r.table_context = row.table_context,
                             r.year = row.yr,
                             r.page = row.pg,
                             r.filing = row.file,
@@ -689,6 +696,7 @@ class GraphIngestor:
                             ,claim.metric_unit = row.metric_unit
                             ,claim.metric_period = row.metric_period
                             ,claim.metric_values_json = row.metric_values_json
+                            ,claim.table_context = row.table_context
                             ,claim.recorded_from = coalesce(claim.recorded_from, datetime())
                         MERGE (claim)-[:SUPPORTED_BY]->(es)
                         MERGE (claim)-[:ABOUT_SOURCE]->(s)
@@ -714,6 +722,7 @@ class GraphIngestor:
                             r.causal_strength = row.cs,
                             r.confidence = row.conf,
                             r.evidence_sentence = row.ev,
+                            r.table_context = row.table_context,
                             r.year = row.yr,
                             r.page = row.pg,
                             r.filing = row.file,

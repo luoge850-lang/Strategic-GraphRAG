@@ -35,6 +35,13 @@ from dotenv import load_dotenv
 from ..ontology.intent_classifier import classify_intent, get_retrieval_strategy, extract_financial_entities_from_query
 from .query_understanding import parse_query
 from .retrieval import Neo4jPPRRetriever, QueryRouter
+from .evidence_quality import (
+    apply_directness_ranking,
+    audit_documents,
+    contains_absence_claim,
+    select_answer_evidence,
+    semantic_scope,
+)
 from ..ontology.relation_inference import VALID_RELATIONS, CAUSAL_STRENGTHS, detect_causal_strength
 
 load_dotenv()
@@ -63,6 +70,7 @@ class CausalPath:
     score_breakdown: Dict[str, float] = field(default_factory=dict)
     duplicate_count: int = 1
     evidence_variants: List[List[Dict[str, Any]]] = field(default_factory=list)
+    evidence_role: str = "BACKGROUND_CONTEXT"
 
     def to_trace_string(self) -> str:
         """Format as human-readable causal chain trace."""
@@ -706,9 +714,9 @@ Your specialty is tracing causal chains through SEC filings and synthesizing act
 7. QUANTIFY WHEN POSSIBLE: Report dollar amounts, percentages, and materiality thresholds
    from the evidence. If the filing says a risk "could materially affect" results,
    that is significant. If it says "has not had a material impact," report that too.
-8. IDENTIFY GAPS: End every analysis with what the evidence CANNOT conclude.
-   "The graph does not contain evidence that export controls have reduced NVIDIA's
-   actual revenue — only that the company acknowledges this as a risk factor."
+8. IDENTIFY GAPS WITHOUT INVENTING ABSENCE: State only what the retrieved claims do not
+   establish. A corpus-wide statement such as "the filings contain no evidence" requires a
+   completed Negative Evidence Audit. A bounded search miss is not proof of source absence.
 
 [OUTPUT FORMAT — STRICT]:
 ## Executive Summary
@@ -1076,6 +1084,12 @@ CRITICAL STYLE RULES:
         )
 
         if not candidate_paths:
+            negative_audit = self._negative_evidence_audit(
+                user_query,
+                vector_engine=vector_engine,
+                vector_hits=vector_retrieval.get("hits", []),
+                source_filing=source_filing,
+            )
             fallback = self._fallback_response(
                 user_query,
                 all_anchors,
@@ -1086,11 +1100,14 @@ CRITICAL STYLE RULES:
                 "router": router_decision.to_dict(),
                 "retrieval": vector_retrieval,
                 "ppr": {"enabled": router_decision.use_ppr, "ranked_entities": ppr_results},
+                "negative_evidence_audit": negative_audit,
                 "latency_ms": {
                     **stage_times,
                     "total_ms": round((time.perf_counter() - started_at) * 1000, 2),
                 },
             })
+            fallback["answer"] += "\n\n" + negative_audit["safe_absence_statement"]
+            fallback["structured_report"]["limitations"] = negative_audit["safe_absence_statement"]
             return fallback
 
         # Step 4: Score Paths
@@ -1106,6 +1123,7 @@ CRITICAL STYLE RULES:
             year_end=effective_year_end,
         )
         candidate_paths = self._deduplicate_paths(candidate_paths)
+        apply_directness_ranking(candidate_paths, user_query, intent_id)
         candidate_paths.sort(key=self._path_sort_key)
 
         # Step 5: Semantic Reranking (if Cross-Encoder available)
@@ -1116,6 +1134,7 @@ CRITICAL STYLE RULES:
             temporal_context,
             limit=top_k,
         )
+        top_paths = select_answer_evidence(top_paths, top_k)
         stage_times["scoring_rerank_ms"] = round(
             (time.perf_counter() - scoring_started) * 1000, 2
         )
@@ -1145,18 +1164,56 @@ CRITICAL STYLE RULES:
                 [e for e in path.evidence if e and len(e) > 10]
             )
 
+        synthesis_paths = [
+            path for path in top_paths
+            if path.evidence_role in {"ANSWER_CRITICAL", "MECHANISM_SUPPORT"}
+        ]
+        if any(path.evidence_role == "ANSWER_CRITICAL" for path in synthesis_paths):
+            answer_evidence_status = "ANSWER_CRITICAL_AVAILABLE"
+        elif synthesis_paths:
+            answer_evidence_status = "MECHANISM_ONLY"
+        else:
+            answer_evidence_status = "BACKGROUND_ONLY"
+
         # Step 7: LLM Synthesis
         synthesis_started = time.perf_counter()
-        if synthesize:
+        negative_audit = self._negative_evidence_audit(
+            user_query,
+            vector_engine=vector_engine,
+            vector_hits=vector_retrieval.get("hits", []),
+            source_filing=source_filing,
+        )
+        if answer_evidence_status == "BACKGROUND_ONLY":
+            safe = negative_audit["safe_absence_statement"]
+            structured_report = {
+                "format": "evidence_claim_v1",
+                "status": "INSUFFICIENT_DIRECT_EVIDENCE",
+                "executive_summary": (
+                    "Only background evidence was retrieved; it is not sufficient to answer "
+                    "the requested causal or realized-impact question."
+                ),
+                "claims": [],
+                "evidence_quality": (
+                    "Retrieved paths were classified as BACKGROUND_CONTEXT and were excluded "
+                    "from answer synthesis."
+                ),
+                "limitations": safe,
+                "narrative": (
+                    "[INSUFFICIENT DIRECT EVIDENCE] Only background evidence was retrieved; "
+                    "it was withheld from answer synthesis.\n\n" + safe
+                ),
+            }
+        elif synthesize:
             structured_report = self._synthesize_report(
                 user_query,
-                top_paths,
+                synthesis_paths,
                 intent_id,
                 vector_hits=vector_retrieval.get("hits", []),
+                negative_audit=negative_audit,
             )
         else:
             structured_report = self._trace_report(
-                top_paths,
+                synthesis_paths,
                 intent_id,
                 "Retrieval-only mode: external LLM synthesis was disabled.",
                 status="RETRIEVAL_ONLY",
@@ -1164,6 +1221,10 @@ CRITICAL STYLE RULES:
         structured_report = self._canonicalize_report_citations(
             structured_report,
             top_paths,
+        )
+        structured_report = self._enforce_negative_claim_policy(
+            structured_report,
+            negative_audit,
         )
         stage_times["llm_synthesis_ms"] = round(
             (time.perf_counter() - synthesis_started) * 1000, 2
@@ -1180,13 +1241,25 @@ CRITICAL STYLE RULES:
         ):
             answer = "[INSUFFICIENT EVIDENCE] " + answer
             structured_report["support_status"] = "INSUFFICIENT_EVIDENCE"
-        grounding = self._validate_report_grounding(
-            answer,
-            top_paths,
-            structured_report=structured_report,
-        )
+        if structured_report.get("status") in {
+            "INSUFFICIENT_DIRECT_EVIDENCE",
+            "NEGATIVE_CLAIM_GUARD",
+        }:
+            grounding = {
+                "status": "NOT_APPLICABLE",
+                "reason": "Background-only evidence was excluded from synthesis.",
+                "unknown_evidence_ids": [],
+                "unknown_pages": [],
+                "unknown_years": [],
+            }
+        else:
+            grounding = self._validate_report_grounding(
+                answer,
+                top_paths,
+                structured_report=structured_report,
+            )
         llm_route = self._llm_route_metadata()
-        if grounding["status"] != "VERIFIED":
+        if grounding["status"] not in {"VERIFIED", "NOT_APPLICABLE"}:
             logger.warning(
                 "Discarding ungrounded synthesis: status=%s unknown_ids=%s "
                 "unknown_pages=%s unknown_years=%s",
@@ -1215,6 +1288,8 @@ CRITICAL STYLE RULES:
                 "avg_score": round(np.mean([p.aggregate_score for p in top_paths]), 4) if top_paths else 0,
                 "temporal": temporal_status,
                 "grounding": grounding,
+                "negative_evidence_audit": negative_audit,
+                "answer_evidence_status": answer_evidence_status,
                 "llm": llm_route,
                 "source_filing": source_filing,
                 "retrieval": retrieval,
@@ -1293,6 +1368,11 @@ CRITICAL STYLE RULES:
             "paths": [],
             "evidence_sentences": documents[:20],
             "metadata": {
+                "total_candidates": len(hits),
+                "top_paths": 0,
+                "anchors_used": [],
+                "avg_score": 0.0,
+                "answer_evidence_status": "NO_GRAPH_EVIDENCE",
                 "baseline": "vector",
                 "synthesis_enabled": synthesize,
                 "router": router,
@@ -1604,6 +1684,7 @@ CRITICAL STYLE RULES:
                 "total_candidates": len(paths),
                 "top_paths": len(paths),
                 "anchors_used": anchors,
+                "avg_score": round(np.mean([path.aggregate_score for path in paths]), 4) if paths else 0.0,
                 "temporal": temporal_status,
                 "llm": self._llm_route_metadata(),
                 "grounding": {"status": "NOT_APPLICABLE"},
@@ -1946,6 +2027,7 @@ CRITICAL STYLE RULES:
         paths: List[CausalPath],
         intent: str,
         vector_hits: Optional[List[Dict[str, Any]]] = None,
+        negative_audit: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Generate a professional financial analysis report from causal paths."""
         if not paths:
@@ -1962,7 +2044,12 @@ CRITICAL STYLE RULES:
         # Build rich, human-readable context with full evidence
         path_descriptions = []
         for i, path in enumerate(paths[:5]):  # top 5 paths for depth
-            desc = f"## Evidence Chain {i+1} (Score: {path.aggregate_score:.2f}, {path.total_hops} hops)\n"
+            graph_structure = "DIRECT_GRAPH_EDGE" if path.total_hops == 1 else "MULTI_HOP_GRAPH_PATH"
+            desc = (
+                f"## Evidence Chain {i+1} (Score: {path.aggregate_score:.2f}, "
+                f"graph_hops: {path.total_hops}, role: {path.evidence_role}, "
+                f"graph_structure: {graph_structure}, evidence_semantic_scope: {semantic_scope(path)})\n"
+            )
 
             # Step-by-step chain — format as readable narrative, not machine trace
             for j in range(len(path.nodes) - 1):
@@ -2020,6 +2107,9 @@ CRITICAL STYLE RULES:
 [USER QUERY]:
 {query}
 
+[NEGATIVE EVIDENCE AUDIT]:
+{json.dumps(negative_audit or {"status": "AUDIT_UNAVAILABLE"}, ensure_ascii=False)}
+
 [CRITICAL INSTRUCTIONS]:
 1. ANSWER THE EXACT QUERY. Do not drift to adjacent topics.
 2. Return ONLY valid JSON. Do not use Markdown fences or any text outside the JSON object.
@@ -2031,7 +2121,17 @@ CRITICAL STYLE RULES:
    Only use years and pages that appear in the evidence data. Never introduce prior-year
     values, general knowledge, or uncited pages. If the evidence cannot support a claim,
    state that it is not established by this filing.
-5. Use exactly this JSON shape:
+5. Evidence role is binding: use ANSWER_CRITICAL evidence first, MECHANISM_SUPPORT second,
+   and BACKGROUND_CONTEXT only as explicitly labelled context. Never use a background path
+   as the primary answer.
+6. graph_hops counts stored graph edges. evidence_semantic_scope=EMBEDDED_MECHANISM means
+   a sentence contains extra causal language that has NOT been decomposed into additional
+   graph edges. Never call a one-edge path a multi-hop graph path.
+7. Never claim that the filings/corpus contain no evidence, or that no realized impact exists,
+   unless the negative audit permits a bounded statement. Even when the status is
+   NO_MATCH_AFTER_INDEXED_CORPUS_AUDIT, use its safe_absence_statement verbatim and do not
+   turn it into an absolute claim about the source PDFs.
+8. Use exactly this JSON shape:
    {{
      "executive_summary": "concise answer to the user",
      "claims": [
@@ -2046,25 +2146,8 @@ CRITICAL STYLE RULES:
      "evidence_quality": "explicit vs implied support and weaknesses",
      "limitations": "what this filing cannot establish"
    }}
-6. Every claim must include at least one exact EvidenceClaim ID and page from the evidence data.
-5. Use exactly this JSON shape (the JSON contract overrides any legacy prose format):
-   {{
-     "executive_summary": "concise answer to the user",
-     "claims": [
-       {{
-         "statement": "one supported analytical statement",
-         "evidence_claim_ids": ["exact EvidenceClaim ID(s)"],
-         "pages": [integer page number(s)],
-         "fiscal_years": [integer fiscal year(s)],
-         "support_level": "DIRECT|INDIRECT|LIMITED"
-       }}
-     ],
-     "evidence_quality": "explicit vs implied support and weaknesses",
-     "limitations": "what this filing cannot establish"
-   }}
-6. Every claim must include at least one exact EvidenceClaim ID and page from the evidence data.
-5. Follow the output format: Executive Summary → Analysis → Evidence Quality → Limitations.
-6. Be honest about weak links — that is valuable analysis.
+9. Every claim must include at least one exact EvidenceClaim ID and page from the evidence data.
+10. Be honest about weak links — that is valuable analysis.
 
 Now generate the analysis report:"""
 
@@ -2337,6 +2420,107 @@ Now generate the analysis report:"""
             tuple(path.evidence_ids),
         )
 
+    @staticmethod
+    def _report_narrative(report: Dict[str, Any]) -> str:
+        """Render the normalized report after deterministic policy changes."""
+        parts = []
+        summary = str(report.get("executive_summary", "")).strip()
+        if summary:
+            parts.append(f"Executive Summary\n{summary}")
+        for claim in report.get("claims", []) or []:
+            statement = str(claim.get("statement", "")).strip()
+            if not statement:
+                continue
+            citations = [str(value) for value in claim.get("evidence_claim_ids", []) if value]
+            pages = claim.get("pages", []) or []
+            if pages:
+                citations.append("p." + ", p.".join(str(page) for page in pages))
+            parts.append(f"{statement}\n[EvidenceClaim: {'; '.join(citations) or 'missing citation'}]")
+        quality = str(report.get("evidence_quality", "")).strip()
+        limitations = str(report.get("limitations", "")).strip()
+        if quality:
+            parts.append(f"Evidence Quality\n{quality}")
+        if limitations:
+            parts.append(f"Limitations\n{limitations}")
+        return "\n\n".join(parts)
+
+    def _negative_evidence_audit(
+        self,
+        query: str,
+        *,
+        vector_engine,
+        vector_hits: List[Dict[str, Any]],
+        source_filing: Optional[str],
+    ) -> Dict[str, Any]:
+        """Scan every indexed chunk before allowing a corpus-absence statement."""
+        try:
+            if vector_engine is None:
+                from .vector_rag_baseline import VectorRAGBaseline
+                vector_engine = VectorRAGBaseline()
+            documents = vector_engine.corpus_documents(source_filing=source_filing)
+            scope = source_filing or "the indexed FY2023-FY2025 filing corpus"
+            return audit_documents(
+                query,
+                documents,
+                semantic_hits=vector_hits,
+                scope=scope,
+            )
+        except Exception as exc:
+            logger.warning("Negative evidence audit unavailable: %s", type(exc).__name__)
+            return {
+                "performed": False,
+                "status": "AUDIT_UNAVAILABLE",
+                "scope": source_filing or "the indexed filing corpus",
+                "chunks_scanned": 0,
+                "query_concepts": [],
+                "matches": [],
+                "error": type(exc).__name__,
+                "safe_absence_statement": (
+                    "The indexed corpus audit was unavailable, so no filing-wide absence "
+                    "conclusion is permitted."
+                ),
+            }
+
+    def _enforce_negative_claim_policy(
+        self,
+        report: Dict[str, Any],
+        audit: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Fail closed when synthesis makes an unaudited global absence claim."""
+        if not report:
+            return report
+        text = " ".join(
+            [
+                str(report.get("executive_summary", "")),
+                str(report.get("limitations", "")),
+                *(str(item.get("statement", "")) for item in report.get("claims", []) or []),
+            ]
+        )
+        if not contains_absence_claim(text):
+            return report
+
+        safe = audit.get("safe_absence_statement") or (
+            "No corpus-wide absence conclusion is permitted because the audit was unavailable."
+        )
+        original_claims = report.get("claims", []) or []
+        cleaned_claims = [
+            claim for claim in report.get("claims", []) or []
+            if not contains_absence_claim(str(claim.get("statement", "")))
+        ]
+        report = dict(report)
+        report["claims"] = cleaned_claims
+        if contains_absence_claim(str(report.get("executive_summary", ""))):
+            report["executive_summary"] = safe
+        report["limitations"] = safe
+        report["negative_claim_guard"] = {
+            "triggered": True,
+            "audit_status": audit.get("status"),
+            "removed_claims": len(original_claims) - len(cleaned_claims),
+        }
+        report["status"] = "NEGATIVE_CLAIM_GUARD"
+        report["narrative"] = self._report_narrative(report)
+        return report
+
     def _fallback_response(
         self,
         query: str,
@@ -2354,10 +2538,9 @@ Now generate the analysis report:"""
             )
         else:
             answer = (
-                "[INSUFFICIENT EVIDENCE] The knowledge graph does not contain "
-                "sufficient causal pathways to answer this query. The graph may "
-                "need additional SEC filings or a broader set of financial documents "
-                "to build the necessary relationship network.\n\n"
+                "[INSUFFICIENT EVIDENCE] No verified causal pathway was retrieved "
+                "that directly answers this query. Related evidence must not be "
+                "treated as proof of the requested relationship.\n\n"
                 f"Searched for: {', '.join(anchors) if anchors else 'all entities'}"
             )
         return {
@@ -2379,6 +2562,8 @@ Now generate the analysis report:"""
                 "total_candidates": 0,
                 "top_paths": 0,
                 "anchors_used": anchors,
+                "avg_score": 0.0,
+                "answer_evidence_status": "NO_GRAPH_EVIDENCE",
                 "temporal": temporal_status,
                 "llm": self._llm_route_metadata(),
             },
@@ -2405,6 +2590,9 @@ Now generate the analysis report:"""
             "score_breakdown": path.score_breakdown,
             "duplicate_count": path.duplicate_count,
             "evidence_variants": path.evidence_variants,
+            "evidence_role": path.evidence_role,
+            "graph_structure": "DIRECT_GRAPH_EDGE" if path.total_hops == 1 else "MULTI_HOP_GRAPH_PATH",
+            "evidence_semantic_scope": semantic_scope(path),
         }
 
     # ── Convenience ──

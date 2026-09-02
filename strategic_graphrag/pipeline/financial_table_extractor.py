@@ -215,15 +215,138 @@ def _table_name(page_text: str, evidence: str) -> str:
         len(lines),
     )
     rejected = re.compile(
-        r"^(year|years) ended$|^\$\s*%$|^\(?\$ in |^20\d{2}(?:\s+20\d{2})*",
+        r"^(year|years) ended$|^\$\s*%$|^\(?\$ in |^\(?in\s+(?:millions|thousands)\)?$|^\(continued\)$|^20\d{2}(?:\s+20\d{2})*",
         re.IGNORECASE,
     )
+
+    # Prefer document/table-level headings over the nearest prose paragraph.
+    # In SEC text extraction, a row can be separated from its heading by many
+    # rows, while an unrelated subsection title may be closer in raw order.
+    for line in reversed(lines[max(0, row_index - 30):row_index]):
+        lower = line.lower()
+        if (
+            "consolidated statements" in lower
+            or "consolidated balance sheets" in lower
+            or lower in {
+                "liquidity and capital resources",
+                "results of operations",
+            }
+        ):
+            return line
+
+    # Summary/section tables normally put a short title directly above the
+    # period header (for example, "Fiscal Year 2023 Summary").
+    period_index = next(
+        (
+            index
+            for index in range(row_index - 1, -1, -1)
+            if re.search(r"^years? ended$", lines[index], re.IGNORECASE)
+        ),
+        None,
+    )
+    if period_index is not None:
+        for line in reversed(lines[max(0, period_index - 6):period_index]):
+            lower = line.lower()
+            if rejected.search(line):
+                continue
+            if (
+                "following table" in lower
+                or "summary" in lower
+                or (len(line) <= 80 and not _NUMBER_RE.search(line))
+            ):
+                return line
+
     for line in reversed(lines[max(0, row_index - 12):row_index]):
         if rejected.search(line) or _NUMBER_RE.search(line):
             continue
         if 4 <= len(line) <= 120:
             return line
     return "UNKNOWN_TABLE"
+
+
+def _table_context(page_text: str, evidence: str, max_chars: int = 500) -> str:
+    """Return a verbatim page excerpt containing the table header and row.
+
+    A metric row by itself is not a self-contained evidence unit: it loses the
+    statement title, period columns, and scale.  Keep the row values separate
+    for parsing, but persist a compact, page-verbatim context excerpt for
+    citation and human review.
+    """
+    raw_lines = [line.strip() for line in str(page_text or "").splitlines() if line.strip()]
+    target = _normalise(evidence)
+    row_index = next(
+        (index for index, line in enumerate(raw_lines) if _normalise(line) == target),
+        None,
+    )
+    if row_index is None:
+        return str(evidence or "")[:max_chars]
+
+    header_index = next(
+        (
+            index
+            for index in range(row_index - 1, -1, -1)
+            if re.search(r"^years? ended$", raw_lines[index], re.IGNORECASE)
+        ),
+        None,
+    )
+    if header_index is not None:
+        # Keep the table description, period header, scale line when present,
+        # and the target row. Do not copy every intervening metric row into a
+        # single claim; that would blur which values support this metric.
+        description_index = next(
+            (
+                index
+                for index in range(header_index - 1, max(-1, header_index - 4), -1)
+                if "following table" in raw_lines[index].lower()
+                or "consolidated statements" in raw_lines[index].lower()
+            ),
+            None,
+        )
+        start = description_index if description_index is not None else max(0, header_index - 1)
+        header_end = header_index
+        for index in range(header_index + 1, min(row_index, header_index + 5) + 1):
+            line = raw_lines[index]
+            is_date_header = bool(
+                _YEAR_RE.search(line)
+                or re.search(
+                    r"\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|"
+                    r"may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|"
+                    r"oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b",
+                    line,
+                    re.IGNORECASE,
+                )
+            )
+            is_scale_header = bool(
+                re.search(r"\(\$\s+in\s+(?:millions|thousands)\)", line, re.IGNORECASE)
+                or re.search(r"^\s*\$\s+%\s*$", line)
+            )
+            if not (is_date_header or is_scale_header):
+                break
+            header_end = index
+        selected = raw_lines[start:header_end + 1]
+        if row_index > header_end:
+            selected.append(raw_lines[row_index])
+    else:
+        table_name = _table_name(page_text, evidence)
+        heading_index = next(
+            (
+                index
+                for index in range(row_index - 1, -1, -1)
+                if _normalise(raw_lines[index]) == _normalise(table_name)
+            ),
+            max(0, row_index - 3),
+        )
+        selected = raw_lines[heading_index:row_index + 1]
+
+    candidate = "\n".join(selected)
+    if len(candidate) <= max_chars:
+        return candidate
+    row_line = raw_lines[row_index]
+    header = "\n".join(selected[:-1]) if selected[-1] == row_line else selected[0]
+    available = max_chars - len(row_line) - 1
+    if available <= 0:
+        return row_line[-max_chars:]
+    return f"{header[:available]}\n{row_line}"
 
 
 def _unit(page_text: str, row_text: str) -> str:
@@ -302,23 +425,24 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 # Revenue=100% is the denominator of this presentation, not
                 # an amount or a growth metric.
                 continue
-            evidence = _find_exact_row(page_text, row_text, metric_alias)
-            if len(evidence) < 20:
+            row_evidence = _find_exact_row(page_text, row_text, metric_alias)
+            if len(row_evidence) < 20:
                 continue
-            periods = _periods_for_evidence(page_text, evidence, filing_year)
+            evidence = _table_context(page_text, row_evidence)
+            periods = _periods_for_evidence(page_text, row_evidence, filing_year)
             period_text = ",".join(str(year) for year in periods)
-            unit = _unit(page_text, evidence)
+            unit = _unit(page_text, row_evidence)
             # The table may report dollars while nearby prose mentions a
             # percentage view of the same metric.  Use row-level units first.
-            if unit == "percent" and "$" in evidence:
+            if unit == "percent" and "$" in row_evidence:
                 unit = "USD millions" if "in millions" in page_text.lower() else "USD"
-            key = (metric_id, evidence)
+            key = (metric_id, row_evidence)
             if key in seen:
                 continue
             seen.add(key)
             # pdfplumber may split currency symbols into separate cells.  The
             # exact page line is the authoritative row for values and units.
-            values = _numeric_values(evidence)
+            values = _numeric_values(row_evidence)
             if not values:
                 values = _numeric_values(row_text)
             # Values are positionally paired with the reported period columns.
@@ -342,12 +466,21 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 "relation_polarity": "reported",
                 "modality": "observed",
                 "temporal_scope": period_text,
-                "evidence_sentence": evidence,
+                # The row is the cross-parser verbatim citation unit.  The
+                # surrounding header/period/unit context is persisted
+                # separately for human review and table interpretation.
+                "evidence_sentence": row_evidence,
+                "row_evidence": row_evidence,
+                "table_context": evidence,
                 "metric_values_json": json.dumps(period_values, ensure_ascii=False),
                 "metric_value": values[0],
-                "metric_unit": _unit(page_text, evidence),
+                "metric_unit": _unit(page_text, row_evidence),
                 "metric_period": str(periods[0]) if periods else str(filing_year),
-                "table_name": _table_name(page_text, evidence),
+                # Resolve the heading from the exact row, not from the
+                # multi-line citation context.  Passing the full context
+                # makes the row lookup miss and can select an unrelated
+                # heading near the end of the page.
+                "table_name": _table_name(page_text, row_evidence),
                 "row_label": metric_alias,
                 "statement_type": "FINANCIAL_TABLE",
                 "comparability_status": "UNASSESSED",

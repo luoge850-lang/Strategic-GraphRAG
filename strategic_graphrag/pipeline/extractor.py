@@ -12,6 +12,7 @@ Rule Engine: regex pattern matching + ontology dictionary lookup
 import os
 import re
 import json
+import math
 import hashlib
 import logging
 from typing import Dict, List, Optional, Tuple, Set
@@ -30,6 +31,22 @@ from ..ontology.relation_inference import (
 )
 
 logger = logging.getLogger("TripleExtractor")
+
+
+def _read_extraction_temperature() -> float:
+    """Read a provider-compatible extraction temperature safely.
+
+    Zero reduces sampling randomness for comparable extraction runs, but it
+    does not guarantee identical responses from an external model service.
+    """
+    raw = os.getenv("LLM_EXTRACTION_TEMPERATURE", "0.0").strip()
+    try:
+        value = float(raw)
+    except (TypeError, ValueError):
+        return 0.0
+    if not math.isfinite(value) or not 0.0 <= value <= 2.0:
+        return 0.0
+    return value
 
 
 # Reverse aliases are used only for evidence validation. They let the strict
@@ -141,6 +158,7 @@ class TripleExtractor:
         self.llm_failures = 0
         self.llm_accepted_triples = 0
         self.llm_routes = set()
+        self.extraction_temperature = _read_extraction_temperature()
 
         if self._llm_enabled:
             logger.info(f"LLM extraction enabled: {self.llm.provider}/{self.model_name}")
@@ -161,6 +179,7 @@ class TripleExtractor:
             "failures": self.llm_failures,
             "accepted_triples": self.llm_accepted_triples,
             "routes": sorted(self.llm_routes),
+            "extraction_temperature": self.extraction_temperature,
         }
 
     def llm_extract(self, text: str, max_tokens: int = 3000) -> List[Dict]:
@@ -179,6 +198,7 @@ class TripleExtractor:
             prompt,
             model=self.model_name,
             max_tokens=max_tokens,
+            temperature=self.extraction_temperature,
         )
         self.llm_calls += 1
         if result is None:

@@ -173,6 +173,26 @@ class VectorRAGBaseline:
             "embedding_model": self.embedding_model,
         }
 
+    def corpus_documents(self, source_filing: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Return every indexed chunk in scope for a bounded corpus audit."""
+        if not self.collection or self.collection.count() == 0:
+            return []
+        kwargs: Dict[str, Any] = {"include": ["documents", "metadatas"]}
+        if source_filing:
+            kwargs["where"] = {"source_filing": source_filing}
+        result = self.collection.get(**kwargs)
+        documents = result.get("documents") or []
+        metadatas = result.get("metadatas") or []
+        ids = result.get("ids") or []
+        return [
+            {
+                "document": document,
+                "metadata": metadatas[index] if index < len(metadatas) else {},
+                "id": ids[index] if index < len(ids) else None,
+            }
+            for index, document in enumerate(documents)
+        ]
+
     def generate(self, query: str, context_chunks: List[str]) -> str:
         """Generate an answer from retrieved context chunks."""
         if not context_chunks:

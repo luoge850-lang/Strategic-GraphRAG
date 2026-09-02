@@ -14,6 +14,7 @@ import {
 import { fmtLabel, nodeLabelStyle } from "./lib/graph";
 import GraphCanvas from "./components/GraphCanvas";
 import NodeTooltip from "./components/NodeTooltip";
+import ExtractionAnnotationPanel from "./components/ExtractionAnnotationPanel";
 
 /* ═══════════════════════════════════════════════════════
    Error Boundary
@@ -22,7 +23,7 @@ interface EBState {
   hasError: boolean;
   error: Error | null;
 }
-class ErrorBoundary extends Component<
+export class ErrorBoundary extends Component<
   { children: React.ReactNode },
   EBState
 > {
@@ -65,9 +66,7 @@ class ErrorBoundary extends Component<
             </pre>
             <button
               className="btn-ink"
-              onClick={() =>
-                this.setState({ hasError: false, error: null })
-              }
+              onClick={() => window.location.reload()}
               style={{ marginTop: 12 }}
             >
               Retry
@@ -87,12 +86,29 @@ class ErrorBoundary extends Component<
    Example prompts
    ═══════════════════════════════════════════════════════ */
 
-const PROMPTS = [
-  "How do US export controls impact NVIDIA revenue?",
-  "How does NVIDIA mitigate supply chain risks?",
-  "What risks does NVIDIA face in the China market?",
-  "How do supply chain disruptions affect NVIDIA margins?",
+const PROMPT_BATCHES = [
+  [
+    "How do US export controls impact NVIDIA revenue?",
+    "How does NVIDIA mitigate supply chain risks?",
+    "What risks does NVIDIA face in the China market?",
+    "How do supply chain disruptions affect NVIDIA margins?",
+  ],
+  [
+    "What evidence directly supports NVIDIA's supply-chain mitigation strategies?",
+    "Which supply-chain risks recur across the FY2023-FY2025 filings?",
+    "How did NVIDIA revenue change from FY2023 to FY2025?",
+    "What evidence links inventory risk to financial performance?",
+  ],
+  [
+    "Do the filings document a realized revenue loss from export controls?",
+    "Which mitigation actions are explicitly linked to supply-chain risk reduction?",
+    "What cannot be concluded about climate risk and NVIDIA revenue?",
+    "How did export-control risk disclosures change across FY2023-FY2025?",
+  ],
 ];
+
+const finiteNumber = (value: unknown, fallback = 0) =>
+  typeof value === "number" && Number.isFinite(value) ? value : fallback;
 
 const FILING_OPTIONS: Array<{ value: FilingScope; label: string }> = [
   { value: "2025-10-K.pdf", label: "FY2025 · 10-K" },
@@ -280,7 +296,7 @@ function PathCard({
         }}
       >
         <span style={{ fontSize: 9.5, fontWeight: 600, color: "var(--muted)", letterSpacing: "0.04em" }}>
-          PATH {i + 1} · {p.total_hops} HOPS
+          PATH {i + 1} · {p.total_hops} GRAPH {p.total_hops === 1 ? "HOP" : "HOPS"}
         </span>
         <span
           style={{
@@ -290,7 +306,7 @@ function PathCard({
             color: "var(--ink)",
           }}
         >
-          {p.score.toFixed(3)}
+          {finiteNumber(p.score).toFixed(3)}
         </span>
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
@@ -315,6 +331,11 @@ function PathCard({
         ))}
       </div>
       <div style={{ display: "flex", gap: 10, marginTop: 6, fontSize: 9, color: "var(--muted)" }}>
+        {p.evidence_role && (
+          <span style={{ color: p.evidence_role === "ANSWER_CRITICAL" ? "var(--L1)" : "var(--muted)", fontWeight: 700 }}>
+            {p.evidence_role.replace(/_/g, " ")}
+          </span>
+        )}
         {p.pages.filter((pg) => pg > 0).length > 0 && (
           <span>pp. {[...new Set(p.pages.filter((pg) => pg > 0))].slice(0, 3).join(", ")}</span>
         )}
@@ -346,6 +367,7 @@ export default function App() {
   const [selectedPath, setSelectedPath] = useState(0);
   const [hoveredNode, setHoveredNode] = useState<GNode | null>(null);
   const [selectedNode, setSelectedNode] = useState<GNode | null>(null);
+  const [promptBatch, setPromptBatch] = useState(0);
   // The demo should show the verified multi-year graph on first load.  Users
   // can still switch to a single filing from the scope selector below.
   const [scope, setScope] = useState<FilingScope>("all");
@@ -357,10 +379,7 @@ export default function App() {
   useEffect(() => {
     setGraphLoading(true);
     setGraphError("");
-    getStats(scope)
-      .then(setStats)
-      .catch((e) => setGraphError(`Statistics unavailable: ${e instanceof Error ? e.message : "request failed"}`));
-    getSubgraph(undefined, 500, scope)
+    getSubgraph(undefined, 200, scope)
       .then((d) => {
         console.log(
           "Graph:",
@@ -371,6 +390,9 @@ export default function App() {
         );
         setSubgraph(d);
         setGraphLoading(false);
+        return getStats(scope)
+          .then(setStats)
+          .catch((e) => setGraphError(`Statistics unavailable: ${e instanceof Error ? e.message : "request failed"}`));
       })
       .catch((e) => {
         console.error("Subgraph error:", e);
@@ -400,11 +422,24 @@ export default function App() {
     setError("");
     try {
       const r = await postQuery(q.trim(), 10, undefined, undefined, scope);
-      setResult(r);
+      const safePaths = Array.isArray(r.paths) ? r.paths : [];
+      const safeMetadata = r.metadata ?? {};
+      const normalized: QueryResult = {
+        ...r,
+        paths: safePaths,
+        metadata: {
+          ...safeMetadata,
+          total_candidates: finiteNumber(safeMetadata.total_candidates),
+          top_paths: finiteNumber(safeMetadata.top_paths, safePaths.length),
+          anchors_used: Array.isArray(safeMetadata.anchors_used) ? safeMetadata.anchors_used : [],
+          avg_score: finiteNumber(safeMetadata.avg_score),
+        },
+      };
+      setResult(normalized);
       setSelectedPath(0);
       const hn = new Set<string>();
       const he = new Set<string>();
-      r.paths.forEach((p) => {
+      safePaths.forEach((p) => {
         p.nodes.forEach((n) => hn.add(n));
         for (let i = 0; i < p.nodes.length - 1; i++) {
           he.add(`${p.nodes[i]}|${p.nodes[i + 1]}`);
@@ -431,8 +466,50 @@ export default function App() {
     setError("");
   }, []);
 
+  const negativeAudit = result?.metadata.negative_evidence_audit as
+    | { status?: string; chunks_scanned?: number; total_matches?: number; safe_absence_statement?: string }
+    | undefined;
+
+  const isAnnotationRoute = ["/annotation", "/annotation/"].includes(window.location.pathname.toLowerCase());
+
+  if (isAnnotationRoute) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "var(--paper)",
+          fontFamily: "'Inter', sans-serif",
+          paddingBottom: 60,
+        }}
+      >
+        <nav
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: 14,
+            pointerEvents: "none",
+          }}
+        >
+          <div className="nav-mono" style={{ pointerEvents: "auto", display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>Strategic-GraphRAG</span>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/"; }} style={{ fontSize: 10 }}>
+              返回 Demo
+            </button>
+          </div>
+        </nav>
+        <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 36px" }}>
+          <ExtractionAnnotationPanel />
+        </main>
+      </div>
+    );
+  }
+
   return (
-    <ErrorBoundary>
       <div
         style={{
           minHeight: "100vh",
@@ -728,7 +805,7 @@ export default function App() {
               </div>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                {PROMPTS.map((p) => (
+                {PROMPT_BATCHES[promptBatch].map((p) => (
                   <button
                     key={p}
                     onClick={() => setQ(p)}
@@ -739,6 +816,15 @@ export default function App() {
                     {p}
                   </button>
                 ))}
+                <button
+                  onClick={() => setPromptBatch((current) => (current + 1) % PROMPT_BATCHES.length)}
+                  disabled={loading}
+                  className="btn-ghost"
+                  style={{ fontSize: 10.5, fontWeight: 700 }}
+                  aria-label="Show another batch of example questions"
+                >
+                  More examples ↻
+                </button>
               </div>
 
               {result && (
@@ -811,7 +897,7 @@ export default function App() {
                         Analysis
                       </span>
                       <span style={{ fontSize: 10, color: "var(--muted)", fontWeight: 500 }}>
-                        {result.intent_display} · {result.metadata.total_candidates} candidates · avg {result.metadata.avg_score.toFixed(2)}
+                        {result.intent_display} · {finiteNumber(result.metadata.total_candidates)} candidates · avg {finiteNumber(result.metadata.avg_score).toFixed(2)}
                       </span>
                     </div>
 
@@ -890,6 +976,23 @@ export default function App() {
                   </div>
                 )}
 
+                {negativeAudit && (
+                  <CollapsibleCard
+                    title="Negative evidence audit"
+                    badge={negativeAudit.status || "UNKNOWN"}
+                    defaultOpen={false}
+                  >
+                    <div style={{ fontSize: 10.5, lineHeight: 1.6, color: "var(--L1)" }}>
+                      <div>
+                        Scanned {finiteNumber(negativeAudit.chunks_scanned).toLocaleString()} indexed chunks · {finiteNumber(negativeAudit.total_matches)} potential matches
+                      </div>
+                      <div style={{ marginTop: 6, color: "var(--muted)" }}>
+                        {negativeAudit.safe_absence_statement}
+                      </div>
+                    </div>
+                  </CollapsibleCard>
+                )}
+
                 <div className="grid2">
                   {/* Left column: Causal Paths */}
                   <CollapsibleCard title="Causal paths" badge={`${result.paths.length} of ${result.metadata.total_candidates}`} defaultOpen={true}>
@@ -908,7 +1011,7 @@ export default function App() {
 
                   {/* Right column: Evidence + Logic */}
                   <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                    <CollapsibleCard title={`Evidence chain · path ${selectedPath + 1}`} badge={`${result.paths[selectedPath]?.total_hops || 0} hops`} defaultOpen={true}>
+                    <CollapsibleCard title={`Graph evidence chain · path ${selectedPath + 1}`} badge={`${result.paths[selectedPath]?.total_hops || 0} graph hops`} defaultOpen={true}>
                       {result.paths[selectedPath] && (
                         <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 320, overflowY: "auto" }}>
                           {result.paths[selectedPath].evidence.map((ev, i) =>
@@ -948,8 +1051,10 @@ export default function App() {
                         {[
                           ["Intent", result.intent_display],
                           ["Candidates", String(result.metadata.total_candidates)],
-                          ["Avg score", result.metadata.avg_score.toFixed(3)],
-                          ["Anchors", result.metadata.anchors_used.slice(0, 5).join(", ")],
+                          ["Avg score", finiteNumber(result.metadata.avg_score).toFixed(3)],
+                          ["Answer evidence", String(result.metadata.answer_evidence_status || "NOT_CLASSIFIED").replace(/_/g, " ")],
+                          ["Corpus audit", negativeAudit?.status || "NOT_RUN"],
+                          ["Anchors", (result.metadata.anchors_used || []).slice(0, 5).join(", ")],
                         ].map(([k, v]) => (
                           <div key={k} style={{
                             display: "flex", justifyContent: "space-between",
@@ -992,7 +1097,6 @@ export default function App() {
           </p>
         </footer>
       </div>
-    </ErrorBoundary>
   );
 }
 

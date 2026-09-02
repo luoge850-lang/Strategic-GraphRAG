@@ -11,6 +11,11 @@ from strategic_graphrag.pipeline.pipeline import KnowledgeGraphPipeline
 from strategic_graphrag.ontology.intent_classifier import extract_financial_entities_from_query
 from strategic_graphrag.engine.query_understanding import parse_query
 from strategic_graphrag.engine.graph_rag_engine import CausalPath, GraphRAGEngine
+from strategic_graphrag.engine.evidence_quality import (
+    apply_directness_ranking,
+    audit_documents,
+    semantic_scope,
+)
 from strategic_graphrag.engine.retrieval import QueryRouter, personalized_pagerank
 from strategic_graphrag.schema.financial_observation import build_financial_observations
 from strategic_graphrag.provenance import evidence_identity, normalize_evidence
@@ -26,6 +31,77 @@ class _FakePage:
 
 
 class PipelineContractTests(unittest.TestCase):
+    @staticmethod
+    def _path(path_id, nodes, relationships, evidence):
+        hops = len(relationships)
+        return CausalPath(
+            path_id=path_id,
+            nodes=nodes,
+            node_labels=["RiskFactor"] * len(nodes),
+            relationships=relationships,
+            causal_strengths=["CONFIRMED_CAUSAL"] * hops,
+            evidence=evidence,
+            pages=[1] * hops,
+            years=[2025] * hops,
+            evidence_ids=[f"claim_{path_id}_{index}" for index in range(hops)],
+            filings=["2025-10-K.pdf"] * hops,
+            total_hops=hops,
+            aggregate_score=0.8,
+        )
+
+    def test_direct_mitigation_outranks_tangential_climate_path(self):
+        direct = self._path(
+            "direct",
+            ["SUPPLY_CHAIN_DIVERSIFICATION", "SUPPLY_CHAIN_DISRUPTION"],
+            ["MITIGATES"],
+            ["Supplier diversification mitigates supply chain disruption risk."],
+        )
+        tangent = self._path(
+            "tangent",
+            ["CLIMATE_CHANGE", "SUPPLY_CHAIN_DISRUPTION"],
+            ["CAUSES"],
+            ["Climate change may cause supply chain disruption."],
+        )
+        ranked = apply_directness_ranking(
+            [direct, tangent],
+            "How does NVIDIA mitigate supply chain risks?",
+            "MITIGATION_STRATEGY",
+        )
+        ranked.sort(key=GraphRAGEngine._path_sort_key)
+        self.assertEqual(ranked[0].path_id, "direct")
+        self.assertEqual(ranked[0].evidence_role, "ANSWER_CRITICAL")
+        self.assertEqual(ranked[1].evidence_role, "BACKGROUND_CONTEXT")
+
+    def test_single_graph_hop_can_contain_embedded_text_mechanism(self):
+        path = self._path(
+            "embedded",
+            ["EXPORT_CONTROL", "REVENUE"],
+            ["DECREASES"],
+            ["License restrictions reduce market access, resulting in lower revenue."],
+        )
+        self.assertEqual(path.total_hops, 1)
+        self.assertEqual(semantic_scope(path), "EMBEDDED_MECHANISM")
+
+    def test_negative_audit_never_turns_a_search_miss_into_pdf_absence(self):
+        result = audit_documents(
+            "Do the filings document a realized revenue loss from export controls?",
+            [{
+                "document": "NVIDIA is subject to competition in several markets.",
+                "metadata": {"source_filing": "2025-10-K.pdf", "page": 20},
+            }],
+            scope="2025-10-K.pdf",
+        )
+        self.assertEqual(result["status"], "NO_MATCH_AFTER_INDEXED_CORPUS_AUDIT")
+        self.assertIn("bounded retrieval result", result["safe_absence_statement"])
+        self.assertNotIn("filing contains no", result["safe_absence_statement"].lower())
+
+    def test_fallback_metadata_has_common_numeric_contract(self):
+        engine = GraphRAGEngine.__new__(GraphRAGEngine)
+        engine.llm = None
+        response = engine._fallback_response("unknown question", ["UNKNOWN"])
+        self.assertEqual(response["metadata"]["avg_score"], 0.0)
+        self.assertEqual(response["metadata"]["total_candidates"], 0)
+
     def test_evidence_identity_is_stable_across_runtime_metadata(self):
         base = dict(
             document_sha256="a" * 64,

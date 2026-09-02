@@ -26,6 +26,9 @@ export interface CausalPath {
   total_hops: number;
   score: number;
   score_breakdown: Record<string, number>;
+  evidence_role?: "ANSWER_CRITICAL" | "MECHANISM_SUPPORT" | "BACKGROUND_CONTEXT";
+  graph_structure?: "DIRECT_GRAPH_EDGE" | "MULTI_HOP_GRAPH_PATH";
+  evidence_semantic_scope?: "ATOMIC_RELATION" | "EMBEDDED_MECHANISM";
 }
 
 export interface QueryResult {
@@ -50,10 +53,12 @@ export interface QueryResult {
   paths: CausalPath[];
   evidence_sentences: string[];
   metadata: {
-    total_candidates: number;
-    top_paths: number;
-    anchors_used: string[];
-    avg_score: number;
+    total_candidates?: number;
+    top_paths?: number;
+    anchors_used?: string[];
+    avg_score?: number;
+    negative_evidence_audit?: Record<string, unknown>;
+    [key: string]: unknown;
   };
 }
 
@@ -195,11 +200,82 @@ export interface TemporalEvent {
   evidence_id: string | null;
 }
 
+export type AnnotationValue = boolean | "uncertain" | null;
+
+export interface ExtractionAnnotationRow {
+  claim_id: string;
+  doc_id: string;
+  page: number;
+  section: string | null;
+  extraction_method: string;
+  source_id: string;
+  relation_type: string;
+  target_id: string;
+  evidence: string;
+  evidence_context?: string | null;
+  verbatim_on_declared_page?: boolean;
+  labels: {
+    source_entity_correct: AnnotationValue;
+    target_entity_correct: AnnotationValue;
+    relation_correct: AnnotationValue;
+    evidence_supports_relation: AnnotationValue;
+    missing_gold_relations: string[] | null;
+  };
+  annotation_status: string;
+  annotator: string | null;
+  notes: string;
+}
+
+export interface ExtractionSampleResponse {
+  sample: string;
+  rows: ExtractionAnnotationRow[];
+  total: number;
+  labeled: number;
+  unlabeled: number;
+}
+
+export interface ExtractionAnnotationPatch {
+  source_entity_correct?: AnnotationValue;
+  target_entity_correct?: AnnotationValue;
+  relation_correct?: AnnotationValue;
+  evidence_supports_relation?: AnnotationValue;
+  missing_gold_relations?: string[];
+  annotation_status?: string | null;
+  annotator?: string | null;
+  notes?: string | null;
+}
+
+export interface ExtractionAnnotationPatchResponse extends Omit<ExtractionSampleResponse, "rows"> {
+  row: ExtractionAnnotationRow;
+}
+
+export type ExtractionSampleKey = "baseline" | "2025_post_repair_v2" | "2025_post_repair_human_v1";
+
 export async function getTemporalEvolution(
   riskId: string,
   limit = 20,
 ): Promise<TemporalEvent[]> {
   const r = await fetchWithTimeout(`${B}/graph/temporal/${encodeURIComponent(riskId)}?limit=${limit}`);
   if (!r.ok) throw new Error(`Temporal ${r.status}`);
+  return r.json();
+}
+
+export async function getExtractionSample(sample: ExtractionSampleKey): Promise<ExtractionSampleResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/extraction-sample?sample=${encodeURIComponent(sample)}`);
+  if (!r.ok) throw new Error(`Annotation sample ${r.status}`);
+  return r.json();
+}
+
+export async function patchExtractionSample(
+  claimId: string,
+  patch: ExtractionAnnotationPatch,
+  sample: ExtractionSampleKey,
+): Promise<ExtractionAnnotationPatchResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/extraction-sample/${encodeURIComponent(claimId)}?sample=${encodeURIComponent(sample)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  if (!r.ok) throw new Error(`Annotation save ${r.status}`);
   return r.json();
 }

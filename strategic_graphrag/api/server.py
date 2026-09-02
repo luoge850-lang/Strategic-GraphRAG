@@ -20,22 +20,24 @@ import logging
 import hmac
 import threading
 import time
+import tempfile
 import uuid
 from collections import OrderedDict, defaultdict, deque
 from copy import deepcopy
-from typing import Optional, List, Dict, Literal
+from typing import Optional, List, Dict, Literal, Union
 
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.concurrency import run_in_threadpool
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StrictBool, StrictStr
 from dotenv import load_dotenv
 from pathlib import Path
 
 # Add project root to path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
 
 load_dotenv()
 
@@ -172,7 +174,146 @@ async def structured_http_error(request: Request, exc: HTTPException):
 
 # Serve the built Vite application when available.  The public/index.html
 # fallback keeps the API usable before a frontend build has been produced.
-FRONTEND_ROOT = Path(__file__).resolve().parent.parent.parent / "frontend"
+FRONTEND_ROOT = PROJECT_ROOT / "frontend"
+EXTRACTION_SAMPLE_PATH = PROJECT_ROOT / "evaluation" / "annotation" / "extraction_sample_v1.jsonl"
+EXTRACTION_SAMPLE_PATHS = {
+    "baseline": EXTRACTION_SAMPLE_PATH,
+    "2025_post_repair_v2": PROJECT_ROOT / "evaluation" / "annotation" / "extraction_sample_2025_post_repair_v2.jsonl",
+    "2025_post_repair_human_v1": PROJECT_ROOT / "evaluation" / "annotation" / "extraction_sample_2025_post_repair_human_v1.jsonl",
+}
+HUMAN_EXTRACTION_SAMPLE_KEY = "2025_post_repair_human_v1"
+_EXTRACTION_SAMPLE_LOCK = threading.Lock()
+
+
+_ANNOTATION_LABEL_FIELDS = (
+    "source_entity_correct",
+    "target_entity_correct",
+    "relation_correct",
+    "evidence_supports_relation",
+)
+_ANNOTATION_PATCH_FIELDS = set(_ANNOTATION_LABEL_FIELDS) | {
+    "missing_gold_relations",
+    "annotation_status",
+    "annotator",
+    "notes",
+}
+
+
+def read_extraction_sample(path: Optional[Path] = None) -> List[Dict]:
+    """Read the JSONL annotation sample without mutating the source file."""
+    sample_path = path or EXTRACTION_SAMPLE_PATH
+    with sample_path.open("r", encoding="utf-8", newline="") as handle:
+        rows = []
+        for line_number, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Invalid JSON on annotation sample line {line_number}") from exc
+            if not isinstance(row, dict):
+                raise ValueError(f"Annotation sample line {line_number} is not an object")
+            rows.append(row)
+    return rows
+
+
+def extraction_sample_path(sample: str = "baseline") -> Path:
+    """Resolve a named annotation set without allowing arbitrary file paths."""
+    try:
+        return EXTRACTION_SAMPLE_PATHS[sample]
+    except KeyError as exc:
+        allowed = ", ".join(sorted(EXTRACTION_SAMPLE_PATHS))
+        raise ValueError(f"Unknown extraction sample '{sample}'. Choose one of: {allowed}") from exc
+
+
+def extraction_sample_summary(rows: List[Dict]) -> Dict[str, int]:
+    labeled = sum(1 for row in rows if row.get("annotation_status") == "LABELED")
+    return {"total": len(rows), "labeled": labeled, "unlabeled": len(rows) - labeled}
+
+
+def update_extraction_sample(
+    claim_id: str,
+    updates: Dict,
+    path: Optional[Path] = None,
+) -> tuple[Dict, List[Dict]]:
+    """Patch one row and atomically replace the JSONL file.
+
+    Unchanged source lines are copied byte-for-byte; only the matched JSON object
+    is serialized again. The temporary file lives beside the source for an
+    atomic os.replace on the same filesystem.
+    """
+    unknown = set(updates) - _ANNOTATION_PATCH_FIELDS
+    if unknown:
+        raise ValueError(f"Unsupported annotation fields: {sorted(unknown)}")
+    for field in _ANNOTATION_LABEL_FIELDS:
+        if field in updates:
+            value = updates[field]
+            if value is not None and not isinstance(value, bool) and value != "uncertain":
+                raise ValueError(f"{field} must be true, false, uncertain, or null")
+    if "missing_gold_relations" in updates:
+        values = updates["missing_gold_relations"]
+        if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
+            raise ValueError("missing_gold_relations must be a string array")
+    if updates.get("annotation_status") == "LABELED" and not str(updates.get("annotator") or "").strip():
+        raise ValueError("annotator is required before an annotation can be marked LABELED")
+
+    sample_path = path or EXTRACTION_SAMPLE_PATH
+    with _EXTRACTION_SAMPLE_LOCK:
+        with sample_path.open("r", encoding="utf-8", newline="") as handle:
+            raw_lines = handle.readlines()
+
+        updated_row = None
+        updated_lines = []
+        rows = []
+        for line in raw_lines:
+            if not line.strip():
+                updated_lines.append(line)
+                continue
+            row = json.loads(line)
+            if not isinstance(row, dict):
+                raise ValueError("Annotation sample contains a non-object row")
+            if row.get("claim_id") == claim_id:
+                labels = dict(row.get("labels") or {})
+                for field in _ANNOTATION_LABEL_FIELDS:
+                    if field in updates:
+                        labels[field] = updates[field]
+                if "missing_gold_relations" in updates:
+                    labels["missing_gold_relations"] = updates["missing_gold_relations"]
+                row["labels"] = labels
+                for field in ("annotation_status", "annotator", "notes"):
+                    if field in updates:
+                        row[field] = updates[field]
+                updated_row = row
+                line_ending = "\r\n" if line.endswith("\r\n") else "\n" if line.endswith("\n") else ""
+                updated_lines.append(json.dumps(row, ensure_ascii=False) + line_ending)
+            else:
+                updated_lines.append(line)
+            rows.append(row)
+
+        if updated_row is None:
+            raise KeyError(claim_id)
+
+        temp_path = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                encoding="utf-8",
+                newline="",
+                dir=str(sample_path.parent),
+                prefix=f".{sample_path.name}.",
+                suffix=".tmp",
+                delete=False,
+            ) as handle:
+                temp_path = Path(handle.name)
+                handle.writelines(updated_lines)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temp_path, sample_path)
+        finally:
+            if temp_path is not None and temp_path.exists():
+                temp_path.unlink()
+
+    return updated_row, rows
 
 
 def get_frontend_index() -> Path:
@@ -461,6 +602,23 @@ class SubgraphRequest(BaseModel):
     max_nodes: int = Field(default=50, ge=10, le=200)
 
 
+AnnotationLabel = Union[StrictBool, Literal["uncertain"]]
+
+
+class ExtractionAnnotationPatch(BaseModel):
+    source_entity_correct: Optional[AnnotationLabel] = None
+    target_entity_correct: Optional[AnnotationLabel] = None
+    relation_correct: Optional[AnnotationLabel] = None
+    evidence_supports_relation: Optional[AnnotationLabel] = None
+    missing_gold_relations: Optional[List[StrictStr]] = None
+    annotation_status: Optional[StrictStr] = None
+    annotator: Optional[StrictStr] = None
+    notes: Optional[StrictStr] = None
+
+    class Config:
+        extra = "forbid"
+
+
 # =============================================================================
 # Endpoints
 # =============================================================================
@@ -475,6 +633,62 @@ async def root():
         "version": "1.0.0",
         "endpoints": ["POST /query", "POST /query/vector", "GET /graph/statistics", "GET /graph/subgraph", "GET /evidence/{entity_id}", "GET /graph/temporal/{risk_id}"],
     }
+
+
+@app.get("/annotation")
+@app.get("/annotation/")
+async def annotation_page():
+    """Serve the standalone annotation UI without exposing it in the main demo nav."""
+    index_path = get_frontend_index()
+    if index_path.exists():
+        return FileResponse(index_path)
+    raise HTTPException(status_code=404, detail="Frontend build not found")
+
+
+@app.get("/evaluation/extraction-sample")
+async def get_extraction_sample(sample: str = "baseline"):
+    try:
+        path = extraction_sample_path(sample)
+        rows = read_extraction_sample(path)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Extraction annotation sample not found")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except OSError as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+    return {"sample": sample, "rows": rows, **extraction_sample_summary(rows)}
+
+
+@app.patch("/evaluation/extraction-sample/{claim_id}")
+async def patch_extraction_sample(
+    claim_id: str,
+    req: ExtractionAnnotationPatch,
+    sample: str = "baseline",
+):
+    try:
+        path = extraction_sample_path(sample)
+        if sample != HUMAN_EXTRACTION_SAMPLE_KEY:
+            raise HTTPException(
+                status_code=403,
+                detail=(
+                    "This extraction sample is read-only. The original 60-row baseline and historical "
+                    "2025_post_repair_v2 are immutable; annotate only 2025_post_repair_human_v1."
+                ),
+            )
+        updated_row, rows = update_extraction_sample(
+            claim_id,
+            req.model_dump(exclude_unset=True),
+            path,
+        )
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Extraction annotation sample not found")
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Claim not found: {claim_id}")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except OSError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    return {"sample": sample, "row": updated_row, **extraction_sample_summary(rows)}
 
 
 @app.post("/query", response_model=QueryResponse)

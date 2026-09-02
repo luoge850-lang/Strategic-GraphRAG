@@ -60,14 +60,47 @@ def stratified_sample(rows: list[dict], size: int, seed: int) -> list[dict]:
     return selected[:size]
 
 
+def load_jsonl(path: Path) -> list[dict]:
+    with path.open("r", encoding="utf-8") as handle:
+        return [json.loads(line) for line in handle if line.strip()]
+
+
+def write_or_preserve_annotation_sample(
+    sample_path: Path,
+    generated_rows: list[dict],
+    regenerate: bool = False,
+) -> tuple[list[dict], str]:
+    """Never erase labels unless regeneration is explicitly requested."""
+    if sample_path.exists() and not regenerate:
+        return load_jsonl(sample_path), "PRESERVED_EXISTING_ANNOTATION"
+    sample_path.parent.mkdir(parents=True, exist_ok=True)
+    sample_path.write_text(
+        "\n".join(json.dumps(item, ensure_ascii=False) for item in generated_rows) + "\n",
+        encoding="utf-8",
+    )
+    return generated_rows, "GENERATED_NEW_UNLABELED_SAMPLE"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--sample", type=Path, required=True)
     parser.add_argument("--sample-size", type=int, default=60)
     parser.add_argument("--seed", type=int, default=20260814)
+    parser.add_argument(
+        "--doc-id",
+        choices=tuple(sorted(PDFS)),
+        default=None,
+        help="Restrict the audit and annotation sample to one filing.",
+    )
+    parser.add_argument(
+        "--regenerate-sample",
+        action="store_true",
+        help="Explicitly replace an existing annotation sample and erase its labels.",
+    )
     args = parser.parse_args()
     load_dotenv(ROOT / ".env", override=True)
+    doc_ids = [args.doc_id] if args.doc_id else list(PDFS)
     driver = GraphDatabase.driver(os.environ["NEO4J_URI"], auth=(os.environ["NEO4J_USERNAME"], os.environ["NEO4J_PASSWORD"]))
     try:
         with driver.session(database=os.getenv("NEO4J_DATABASE") or None) as session:
@@ -80,6 +113,7 @@ def main() -> None:
                 OPTIONAL MATCH (source)-[r]->(target) WHERE r.evidence_id=c.id
                 RETURN c.id AS id, c.doc_id AS doc_id, c.page AS page,
                        c.section AS section, c.text AS text,
+                       c.table_context AS table_context,
                        c.source_id AS source_id, c.target_id AS target_id,
                        c.relation_type AS relation_type,
                        c.extraction_method AS extraction_method,
@@ -92,7 +126,7 @@ def main() -> None:
                        count(r) AS linked_edges
                 ORDER BY c.doc_id, c.page, c.id
                 """,
-                doc_ids=list(PDFS),
+                doc_ids=doc_ids,
             )]
     finally:
         driver.close()
@@ -118,17 +152,22 @@ def main() -> None:
             "claim_id": row["id"], "doc_id": row["doc_id"], "page": row["page"],
             "section": row.get("section"), "extraction_method": row.get("extraction_method"),
             "source_id": row["source_id"], "relation_type": row["relation_type"], "target_id": row["target_id"],
-            "evidence": row["text"], "verbatim_on_declared_page": row["verbatim_on_declared_page"],
+            "evidence": row["text"],
+            "evidence_context": row.get("table_context"),
+            "verbatim_on_declared_page": row["verbatim_on_declared_page"],
             "labels": {"source_entity_correct": None, "target_entity_correct": None, "relation_correct": None, "evidence_supports_relation": None, "missing_gold_relations": None},
             "annotation_status": "UNLABELED", "annotator": None, "notes": "",
         })
-    args.sample.parent.mkdir(parents=True, exist_ok=True)
-    args.sample.write_text("\n".join(json.dumps(item, ensure_ascii=False) for item in annotation_rows) + "\n", encoding="utf-8")
+    annotation_rows, sample_write_mode = write_or_preserve_annotation_sample(
+        args.sample,
+        annotation_rows,
+        regenerate=args.regenerate_sample,
+    )
 
     report = {
         "schema": "strategic-graphrag-extraction-quality/v1",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "scope": list(PDFS), "claim_count": len(rows),
+        "scope": doc_ids, "claim_count": len(rows),
         "automated_metrics": {
             "verbatim_page_match_rate": sum(exact) / len(exact) if exact else 0,
             "required_provenance_completeness": sum(complete) / len(complete) if complete else 0,
@@ -145,7 +184,13 @@ def main() -> None:
             "evidence_support_precision": "NOT_MEASURED", "relation_recall": "NOT_MEASURED",
             "reason": "Independent labels are required; automated self-scoring would inflate quality.",
         },
-        "annotation_sample": {"path": str(args.sample), "rows": len(annotation_rows), "labeled": 0, "seed": args.seed},
+        "annotation_sample": {
+            "path": str(args.sample),
+            "rows": len(annotation_rows),
+            "labeled": sum(row.get("annotation_status") == "LABELED" for row in annotation_rows),
+            "seed": args.seed,
+            "write_mode": sample_write_mode,
+        },
     }
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")

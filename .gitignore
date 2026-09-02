@@ -45,6 +45,9 @@ data/evaluation/
 # Local audit/runtime outputs; selected release reports are force-added.
 reports/
 
+# Local recovery archives are not source-delivery artifacts.
+archive/
+
 # Pipeline artifacts (regenerated on each run)
 pipeline_stats.json
 test_answer.json
