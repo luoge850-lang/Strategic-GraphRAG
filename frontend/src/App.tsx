@@ -118,6 +118,9 @@ const FILING_OPTIONS: Array<{ value: FilingScope; label: string }> = [
   { value: "all", label: "All verified filings" },
 ];
 
+const GRAPH_RETRY_DELAYS_MS = [0, 1000, 2000, 4000, 8000, 12000] as const;
+const GRAPH_RETRY_WINDOW_MS = 30_000;
+
 /* ═══════════════════════════════════════════════════════
    Collapsible Card — expand/collapse secondary content
    ═══════════════════════════════════════════════════════ */
@@ -378,28 +381,75 @@ export default function App() {
 
   /* ── Load data ── */
   useEffect(() => {
+    let cancelled = false;
+    let retryTimer: number | undefined;
+    const deadline = Date.now() + GRAPH_RETRY_WINDOW_MS;
+    let lastError: unknown = new Error("request failed");
+
     setGraphLoading(true);
     setGraphError("");
-    getSubgraph(undefined, 200, scope)
-      .then((d) => {
-        console.log(
-          "Graph:",
-          d.nodes?.length,
-          "nodes,",
-          d.edges?.length,
-          "edges"
-        );
-        setSubgraph(d);
+    const loadGraph = async () => {
+      for (const delay of GRAPH_RETRY_DELAYS_MS) {
+        if (cancelled) return;
+        const waitMs = Math.min(delay, Math.max(0, deadline - Date.now()));
+        if (waitMs > 0) {
+          await new Promise<void>((resolve) => {
+            retryTimer = window.setTimeout(resolve, waitMs);
+          });
+        }
+        if (cancelled) return;
+
+        const remainingMs = deadline - Date.now();
+        if (remainingMs <= 0) break;
+        try {
+          const d = await Promise.race([
+            getSubgraph(undefined, 200, scope),
+            new Promise<never>((_, reject) => {
+              retryTimer = window.setTimeout(
+                () => reject(new Error("Graph load retry window expired")),
+                remainingMs,
+              );
+            }),
+          ]);
+          if (retryTimer !== undefined) window.clearTimeout(retryTimer);
+          if (cancelled) return;
+          console.log(
+            "Graph:",
+            d.nodes?.length,
+            "nodes,",
+            d.edges?.length,
+            "edges"
+          );
+          setSubgraph(d);
+          setGraphLoading(false);
+          try {
+            const nextStats = await getStats(scope);
+            if (!cancelled) setStats(nextStats);
+          } catch (e) {
+            if (!cancelled) {
+              setGraphError(`Statistics unavailable: ${e instanceof Error ? e.message : "request failed"}`);
+            }
+          }
+          return;
+        } catch (e) {
+          if (retryTimer !== undefined) window.clearTimeout(retryTimer);
+          lastError = e;
+          if (Date.now() >= deadline) break;
+        }
+      }
+
+      if (!cancelled) {
+        console.error("Subgraph error:", lastError);
+        setGraphError(`Graph unavailable: ${lastError instanceof Error ? lastError.message : "request failed"}`);
         setGraphLoading(false);
-        return getStats(scope)
-          .then(setStats)
-          .catch((e) => setGraphError(`Statistics unavailable: ${e instanceof Error ? e.message : "request failed"}`));
-      })
-      .catch((e) => {
-        console.error("Subgraph error:", e);
-        setGraphError(`Graph unavailable: ${e instanceof Error ? e.message : "request failed"}`);
-        setGraphLoading(false);
-      });
+      }
+    };
+
+    void loadGraph();
+    return () => {
+      cancelled = true;
+      if (retryTimer !== undefined) window.clearTimeout(retryTimer);
+    };
   }, [scope]);
 
   /* ── Measure graph container ── */

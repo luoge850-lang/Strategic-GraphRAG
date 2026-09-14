@@ -1,0 +1,48 @@
+Table of Contents
+Data protection laws around the world are quickly changing and may be interpreted and applied in an increasingly stringent fashion and in a manner that is
+inconsistent with our data practices. These obligations may affect our product design and necessitate changes to our information technologies, systems and
+practices and to those of any third parties that process personal data on our behalf. Despite our efforts, we or third parties we rely upon may fail to comply with
+such obligations. If we fail, or are perceived to have failed, to address or comply with data privacy and security obligations, we could face significant
+consequences, including but not limited to, government enforcement actions, litigation, additional reporting requirements and/or oversight, bans on processing
+personal data, and orders to destroy or not use personal data. Any of these events could have a material adverse effect on our reputation, business, or financial
+condition.
+We may have exposure to additional tax liabilities and our operating results may be adversely impacted by changes in tax laws, higher than expected
+tax rates and other tax-related factors.
+We are subject to complex income tax laws and regulations, as well as non-income-based taxes, in various jurisdictions. Significant judgment is required in
+determining our worldwide provision for income taxes and other tax liabilities. We are regularly under audit by tax authorities in different jurisdictions. Although
+we believe our tax estimates are reasonable, any adverse outcome could increase our worldwide effective tax rate, increase the amount of non-income taxes
+imposed on our business, and harm our financial position, results of operations, net income, and cash flows.
+Further, changes in tax laws or their interpretation by tax authorities in the U.S. or foreign jurisdictions could increase our future tax liability or cause other
+adverse tax impacts, which may materially impact our results of operations, or the way we conduct our business. Most of our income is taxable in the United
+States, with a significant portion qualifying for preferential treatment as foreign-derived intangible income, or FDII. If U.S. tax rates increase or the FDII deduction
+is reduced, our provision for income taxes, results of operations, net income and cash flows would be adversely affected. In addition, changes in the tax laws of
+foreign jurisdictions could arise as a result of global implementation of the Inclusive Framework on Base Erosion and Profit Shifting and Pillar Two Model Rules
+announced by The Organization for Economic Cooperation and Development, or OECD. These and other changes in the foreign tax laws, as adopted by
+countries, may increase tax uncertainty and adversely affect our provision for income taxes, results of operations, and financial condition.
+Our future effective tax rate may also be affected by a variety of factors, including changes in our business or statutory rates, the mix of earnings in countries
+with differing statutory tax rates, available tax incentives, credits and deductions, the expiration of statutes of limitations, changes in accounting principles,
+adjustments to income taxes upon finalization of tax returns, increases in expenses not deductible for tax purposes, the estimates of our deferred tax assets and
+liabilities and deferred tax asset valuation allowances, changing interpretation of existing laws or regulations, the impact of accounting for business
+combinations, as well as changes in the domestic or international organization of our business and structure. Furthermore, the tax effects of accounting for
+stock-based compensation and volatility in our stock price may significantly impact our effective tax rate in the period in which they occur. A decline in our stock
+price may result in reduced future tax benefits from stock-based compensation, increase our effective tax rate and adversely affect our financial results.
+Our business is exposed to the risks associated with litigation, investigations and regulatory proceedings.
+We currently and will likely continue to face legal, administrative and regulatory proceedings, claims, demands and/or investigations involving shareholder,
+consumer, competition and/or other issues relating to our business. For example, we are defending a securities class action lawsuit from multiple shareholders
+asserting claims that we and certain of our officers made false and/or misleading statements related to channel inventory and the impact of cryptocurrency
+mining on GPU demand in 2017 and 2018. Litigation and regulatory proceedings are inherently uncertain, and adverse rulings could occur, including monetary
+damages or fines, or an injunction stopping us from manufacturing or selling certain products, engaging in certain business practices, or requiring other
+remedies, such as compulsory licensing of patents. An unfavorable outcome or settlement may result in a material adverse impact. Regardless of the outcome,
+litigation can be costly, time-consuming, and disruptive to our operations.
+Our indebtedness could adversely affect our financial position and cash flows from operations, and prevent us from implementing our strategy or
+fulfilling our contractual obligations.
+As of January 28, 2024, we had net outstanding a total of $9.7 billion in notes due by 2060. As each series of senior notes matures, unless redeemed or
+repurchased, we must repay or refinance the notes. If we decide to refinance, we may receive less favorable terms, or we may be unable to refinance at all,
+which may adversely affect our financial condition. We also have a $575 million commercial paper program.
+Maintenance of our current and future indebtedness and contractual restrictions could cause us to dedicate a substantial portion of our cash flows from
+operations towards debt service obligations and principal repayments; increase our vulnerability to adverse changes in general economic, industry and
+competitive conditions; limit our flexibility regarding changes in our business and our industry; impair our ability to obtain future financing; and restrict our ability
+to grant liens on property, enter into certain mergers, dispose of our assets, or materially change our business.
+Our ability to comply with the covenants in our indenture may be affected by events beyond our control. If we breach any of the covenants without a waiver from
+the note holders or lenders, then any outstanding indebtedness may be declared
+30

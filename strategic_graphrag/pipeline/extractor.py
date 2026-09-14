@@ -29,6 +29,7 @@ from ..ontology.relation_inference import (
     _is_concession, _is_negated, _is_counterfactual,
     _has_concession_pivot, _clean_signal,
 )
+from ..llm_response_cache import LLMResponseCache
 
 logger = logging.getLogger("TripleExtractor")
 
@@ -137,12 +138,22 @@ class TripleExtractor:
     Supports Gemini (free), Groq (free), and DeepSeek (paid) via LLMProvider.
     """
 
-    def __init__(self, llm_provider=None, model_name: str = None, provider: str = None):
+    def __init__(
+        self,
+        llm_provider=None,
+        model_name: str = None,
+        provider: str = None,
+        response_cache=None,
+        cache_mode: str = None,
+        cache_path: str = None,
+    ):
         """
         Args:
             llm_provider: LLMProvider instance (auto-created from env if None)
             model_name: LLM model identifier (auto-detected if None)
             provider: provider name used when creating the LLM instance
+            response_cache: optional LLMResponseCache instance for tests or callers
+            cache_mode/cache_path: optional environment-equivalent cache overrides
         """
         from ..llm_provider import get_llm
 
@@ -151,14 +162,25 @@ class TripleExtractor:
         else:
             self.llm = get_llm(provider=provider, model=model_name)
 
+        self.response_cache = response_cache or LLMResponseCache.from_env(
+            mode=cache_mode,
+            path=cache_path,
+        )
         self.model_name = model_name or self.llm.get_task_model("extraction")
-        self._llm_enabled = self.llm.available
+        # A populated record/replay cache is usable even when the external
+        # provider is not configured.  The provider is still called on a
+        # record miss and will report its normal failure if unavailable.
+        self._llm_enabled = bool(
+            self.llm.available or self.response_cache.mode in {"record", "replay"}
+        )
         self.llm_calls = 0
         self.llm_successes = 0
         self.llm_failures = 0
         self.llm_accepted_triples = 0
+        self.llm_network_calls = 0
         self.llm_routes = set()
         self.extraction_temperature = _read_extraction_temperature()
+        self._filter_rejection_counts: Dict[str, int] = {}
 
         if self._llm_enabled:
             logger.info(f"LLM extraction enabled: {self.llm.provider}/{self.model_name}")
@@ -170,7 +192,10 @@ class TripleExtractor:
 
     @property
     def llm_available(self) -> bool:
-        return bool(self._llm_enabled and self.llm.available)
+        return bool(
+            self._llm_enabled
+            and (self.llm.available or self.response_cache.mode in {"record", "replay"})
+        )
 
     def get_llm_stats(self) -> Dict:
         return {
@@ -180,7 +205,18 @@ class TripleExtractor:
             "accepted_triples": self.llm_accepted_triples,
             "routes": sorted(self.llm_routes),
             "extraction_temperature": self.extraction_temperature,
+            "network_calls": self.llm_network_calls,
+            "cache": self.response_cache.stats(),
         }
+
+    def get_filter_rejection_counts(self) -> Dict[str, int]:
+        """Return the rejection reasons from the most recent filter call."""
+        return dict(sorted(self._filter_rejection_counts.items()))
+
+    def _record_filter_rejection(self, reason: str) -> None:
+        self._filter_rejection_counts[reason] = (
+            self._filter_rejection_counts.get(reason, 0) + 1
+        )
 
     def llm_extract(self, text: str, max_tokens: int = 3000) -> List[Dict]:
         """Extract triples using LLM with auto-fallback across providers."""
@@ -193,13 +229,57 @@ class TripleExtractor:
         # character position.
         prompt = f"{EXTRACTION_SYSTEM_PROMPT}\n\nTEXT:\n{text}\n\nReturn ONLY valid JSON object with the 'triples' array."
 
-        # Use auto-fallback: primary → gemini → ollama → deepseek
-        result = self.llm.extract_json_with_fallback(
-            prompt,
-            model=self.model_name,
-            max_tokens=max_tokens,
+        request_provider = str(getattr(self.llm, "provider", "unknown"))
+        request = self.response_cache.make_request(
+            operation="extract_json_with_fallback",
+            request_provider=request_provider,
+            request_model=str(self.model_name),
             temperature=self.extraction_temperature,
+            max_tokens=max_tokens,
+            prompt=prompt,
         )
+        cached = self.response_cache.lookup(request)
+        if cached is not None:
+            result = cached.response
+            route_provider = cached.metadata.get(
+                "actual_provider", request.request_provider
+            )
+            route_model = cached.metadata.get("actual_model", request.request_model)
+            self.llm.last_success_provider = route_provider
+            self.llm.last_success_model = route_model
+        else:
+            # Use auto-fallback: primary → explicitly configured alternatives.
+            network_calls_before = getattr(self.llm, "network_calls", None)
+            result = self.llm.extract_json_with_fallback(
+                prompt,
+                model=self.model_name,
+                max_tokens=max_tokens,
+                temperature=self.extraction_temperature,
+            )
+            network_calls_after = getattr(self.llm, "network_calls", None)
+            if (
+                isinstance(network_calls_before, int)
+                and isinstance(network_calls_after, int)
+            ):
+                self.llm_network_calls += max(
+                    network_calls_after - network_calls_before, 0
+                )
+            else:
+                # Fake providers and legacy adapters do not expose transport
+                # counters; one provider invocation is the conservative test
+                # double equivalent.  Replay never enters this branch.
+                self.llm_network_calls += 1
+            if result is not None:
+                route_provider = getattr(self.llm, "last_success_provider", None)
+                route_model = getattr(self.llm, "last_success_model", None)
+                route_provider = route_provider or request.request_provider
+                route_model = route_model or request.request_model
+                self.response_cache.store(
+                    request,
+                    result,
+                    actual_provider=route_provider,
+                    actual_model=route_model,
+                )
         self.llm_calls += 1
         if result is None:
             self.llm_failures += 1
@@ -648,6 +728,9 @@ class TripleExtractor:
         - Reclassify mislabeled entities
         - Enforce hubness and cardinality limits
         """
+        # This is deliberately per-call state: pipeline page statistics must
+        # describe only the candidates submitted for the current page.
+        self._filter_rejection_counts = {}
         filtered: List[Dict] = []
         # Cardinality limits per relation type
         limits = {"DISCLOSES": 2, "EXPOSED_TO": 4}
@@ -662,28 +745,37 @@ class TripleExtractor:
 
             # Basic validation
             if not s_raw or not t_raw or not rel:
+                self._record_filter_rejection("EMPTY_FIELD")
                 continue
             if rel not in VALID_RELATIONS:
+                self._record_filter_rejection("INVALID_RELATION")
                 continue
             if norm_id(s_raw) == norm_id(t_raw):
+                self._record_filter_rejection("SELF_RELATION")
                 continue
 
             # Filter noise
             if is_banned(s_raw) or is_banned(t_raw):
+                self._record_filter_rejection("BANNED_ENTITY")
                 continue
             if is_generic(s_raw) or is_generic(t_raw):
+                self._record_filter_rejection("GENERIC_ENTITY")
                 continue
             if t_cat == "RiskFactor" and is_non_risk(t_raw):
+                self._record_filter_rejection("NON_RISK_ENTITY")
                 continue
             if s_cat == "RiskFactor" and is_non_risk(s_raw):
+                self._record_filter_rejection("NON_RISK_ENTITY")
                 continue
             if is_company_blacklisted(s_raw) or is_company_blacklisted(t_raw):
+                self._record_filter_rejection("BLACKLISTED_COMPANY")
                 continue
 
             # Evidence is mandatory for the graph pipeline.  If a caller has
             # supplied source text, reject paraphrased or fabricated evidence.
             evidence = str(t.get("evidence_sentence", "")).strip()
             if text and not self._evidence_is_verbatim(evidence, text):
+                self._record_filter_rejection("NON_VERBATIM_EVIDENCE")
                 continue
 
             # Reclassify competitors as Company + COMPETITION_RISK
@@ -695,6 +787,7 @@ class TripleExtractor:
             # Cardinality enforcement
             if rel in limits:
                 if counts[rel] >= limits[rel]:
+                    self._record_filter_rejection("CARDINALITY_LIMIT")
                     continue
                 counts[rel] += 1
 
@@ -702,7 +795,7 @@ class TripleExtractor:
             sn, sc = resolve_entity(s_raw, s_cat)
             tn, tc = resolve_entity(t_raw, t_cat)
 
-            valid_relation, _ = validate_triple(sc, tc, rel, sn, tn)
+            valid_relation, _validation_reason = validate_triple(sc, tc, rel, sn, tn)
             # Check the model's grounded names before canonical IDs.  The
             # evidence sentence may contain a natural-language variant such
             # as "cyber-attacks" while the ontology ID is CYBER_ATTACKS.
@@ -713,13 +806,30 @@ class TripleExtractor:
                 evidence_supported, _support_reason = self._evidence_supports_relation(
                     sn, tn, rel, evidence
                 )
-            if valid_relation and evidence_supported:
-                t["source"] = sn
-                t["source_category"] = sc
-                t["target"] = tn
-                t["target_category"] = tc
-                t["relation"] = rel
-                filtered.append(t)
+            if not valid_relation:
+                rejection_reason = (
+                    "SELF_RELATION"
+                    if _validation_reason == "Self-referencing relation not allowed"
+                    else "INVALID_ENTITY_CATEGORY_RELATION"
+                )
+                self._record_filter_rejection(rejection_reason)
+                continue
+            if not evidence_supported:
+                if _support_reason == "ENTITY_NOT_PRESENT_IN_EVIDENCE":
+                    rejection_reason = "EVIDENCE_ENTITY_NOT_PRESENT"
+                elif _support_reason == "EMPTY_EVIDENCE":
+                    rejection_reason = "EMPTY_FIELD"
+                else:
+                    rejection_reason = "EVIDENCE_DIRECTION_UNSUPPORTED"
+                self._record_filter_rejection(rejection_reason)
+                continue
+
+            t["source"] = sn
+            t["source_category"] = sc
+            t["target"] = tn
+            t["target_category"] = tc
+            t["relation"] = rel
+            filtered.append(t)
 
         return filtered
 

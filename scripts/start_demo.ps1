@@ -22,6 +22,21 @@ function Get-ListeningPids {
     ) | Sort-Object -Unique
 }
 
+function Get-ControlledProcessIds([int]$listenerPid) {
+    $projectPythonPath = [System.IO.Path]::GetFullPath($pythonPath)
+    $ids = @($listenerPid)
+    $current = Get-Process -Id $listenerPid -ErrorAction SilentlyContinue
+    while ($null -ne $current) {
+        $parent = $current.Parent
+        if ($null -eq $parent) { break }
+        if ($parent.ProcessName -notin @("python", "python3")) { break }
+        if (-not $parent.Path -or [System.IO.Path]::GetFullPath($parent.Path) -ne $projectPythonPath) { break }
+        $ids += $parent.Id
+        $current = $parent
+    }
+    $ids | Sort-Object -Unique
+}
+
 $existingPids = @(Get-ListeningPids)
 if ($existingPids.Count -gt 0) {
     if (-not $Restart) {
@@ -30,12 +45,17 @@ if ($existingPids.Count -gt 0) {
         exit 0
     }
 
-    foreach ($existingPid in $existingPids) {
-        $existingProcess = Get-Process -Id $existingPid -ErrorAction Stop
-        if ($existingProcess.ProcessName -notin @("python", "python3")) {
-            throw "Refusing to stop non-Python process $existingPid ($($existingProcess.ProcessName)) on port $Port."
+    $controlledPids = @(
+        foreach ($existingPid in $existingPids) {
+            Get-ControlledProcessIds $existingPid
         }
-        Stop-Process -Id $existingPid -Force
+    ) | Sort-Object -Unique
+    foreach ($controlledPid in $controlledPids) {
+        $existingProcess = Get-Process -Id $controlledPid -ErrorAction Stop
+        if ($existingProcess.ProcessName -notin @("python", "python3")) {
+            throw "Refusing to stop non-Python process $controlledPid ($($existingProcess.ProcessName)) on port $Port."
+        }
+        Stop-Process -Id $controlledPid -Force
     }
     Start-Sleep -Seconds 1
 }
@@ -71,10 +91,22 @@ if ($null -eq $live) {
     throw "Demo failed to become live within 30 seconds. $errorTail"
 }
 
+# Python may expose a child process as the actual listener on Windows. Report
+# the listener PID because that is the process controlled by -Restart.
+$listenerPids = @(Get-ListeningPids)
+$ready = $null
+try {
+    $ready = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/health/ready" -TimeoutSec 3
+} catch {
+    $ready = $null
+}
+
 [PSCustomObject]@{
     url = "http://127.0.0.1:$Port/"
-    pid = $process.Id
+    pid = if ($listenerPids.Count -eq 1) { $listenerPids[0] } else { $listenerPids }
+    launcher_pid = $process.Id
     status = $live.status
+    readiness = if ($ready) { $ready.status } else { "unknown" }
     version = $live.version
     stdout_log = $stdoutPath
     stderr_log = $stderrPath

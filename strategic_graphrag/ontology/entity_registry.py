@@ -419,7 +419,8 @@ CANONICAL_MAP: Dict[str, Tuple[str, str]] = {
     # ── Events ──
     "covid_19": ("COVID_19", "Event"),
     "covid": ("COVID_19", "Event"),
-    "pandemic": ("COVID_19", "Event"),
+    "pandemic": ("PANDEMIC", "Event"),
+    "pandemics": ("PANDEMIC", "Event"),
     "chatgpt": ("CHATGPT_LAUNCH", "Event"),
     "generative_ai_boom": ("CHATGPT_LAUNCH", "Event"),
     "arm_acquisition": ("NVIDIA_ARM_TERMINATED", "Event"),

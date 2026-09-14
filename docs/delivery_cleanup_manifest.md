@@ -55,6 +55,17 @@ report, and the stable-provenance inputs consumed by the existing scripts.
 To recover a moved tracked file before committing the cleanup, use the archive
 copy or restore it from Git; no remote branch or external message was created.
 
+## Historical report cleanup — 2026-09-14
+
+Sixteen superseded or failed-attempt reports were moved to
+`archive/cleanup-2026-09-14/historical-reports/`: the old readiness audits,
+failed-rebuild snapshots, pre-rebuild 2025 snapshot, obsolete repair-run
+statistics, one-question retrieval probe, old chain/coverage audits, and the
+historical extraction-quality audit. Current snapshots, per-filing audits,
+stable-provenance inputs, the Silver benchmark, and the current readiness report
+remain in `reports/`. This reduced the active report inventory to 34 files
+without deleting evidence needed to explain earlier runs.
+
 ## Follow-up cleanup guardrails — 2026-09-02
 
 - `.venv/` is the only canonical Python environment for this delivery and is
@@ -68,6 +79,14 @@ copy or restore it from Git; no remote branch or external message was created.
   is current, historical, generated, or user-owned, and then choose the
   recoverable action for that item.
 
+## Temporary working artifacts — 2026-09-11
+
+The root `tmp/` directory contained 26 untracked document-render folders,
+proposal scripts, and intermediate architecture images. No current source or
+runtime path referenced these files. They were moved, not destroyed, to
+`archive/cleanup-2026-09-11/tmp/` so the delivery root stays focused while the
+render history remains recoverable.
+
 ## Golden QA artifacts retained — 2026-09-02
 
 - `data/evaluation/golden_qa_v2.jsonl` remains the generated candidate set. It
@@ -80,3 +99,16 @@ copy or restore it from Git; no remote branch or external message was created.
 - The original extraction samples, frozen filing artifacts, graph snapshots,
   and audit reports remain preserved because they are required to reproduce
   and explain earlier measurements. They are not disposable cache files.
+
+## Follow-up cleanup — 2026-09-14
+
+- Confirmed that the project-root `tmp/` directory was empty, including hidden
+  entries, and removed only that empty directory.
+- No files and no non-empty directories were removed.
+- Retained the user-owned `GraphRAG初稿.docx`, `evaluation/cache/`,
+  `evaluation/review_packets/`, `evaluation/silver_retrieval_v1.jsonl`, and
+  `evaluation/annotation/`.
+- Retained `scripts/`, `tests/`, `docs/`, `archive/`, `reports/`,
+  `data/` and its PDFs, and Chroma artifacts.
+- Did not touch `.env`, Neo4j, or Chroma contents, and performed no remote
+  GitHub operation.

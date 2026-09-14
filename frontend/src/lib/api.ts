@@ -7,9 +7,33 @@ async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}
   const timer = window.setTimeout(() => controller.abort(), timeoutMs);
   try {
     return await fetch(input, { ...init, signal: controller.signal });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error("Local API request timed out. Check Neo4j/LLM readiness and retry.");
+    }
+    if (error instanceof TypeError) {
+      throw new Error("Cannot reach the local API. Run .\\scripts\\start_demo.ps1, then reload the page.");
+    }
+    throw error;
   } finally {
     window.clearTimeout(timer);
   }
+}
+
+async function throwApiError(operation: string, response: Response): Promise<never> {
+  let detail = "";
+  try {
+    const payload = await response.clone().json() as Record<string, any>;
+    detail = payload.detail || payload.error?.message || payload.dependencies?.neo4j?.error || "";
+  } catch {
+    // Keep a stable user-facing error even when a proxy returns non-JSON text.
+  }
+  if (response.status === 503) {
+    throw new Error(
+      `${operation} 暂不可用（503）：本地 API 已启动，但 Neo4j 等外部依赖未就绪。请检查 /health/ready 和 .env 中的连接配置。${detail ? ` [${detail}]` : ""}`,
+    );
+  }
+  throw new Error(`${operation} ${response.status}${detail ? `: ${detail}` : ""}`);
 }
 
 export interface CausalPath {
@@ -151,7 +175,7 @@ export async function postQuery(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   }, 120000);
-  if (!r.ok) throw new Error(`Query ${r.status}`);
+  if (!r.ok) await throwApiError("Query", r);
   return r.json();
 }
 
@@ -159,7 +183,7 @@ export async function getStats(scope: FilingScope = "all"): Promise<GraphStats> 
   const p = new URLSearchParams();
   applyScope(p, scope);
   const r = await fetchWithTimeout(`${B}/graph/statistics?${p}`);
-  if (!r.ok) throw new Error(`Stats ${r.status}`);
+  if (!r.ok) await throwApiError("Stats", r);
   return r.json();
 }
 
@@ -173,7 +197,7 @@ export async function getSubgraph(
   p.set("limit", String(limit));
   applyScope(p, scope);
   const r = await fetchWithTimeout(`${B}/graph/subgraph?${p}`);
-  if (!r.ok) throw new Error(`Subgraph ${r.status}`);
+  if (!r.ok) await throwApiError("Subgraph", r);
   return r.json();
 }
 
@@ -185,7 +209,7 @@ export async function getEvidence(
   const p = new URLSearchParams({ limit: String(limit) });
   applyScope(p, scope);
   const r = await fetchWithTimeout(`${B}/evidence/${encodeURIComponent(entityId)}?${p}`);
-  if (!r.ok) throw new Error(`Evidence ${r.status}`);
+  if (!r.ok) await throwApiError("Evidence", r);
   return r.json();
 }
 

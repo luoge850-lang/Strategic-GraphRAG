@@ -81,6 +81,33 @@ FINANCIAL_METRICS_MAP = {
     "market value": "MARKET_VALUE",
     "stock price": "MARKET_VALUE",
     "market cap": "MARKET_VALUE",
+    # Filing-table metrics are part of the active FinancialMetric registry and
+    # must be addressable by natural-language and canonical-token queries.
+    "cash and cash equivalents": "CASH_AND_CASH_EQUIVALENTS",
+    "cash_and_cash_equivalents": "CASH_AND_CASH_EQUIVALENTS",
+    "accounts receivable": "ACCOUNTS_RECEIVABLE",
+    "accounts_receivable": "ACCOUNTS_RECEIVABLE",
+    "marketable securities": "MARKETABLE_SECURITIES",
+    "marketable_securities": "MARKETABLE_SECURITIES",
+    "inventories": "INVENTORIES",
+    "total current assets": "TOTAL_CURRENT_ASSETS",
+    "total_current_assets": "TOTAL_CURRENT_ASSETS",
+    "total assets": "TOTAL_ASSETS",
+    "total_assets": "TOTAL_ASSETS",
+    "total current liabilities": "TOTAL_CURRENT_LIABILITIES",
+    "total_current_liabilities": "TOTAL_CURRENT_LIABILITIES",
+    "total liabilities": "TOTAL_LIABILITIES",
+    "total_liabilities": "TOTAL_LIABILITIES",
+    "total shareholders equity": "TOTAL_SHAREHOLDERS_EQUITY",
+    "total_shareholders_equity": "TOTAL_SHAREHOLDERS_EQUITY",
+    "gross profit": "GROSS_PROFIT",
+    "gross_profit": "GROSS_PROFIT",
+    "operating income": "OPERATING_INCOME",
+    "operating_income": "OPERATING_INCOME",
+    "pretax income": "PRETAX_INCOME",
+    "pretax_income": "PRETAX_INCOME",
+    "income tax expense": "INCOME_TAX_EXPENSE",
+    "income_tax_expense": "INCOME_TAX_EXPENSE",
 }
 
 # Analysis type detection

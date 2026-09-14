@@ -1,0 +1,55 @@
+Table of Contents
+GPUs, which could negatively impact retail prices for our GPUs and reduce demand for our new GPUs. In general, our new products or previously sold products
+may be resold online or on the unauthorized “gray market,” which also makes demand forecasting difficult. Gray market products and reseller marketplaces
+compete with our new products and distribution channels.
+Additionally, we depend on developers, customers and other third parties to build, enhance, and maintain accelerated computing applications that leverage our
+platforms. We also rely on third-party content providers and publishers to make their content available on our platforms, such as GeForce NOW. Failure by
+developers, customers, and other third parties to build, enhance, and maintain applications that leverage our platforms, or failure by third-party content providers
+or publishers to make their content available on reasonable terms or at all for use by our customers or end users on our platforms, could adversely affect
+customer demand.
+Dependency on third-party suppliers and their technology to manufacture, assemble, test, or package our products reduces our control over product
+quantity and quality, manufacturing yields, and product delivery schedules and could harm our business.
+We depend on foundries to manufacture our semiconductor wafers using their fabrication equipment and techniques. We do not assemble, test, or package our
+products, but instead contract with independent subcontractors. These subcontractors assist with procuring components used in our systems, boards, and
+products. We face several risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain,
+negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial
+results, including:
+•
+lack of guaranteed supply of wafer, component and capacity or decommitment and potential higher wafer and component prices, from incorrectly
+estimating demand and failing to place orders with our suppliers with sufficient quantities or in a timely manner;
+•
+failure by our foundries or contract manufacturers to procure raw materials or provide adequate levels of manufacturing or test capacity for our
+products;
+•
+failure by our foundries to develop, obtain or successfully implement high quality process technologies, including transitions to smaller geometry
+process technologies such as advanced process node technologies and memory designs needed to manufacture our products;
+•
+failure by our suppliers to comply with our policies and expectations and emerging regulatory requirements;
+•
+limited number and geographic concentration of global suppliers, foundries, contract manufacturers, assembly and test providers and memory
+manufacturers;
+•
+loss of a supplier and additional expense and/or production delays as a result of qualifying a new foundry or subcontractor and commencing volume
+production or testing in the event of a loss, addition or change of a supplier;
+•
+lack of direct control over product quantity, quality and delivery schedules;
+•
+suppliers or their suppliers failing to supply high quality products and/or making changes to their products without our qualification;
+•
+delays in product shipments, shortages, a decrease in product quality and/or higher expenses in the event our subcontractors or foundries prioritize our
+competitors’ or other customers’ orders over ours;
+•
+requirements to place orders that are not cancellable upon changes in demand or requirements to prepay for supply in advance;
+•
+low manufacturing yields resulting from a failure in our product design or a foundry’s proprietary process technology; and
+•
+disruptions in manufacturing, assembly and other processes due to closures related to heat waves, earthquakes, fires, or other natural disasters and
+electricity conservation efforts.
+Defects in our products have caused and could cause us to incur significant expenses to remediate, which can damage our reputation and cause us
+to lose market share.
+Our hardware and software product and service offerings are complex. They have in the past and may in the future contain defects or security vulnerabilities or
+experience failures or unsatisfactory performance due to any number of issues in design, fabrication, packaging, materials, bugs and/or use within a system.
+These risks may increase as our products are introduced into new devices, markets, technologies and applications or as new versions are released. These risks
+further increase when we rely on partners to supply and manufacture components that are used in our products, as these arrangements reduce our direct control
+over production. AI software products we or our partners offer rely on
+18

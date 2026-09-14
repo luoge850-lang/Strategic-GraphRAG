@@ -1,0 +1,45 @@
+Table of Contents
+the activities of U.S. persons, trade and economic sanctions, decrees, quotas or other trade barriers and restrictions could affect our ability to ship products,
+provide services to our customers and employees, do business without an export license with entities on the U.S. Department of Commerce’s U.S. Entity List or
+other USG restricted parties lists (which is expected to change from time to time), and generally fulfill our contractual obligations and have a material adverse
+effect on our business. If we were ever found to have violated export control laws or sanctions of the U.S. or similar applicable non-U.S. laws, even if the
+violation occurred without our knowledge, we may be subject to various penalties available under the laws, any of which could have a material and adverse
+impact on our business, operating results and financial condition.
+For example, in response to the war in Ukraine, the United States and other jurisdictions imposed economic sanctions and export control measures which
+blocked the passage of our products, services and support into Russia, Belarus, and certain regions of Ukraine. In fiscal year 2023, we stopped direct sales to
+Russia and closed business operations in Russia. Concurrently, the war in Ukraine has impacted sales in EMEA and may continue to do so in the future.
+The increasing focus on the risks and strategic importance of AI technologies has resulted in regulatory restrictions that target products and services capable of
+enabling or facilitating AI and may in the future result in additional restrictions impacting some or all of our product and service offerings.
+Concerns regarding third-party use of AI for purposes contrary to local governmental interests, including concerns relating to the misuse of AI applications,
+models, and solutions, has resulted in and could in the future result in unilateral or multilateral restrictions on products that can be used for training, modifying,
+tuning, and deploying LLMs and other AI applications. Such restrictions have limited and could in the future limit the ability of downstream customers and users
+worldwide to acquire, deploy and use systems that include our products, software, and services, and negatively impact our business and financial results.
+Such restrictions could include additional unilateral or multilateral export controls on certain products or technology, including but not limited to AI technologies.
+As geopolitical tensions have increased, semiconductors associated with AI, including GPUs and related products, are increasingly the focus of export control
+restrictions proposed by stakeholders in the U.S. and its allies. The United States has imposed unilateral worldwide controls restricting GPUs and associated
+products, and it is likely that additional unilateral or multilateral controls will be adopted. Such controls have been and may again be very broad in scope and
+application, prohibit us from exporting our products to any or all customers in one or more markets, including but not limited to China and over 150 countries
+designated “Tier 2” by the January 2025 AI Diffusion IFR, and could negatively impact our manufacturing, testing and warehousing locations and options, or
+could impose other conditions that limit our ability to serve demand abroad and could negatively and materially impact our business, revenue and financial
+results. Export controls targeting GPUs and semiconductors associated with AI, which have been imposed and are increasingly likely to be further tightened,
+would further restrict our ability to export our technology, products, or services even though competitors may not be subject to similar restrictions, creating a
+competitive disadvantage for us and negatively impacting our business and financial results. Export controls targeting GPUs and semiconductors associated
+with AI have subjected and may in the future subject downstream users of our products to additional restrictions on the use, resale, repair, or transfer of our
+products, negatively impacting our business and financial results. Controls could negatively impact our cost and/or ability to provide services such as NVIDIA AI
+cloud services and could impact the cost and/or ability for our CSPs and customers to provide services to their end customers, even outside China.
+Export controls could disrupt our supply chain and distribution channels, negatively impacting our ability to serve demand, including in markets outside China
+and for our gaming products. The possibility of additional export controls has negatively impacted and may in the future negatively impact demand for our
+products, benefiting competitors that offer alternatives less likely to be restricted by further controls. Repeated changes in the export control rules are likely to
+impose compliance burdens on our business and our customers, negatively and materially impacting our business.
+Increasing use of economic sanctions and export controls has impacted and may in the future impact demand for our products or services, negatively impacting
+our business and financial results. Reduced demand due to export controls could also lead to excess inventory or cause us to incur related supply charges.
+Additional unilateral or multilateral controls are also likely to include deemed export control limitations that negatively impact the ability of our research and
+development teams to execute our roadmap or other objectives in a timely manner. Additional export restrictions may not only impact our ability to serve
+overseas markets, but also provoke responses from foreign governments, including China, that negatively impact our supply chain or our ability to provide our
+products and services to customers in all markets worldwide, which could also substantially reduce our revenue. Regulators in China have inquired about our
+sales and efforts to supply the China market and our fulfillment of the commitments we entered at the close of our Mellanox acquisition. For example, regulators
+in China are investigating whether complying with applicable U.S. export controls discriminates unfairly against customers in the China market. If regulators
+conclude that we have failed to fulfill such commitments or we have violated any applicable law in China, we could be subject to financial penalties, restrictions
+on our ability to conduct our business, restrictions regarding our networking products and services, or otherwise impact our operations in China, any of which
+could have a material and adverse impact on our business, operating results and financial condition.
+26

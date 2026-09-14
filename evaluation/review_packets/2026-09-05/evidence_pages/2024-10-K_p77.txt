@@ -1,0 +1,75 @@
+Table of Contents
+NVIDIA Corporation and Subsidiaries
+Notes to the Consolidated Financial Statements
+(Continued)
+A reconciliation of gross unrecognized tax benefits is as follows:
+ 
+Jan 28, 2024
+Jan 29, 2023
+Jan 30, 2022
+ 
+(In millions)
+Balance at beginning of period
+$
+1,238 
+$
+1,013 
+$
+776 
+Increases in tax positions for current year
+616 
+268 
+246 
+Increases in tax positions for prior years
+87 
+1 
+14 
+Decreases in tax positions for prior years
+(148)
+(15)
+(4)
+Settlements
+(104)
+(9)
+(8)
+Lapse in statute of limitations
+(19)
+(20)
+(11)
+Balance at end of period
+$
+1,670 
+$
+1,238 
+$
+1,013 
+Included in the balance of unrecognized tax benefits as of January 28, 2024 are $1.0 billion of tax benefits that would affect our effective tax rate if recognized.
+We classify an unrecognized tax benefit as a current liability, or amount refundable, to the extent that we anticipate payment or receipt of cash for income taxes
+within one year. The amount is classified as a long-term liability, or reduction of long-term amount refundable, if we anticipate payment or receipt of cash for
+income taxes during a period beyond a year.
+We include interest and penalties related to unrecognized tax benefits as a component of income tax expense. We recognized net interest and penalties related
+to unrecognized tax benefits in the income tax expense line of our consolidated statements of income of $42 million, $33 million, and $14 million during fiscal
+years 2024, 2023 and 2022, respectively. As of January 28, 2024 and January 29, 2023, we have accrued $140 million and $95 million, respectively, for the
+payment of interest and penalties related to unrecognized tax benefits, which is not included as a component of our gross unrecognized tax benefits.
+While we believe that we have adequately provided for all tax positions, amounts asserted by tax authorities could be greater or less than our accrued position.
+Accordingly, our provisions on federal, state and foreign tax-related matters to be recorded in the future may change as revised estimates are made or the
+underlying matters are settled or otherwise resolved. As of January 28, 2024, we have not identified any positions for which it is reasonably possible that the total
+amounts of unrecognized tax benefits will significantly increase or decrease within the next twelve months.
+We are subject to taxation by taxing authorities both in the United States and other countries. As of January 28, 2024, the significant tax jurisdictions that may be
+subject to examination include the United States for fiscal years after 2020, as well as China, Germany, Hong Kong, India, Israel, Taiwan, and the United
+Kingdom for fiscal years 2005 through 2023. As of January 28, 2024, the significant tax jurisdictions for which we are currently under examination include
+Germany, India, Israel, and Taiwan for fiscal years 2005 through 2023.
+Note 15 - Shareholders’ Equity
+Capital Return Program
+In August 2023, our Board of Directors approved an increase to our share repurchase program of an additional $25.0 billion, without expiration. During fiscal
+year 2024, we repurchased 21 million shares of our common stock for $9.7 billion. As of January 28, 2024, we were authorized, subject to certain specifications,
+to repurchase additional shares of our common stock up to $22.5 billion. From January 29, 2024 through February 16, 2024, we repurchased 2.8 million shares
+for $1.9 billion pursuant to a Rule 10b5-1 trading plan. Our share repurchase program aims to offset dilution from shares issued to employees. We may pursue
+additional share repurchases as we weigh market factors and other investment opportunities.
+During fiscal years 2024, 2023, and 2022, we paid $395 million, $398 million, and $399 million in cash dividends to our shareholders, respectively. Our cash
+dividend program and the payment of future cash dividends under that program are subject to our Board of Directors' continuing determination that the dividend
+program and the declaration of dividends thereunder are in the best interests of our shareholders.
+In fiscal year 2022, we retired our existing 349 million treasury shares. These shares assumed the status of authorized and unissued shares upon retirement.
+The excess of repurchase price over par value was allocated between additional paid-in capital and retained earnings, resulting in a reduction in additional paid-
+in capital by $20 million and retained earnings by $12.0 billion. Any future repurchased shares will assume the status of authorized and unissued shares.
+77

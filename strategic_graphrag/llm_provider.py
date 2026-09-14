@@ -124,6 +124,9 @@ class LLMProvider:
         self._local_tokenizer = None
         self.last_success_provider = None
         self.last_success_model = None
+        # Counts actual remote transport attempts.  Replay callers bypass
+        # chat() entirely, so this remains unchanged during cache replay.
+        self.network_calls = 0
 
         # Ollama and local are keyless — always "available"
         self._available = (self._type in ("ollama", "local_transformers")) or \
@@ -219,6 +222,9 @@ class LLMProvider:
         """Send a chat completion. Returns text or None."""
         if not self.available:
             return None
+
+        if self._type in {"gemini_rest", "groq_native", "openai_compat"}:
+            self.network_calls = getattr(self, "network_calls", 0) + 1
 
         if self._type == "gemini_rest":
             return self._chat_gemini(prompt, system_prompt, model, temperature, max_tokens, json_mode)
@@ -459,7 +465,9 @@ class LLMProvider:
 
     def switch_provider(self, provider: str, model: str = None):
         """Switch to a different provider at runtime."""
+        network_calls = getattr(self, "network_calls", 0)
         self.__init__(provider=provider, model=model)
+        self.network_calls = network_calls
         return self
 
     # ── Auto-Fallback ──

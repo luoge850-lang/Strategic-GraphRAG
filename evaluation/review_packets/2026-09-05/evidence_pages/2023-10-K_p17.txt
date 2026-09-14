@@ -1,0 +1,50 @@
+Table of Contents
+•
+Our operating results may be adversely impacted by additional tax liabilities, higher than expected tax rates and other tax-related
+factors.
+•
+Our business is exposed to the risks associated with litigation, investigations and regulatory proceedings.
+•
+Our indebtedness could adversely affect our financial position and cash flows from operations and prevent us from implementing our
+strategy or fulfilling our contractual obligations.
+•
+Delaware law, provisions in our governing documents, and our agreement with Microsoft could delay or prevent a change in control.
+Risk Factors
+Risks Related to Our Industry and Markets
+Failure to meet the evolving needs of our industry and markets may adversely impact our financial results.
+Our accelerated computing platforms experience rapid changes in technology, customer requirements, competitive products, and industry
+standards.
+Our success depends on our ability to:
+•
+timely identify industry changes, adapt our strategies, and develop new or enhance existing products and technologies that meet the
+evolving needs of these markets, including due to unexpected changes in industry standards or disruptive technological innovation that
+could render our products incompatible with products developed by other companies;
+•
+develop new products and technologies through investments in research and development;
+•
+launch new offerings with new business models including standalone software, cloud solutions, and software-, infrastructure-, or
+platform-as-a-service solutions;
+•
+expand the ecosystem for our products and technologies;
+•
+meet evolving and prevailing customer and industry safety and compliance standards;
+•
+manage product and software lifecycles to maintain customer and end user satisfaction;
+•
+develop, acquire, and maintain the internal and external infrastructure needed to scale our business, including our acquisitions
+integrations, customer support, e-commerce, IP licensing capabilities and cloud service capacity; and
+•
+complete technical, financial, compliance, sales and marketing investments for some of the above activities.
+We invest in research and development in markets where we have a limited operating history, which may not produce meaningful revenue for
+several years, if at all. If we fail to develop or monetize new products and technologies, or if they do not become widely adopted, our financial
+results could be adversely affected. Obtaining design wins may involve a lengthy process and depend on our ability to anticipate and provide
+features and functionality that customers will demand. They also do not guarantee revenue. Failure to obtain a design win may prevent us from
+obtaining future design wins in subsequent generations. We cannot ensure that the products and technologies we bring to market will provide
+value to our customers and partners. If we fail any of these key success criteria, our financial results may be harmed.
+We will offer enterprise customers NVIDIA AI cloud services directly and through our network of partners. Examples of these services include
+NVIDIA DGX Cloud, which is cloud-based infrastructure and software for training AI models, and customizable pretrained AI models. NVIDIA has
+partnered with leading cloud service providers to host these services in their data centers, and we entered into multi-year cloud service
+agreements in the second half of fiscal year 2023 to support these offerings and our research and development activities. NVIDIA AI cloud
+services may not be successful and will take time, resources and investment. We also offer or plan to offer standalone software solutions for AI
+including NVIDIA AI Enterprise, NVIDIA Omniverse, NVIDIA DRIVE for automotive, and several other software solutions. These new
+17

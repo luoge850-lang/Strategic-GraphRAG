@@ -990,7 +990,10 @@ CRITICAL STYLE RULES:
         ) if router_decision.use_vector else []
         all_anchors = list(dict.fromkeys(query_entities + lexical_anchors + vector_anchors + llm_anchors))
         target_metric = structured_query.target_metric
-        metric_only = bool(target_metric) and not re.search(
+        explicit_chain_query = bool(
+            re.search(r"\b(?:through|two[- ]step|chain)\b", user_query, re.IGNORECASE)
+        )
+        metric_only = bool(target_metric) and not explicit_chain_query and not re.search(
             r"\b(affect|impact|cause|risk|control|constraint|exposure|supply chain|why|how)\b",
             user_query,
             re.IGNORECASE,
@@ -1050,6 +1053,38 @@ CRITICAL STYLE RULES:
             source_filing=source_filing,
             max_paths=path_budget,
         )
+        if explicit_chain_query and candidate_paths:
+            # A question that names a start, bridge, and end entity is asking
+            # for that concrete chain. The generic path finder accepts any
+            # anchor endpoint, so constrain only this explicit chain form to
+            # paths containing all named non-company entity tokens. If the
+            # graph cannot satisfy the constraint, keep the original results
+            # so the normal insufficiency/negative-evidence guard can report it.
+            chain_tokens = [
+                token
+                for token in explicit_entity_tokens
+                if token not in {"NVIDIA", "NVIDIA_CORPORATION"}
+            ]
+
+            def _node_matches_token(node: Any, token: str) -> bool:
+                node_key = re.sub(r"[^A-Z0-9]", "", str(node).upper())
+                token_key = re.sub(r"[^A-Z0-9]", "", token.upper())
+                return bool(
+                    node_key
+                    and token_key
+                    and (token_key in node_key or node_key in token_key)
+                )
+
+            constrained_paths = [
+                path
+                for path in candidate_paths
+                if all(
+                    any(_node_matches_token(node, token) for node in path.nodes)
+                    for token in chain_tokens
+                )
+            ]
+            if constrained_paths:
+                candidate_paths = constrained_paths
         if target_metric and temporal_context["require_multi_year"]:
             candidate_paths.extend(self.path_finder.find_metric_disclosures(
                 target_metric,
@@ -1057,10 +1092,38 @@ CRITICAL STYLE RULES:
                 year_end=effective_year_end,
                 source_filing=source_filing,
             ))
+        metric_trend_query = bool(
+            target_metric
+            and temporal_context["require_multi_year"]
+            and not explicit_chain_query
+            and not re.search(
+                r"\b(affect|impact|cause|risk|control|constraint|exposure|why|supply chain)\b",
+                user_query,
+                re.IGNORECASE,
+            )
+        )
+        if metric_trend_query and candidate_paths:
+            # Cross-filing metric comparisons need accounting disclosure paths,
+            # not unrelated risk paths that happen to mention the same metric.
+            # Vector anchors are intentionally still used for discovery, but
+            # they cannot displace the explicitly requested REPORTS_METRIC
+            # evidence before temporal year selection.
+            reported_metric_paths = [
+                path
+                for path in candidate_paths
+                if "REPORTS_METRIC" in path.relationships
+                and any(
+                    str(node).lower().replace("_", " ")
+                    == str(target_metric).lower().replace("_", " ")
+                    for node in path.nodes
+                )
+            ]
+            if reported_metric_paths:
+                candidate_paths = reported_metric_paths
         # For an explicitly identified metric, prefer paths that actually
         # contain that metric. Generic Company anchors otherwise dominate the
         # bounded candidate pool and can displace an exact REPORTS_METRIC edge.
-        if target_metric:
+        if target_metric and not explicit_chain_query:
             target_key = target_metric.lower().replace("_", " ")
             exact_metric_paths = [
                 path for path in candidate_paths

@@ -1,0 +1,69 @@
+Table of Contents
+The fiscal year 2023 effective tax rate includes the mandatory capitalization and amortization of research and development expenses beginning
+in fiscal year 2023, which resulted in a greater FDII deduction and significantly increased current taxes, with a corresponding deferred tax benefit
+at the relevant statutory tax rate.
+The decrease in our effective tax rate in fiscal year 2023 as compared to fiscal year 2022 was primarily due to increased tax benefits of the FDII
+deduction, stock-based compensation, and the U.S. federal research tax credit, relative to lower profitability. This is partially offset by the impact
+of an increase in the proportion of earnings subject to U.S. tax in fiscal year 2023 and the one-time benefits of the domestication of a foreign
+subsidiary in fiscal year 2022, or the Domestication.
+Our effective tax rate for fiscal year 2023 was lower than the U.S. federal statutory rate of 21% due primarily to tax benefits from the FDII
+deduction, tax benefits related to stock-based compensation and the U.S. federal research tax credit.
+Our effective tax rate for fiscal year 2022 was lower than the U.S. federal statutory rate of 21% due to tax benefits from the FDII deduction,
+income earned in jurisdictions that are subject to taxes lower than the U.S. federal statutory tax rate, excess tax benefits related to stock-based
+compensation, recognition of U.S. federal research tax credit and the one-time benefits of the Domestication.
+Refer to Note 14 of the Notes to the Consolidated Financial Statements in Part IV, Item 15 of this Annual Report on Form 10-K for additional
+information.
+Liquidity and Capital Resources
+ 
+January 29,
+2023
+January 30,
+2022
+ 
+(In millions)
+Cash and cash equivalents
+$
+3,389 
+$
+1,990 
+Marketable securities
+9,907 
+19,218 
+Cash, cash equivalents, and marketable securities
+$
+13,296 
+$
+21,208 
+ 
+Year Ended
+January 29,
+2023
+January 30,
+2022
+ 
+(In millions)
+Net cash provided by operating activities
+$
+5,641 
+$
+9,108 
+Net cash provided by (used in) investing activities
+$
+7,375 
+$
+(9,830)
+Net cash provided by (used in) financing activities
+$
+(11,617)
+$
+1,865 
+As of January 29, 2023, we had $13.30 billion in cash, cash equivalents and marketable securities, a decrease of $7.91 billion from the end of
+fiscal year 2022. Our investment policy requires the purchase of highly rated fixed income securities, the diversification of investment types and
+credit exposures, and certain maturity limits on our portfolio.
+Cash provided by operating activities decreased in fiscal year 2023 compared to fiscal year 2022, primarily due to a decrease in net income
+adjusted for certain non-cash items, such as the Arm acquisition termination cost of $1.35 billion, and higher tax payments, partially offset by
+changes in working capital. Changes in working capital were primarily driven by lower accounts receivable due to strong collections partially
+offset by timing of supplier payments and inventory deliveries.
+Cash provided by investing activities increased in fiscal year 2023 compared to fiscal year 2022, primarily driven by lower purchases and higher
+sales and maturities of marketable securities, offset by higher capital expenditures.
+44

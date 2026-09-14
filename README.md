@@ -5,11 +5,13 @@ filings. The project turns SEC PDFs into a strict Neo4j evidence graph,
 combines graph traversal with filing-scoped vector retrieval, and returns
 structured answers whose citations can be joined back to verbatim PDF text.
 
-> Research status as of 2026-09-01: the engineering baseline is usable, and
-> the 30-row 2025 post-repair AI-assisted working set is labeled. The historical
-> `post_repair_v2` file is a prefilled candidate audit, not independent human
-> gold. Recall/F1 and the retrieval/answer benchmark remain blocked until a
-> blind human relation inventory and a human-reviewed Golden QA set are available.
+> Research status as of 2026-09-14: the engineering baseline is usable, the
+> strict graph audit passes, and an automatic 37-question Silver retrieval
+> regression is available for all four modes. This is not human gold. The
+> fail-closed readiness audit remains `NOT_READY` because independent human
+> Golden QA is incomplete and a repeated external-LLM extraction produced 126
+> versus 131 accepted claims at temperature 0.0; neither issue is hidden behind
+> a fabricated score.
 
 ![Strategic-GraphRAG dashboard](docs/demo-dashboard-v3.png)
 
@@ -19,19 +21,23 @@ structured answers whose citations can be joined back to verbatim PDF text.
 |---|---:|---:|---:|---:|
 | 2023 10-K | 169 | 126 | 44 | 678 |
 | 2024 10-K | 96 | 129 | 41 | 425 |
-| 2025 10-K | 130 | 128 | 46 | 583 |
-| **Total** | **395** | **383** | **131 filing-page pairs** | **1,686** |
+| 2025 10-K | 130 | 126 | 43 | 583 |
+| **Total** | **395** | **381** | **128 filing-page pairs** | **1,686** |
 
-The active graph has 383 strict business edges, each linked to a `VERBATIM`
+The active graph has 381 strict business edges, each linked to a `VERBATIM`
 EvidenceClaim with filing, page, section, chunk, source entity, target entity,
-and relation metadata. All 383 claims use content-derived `claim_v2_*` IDs.
-The post-migration audit found 49 valid same-filing two-hop paths and zero
-invalid strict paths.
+and relation metadata. All 381 active claims use content-derived `claim_v2_*` IDs.
+The post-rebuild strict-chain audit found 9 valid same-filing two-hop paths and
+zero invalid strict paths.
 
 The historical `extraction_sample_2025_post_repair_v2.jsonl` is a prefilled
-candidate audit. The current `extraction_sample_2025_post_repair_human_v1.jsonl`
-contains 30 rows labeled with GPT-5.6/Sol assistance: source entity 29/30,
-target entity 29/30, relation 22/30, and evidence support 22/30. The relation
+candidate audit. The latest structural annotation audit reports source entity
+29/30, target entity 29/30, relation 27/30, and evidence support 27/30 when
+`uncertain` is counted as incorrect. Two sampled IDs no longer exist after the
+2025 replacement and must be remapped before this sample is used as a current
+benchmark. The separate
+`extraction_sample_2025_post_repair_human_v1.jsonl` contains 30 rows labeled
+with GPT-5.6/Sol assistance: relation 22/30 and evidence support 22/30. The relation
 and evidence fields each contain 7 `uncertain` labels and 1 explicit `false`
 label. These are precision-like sample estimates from a different, 2025-only
 sample than the original 60-row three-filing baseline; they are not Recall/F1
@@ -39,12 +45,15 @@ and should not be reported as a statistically significant before/after result.
 Neither file is an independent human Golden QA set and neither should be
 reported as one.
 The machine-readable readiness audit is
-`reports/2026-08-28_research_readiness.json` and is intentionally fail-closed.
-The historical 30-row machine-readable annotation audit is
+`reports/research_readiness_current.json` and is intentionally fail-closed.
+The latest 30-row machine-readable annotation audit is
+`reports/extraction_annotation_audit_2025_post_rebuild_2026-09-03.json`; the
+historical audit is
 `reports/extraction_annotation_audit_2025_post_repair_v2.json`; the newer
 `human_v1` file is an AI-assisted working set rather than a human gold set. The older
-`extraction_quality_2025_post_repair_v2.json` file is historical and must not
-be cited as the current result.
+`extraction_quality_2025_post_repair_v2.json` file is historical, retained under
+`archive/cleanup-2026-09-14/historical-reports/`, and must not be cited as the
+current result.
 
 Legacy storage is now physically isolated: the post-clean check found zero
 out-of-scope business edges, zero old evidence nodes, and zero old Chroma
@@ -79,14 +88,11 @@ Key implementation decisions:
   and the exact supporting `EvidenceClaim`. Percentage-of-revenue denominator
   rows are excluded from amount retrieval; genuine percentage rows are mapped
   to margin/ratio metrics.
-- All 383 strict claims are represented as `TemporalFact` versions using
-  separate valid-time and recorded-time fields. The current
-  `bitemporal_fact_v2` migration marks 124 versions `ACTIVE_CURRENT` and 259
-  `SUPERSEDED_DISCLOSURE`; supersession means a later disclosure version exists,
-  not that the earlier real-world assertion became false.
-- The 99 `TemporalChange` nodes now link fact versions and supporting claims:
-  58 continued, 6 recurred, 19 metric increases, 3 metric decreases, and 13
-  non-comparable metric changes. The model never infers resolution from silence.
+- The graph also contains bitemporal and temporal-change models. Because the
+  2025 filing was subsequently replaced with a stricter 126-claim set, these
+  derived artifacts must be regenerated before temporal counts or temporal
+  accuracy are reported. The post-rebuild snapshot explicitly records this
+  dependency instead of treating the older 383-fact materialization as current.
 - `QueryRouter` exposes four reproducible modes: `vector`, `graph`, `hybrid`,
   and `hybrid_temporal`. Hybrid modes use vector-to-graph anchor expansion and
   PPR; Hybrid+Temporal additionally scores bitemporal fact matches.
@@ -146,6 +152,12 @@ After building the frontend, the repeatable Windows launcher is:
 The launcher waits for `/health/live`; `/health/ready` can still report
 `degraded` when Neo4j or an external LLM is unavailable.
 
+If `/health/live` is `alive` but `/health/ready` is `503`, the frontend process
+is running and the missing graph is an external dependency problem. Re-copy the
+current Neo4j Aura connection URI and database name from the Aura Connect panel
+into `.env`; do not infer a new URI from an old database ID. Then run
+`.\scripts\start_demo.ps1 -Restart` and reload the page.
+
 ## Reproducibility and checks
 
 ```powershell
@@ -167,7 +179,7 @@ cd frontend
 npm run build
 ```
 
-The current release passed 48 Python tests, including 43 focused Python
+The current working tree passed 84 Python tests, including focused Python
 contracts plus reproducibility checks, Python compilation,
 frontend TypeScript/Vite production build, Neo4j/Chroma post-clean checks, stable
 ID consistency, strict path validation, API health, and browser rendering. The
@@ -186,7 +198,7 @@ observations, not benchmark guarantees.
 
 This is a strong engineering candidate, not yet a completed research result:
 
-- Automated provenance checks passed for all 383 claims: 100% declared-page
+- Automated provenance checks passed for all 381 active claims: 100% declared-page
   verbatim match, 100% required provenance completeness, one linked business
   edge per claim, and zero exact duplicates. The legacy 60-claim stratified
   sample has status fields marked `LABELED`, but lacks verifiable human metadata
@@ -200,11 +212,13 @@ This is a strong engineering candidate, not yet a completed research result:
   The duplicate-triple audit found 8 repeated logical triples across 21 rows;
   7 groups have different evidence, 1 group repeats the same evidence, and
   duplicate-triple label agreement is 0.75. See
-  `reports/extraction_annotation_audit_v1.json` for the machine-readable audit.
+  `archive/cleanup-2026-09-14/historical-reports/extraction_annotation_audit_v1.json`
+  for the historical machine-readable audit.
 - The existing 38-item auto-generated QA file is stale after the evidence-ID
   migration and is not a valid Golden QA benchmark. There is no independent
-  human Golden QA in the current checkout; the current evaluation artifact is
-  only an AI-assisted working set (`human_v1`).
+  human Golden QA in the current checkout; the current extraction-annotation
+  artifact is only an AI-assisted working set (`human_v1`). The separate
+  retrieval artifact is an auto-generated Silver regression, not human gold.
 - A real DeepSeek Flash Hybrid query and the corresponding browser flow were
   tested across all three filings. This is a smoke test, not a Golden QA score.
 - Filing disclosures support attributed relationships; they do not prove
@@ -226,9 +240,21 @@ This is a strong engineering candidate, not yet a completed research result:
   timestamp because the historical database-write time is unknown. Narrative
   intensified/mitigated/resolved labels and an independently labeled temporal
   benchmark remain open.
-- The four retrieval modes are implemented and smoke-tested, but they are not
-  yet accuracy baselines: a labeled QA/evidence set is still required for
-  Recall@K, Precision@K, faithfulness, answer relevance, and significance tests.
+- The four retrieval modes are implemented and evaluated on the automatic
+  Silver set in `reports/retrieval_benchmark_silver_2026-09-14.json`. On its
+  common page-level unit and 32 answerable questions, the observed macro
+  Recall@5/MRR are Vector 0.2188/0.0828, Graph 0.7009/0.7083, Hybrid
+  0.5134/0.4740, and Hybrid Temporal 0.5446/0.5000. Graph is higher than
+  Vector on this self-generated Silver regression, but this is not evidence
+  that GraphRAG is generally superior to Vector RAG: expected pages are
+  derived from the graph under test, so the benchmark has self-test bias and
+  no independent human Golden QA. Hybrid Temporal did not exceed Graph on this
+  snapshot; with only two temporal-metric questions, that does not establish
+  that the temporal module is ineffective. The report now includes
+  question-type strata, question-ID paired win/tie/loss counts, and descriptive
+  question-level bootstrap intervals. A human-reviewed QA/evidence set remains
+  required for paper-level Recall@K, Precision@K, faithfulness, answer
+  relevance, and significance tests.
 - API authentication is configurable but disabled in the local demo. It must be
   enabled with restricted CORS before public deployment.
 - DeepSeek Flash is an external processor. Production use needs documented data
@@ -239,26 +265,67 @@ See [the P0/P1 acceptance audit](reports/2026-08-14_p0_p1_acceptance.md) and the
 The current frozen baseline is documented in the
 [v3.1 release notes](reports/2026-08-17_v3.1_release_notes.md) and
 [v3.1 freeze manifest](reports/2026-08-17_v3.1_freeze_manifest.json).
-The v3.1 manifest is a historical freeze from 2026-08-17; the post-repair
-2025-only audit is a subsequent working state. The full evaluation contract is
+The v3.1 manifest is a historical freeze from 2026-08-17; the post-rebuild
+2025-only audit is a subsequent working state. The current graph snapshot is
+`reports/neo4j_snapshot_post_rebuild_derived_2026-09-05.json`, and the
+full evaluation contract is
 documented in [research_evaluation_protocol.md](docs/research_evaluation_protocol.md).
 The delivery cleanup and retained/deleted-file decisions are recorded in
 [delivery_cleanup_manifest.md](docs/delivery_cleanup_manifest.md).
+The graduation-project and application-material positioning is summarized in
+[graduation_application_brief.md](docs/graduation_application_brief.md).
 
 ## Next research milestones
 
-1. First create a blind human annotation set with a complete gold relation
-   inventory and an independent adjudication pass; only then report
+1. **Completed:** keep the automatic Silver benchmark as an engineering
+   regression and implement the versioned extraction response cache. The 2025
+   record/replay gate passed with 126 accepted claims in both runs, 170 unique
+   keys, 170 record network calls, and 0 replay network calls. This demonstrates
+   deterministic replay of the frozen response artifact only; it is not fresh
+   external-model repeatability, semantic correctness, or human gold.
+2. **Deferred:** create a blind human annotation set with a complete gold
+   relation inventory and an independent adjudication pass; only then report
    entity/relation precision, recall, F1, and error categories.
-2. Build a 30-50 question independently human-reviewed Golden QA set with stable evidence IDs and
-   unanswerable cases; report retrieval Recall@K, Precision@K, faithfulness,
-   answer relevance, abstention accuracy, and latency distributions.
-3. Extend observed numeric changes with independently labeled narrative states
+3. **Deferred:** build a 30-50 question independently human-reviewed Golden QA
+   set with stable evidence IDs and unanswerable cases; report retrieval
+   Recall@K, Precision@K, faithfulness, answer relevance, abstention accuracy,
+   and latency distributions.
+4. Extend observed numeric changes with independently labeled narrative states
    such as new, intensified, mitigated, and resolved; evaluate them separately.
-4. Evaluate the four implemented retrieval baselines, then add reranker and
+5. Run a targeted, human-reviewed temporal ablation: add cross-filing questions
+   with independently verified valid-time/recorded-time evidence, hold the
+   candidate budget fixed, compare Hybrid with Hybrid Temporal by temporal and
+   non-temporal strata, and report temporal-field/path-hit diagnostics. Refresh
+   derived temporal artifacts from the current graph and freeze/cache external
+   extraction responses before interpreting the result.
+6. Evaluate the four implemented retrieval baselines, then add reranker and
    evidence-guard ablations only after the main-model benchmark is stable.
-5. Containerize and deploy behind authentication, restricted CORS, observability,
+7. Containerize and deploy behind authentication, restricted CORS, observability,
    request timeouts, and cost controls.
+
+### 2025 extraction cache dry-run
+
+Use PowerShell environment variables for the cache mode and path; these commands
+do not modify `.env`:
+
+```powershell
+$env:LLM_RESPONSE_CACHE_PATH = "evaluation/cache/llm_extraction_v1.jsonl"
+$env:LLM_RESPONSE_CACHE_MODE = "record"
+python -m strategic_graphrag.pipeline.pipeline `
+  --pdf data/pdfs/2025-10-K.pdf --require_llm --dry_run `
+  --output_stats reports/rebuild_2025_cache_record_2026-09-14.json
+
+$env:LLM_RESPONSE_CACHE_MODE = "replay"
+python -m strategic_graphrag.pipeline.pipeline `
+  --pdf data/pdfs/2025-10-K.pdf --require_llm --dry_run `
+  --output_stats reports/rebuild_2025_cache_replay_2026-09-14.json
+```
+
+Reports record cache path, schema, mode, key count, hits/misses/writes, and
+network-call count. The cache is auditable JSONL and stores structured responses
+plus prompt digests, not a separate raw PDF prompt payload or API keys; its
+structured evidence fields remain available for deterministic replay. It is not
+a human Golden QA dataset.
 
 ## License and data
 

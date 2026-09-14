@@ -1,0 +1,43 @@
+Table of Contents
+Product, system security, and data protection breaches, as well as cyber-attacks, could disrupt our operations, reduce our expected
+revenue and increase our expenses, which could adversely affect our stock price and damage our reputation.
+Security breaches, computer malware, social-engineering attacks, denial-of-service attacks, software bugs, server malfunctions, software or
+hardware failures, loss of data or other information technology assets, and other cyber-attacks are increasingly sophisticated, making it more
+difficult to successfully detect, defend against them or implement adequate preventative measures.
+Cyber-attacks, including ransomware attacks by organized criminal threat actors, nation-states, and nation-state-supported actors, may become
+more prevalent and severe. Our ability to recover from ransomware attacks may be limited if our backups have been affected by the attack, or if
+restoring from backups is delayed or not feasible.
+Threat actors, sophisticated nation-states, and nation-state-supported actors now engage and are expected to continue to engage in cyber-
+attacks. Due to increasing geopolitical conflicts and during times of war or other major conflicts, we and the third parties upon which we rely may
+be vulnerable to a heightened risk of cyber-attacks that could materially disrupt our ability to provide services and products. Furthermore, we rely
+on products and services provided by third-party suppliers to operate certain critical business systems, including without limitation, cloud-based
+infrastructure, encryption and authentication technology, employee email, and other functions, which exposes us to supply-chain attacks or other
+business disruptions. We cannot guarantee that third parties and infrastructure in our supply chain or our partners’ supply chains have not been
+compromised or that they do not contain exploitable defects or bugs that could result in a breach of or disruption to our information technology
+systems, including our products and services, or the third-party information technology systems that support our services. Our ability to monitor
+these third parties’ information security practices is limited, and these may not have adequate information security measures in place. In
+addition, if one of our third-party suppliers suffers a security breach, our response may be limited or more difficult because we may not have
+direct access to their systems, logs and other information related to the security breach. Additionally, we are incorporated into the supply chain of
+a large number of entities worldwide and, as a result, if our products or services are compromised, a significant number of our customers and
+their data could be affected, which could result in potential liability and harm our business.
+To defend against cyber-attacks, we must continuously engineer more secure products and enhance security and reliability features, which is
+expected to result in increased expenses. We must also continue to develop our security measures, ensure our suppliers have appropriate
+security measures in place, and continue to meet the evolving security requirements of our customers, applicable industry standards, and
+government regulations. While we take steps to detect and remediate certain vulnerabilities that we have identified, we may not always be able
+to detect all vulnerabilities in our security controls, systems or software, including third-party software we have installed, as such threats and
+techniques change frequently and may not be detected until after a security incident has occurred. Further, we may experience delays in
+developing and deploying remedial measures designed to address identified vulnerabilities. These vulnerabilities could result in reputational and
+financial harm.
+We hold confidential and proprietary information, including information from partners and customers. Breaches of our security measures, along
+with reported or perceived vulnerabilities or unapproved dissemination of proprietary information or sensitive or confidential data about us or third
+parties could expose us and the parties affected to a risk of loss or misuse of this information, potentially resulting in litigation and subsequent
+liability, regulatory inquiries or actions, damage to our brand and reputation or other harm, including financial, to our business. For example, we
+hold propriety game source code from third-party partners in our GFN service. Breaches of our GFN security measures, which have happened in
+the past, could expose our partners to a risk of loss or misuse of this source code, damage both us and our partners, and expose NVIDIA to
+potential litigation and liability. If we or a third party we rely on experience a security incident, which has occurred in the past, or are perceived to
+have experienced a security incident, we may experience adverse consequences, including government enforcement actions, additional
+reporting requirements and/or oversight, restrictions on processing data, litigation, indemnification obligations, reputational harm, diversion of
+funds, financial loss, loss of data, material disruptions in our systems and operations, supply chain, and ability to produce, sell and distribute our
+goods and services, and other similar harms. Inability to fulfill orders, delayed sales, lower margins or lost customers as a result of these
+disruptions could adversely affect our financial results, stock price and reputation.
+23

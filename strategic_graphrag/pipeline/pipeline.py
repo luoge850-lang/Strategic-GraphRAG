@@ -34,8 +34,18 @@ from .section_detector import SectionDetector
 from .extractor import TripleExtractor
 from .ingestor import GraphIngestor
 from .financial_table_extractor import extract_financial_table_triples
+from ..llm_response_cache import LLMResponseCacheError
 
 logger = logging.getLogger("Pipeline")
+
+
+def _get_filter_rejection_counts(extractor) -> Dict[str, int]:
+    """Snapshot the latest filter diagnostics without changing old callers."""
+    getter = getattr(extractor, "get_filter_rejection_counts", None)
+    if not callable(getter):
+        return {}
+    counts = getter()
+    return dict(counts or {})
 
 
 # =============================================================================
@@ -67,10 +77,16 @@ class PipelineConfig:
     min_content_chars: int = 200
     llm_provider: Optional[str] = None
     model_name: Optional[str] = None
+    llm_cache_mode: Optional[str] = None
+    llm_cache_path: Optional[str] = None
     require_llm: bool = False
     allow_multiple_pdfs: bool = False
     replace_existing_filing: bool = False
     year_override: Optional[int] = None
+    # Extraction-only mode for repeatability and regression checks.  It must
+    # not connect to Neo4j or run post-processing, so a second extraction can
+    # be compared without changing the frozen graph.
+    dry_run: bool = False
 
 
 # =============================================================================
@@ -102,6 +118,8 @@ class KnowledgeGraphPipeline:
         self.extractor = TripleExtractor(
             model_name=self.config.model_name,
             provider=self.config.llm_provider,
+            cache_mode=self.config.llm_cache_mode,
+            cache_path=self.config.llm_cache_path,
         )
         self.ingestor = GraphIngestor()
         # Persist the provider-safe values that the runtime actually resolved,
@@ -120,6 +138,14 @@ class KnowledgeGraphPipeline:
 
         # Statistics
         self.stats: Dict = {}
+
+    def _ensure_commit_connection(self) -> None:
+        """Fail before any filing write when the pre-commit reconnect fails."""
+        if not self.ingestor.ensure_connection():
+            raise RuntimeError(
+                "Neo4j connection unavailable before filing commit; "
+                "existing filing was preserved."
+            )
 
     @staticmethod
     def _evidence_span(text: str, evidence: str) -> Tuple[Optional[int], Optional[int]]:
@@ -293,6 +319,7 @@ class KnowledgeGraphPipeline:
                     "llm_accepted_triples": 0,
                     "table_candidates": 0,
                     "table_strict_triples": 0,
+                    "filter_rejection_counts": {},
                 }
                 if selected and text_chars < self.config.min_content_chars:
                     record["parse_status"] = "below_min_content"
@@ -388,6 +415,7 @@ class KnowledgeGraphPipeline:
                 # Filter and canonicalize
                 page_triples = self.extractor.filter_triples(page_triples, text)
                 filtered_candidate_count = len(page_triples)
+                filter_rejection_counts = _get_filter_rejection_counts(self.extractor)
 
                 for triple in page_triples:
                     evidence_start, evidence_end = self._evidence_span(
@@ -476,6 +504,7 @@ class KnowledgeGraphPipeline:
                         1 for triple in unique_triples
                         if triple.get("extraction_method") == "TABLE_EXTRACTION"
                     ),
+                    "filter_rejection_counts": dict(filter_rejection_counts),
                     "exclusion_reason": None,
                 })
 
@@ -519,6 +548,7 @@ class KnowledgeGraphPipeline:
                         1 for triple in unique_triples
                         if triple.get("extraction_method") == "TABLE_EXTRACTION"
                     ),
+                    "filter_rejection_counts": dict(filter_rejection_counts),
                 })
 
                 all_triples.extend(unique_triples)
@@ -548,34 +578,45 @@ class KnowledgeGraphPipeline:
                     "replace the filing. Existing filing was preserved."
                 )
 
-        # Commit phase: only after the whole PDF is staged and, when enabled,
-        # the LLM quality gate has passed. Ingestion must also work in the
-        # deterministic rules/tables-only mode.
-        if self.config.replace_existing_filing:
-            self.ingestor.replace_filing(filename)
+        if self.config.dry_run:
+            logger.info(
+                "  DRY RUN: extraction completed; skipping Neo4j replacement, "
+                "ingestion, and post-processing."
+            )
+        else:
+            # Commit phase: only after the whole PDF is staged and, when
+            # enabled, the LLM quality gate has passed. Re-check the driver
+            # because a long extraction run can outlive Neo4j's routing
+            # connection. A failed reconnect must occur before any filing
+            # replacement or write.
+            self._ensure_commit_connection()
 
-        self.ingestor.create_document_node(
-            filename=filename,
-            doc_type="10-K" if "10-K" in filename else "10-Q",
-            fiscal_year=year,
-            total_pages=total_pages,
-            document_sha256=document_sha256,
-        )
-        for batch in pending_batches:
-            ingested = self.ingestor.ingest_batch(
-                triples=batch["triples"],
+            # Ingestion must also work in the deterministic rules/tables-only mode.
+            if self.config.replace_existing_filing:
+                self.ingestor.replace_filing(filename)
+
+            self.ingestor.create_document_node(
                 filename=filename,
-                pages=[batch["page"]] * len(batch["triples"]),
-                year=batch["year"],
-                sections=[batch["section"]] * len(batch["triples"]),
+                doc_type="10-K" if "10-K" in filename else "10-Q",
+                fiscal_year=year,
+                total_pages=total_pages,
                 document_sha256=document_sha256,
             )
-            total_ingested += ingested
-            if ingested > 0:
-                logger.info(
-                    f"  Page {batch['page']} [{batch['section']}]: "
-                    f"{len(batch['triples'])} triples, {ingested} ingested"
+            for batch in pending_batches:
+                ingested = self.ingestor.ingest_batch(
+                    triples=batch["triples"],
+                    filename=filename,
+                    pages=[batch["page"]] * len(batch["triples"]),
+                    year=batch["year"],
+                    sections=[batch["section"]] * len(batch["triples"]),
+                    document_sha256=document_sha256,
                 )
+                total_ingested += ingested
+                if ingested > 0:
+                    logger.info(
+                        f"  Page {batch['page']} [{batch['section']}]: "
+                        f"{len(batch['triples'])} triples, {ingested} ingested"
+                    )
 
         # Step 6: Log filing statistics
         batch_stats = self.ingestor.get_stats()
@@ -634,6 +675,7 @@ class KnowledgeGraphPipeline:
             "triples_extracted": len(all_triples),
             "triples_ingested": total_ingested,
             "llm": self.extractor.get_llm_stats(),
+            "llm_cache": self.extractor.response_cache.stats(),
             "llm_provider": getattr(self.extractor.llm, "provider", None),
             "llm_model": getattr(self.extractor.llm, "default_model", None),
             "prompt_version": getattr(self.ingestor, "prompt_version", None),
@@ -646,6 +688,7 @@ class KnowledgeGraphPipeline:
             ),
             "relations": dict(batch_stats["relations"]),
             "entities": dict(batch_stats["entities"]),
+            "dry_run": self.config.dry_run,
             "status": "completed",
         }
 
@@ -698,8 +741,10 @@ class KnowledgeGraphPipeline:
         logger.info(f"Found {len(pdf_files)} PDF file(s)")
         results = []
 
-        # Connect to Neo4j
-        if not self.ingestor.connect():
+        # Extraction-only validation intentionally has no external graph side
+        # effect.  In normal mode connect before processing and keep the
+        # existing post-processing behavior unchanged.
+        if not self.config.dry_run and not self.ingestor.connect():
             logger.error("Failed to connect to Neo4j. Aborting.")
             return []
 
@@ -713,26 +758,29 @@ class KnowledgeGraphPipeline:
                     logger.error(f"ERROR processing {pdf_path}: {e}")
                     import traceback
                     logger.error(traceback.format_exc())
+                    if isinstance(e, LLMResponseCacheError):
+                        raise
                     results.append({
                         "filename": os.path.basename(pdf_path),
                         "status": "error",
                         "error": str(e),
                     })
 
-            # Post-processing
-            logger.info("\n" + "=" * 60)
-            logger.info("POST-PROCESSING")
-            logger.info("=" * 60)
-            self.ingestor.deduplicate_relations()
-            self.ingestor.enforce_hubness(max_out_edges=30)
+            if not self.config.dry_run:
+                # Post-processing
+                logger.info("\n" + "=" * 60)
+                logger.info("POST-PROCESSING")
+                logger.info("=" * 60)
+                self.ingestor.deduplicate_relations()
+                self.ingestor.enforce_hubness(max_out_edges=30)
 
-            # Final stats
-            final_stats = self.ingestor.get_stats()
-            logger.info(f"\nFINAL STATISTICS:")
-            logger.info(f"  Total unique triples: {final_stats['total_relations']}")
-            logger.info(f"  Total entities: {final_stats['total_entities']}")
-            for rel, count in sorted(final_stats["relations"].items(), key=lambda x: -x[1]):
-                logger.info(f"    {rel}: {count}")
+                # Final stats
+                final_stats = self.ingestor.get_stats()
+                logger.info(f"\nFINAL STATISTICS:")
+                logger.info(f"  Total unique triples: {final_stats['total_relations']}")
+                logger.info(f"  Total entities: {final_stats['total_entities']}")
+                for rel, count in sorted(final_stats["relations"].items(), key=lambda x: -x[1]):
+                    logger.info(f"    {rel}: {count}")
 
         finally:
             self.ingestor.close()
@@ -803,6 +851,10 @@ def main():
         help="Delete only the same filing's evidence and edges before re-ingestion"
     )
     parser.add_argument(
+        "--dry_run", action="store_true",
+        help="Extract and validate without connecting to Neo4j or changing the graph"
+    )
+    parser.add_argument(
         "--output_stats", type=str, default="pipeline_stats.json",
         help="Path to save processing statistics JSON"
     )
@@ -820,6 +872,7 @@ def main():
         allow_multiple_pdfs=args.allow_multiple_pdfs,
         replace_existing_filing=args.replace_existing_filing,
         year_override=args.year,
+        dry_run=args.dry_run,
     )
 
     pipeline = KnowledgeGraphPipeline(config)
@@ -828,13 +881,18 @@ def main():
 
     # Print summary
     completed = [r for r in results if r.get("status") == "completed"]
-    total_triples = sum(r.get("triples_ingested", 0) for r in completed)
+    total_triples = sum(
+        r.get("triples_extracted", 0) if args.dry_run
+        else r.get("triples_ingested", 0)
+        for r in completed
+    )
     print(f"\n{'='*60}")
     print(f"PIPELINE COMPLETE")
     print(f"{'='*60}")
     print(f"  Files processed: {len(results)}")
     print(f"  Completed: {len(completed)}")
-    print(f"  Total triples ingested: {total_triples}")
+    label = "extracted (dry run)" if args.dry_run else "ingested"
+    print(f"  Total triples {label}: {total_triples}")
 
 
 if __name__ == "__main__":

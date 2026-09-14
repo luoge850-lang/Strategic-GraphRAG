@@ -1,0 +1,46 @@
+Table of Contents
+industry standard servers from every major cloud provider and server maker. Beyond GPUs, our data center platform expanded to include DPUs in fiscal year
+2022 and CPUs in fiscal year 2024. We can optimize across the entire computing, networking and storage stack to deliver data center-scale computing
+solutions.
+While our approach starts with powerful chips, what makes it a full-stack computing platform is our large body of software, including the CUDA parallel
+programming model, the CUDA-X collection of acceleration libraries, APIs, SDKs, and domain-specific application frameworks.
+In addition to software delivered to customers as an integral part of our data center computing platform, we offer paid licenses to NVIDIA AI Enterprise, a
+comprehensive suite of enterprise-grade AI software and NVIDIA vGPU software for graphics-rich virtual desktops and workstations. We also offer the NVIDIA
+DGX Cloud, a fully managed AI-training-as-a-service platform which includes cloud-based infrastructure and software for AI, customizable pretrained AI models,
+and access to NVIDIA experts.
+In fiscal year 2025, we launched the NVIDIA Blackwell architecture, a full set of data center scale infrastructure that includes GPUs, CPUs, DPUs, interconnects,
+switch chips and systems, and networking adapters. Blackwell excels at processing cutting edge generative AI and accelerated computing workloads with
+market leading performance and efficiency. Offered in a number of configurations, it can address the needs of customers across industries and a diverse set of
+AI and accelerated computing use cases.
+Gaming
+Gaming is the largest entertainment industry, with PC gaming as the predominant platform. Many factors propel its growth, including new high production value
+games and franchises, the continued rise of competitive gaming, or eSports, social connectivity and the increasing popularity of game streamers, modders, or
+gamers who remaster games, and creators.
+Our gaming platforms leverage our GPUs and sophisticated software to enhance the gaming experience with smoother, higher quality graphics. We developed
+NVIDIA RTX to bring next generation graphics and AI to games. NVIDIA RTX features ray tracing technology for real-time, cinematic-quality rendering. Ray
+tracing, which has long been used for special effects in the movie industry, is a computationally intensive technique that simulates the physical behavior of light
+to achieve greater realism in computer-generated scenes. NVIDIA RTX also features deep learning super sampling, or NVIDIA DLSS, our AI technology that
+boosts frame rates while generating beautiful, sharp images for games. RTX GPUs will also accelerate a new generation of AI applications. With an installed
+base of over 100 million AI capable PCs, more than 700 RTX AI-enabled applications and games, and a robust suite of development tools, RTX is already the AI
+PC leader.
+Our products for the gaming market include GeForce RTX and GeForce GTX GPUs for gaming desktop and laptop PCs, GeForce NOW cloud gaming for
+playing PC games on underpowered devices, as well as SoCs and development services for game consoles.
+In fiscal year 2025, we launched the NVIDIA Blackwell GeForce RTX 50 Series family of desktop and laptop GPUs. The Blackwell architecture introduced neural
+graphics which combines AI models with traditional rendering to unlock a new era of graphics innovation. The RTX 50 Series also features the next generation of
+our DLSS technology powered for the first time by a transformer model architecture. Together these technologies help deliver up to a 2x leap in performance and
+stunning visual realism for PC gamers, developers, and creatives.
+Professional Visualization
+We serve the Professional Visualization market by working closely with independent software vendors, or ISVs, to optimize their offerings for NVIDIA GPUs. Our
+GPU computing platform enhances productivity and introduces new capabilities for critical workflows in many fields, such as design and manufacturing and
+digital content creation. Design and manufacturing encompass computer-aided design, architectural design, consumer-products manufacturing, medical
+instrumentation, and aerospace. Digital content creation includes professional video editing and post-production, special effects for films, and broadcast-
+television graphics. Additionally, the infusion of generative AI into an increasing number of applications is giving rise to the need for the enhanced AI processing
+capabilities of our RTX GPUs.
+The NVIDIA RTX platform makes it possible to render film-quality, photorealistic objects and environments with physically accurate shadows, reflections and
+refractions using ray tracing in real-time. Many leading 3D design and content creation applications developed by our ecosystem partners now support RTX,
+allowing professionals to accelerate and transform their workflows with NVIDIA RTX GPUs and software.
+We offer NVIDIA Omniverse as a development platform and operating system for building and running virtual world simulation applications, available as a
+software subscription for enterprise use and free for individual use. Industrial enterprises are adopting Omniverse’s 3D and simulation technologies to digitalize
+their complex physical assets, processes, and environments – building digital twins of factories, real time 3D product configurators, testing and validating
+autonomous robots and vehicles, powered by NVIDIA accelerated computing infrastructure on-premises and in the cloud.
+6

@@ -193,6 +193,14 @@ class PipelineContractTests(unittest.TestCase):
             "SG_AND_A_EXPENSE",
         )
 
+    def test_table_metric_queries_resolve_canonical_targets(self):
+        self.assertEqual(
+            parse_query(
+                "How did NVIDIA's reported CASH_AND_CASH_EQUIVALENTS change across fiscal 2023, 2024, and 2025?"
+            ).target_metric,
+            "CASH_AND_CASH_EQUIVALENTS",
+        )
+
     def test_adaptive_retrieval_skips_vector_for_exact_metric(self):
         self.assertEqual(
             GraphRAGEngine._resolve_retrieval_mode(

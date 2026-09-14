@@ -1,0 +1,51 @@
+Table of Contents
+•
+purchasing decisions made, and inventory levels held by, distributors, ODMs, OEMs, system integrators, other channel partners and other third parties;
+•
+the ability of developers, end customers and other third parties to build, enhance, and maintain accelerated computing applications that leverage our
+platforms;
+•
+the availability of third-party content on our platforms, such as GeForce NOW;
+•
+the demand for accelerated computing, AI-related cloud services, or large language models;
+•
+changes that impact the ecosystem for the architectures underlying our products and technologies;
+•
+government actions or changes in governmental policies, such as export controls, increased restrictions on gaming usage, or tariffs; and
+•
+our customers' ability to invest in AI infrastructure.
+Challenges in estimating demand could become more pronounced or volatile in the future on both a global and regional basis. Extended lead times may occur if
+we experience other supply constraints caused by natural disasters, pandemics or other events. In addition, geopolitical tensions, such as those involving Taiwan
+and China, which comprise a significant portion of our revenue and where we have suppliers, contract manufacturers, and assembly partners who are critical to
+our supply continuity, could have a material adverse impact on us.
+We continue to increase our supply and capacity purchases with existing and new suppliers to support our demand projections and increasing complexity of our
+data center products. With these additions, we have also entered and may continue to enter into prepaid manufacturing and capacity agreements to supply both
+current and future products. The increased purchase volumes and integration of new suppliers and contract manufacturers into our supply chain creates more
+complexity in managing multiple suppliers with variations in production planning, execution and logistics. Our expanding product portfolio and varying component
+compatibility and quality may lead to increased inventory levels. We have incurred and may in the future incur inventory provisions or impairments if our
+inventory or supply or capacity commitments exceed demand for our products or demand declines.
+Product transitions are complex and we often ship both new and prior architecture products simultaneously as our channel partners prepare to ship and support
+new products. We are generally in various stages of transitioning the architectures of our Data Center, Gaming, Professional Visualization, and Automotive
+products. The computing industry is experiencing a broader and faster launch cadence of accelerated computing platforms to meet a growing and diverse set of
+AI opportunities. We have introduced a new product and architecture cadence of our Data Center solutions where we seek to complete new computing solutions
+each year and provide a greater variety of Data Center offerings. The increased frequency of these transitions and the larger number of products and product
+configurations may magnify the challenges associated with managing our supply and demand which may further create volatility in our revenue. Qualification
+time for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product
+introductions can reduce, or create volatility in, our revenue. We have experienced and may in the future experience reduced demand for current generation
+architectures when customers anticipate transitions, and we may be unable to sell multiple product architectures at the same time for current and future
+architecture transitions. Our financial results have been and may in the future be negatively impacted if we are unable to execute our architectural transitions as
+planned for any reason. The increased frequency and complexity of newly introduced products could result in unanticipated quality or production issues that
+could increase the magnitude of inventory provisions, warranty, or other costs or result in product delays. For example, our gross margins in the second quarter
+of fiscal year 2025 were negatively impacted by inventory provisions for low-yielding Blackwell material.
+We incur significant engineering development resources for new products, and changes to our product roadmap may impact our ability to develop other products
+or adequately manage our supply chain cost. Customers may delay purchasing existing products as we increase the frequency of new products or may not be
+able to adopt our new products as fast as forecasted, both impacting the timing of our revenue and supply chain cost. While we have managed prior product
+transitions and have sold multiple product architectures at the same time, these transitions are difficult, may impair our ability to predict demand and impact our
+supply mix, and may cause us to incur additional costs.
+Demand estimates for our products, applications, and services can be incorrect, which may create volatility in our revenue or supply levels. We may not be able
+to generate significant revenue from them. Because our products may be used in multiple use cases and applications, it is difficult to estimate with any
+reasonable degree of precision the impact of generative AI models on our reported revenue or forecasted demand.
+The use of our GPUs for new, mercurial, or trendy applications, has impacted and can impact in the future demand for our products, including by leading to
+inconsistent spikes and drops in demand. For example, several years ago, our Gaming GPUs began to be used for mining digital currencies, such as Ethereum.
+It is difficult for us to estimate with any reasonable degree of precision the past or current impact of cryptocurrency mining, or forecast the future impact of
+17

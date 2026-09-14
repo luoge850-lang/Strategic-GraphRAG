@@ -1209,7 +1209,7 @@ async def temporal_changes(entity_id: str, limit: int = Query(50, ge=1, le=200))
             run_in_threadpool(
                 get_schema_manager()._read,
                 """
-                MATCH (earlier:EvidenceClaim)-[:HAS_TEMPORAL_CHANGE]->(change:TemporalChange)-[:CHANGES_TO]->(later:EvidenceClaim)
+                MATCH (earlier:EvidenceClaim)-[:HAS_TEMPORAL_CHANGE]->(change:TemporalChange {model_version:'bitemporal_fact_v2'})-[:CHANGES_TO]->(later:EvidenceClaim)
                 WHERE toLower(change.source_id) CONTAINS toLower($entity_id)
                    OR toLower(change.target_id) CONTAINS toLower($entity_id)
                 RETURN change.id AS id, change.change_type AS change_type,

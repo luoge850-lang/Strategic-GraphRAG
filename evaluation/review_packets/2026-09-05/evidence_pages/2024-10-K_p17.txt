@@ -1,0 +1,48 @@
+Table of Contents
+transitions, and we may be unable to sell multiple product architectures at the same time for current and future architecture transitions. If we are unable to
+execute our architectural transitions as planned for any reason, our financial results may be negatively impacted. The increasing frequency and complexity of
+newly introduced products may result in unanticipated quality or production issues that could increase the magnitude of inventory provisions, warranty or other
+costs or result in product delays. Deployment of new products to customers creates additional challenges due to the complexity of our technologies, which has
+impacted and may in the future impact the timing of customer purchases or otherwise impact our demand. While we have managed prior product transitions and
+have previously sold multiple product architectures at the same time, these transitions are difficult, may impair our ability to predict demand and impact our
+supply mix, and we may incur additional costs.
+Many end customers often do not purchase directly from us but instead purchase indirectly through multiple OEMs, ODMs, system integrators, distributors, and
+other channel partners. As a result, the decisions made by our multiple OEMs, ODMs, system integrators, distributors, and other channel partners, and in
+response to changing market conditions and changes in end-user demand for our products, have impacted and could in the future continue to impact our ability
+to properly forecast demand, particularly as they are based on estimates provided by various downstream parties.
+If we underestimate our customers' future demand for our products, our foundry partners may not have adequate lead-time or capacity to increase production
+and we may not be able to obtain sufficient inventory to fill orders on a timely basis. Even if we are able to increase supply to meet customer demand, we may
+not be able to do so in a timely manner, or our contract manufacturers may experience supply constraints. If we cannot procure sufficient supply to meet demand
+or otherwise fail to fulfill our customers’ orders on a timely basis, or at all, our customer relationships could be damaged, we could lose revenue and market
+share and our reputation could be harmed. Additionally, since some of our products are part of a complex data center buildout, supply constraints or availability
+issues with respect to any one component have had and may have a broader revenue impact.
+If we overestimate our customers’ future demand for our products, or if customers cancel or defer orders or choose to purchase from our competitors, we may
+not be able to reduce our inventory or other contractual purchase commitments. In the past, we have experienced a reduction in average selling prices, including
+due to channel pricing programs that we have implemented and may continue to implement, as a result of our overestimation of future demand, and we may
+need to continue these reductions. We have had to increase prices for certain of our products as a result of our suppliers’ increase in prices, and we may need to
+continue to do so for other products in the future. We have also written down our inventory, incurred cancellation penalties, and recorded impairments and may
+have to do so in the future. These impacts were amplified by our placement of non-cancellable and non-returnable purchasing terms well in advance of our
+historical lead times and could be exacerbated if we need to make changes to the design of future products. The risk of these impacts has increased and may
+continue to increase as our purchase obligations and prepaids have grown and are expected to continue to grow and become a greater portion of our total
+supply. All of these factors may negatively impact our gross margins and financial results.
+We build technology and introduce products for new and innovative use cases and applications, such as NVIDIA DGX Cloud services, NVIDIA AI Foundations,
+Omniverse platform, LLMs, and generative AI models. Our demand estimates for new use cases, applications, and services can be incorrect and create volatility
+in our revenue or supply levels, and we may not be able to generate significant revenue from these use cases, applications, and services. Recent technologies,
+such as generative AI models, have emerged, and while they have driven increased demand for Data Center, the long-term trajectory is unknown. Because our
+products may be used in multiple use cases and applications, it is difficult for us to estimate with any reasonable degree of precision the impact of generative AI
+models on our reported revenue or forecasted demand. Additionally, we started shipping our CPU product offerings, the Grace CPU and Grace Hopper
+Superchips, in the third quarter of fiscal year 2024. Our ability to adequately predict our CPU demand may create volatility in our revenue or supply levels.
+Challenges in estimating demand could become more pronounced or volatile in the future on both a global and regional basis. Extended lead times may occur if
+we experience other supply constraints caused by natural disasters, pandemics or other events. In addition, geopolitical tensions, such as those involving Taiwan
+and China, which comprise a significant portion of our revenue and where we have suppliers, contract manufacturers, and assembly partners who are critical to
+our supply continuity, could have a material adverse impact on us.
+The use of our GPUs other than that for which they were designed and marketed, including new and unexpected use cases, has impacted and can in the future
+impact demand for our products, including by leading to inconsistent spikes and drops in demand. For example, several years ago, our Gaming GPUs began to
+be used for mining digital currencies, such as Ethereum. It is difficult for us to estimate with any reasonable degree of precision the past or current impact of
+cryptocurrency mining, or forecast the future impact of cryptocurrency mining, on demand for our products. Volatility in the cryptocurrency market, including new
+compute technologies, price changes in cryptocurrencies, government cryptocurrency policies and regulations, new cryptocurrency standards and changes in
+the method of verifying blockchain transactions, has impacted and can in the future impact cryptocurrency mining and demand for our products and can further
+impact our ability to estimate demand for our products. Changes to cryptocurrency standards and processes including, but not limited to, the Ethereum 2.0
+merge in 2022, have reduced and may in the future decrease the usage of GPUs for Ethereum mining. This has created and may in the future create increased
+aftermarket sales of our
+17

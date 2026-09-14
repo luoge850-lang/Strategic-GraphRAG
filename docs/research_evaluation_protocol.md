@@ -123,6 +123,121 @@ comparisons between modes. Do not mix cached and uncached latency in one mean.
 If page-level matching is used for fairness, label it as page-level retrieval;
 do not present it as exact EvidenceClaim retrieval.
 
+For this project, macro retrieval metrics and bootstrap intervals use one
+question as the statistical unit. The percentile bootstrap must resample the
+per-question scores with replacement, use a fixed recorded random seed, and
+record the resampling count. A bootstrap interval is a descriptive uncertainty
+summary; it is not a human-gold confidence interval and must not be used alone
+to claim statistical superiority. Paired win/tie/loss comparisons use the same
+`question_id` across modes and exclude errored, unanswerable, or missing-score
+rows from that metric's eligible pairs.
+
+### Automatic Silver benchmark
+
+When human review is not yet available, `scripts/build_silver_benchmark.py`
+creates `evaluation/silver_retrieval_v1.jsonl` from strict `VERBATIM`
+EvidenceClaims, same-filing chains, and deterministic unsupported questions.
+`scripts/evaluate_retrieval_benchmark.py` evaluates all four modes using the
+common `doc_id#page` unit and records Recall@K, Precision@K, MRR, nDCG,
+abstention accuracy, latency, per-question traces, question-type strata, and
+question-level bootstrap/paired diagnostics. The report's primary retrieval
+unit is `canonical_filing_page_key`; its paired and bootstrap unit is
+`question_id`. This is an engineering regression and ablation instrument only:
+its expected evidence is derived from the graph under test, so it has
+self-test bias and cannot establish independent extraction recall, human answer
+quality, or statistical superiority. The report must keep the status
+`AUTO_GENERATED_SILVER_NOT_HUMAN_GOLD`, explicitly identify the data as
+auto-generated Silver, and state that independent human Golden QA is missing.
+
+The 2026-09-14 rerun in
+`reports/retrieval_benchmark_silver_2026-09-14.json` observed the following
+page-level macro results on 32 answerable questions (plus 5 deterministic
+unsupported questions):
+
+| Mode | Recall@5 | MRR | nDCG@5 |
+|---|---:|---:|---:|
+| Vector | 0.2188 | 0.0828 | 0.1103 |
+| Graph | **0.7009** | **0.7083** | 0.6986 |
+| Hybrid | 0.5134 | 0.4740 | 0.4764 |
+| Hybrid Temporal | 0.5446 | 0.5000 | 0.5036 |
+
+These are observations for this auto-generated Silver self-test, not a claim
+that GraphRAG is generally superior to Vector RAG. Hybrid Temporal did not
+exceed Graph on this snapshot, but that result does not establish that the
+temporal module is ineffective: the Silver set contains only two
+`temporal_metric` questions, its expected pages are graph-derived, and no
+independently reviewed temporal gold set is available.
+
+The targeted follow-up is a matched, human-reviewed temporal ablation: add
+cross-filing questions with independently verified valid-time/recorded-time
+evidence and narrative states, hold the query set and candidate budget fixed,
+compare Hybrid versus Hybrid Temporal on temporal and non-temporal strata, and
+report temporal-field/path-hit diagnostics separately. Regenerate the derived
+temporal artifacts from the current graph before that experiment, and use a
+versioned extraction cache or frozen artifact so external-LLM variation is not
+confounded with the retrieval comparison.
+
+### Extraction repeatability gate
+
+`python -m strategic_graphrag.pipeline.pipeline --pdf data/pdfs/2025-10-K.pdf
+--require_llm --dry_run --output_stats reports/rebuild_2025_repeatability.json`
+performs an extraction-only replay: it parses the same PDF, uses the configured
+provider and prompt, and deliberately skips Neo4j writes and post-processing.
+The readiness audit compares the document hash, model, prompt version,
+temperature, and extracted-claim count. In the 2026-09-09 replay, the frozen
+run produced 126 accepted claims and the second external-LLM call produced 131
+at temperature 0.0. This 126-versus-131 observation remains historical context
+about fresh external calls; it is not superseded by replay.
+
+The versioned `llm_response_cache_v1` cache is now implemented. The 2025
+2026-09-14 record/replay gate passed: both runs produced 126 accepted claims
+with 170 unique keys; record made 170 LLM network calls and replay made zero.
+This supports deterministic replay of the frozen response artifact only. It
+does not establish fresh external-model repeatability, semantic correctness, or
+human Golden QA.
+
+### Versioned LLM response freeze cache
+
+The extraction response cache fixes the input-to-LLM-output boundary for an
+extraction run. It is an engineering reproducibility aid, not a new independent
+model experiment: replaying a cached response does not measure a fresh model
+call, provider variability, latency, or cost. The cache is also not a human
+Golden QA set and does not establish semantic correctness.
+
+The cache is controlled only through environment variables, so `.env` is not
+modified:
+
+```powershell
+$env:LLM_RESPONSE_CACHE_PATH = "evaluation/cache/llm_extraction_v1.jsonl"
+$env:LLM_RESPONSE_CACHE_MODE = "record"
+python -m strategic_graphrag.pipeline.pipeline `
+  --pdf data/pdfs/2025-10-K.pdf --require_llm --dry_run `
+  --output_stats reports/rebuild_2025_cache_record_2026-09-14.json
+
+$env:LLM_RESPONSE_CACHE_MODE = "replay"
+python -m strategic_graphrag.pipeline.pipeline `
+  --pdf data/pdfs/2025-10-K.pdf --require_llm --dry_run `
+  --output_stats reports/rebuild_2025_cache_replay_2026-09-14.json
+```
+
+`off` is the default and does not inspect or write the cache. `record` calls
+the configured provider and its existing explicit fallback sequence on a miss,
+then appends successful structured JSON responses without overwriting an
+existing key. `replay` is read-only and fails closed on a miss or malformed
+record; it never calls an external provider. Each key binds the operation,
+request provider and model, extraction temperature, max tokens, the SHA-256 of
+the complete role-separated prompt, and the cache schema version. The JSONL
+record stores key metadata, actual successful route metadata, structured JSON
+response, response digest, and creation time, but never a separate raw
+prompt/PDF payload or API keys. Structured response fields such as the model's
+evidence quote remain part of the frozen response because they are required for
+the same downstream provenance filtering during replay.
+
+Every extraction report must record the cache path, schema, mode, and unique key
+count, together with cache hits, misses, writes, and LLM network calls. A
+record/replay comparison should also verify identical `document_sha256`,
+`triples_extracted`, and cache key count; replay network calls must be zero.
+
 ## Answer-level scoring
 
 Use a fixed 1--5 rubric with examples for:

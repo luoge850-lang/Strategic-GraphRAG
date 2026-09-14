@@ -191,10 +191,9 @@ def _periods_for_evidence(page_text: str, evidence: str, filing_year: int) -> Li
             if year not in years:
                 years.append(year)
         if len(years) >= 2:
-            # A comparison table contains two reported-period columns followed
-            # by dollar-change and percent-change columns. Only the first two
-            # dates are value semantics for each metric row.
-            return years[:2]
+            # Preserve every dated column. Change columns have no year and
+            # are discarded later by pairing values with these periods.
+            return years[:5]
     return _periods(page_text, filing_year)
 
 

@@ -66,20 +66,26 @@ class GraphIngestor:
 
     def connect(self) -> bool:
         """Connect to Neo4j."""
+        candidate = None
         try:
-            self.driver = GraphDatabase.driver(
+            candidate = GraphDatabase.driver(
                 self.uri, auth=(self.user, self.password),
                 max_connection_lifetime=1800,
                 keep_alive=True,
                 connection_acquisition_timeout=15,
             )
-            self.driver.verify_connectivity()
+            candidate.verify_connectivity()
+            self.driver = candidate
             logger.info(f"Connected to Neo4j: {self.uri}")
             return True
         except ServiceUnavailable as e:
+            if candidate is not None:
+                candidate.close()
             logger.error(f"Cannot connect to Neo4j: {e}")
             return False
         except Exception as e:
+            if candidate is not None:
+                candidate.close()
             logger.error(f"Connection error: {e}")
             return False
 
@@ -92,6 +98,21 @@ class GraphIngestor:
             return True
         except Exception:
             return False
+
+    def ensure_connection(self) -> bool:
+        """Reuse a live driver or safely replace a dead one before writes."""
+        if self._driver_alive():
+            return True
+
+        if self.driver is not None:
+            try:
+                self.driver.close()
+            except Exception as exc:
+                logger.warning("Closing stale Neo4j driver failed: %s", exc)
+            finally:
+                self.driver = None
+
+        return self.connect()
 
     def close(self):
         if self.driver:

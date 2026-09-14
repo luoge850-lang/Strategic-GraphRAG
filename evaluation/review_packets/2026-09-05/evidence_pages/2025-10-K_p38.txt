@@ -1,0 +1,76 @@
+Table of Contents
+Israel and Regional Conflicts
+We are monitoring the impact of the geopolitical conflict in and around Israel on our operations, including the health and safety of our approximately 4,700
+employees in the region who primarily support the research and development, operations, and sales and marketing of our networking products. Our global
+supply chain for our networking products has not experienced any significant impact. Some of our employees in the region have been on active military duty for
+an extended period and may continue to be absent, which may cause disruption to our product development or operations. We have not experienced significant
+impact or expense to our business; however, if the conflict is further extended or expanded, it could impact future product development, operations, and revenue
+or create other uncertainty for our business.
+Fiscal Year 2025 Summary
+ 
+Year Ended
+ 
+Jan 26, 2025
+Jan 28, 2024
+Change
+($ in millions, except per share data)
+Revenue
+$
+130,497 
+$
+60,922 
+Up 114%
+Gross margin
+75.0 %
+72.7 %
+Up 2.3 pts
+Operating expenses
+$
+16,405 
+$
+11,329 
+Up 45%
+Operating income
+$
+81,453 
+$
+32,972 
+Up 147%
+Net income
+$
+72,880 
+$
+29,760 
+Up 145%
+Net income per diluted share
+$
+2.94 
+$
+1.19 
+Up 147%
+We specialize in markets where our computing platforms can provide tremendous acceleration for applications. These platforms incorporate processors,
+interconnects, software, algorithms, systems, and services to deliver unique value. Our platforms address four large markets where our expertise is critical: Data
+Center, Gaming, Professional Visualization, and Automotive.
+Revenue for fiscal year 2025 was $130.5 billion, up 114% from a year ago.
+Data Center revenue for fiscal year 2025 was up 142% from a year ago. The strong year-on-year growth was driven by demand for our Hopper architecture
+accelerated computing platform used for large language models, recommendation engines, and generative AI applications. We began shipping production
+systems of the Blackwell architecture in the fourth quarter of fiscal year 2025.
+Gaming revenue for fiscal year 2025 was up 9% from a year ago, driven by sales of our GeForce RTX 40 Series GPUs.
+Professional Visualization revenue for fiscal year 2025 was up 21% from a year ago, driven by the continued ramp of Ada RTX GPU workstations for use cases
+such as generative AI-powered design, simulation, and engineering.
+Automotive revenue for fiscal year 2025 was up 55% from a year ago, driven by sales of our self-driving platforms.
+Gross margin increased in fiscal year 2025 driven by a higher mix of Data Center revenue.
+Operating expenses for fiscal year 2025 were up 45% from a year ago, driven by higher compensation and benefits expenses due to employee growth and
+compensation increases, and engineering development, compute and infrastructure costs for new product introductions.
+Critical Accounting Estimates
+Our consolidated financial statements are prepared in accordance with accounting principles generally accepted in the United States, or U.S. GAAP. The
+preparation of these financial statements requires us to make estimates and judgments that affect the reported amounts of assets, liabilities, revenue, cost of
+revenue, expenses and related disclosure of contingencies. Critical accounting estimates are those estimates that involve a significant level of estimation
+uncertainty and could have a material impact on our financial condition or results of operations. We have critical accounting estimates in the areas of inventories,
+income taxes, and revenue recognition. Refer to Note 1 of the Notes to the Consolidated Financial Statements in Part IV, Item 15 of this Annual Report on Form
+10-K for a summary of significant accounting policies.
+Inventories
+We charge cost of sales for inventory provisions to write-down our inventory to the lower of cost or net realizable value or for obsolete or excess inventory, and
+for excess product purchase commitments. Most of our inventory provisions relate to excess quantities of products or components, based on our inventory levels
+and future product purchase
+38

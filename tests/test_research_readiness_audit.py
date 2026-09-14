@@ -32,8 +32,35 @@ class ResearchReadinessAuditTests(unittest.TestCase):
         self.assertFalse(ai_check["blocking"])
         self.assertEqual(ai_check["status"], "PASS")
         self.assertIn("human_golden_qa_available", report["blocking_failures"])
-        self.assertIn("retrieval_benchmark_has_multiple_questions", report["blocking_failures"])
+        benchmark = report["facts"].get("retrieval_benchmark") or {}
+        if benchmark.get("question_count", 0) >= 30:
+            self.assertNotIn("retrieval_benchmark_has_multiple_questions", report["blocking_failures"])
+        else:
+            self.assertIn("retrieval_benchmark_has_multiple_questions", report["blocking_failures"])
         self.assertIn("extraction_run_is_repeatable", report["blocking_failures"])
+
+    def test_temporal_inventory_detects_stale_and_rebuilt_snapshots(self):
+        # Keep the stale-state regression independent of mutable local reports.
+        for fact_count, expected_status in ((383, "BLOCKED"), (381, "PASS")):
+            with self.subTest(fact_count=fact_count), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                reports = root / "reports"
+                reports.mkdir()
+                snapshot = {
+                    "graph": {
+                        "nodes_by_label": [{"label": "TemporalFact", "count": fact_count}],
+                        "active_claims": [{"doc_id": "2025-10-K", "claims": 381}],
+                    }
+                }
+                (reports / "neo4j_snapshot_post_rebuild_fixture.json").write_text(
+                    json.dumps(snapshot), encoding="utf-8"
+                )
+                report = audit(root)
+                check = next(
+                    item for item in report["checks"]
+                    if item["name"] == "derived_temporal_model_matches_active_claims"
+                )
+                self.assertEqual(check["status"], expected_status)
 
     def test_audit_is_fail_closed_when_required_files_are_missing(self):
         report = audit(ROOT / "does-not-exist")

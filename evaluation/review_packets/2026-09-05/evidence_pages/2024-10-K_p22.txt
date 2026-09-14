@@ -1,0 +1,49 @@
+Table of Contents
+We are monitoring the impact of the geopolitical conflict in and around Israel on our operations, including the health and safety of our approximately 3,700
+employees in the region who primarily support the research and development, operations, and sales and marketing of our networking products. Our operating
+expenses in fiscal year 2024 include expenses for financial support to impacted employees and charitable activity. We believe our global supply chain for our
+networking products has not experienced any significant impact. Further, in connection with the conflict, a substantial number of our employees in the region
+have been called-up for active military duty in Israel. Accordingly, some of our employees in Israel have been absent for an extended period and they or others
+may continue to be absent, which may cause disruption to our product development or operations. We did not experience any significant impact or expense to
+our business; however, if the conflict is further extended, it could impact future product development, operations, and revenue or create other uncertainty for our
+business.
+Additionally, interruptions or delays in services from CSPs, data center co-location partners, and other third parties on which we rely, including due to the events
+described above or other events such as the insolvency of these parties, could impair our ability to provide our products and services and harm our business. As
+we increase our reliance on these third-party systems and services, our exposure to damage from service interruptions, defects, disruptions, outages, shortages
+and other performance and quality problems may increase. Data centers depend on access to clean water and predictable energy. Power or water shortages, or
+regulations that limit energy or water availability, could impair the ability of our customers to expand their data center capacity and consume our products and
+services.
+Climate change may have a long-term impact on our business.
+Climate change may have an increasingly adverse impact on our business and on our customers, partners and vendors. Water and energy availability and
+reliability in the regions where we conduct business is critical, and certain of our facilities may be vulnerable to the impacts of extreme weather events. Extreme
+heat and wind coupled with dry conditions in Northern California may lead to power safety shut offs due to wildfire risk, which can have adverse implications for
+our Santa Clara, California headquarter offices and data centers, including impairing the ability of our employees to work effectively. Climate change, its impact
+on our supply chain and critical infrastructure worldwide and its potential to increase political instability in regions where we, our customers, partners and our
+vendors do business, may disrupt our business and cause us to experience higher attrition, losses and costs to maintain or resume operations. Although we
+maintain insurance coverage for a variety of property, casualty, and other risks, the types and amounts of insurance we obtain vary depending on availability and
+cost. Some of our policies have large deductibles and broad exclusions, and our insurance providers may be unable or unwilling to pay a claim. Losses not
+covered by insurance may be large, which could harm our results of operations and financial condition.
+Our business and those of our suppliers and customers may also be subject to climate-related laws, regulations and lawsuits. New or proposed regulations
+relating to carbon taxes, fuel or energy taxes, pollution limits, sustainability-related disclosure and governance and supply chain governance could result in
+greater direct costs, including costs associated with changes to manufacturing processes or the procurement of raw materials used in manufacturing processes,
+increased capital expenditures to improve facilities and equipment, and higher compliance and energy costs to reduce emissions, other compliance costs, as
+well as greater indirect costs resulting from our customers and/or suppliers incurring additional compliance costs that are passed on to us. These costs and
+restrictions could harm our business and results of operations by increasing our expenses or requiring us to alter our operations and product design activities.
+Stakeholder groups may find us insufficiently responsive to the implications of climate change, and therefore we may face legal action or reputational harm. We
+may not achieve our stated sustainability-related goals, which could harm our reputation, or we may incur additional, unexpected costs to achieve such goals.
+We may also experience contractual disputes due to supply chain delays arising from climate change-related disruptions, which could result in increased
+litigation and costs.
+We also face risks related to business trends that may be influenced by climate change concerns. Our business could be negatively impacted by concerns
+around the high absolute energy requirements of our GPUs, despite their much more energy efficient design and operation relative to alternative computing
+platforms.
+We may not be able to realize the potential benefits of business investments or acquisitions, and we may not be able to successfully integrate
+acquired companies, which could hurt our ability to grow our business, develop new products or sell our products.
+We have acquired and invested and may continue to do so in businesses that offer products, services and technologies that we believe will help expand or
+enhance our strategic objectives. Acquisitions or investments involve significant challenges and risks and could impair our ability to grow our business, develop
+new products or sell our products and ultimately could have a negative impact on our financial results. If we pursue a particular transaction, we may limit our
+ability to enter into other transactions that could help us achieve our other strategic objectives. If we are unable to timely complete acquisitions, including due to
+delays and challenges in obtaining regulatory approvals, we may be unable to pursue other transactions, we may not be able to retain critical talent from the
+target company, technology may evolve and make the acquisition less attractive, and other changes can take place, which could reduce the anticipated benefits
+of the transaction and negatively impact our business. Regulators could also impose conditions that reduce the ultimate value of our acquisitions. In addition, to
+the extent that our perceived ability to consummate acquisitions has been
+22

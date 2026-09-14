@@ -1,0 +1,109 @@
+Table of Contents
+NVIDIA Corporation and Subsidiaries
+Notes to the Consolidated Financial Statements
+(Continued)
+Equity Award Activity
+The following is a summary of our equity award transactions under our equity incentive plans: 
+RSUs, PSUs and Market-based PSUs Outstanding
+ 
+Number of Shares
+Weighted Average Grant-Date
+Fair Value
+(In millions, except per share data)
+Balances, Jan 29, 2023
+45 
+$
+158.45 
+Granted
+14 
+$
+374.08 
+Vested restricted stock
+(21)
+$
+148.56 
+Canceled and forfeited
+(1)
+$
+206.35 
+Balances, Jan 28, 2024
+37 
+$
+245.94 
+Vested and expected to vest after Jan 28, 2024
+37 
+$
+245.49 
+As of January 28, 2024 and January 29, 2023, there were 147 million and 160 million shares, respectively, of common stock available for future grants under our
+equity incentive plans. 
+The total fair value of RSUs and PSUs, as of their respective vesting dates, during the years ended January 28, 2024, January 29, 2023, and January 30, 2022,
+was $8.2 billion, $4.3 billion, and $5.6 billion, respectively.
+Note 5 - Net Income Per Share
+The following is a reconciliation of the denominator of the basic and diluted net income per share computations for the periods presented:
+ 
+Year Ended
+ 
+Jan 28, 2024
+Jan 29, 2023
+Jan 30, 2022
+ 
+(In millions, except per share data)
+Numerator:
+ 
+ 
+ 
+Net income
+$
+29,760 
+$
+4,368 
+$
+9,752 
+Denominator:
+ 
+ 
+ 
+Basic weighted average shares
+2,469 
+2,487 
+2,496 
+Dilutive impact of outstanding equity awards
+25 
+20 
+39 
+Diluted weighted average shares
+2,494 
+2,507 
+2,535 
+Net income per share:
+ 
+ 
+ 
+Basic (1)
+$
+12.05 
+$
+1.76 
+$
+3.91 
+Diluted (2)
+$
+11.93 
+$
+1.74 
+$
+3.85 
+Equity awards excluded from diluted net income per share because their effect would have
+been anti-dilutive
+15 
+40 
+21 
+(1)    Calculated as net income divided by basic weighted average shares.
+(2)    Calculated as net income divided by diluted weighted average shares.
+Note 6 - Goodwill
+As of January 28, 2024, the total carrying amount of goodwill was $4.4 billion, consisting of goodwill balances allocated to our Compute & Networking and
+Graphics reporting units of $4.1 billion and $370 million, respectively. As of January 29, 2023, the total carrying amount of goodwill was $4.4 billion, consisting of
+goodwill balances allocated to our Compute & Networking and Graphics reporting units of $4.0 billion and $370 million, respectively. Goodwill increased by
+$59 million in fiscal year 2024 from an immaterial acquisition and was allocated to our Compute & Networking reporting unit. During the fourth quarters of fiscal
+years 2024, 2023, and 2022, we completed our annual qualitative impairment tests and concluded that goodwill was not impaired.
+63

@@ -1,0 +1,79 @@
+{
+  "generated_at_utc": "2026-09-05T09:02:26.465442+00:00",
+  "source": "reports/handoff_2026-09-05/current_claims.json",
+  "historical_files_modified": false,
+  "remappings": [
+    {
+      "old_claim_id": "claim_v2_1633c1f206c5825069377d87",
+      "old_record": {
+        "claim_id": "claim_v2_1633c1f206c5825069377d87",
+        "doc_id": "2025-10-K",
+        "page": 25,
+        "section": "Item 1A - Risk Factors",
+        "extraction_method": "LLM_EXTRACTION",
+        "source_id": "revisionstolawsorregulations",
+        "relation_type": "INCREASES",
+        "target_id": "taxation",
+        "evidence": "Revisions to laws or regulations or their interpretation and enforcement could also result in increased taxation, trade sanctions, the imposition of or increase to import duties or tariffs, restrictions and controls on imports or exports, or other retaliatory actions, which could have an adverse effect on our business plans or impact the timing of our shipments.",
+        "evidence_context": "",
+        "verbatim_on_declared_page": true,
+        "labels": {
+          "source_entity_correct": true,
+          "target_entity_correct": true,
+          "relation_correct": true,
+          "evidence_supports_relation": true,
+          "missing_gold_relations": []
+        },
+        "annotation_status": "LABELED",
+        "annotator": null,
+        "notes": ""
+      },
+      "new_claim_id": null,
+      "status": "NO_CURRENT_EQUIVALENT",
+      "current_evidence": null,
+      "match_basis": null,
+      "labels_transferred": false,
+      "explanation": "The old triple is absent from the current graph. Do not substitute a different same-page relation.",
+      "affects_historical_files": [
+        "extraction_sample_2025_post_repair_v2.jsonl",
+        "extraction_sample_2025_post_repair_human_v1.jsonl"
+      ]
+    },
+    {
+      "old_claim_id": "claim_v2_dff5962a83a9798db710ce26",
+      "old_record": {
+        "claim_id": "claim_v2_dff5962a83a9798db710ce26",
+        "doc_id": "2025-10-K",
+        "page": 39,
+        "section": "Item 7 - Management's Discussion and Analysis",
+        "extraction_method": "LLM_EXTRACTION",
+        "source_id": "valuationallowance",
+        "relation_type": "DECREASES",
+        "target_id": "deferredtaxassets",
+        "evidence": "We record a valuation allowance to reduce deferred tax assets to the amount that is believed more likely than not to be realized based on all available evidence.",
+        "evidence_context": "",
+        "verbatim_on_declared_page": true,
+        "labels": {
+          "source_entity_correct": true,
+          "target_entity_correct": true,
+          "relation_correct": true,
+          "evidence_supports_relation": true,
+          "missing_gold_relations": []
+        },
+        "annotation_status": "LABELED",
+        "annotator": null,
+        "notes": ""
+      },
+      "new_claim_id": "claim_v2_7f252494def8a075c8a4c30b",
+      "status": "SAME_TRIPLE_CHANGED_QUOTE_REVIEW_REQUIRED",
+      "current_evidence": "We record a valuation allowance to reduce deferred tax assets to the amount that is believed more likely than not to be realized",
+      "match_basis": "same filing, page, source, relation, target",
+      "labels_transferred": false,
+      "explanation": "Current quote is shorter; this is not an identical evidence unit.",
+      "affects_historical_files": [
+        "extraction_sample_2025_post_repair_v2.jsonl",
+        "extraction_sample_2025_post_repair_human_v1.jsonl"
+      ]
+    }
+  ]
+}

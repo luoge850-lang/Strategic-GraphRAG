@@ -1,0 +1,43 @@
+Table of Contents
+revenue has sequentially declined. All of these factors may negatively impact our gross margins and financial results.
+We build technology and products for use cases and applications that may be new or may not yet exist. Examples include our Omniverse
+platform and third-party large language models and generative models. Our demand estimates for these use cases and applications can be
+incorrect and create volatility in our revenue or supply levels, and we may not be able to generate any revenue from these use cases and
+applications.
+Challenges in estimating demand could become more pronounced or volatile in the future on both a global and regional basis. Extended lead
+times may occur if we experience other supply constraints caused by natural disasters, pandemics or other events, such as the COVID-19
+pandemic. In addition, geopolitical tensions, such as those involving Taiwan and China, which comprise a significant portion of our revenue and
+where we have suppliers, contract manufacturers, and assembly partners who are critical to our supply continuity, could have a material adverse
+impact on us.
+The use of our GPUs for other than that for which they were designed and marketed, including new and unexpected use cases, has impacted
+and can in the future impact demand for our products, including by leading to inconsistent spikes and drops in demand. For example, a number
+of years ago, our Gaming GPUs began to be used for digital currency mining, including blockchain-based platforms such as Ethereum. It is
+difficult for us to estimate with any reasonable degree of precision, the past or current impact of cryptocurrency mining, or forecast the future
+impact of cryptocurrency mining, on demand for our products. Volatility in the cryptocurrency market, including new compute technologies, price
+changes in cryptocurrencies, government cryptocurrency policies and regulations, new cryptocurrency standards, and changes in the method of
+verifying blockchain transactions, has impacted and can in the future impact cryptocurrency mining and demand for our products and can further
+impact our ability to estimate demand for our products. Changes to cryptocurrency standards and processes including, but not limited to, the
+recently implemented Ethereum 2.0 merge may decrease the usage of GPUs for Ethereum mining as well as create increased aftermarket sales
+of our GPUs, which could negatively impact retail prices for our GPUs and reduce demand for our new GPUs. We previously introduced Lite
+Hash Rate, or LHR, GeForce GPUs with limited Ethereum mining capability and provided CMP products in an effort to address demand from
+gamers and direct miners to CMP. With the Ethereum 2.0 merge, NVIDIA Ampere and Ada Lovelace architectures no longer include LHR. In
+addition, our new products or previously sold products may be resold online or on the unauthorized “gray market,” which also makes demand
+forecasting difficult. Gray market products and reseller marketplaces compete with our new products and distribution channels.
+Additionally, we depend on developers and other third parties to build accelerated computing applications that leverage our platforms. We also
+rely on third-party content providers and publishers to make their content available on our platforms such as GeForce NOW. Failure by
+developers to build applications that leverage our platforms, or failure by third-party content providers or publishers to make their content
+available on reasonable terms or at all for use by our customers or end users on our platforms, could adversely affect customer demand.
+Dependency on third-party suppliers and their technology to manufacture, assemble, test, package or design our products reduces
+our control over product quantity and quality, manufacturing yields, development, enhancement and product delivery schedules and
+could harm our business.
+We depend on foundries to manufacture our semiconductor wafers using their fabrication equipment and techniques. We do not assemble, test
+or package our products, but instead contract with independent subcontractors. We also rely on third-party software development tools to assist
+us in the design, simulation and verification of new products or product enhancements. The design requirements necessary to meet consumer
+demands for greater functionality from our products may exceed the capabilities of available software development tools. We face several risks
+which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact
+longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results,
+including:
+•
+lack of guaranteed supply of wafer, component and capacity or decommitment and potential higher wafer and component prices, from
+incorrectly estimating demand and failing to place orders with our suppliers with sufficient quantities or in a timely manner;
+20

@@ -3,8 +3,10 @@
 This is a fail-closed, local-only audit.  It checks that published-looking
 artifacts are backed by current data, that the extraction sample is complete,
 and that a human-reviewed Golden QA benchmark exists before retrieval metrics
-are treated as research results.  It does not contact Neo4j, call an LLM, or
-modify the corpus and annotation files.
+are treated as research results.  An automatic Silver benchmark can satisfy
+the engineering regression gate, but it never satisfies the human-gold gate.
+It does not contact Neo4j, call an LLM, or modify the corpus and annotation
+files.
 """
 
 from __future__ import annotations
@@ -18,7 +20,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_OUTPUT = ROOT / "reports" / "2026-08-28_research_readiness.json"
+DEFAULT_OUTPUT = ROOT / "reports" / "research_readiness_current.json"
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -40,6 +42,19 @@ def _load_jsonl(path: Path) -> list[dict[str, Any]]:
                 raise ValueError(f"Expected an object in {path}:{line_number}")
             rows.append(value)
     return rows
+
+
+def _latest_file(directory: Path, *patterns: str) -> Path | None:
+    """Return the newest matching report without silently using an old baseline."""
+
+    if not directory.exists():
+        return None
+    candidates: list[Path] = []
+    for pattern in patterns:
+        candidates.extend(path for path in directory.glob(pattern) if path.is_file())
+    if not candidates:
+        return None
+    return max(candidates, key=lambda path: (path.stat().st_mtime_ns, path.name))
 
 
 def _check(
@@ -135,17 +150,30 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
     checks: list[dict[str, Any]] = []
     facts: dict[str, Any] = {}
 
-    manifest_path = root / "reports" / "2026-08-14_corpus_manifest.json"
-    snapshot_path = root / "reports" / "neo4j_snapshot_post_rebuild_2025_v2.json"
-    strict_path = root / "reports" / "strict_chain_audit_2025_post_repair_v2.json"
-    annotation_audit_path = root / "reports" / "extraction_annotation_audit_2025_post_repair_v2.json"
+    reports_dir = root / "reports"
+    manifest_path = _latest_file(reports_dir, "*corpus_manifest*.json") or (
+        reports_dir / "2026-08-14_corpus_manifest.json"
+    )
+    snapshot_path = _latest_file(reports_dir, "neo4j_snapshot_post_rebuild_*.json") or (
+        reports_dir / "neo4j_snapshot_post_rebuild_2025_v2.json"
+    )
+    strict_path = _latest_file(
+        reports_dir, "strict_chain_audit_2025_post_rebuild_*.json"
+    ) or (reports_dir / "strict_chain_audit_2025_post_repair_v2.json")
+    annotation_audit_path = _latest_file(
+        reports_dir, "extraction_annotation_audit_2025_post_rebuild_*.json"
+    ) or (reports_dir / "extraction_annotation_audit_2025_post_repair_v2.json")
     historical_extraction_report_path = root / "reports" / "extraction_quality_2025_post_repair_v2.json"
     sample_path = root / "evaluation" / "annotation" / "extraction_sample_2025_post_repair_v2.jsonl"
     human_annotation_path = root / "evaluation" / "annotation" / "extraction_sample_2025_post_repair_human_v1.jsonl"
     baseline_path = root / "evaluation" / "annotation" / "extraction_sample_v1.jsonl"
     golden_candidate_path = root / "data" / "evaluation" / "golden_qa_v2.jsonl"
     human_golden_path = root / "evaluation" / "golden_qa_human_v1.jsonl"
-    retrieval_path = root / "reports" / "retrieval_baselines_smoke.json"
+    silver_benchmark_path = root / "evaluation" / "silver_retrieval_v1.jsonl"
+    retrieval_path = _latest_file(reports_dir, "retrieval_baselines_*.json") or (
+        reports_dir / "retrieval_baselines_smoke.json"
+    )
+    silver_retrieval_path = _latest_file(reports_dir, "retrieval_benchmark_silver_*.json")
 
     manifest = None
     if manifest_path.exists():
@@ -182,6 +210,32 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
         {"status": strict_status, "strict_verbatim_edges": strict_edges, "invalid_edges": invalid_edges},
         {"status": "PASS", "invalid_edges": 0},
         note="Structural provenance is necessary but does not establish semantic correctness.",
+    )
+
+    snapshot_labels = {
+        str(item.get("label")): int(item.get("count") or 0)
+        for item in ((snapshot or {}).get("graph") or {}).get("nodes_by_label") or []
+    }
+    active_claim_count = sum(
+        int(item.get("claims") or 0)
+        for item in ((snapshot or {}).get("graph") or {}).get("active_claims") or []
+    )
+    facts["derived_model_inventory"] = {
+        "active_evidence_claims": active_claim_count or None,
+        "temporal_facts": snapshot_labels.get("TemporalFact"),
+        "temporal_changes": snapshot_labels.get("TemporalChange"),
+        "financial_observations": snapshot_labels.get("FinancialObservation"),
+    }
+    _check(
+        checks,
+        "derived_temporal_model_matches_active_claims",
+        active_claim_count > 0 and snapshot_labels.get("TemporalFact") == active_claim_count,
+        {
+            "active_evidence_claims": active_claim_count or None,
+            "temporal_facts": snapshot_labels.get("TemporalFact"),
+        },
+        "one bitemporal fact version per active VERBATIM EvidenceClaim",
+        note="Replacing a filing invalidates old temporal materializations; rebuild derived models before using hybrid-temporal results.",
     )
 
     rows = _load_jsonl(sample_path) if sample_path.exists() else []
@@ -366,26 +420,91 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
         ["graph", "hybrid", "hybrid_temporal", "vector"],
         note="All four modes must be present before a comparison is meaningful.",
     )
+    silver_rows = _load_jsonl(silver_benchmark_path) if silver_benchmark_path.exists() else []
+    silver_report = _load_json(silver_retrieval_path) if silver_retrieval_path and silver_retrieval_path.exists() else None
+    silver_question_count = (silver_report or {}).get("evaluated_questions") or (silver_report or {}).get("dataset_size") or len(silver_rows)
+    silver_status = (silver_report or {}).get("dataset_status") or ("AUTO_GENERATED_SILVER_NOT_HUMAN_GOLD" if silver_rows else None)
+    silver_modes = set((silver_report or {}).get("modes") or [])
+    facts["retrieval_benchmark"] = {
+        "dataset": str(silver_benchmark_path.relative_to(root)) if silver_benchmark_path.exists() else str(silver_benchmark_path),
+        "report": str(silver_retrieval_path.relative_to(root)) if silver_retrieval_path and silver_retrieval_path.exists() else None,
+        "question_count": int(silver_question_count or 0),
+        "evaluated_questions": (silver_report or {}).get("evaluated_questions"),
+        "dataset_status": silver_status,
+        "modes": sorted(silver_modes),
+        "human_reviewed": False,
+        "eligible_as_human_gold": False,
+    }
+    has_automatic_benchmark = int(silver_question_count or 0) >= 30 and (
+        not silver_report or silver_modes == {"vector", "graph", "hybrid", "hybrid_temporal"}
+    )
     _check(
         checks,
         "retrieval_benchmark_has_multiple_questions",
-        question_count >= 30,
-        question_count,
-        ">= 30 human-reviewed questions",
-        note="A one-question smoke test is not an accuracy benchmark.",
+        question_count >= 30 or has_automatic_benchmark,
+        {
+            "smoke_question_count": question_count,
+            "silver_question_count": int(silver_question_count or 0),
+            "silver_status": silver_status,
+            "silver_modes": sorted(silver_modes),
+        },
+        ">= 30 questions in a human-reviewed benchmark or automatic Silver regression benchmark",
+        note="Silver is sufficient for engineering regression, but human-reviewed Golden QA is still required for paper-level semantic claims.",
     )
 
-    run_a = _load_json(root / "reports" / "rebuild_2025_repair_stats.json") if (root / "reports" / "rebuild_2025_repair_stats.json").exists() else None
-    run_b = _load_json(root / "reports" / "rebuild_2025_repair_v2_stats.json") if (root / "reports" / "rebuild_2025_repair_v2_stats.json").exists() else None
-    count_a = (((run_a or {}).get("files") or [{}])[0]).get("triples_ingested")
-    count_b = (((run_b or {}).get("files") or [{}])[0]).get("triples_ingested")
+    # Only compare runs that record the frozen extraction temperature.  The
+    # older repair reports predate that field and must not be used to claim
+    # non-repeatability of the current protocol.
+    extraction_runs: list[dict[str, Any]] = []
+    for path in sorted(reports_dir.glob("rebuild_2025_*.json")):
+        try:
+            report = _load_json(path)
+        except (OSError, ValueError):
+            continue
+        file_report = ((report.get("files") or [{}])[0])
+        llm_report = file_report.get("llm") or {}
+        if file_report.get("status") != "completed" or llm_report.get("extraction_temperature") is None:
+            continue
+        dry_run = bool(file_report.get("dry_run", False))
+        output_count = (
+            file_report.get("triples_extracted")
+            if dry_run
+            else file_report.get("triples_ingested")
+        )
+        extraction_runs.append(
+            {
+                "path": str(path.relative_to(root)),
+                "triples_ingested": file_report.get("triples_ingested"),
+                "triples_extracted": file_report.get("triples_extracted"),
+                "dry_run": dry_run,
+                "repeatability_output_count": output_count,
+                "document_sha256": file_report.get("document_sha256"),
+                "llm_model": file_report.get("llm_model"),
+                "prompt_version": file_report.get("prompt_version"),
+                "extraction_temperature": llm_report.get("extraction_temperature"),
+            }
+        )
+    run_fingerprints = {
+        (
+            item["document_sha256"],
+            item["llm_model"],
+            item["prompt_version"],
+            item["extraction_temperature"],
+            item["repeatability_output_count"],
+        )
+        for item in extraction_runs
+    }
+    facts["extraction_runs"] = {
+        "successful_frozen_runs": len(extraction_runs),
+        "runs": extraction_runs,
+    }
     _check(
         checks,
         "extraction_run_is_repeatable",
-        count_a is not None and count_a == count_b,
-        {"first_run_triples": count_a, "second_run_triples": count_b},
+        len(extraction_runs) >= 2 and len(run_fingerprints) == 1,
+        {"successful_frozen_runs": len(extraction_runs), "runs": extraction_runs},
         "same output under the same frozen configuration",
-        note="Different outputs require fixed sampling/temperature, prompt, model, and run metadata before publication.",
+        note="At least two successful runs with the same corpus, model, prompt, temperature, and output count are required before claiming repeatability.",
     )
 
     has_legacy_src = (root / "src").exists()

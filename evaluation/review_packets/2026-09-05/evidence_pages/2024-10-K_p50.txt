@@ -1,0 +1,104 @@
+Table of Contents
+NVIDIA Corporation and Subsidiaries
+Consolidated Statements of Income
+(In millions, except per share data)
+Year Ended
+Jan 28, 2024
+Jan 29, 2023
+Jan 30, 2022
+Revenue
+$
+60,922 
+$
+26,974 
+$
+26,914 
+Cost of revenue
+16,621 
+11,618 
+9,439 
+Gross profit
+44,301 
+15,356 
+17,475 
+Operating expenses
+ 
+ 
+ 
+Research and development
+8,675 
+7,339 
+5,268 
+Sales, general and administrative
+2,654 
+2,440 
+2,166 
+Acquisition termination cost
+— 
+1,353 
+— 
+Total operating expenses
+11,329 
+11,132 
+7,434 
+Operating income
+32,972 
+4,224 
+10,041 
+Interest income
+866 
+267 
+29 
+Interest expense
+(257)
+(262)
+(236)
+Other, net
+237 
+(48)
+107 
+Other income (expense), net
+846 
+(43)
+(100)
+Income before income tax
+33,818 
+4,181 
+9,941 
+Income tax expense (benefit)
+4,058 
+(187)
+189 
+Net income
+$
+29,760 
+$
+4,368 
+$
+9,752 
+Net income per share:
+Basic
+$
+12.05 
+$
+1.76 
+$
+3.91 
+Diluted
+$
+11.93 
+$
+1.74 
+$
+3.85 
+Weighted average shares used in per share computation:
+Basic
+2,469 
+2,487 
+2,496 
+Diluted
+2,494 
+2,507 
+2,535 
+See accompanying notes to the consolidated financial statements.
+50

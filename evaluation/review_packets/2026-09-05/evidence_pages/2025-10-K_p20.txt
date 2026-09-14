@@ -1,0 +1,50 @@
+Table of Contents
+•
+the insolvency of key suppliers, distributors, customers, CSPs, data center providers, licensing parties or other third parties we rely on;
+•
+reduced profitability of customers, which may cause them to scale back operations, exit businesses, file for bankruptcy protection and potentially cease
+operations, or lead to mergers, consolidations or strategic alliances among other companies, which could adversely affect our ability to compete
+effectively; and
+•
+increased credit and collectability risks, higher borrowing costs or reduced availability of capital markets, reduced liquidity, adverse impacts on our
+customers and suppliers, failures of counterparties, including financial institutions and insurers, asset impairments, and declines in the value of our
+financial instruments.
+Adverse developments affecting financial institutions, such as bank failures or instability, or concerns or speculation about similar events or risks, could lead to
+market-wide liquidity problems and other disruptions, which could impact our customers’ ability to fulfill their payment obligations to us, our vendors’ ability to
+fulfill their contractual obligations to us, or our ability to fulfill our own obligations.
+Additionally, we maintain an investment portfolio of various holdings, types, and maturities. These investments are subject to general credit, liquidity, market and
+interest rate risks, which may be exacerbated by market downturns or events that affect global financial markets, as described above. A majority of our
+investment portfolio comprises USG securities. A decline in global financial markets for long periods or a downgrade of the USG credit rating due to an actual or
+threatened default on government debt could result in higher interest rates, a decline in the value of the U.S. dollar, reduced market liquidity or other adverse
+conditions. These factors could cause an unrealized or realized loss position in our investments or require us to record impairment charges.
+International sales and operations are a significant part of our business, which exposes us to risks that could harm our business.
+We sell our products internationally, and we also have operations and conduct business internationally. Our semiconductor wafers are manufactured,
+assembled, tested and packaged by third parties located outside of the United States, and we generated 53% of our revenue in fiscal year 2025 from sales
+outside the United States. The market in China, where our offerings are limited by export controls, is highly competitive and we expect it to remain competitive
+going forward. The global nature of our business subjects us to a number of risks and uncertainties, which have had in the past and could in the future have a
+material adverse effect on our business, financial condition and results of operations. These include domestic and international economic and political conditions
+in countries in which we and our suppliers and manufacturers do business, government lockdowns to control case spread of global or local health issues,
+differing legal standards with respect to protection of IP and employment practices, different domestic and international business and cultural practices,
+disruptions to capital markets, counter-inflation policies, currency fluctuations, natural disasters, acts of war or other military actions, terrorism, public health
+issues, restrictions on international trade, such as tariffs, sanctions, and other controls on imports or exports, and catastrophic events.
+Product, system security, and data protection incidents or breaches, as well as cyber-attacks, could disrupt our operations, reduce our expected
+revenue, increase our expenses, and significantly harm our business and reputation.
+Security breaches, computer malware, social-engineering attacks, denial-of-service attacks, software bugs, server malfunctions, software or hardware failures,
+loss of data or other information technology assets, and other cyber-attacks are becoming increasingly sophisticated, making it more difficult to successfully
+detect, defend against them or implement adequate preventative measures.
+Cyber-attacks, including ransomware attacks by organized criminal threat actors, nation-states, and nation-state-supported actors, may become more prevalent
+and severe. Our ability to recover from ransomware attacks may be limited if our backups have been affected by the attack, or if restore from backups is delayed
+or not feasible.
+Individuals, groups of hackers and sophisticated organizations, including nation-states and nation-state-supported actors, and other threat actors have engaged
+and are expected to continue to engage in cyber-attacks. Additionally, some actors are using AI technology to launch more automated, targeted and coordinated
+attacks. Due to geopolitical conflicts and during times of war or other major conflicts, we and the third parties we rely upon may be subject to a heightened risk of
+cyber-attacks that could materially disrupt our ability to provide services and products. We may also face cybersecurity threats due to error or intentional
+misconduct by employees, contractors or other third-party service providers. Certain aspects of effective cybersecurity are dependent upon our employees,
+contractors and/or other third-party service providers safeguarding our sensitive information and adhering to our security policies and access control
+mechanisms. We have in the past experienced, and may in the future experience, security incidents arising from a failure to properly handle sensitive information
+or adhere to our security policies and access control mechanisms, including, for example, employees posting company data on third-party websites without
+permission, and, although no such events have had a material adverse effect on our business, there can be no assurance that an insider threat or error will not
+result in an incident that is material to us or lead to negative publicity. Furthermore, we rely on products and services provided by third-party suppliers to operate
+certain critical business systems, including without limitation, cloud-based infrastructure, encryption and authentication technology, employee email and other
+functions, which exposes us to
+20

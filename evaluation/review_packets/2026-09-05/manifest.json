@@ -1,0 +1,25 @@
+{
+  "generated_at_utc": "2026-09-05T09:02:26.766086+00:00",
+  "status": "HUMAN_REVIEW_PENDING",
+  "human_reviewed": 0,
+  "question_count": 30,
+  "question_types": {
+    "single_hop": 9,
+    "multi_hop": 6,
+    "financial_table": 6,
+    "cross_filing_numeric": 3,
+    "cross_filing_disclosure": 3,
+    "abstention_candidate": 3
+  },
+  "evidence_pages": 22,
+  "claim_source_sha256": "d18d491d9873d8f1471d2de00bb30f14221eb34095c3e02d7529e981f0106f03",
+  "corpus_sha256": {
+    "2023-10-K.pdf": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+    "2024-10-K.pdf": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+    "2025-10-K.pdf": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e"
+  },
+  "id_and_page_checks": "PASS",
+  "semantic_checks": "NOT_MEASURED",
+  "gold_fields_autofilled": false,
+  "formal_benchmark_eligible": false
+}

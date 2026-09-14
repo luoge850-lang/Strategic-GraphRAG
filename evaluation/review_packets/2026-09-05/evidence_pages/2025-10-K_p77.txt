@@ -1,0 +1,73 @@
+Table of Contents
+NVIDIA Corporation and Subsidiaries
+Notes to the Consolidated Financial Statements
+(Continued)
+Our tax attributes remain subject to audit and may be adjusted for changes or modification in tax laws, other authoritative interpretations thereof, or other facts
+and circumstances. Utilization of tax attributes may also be subject to limitations due to ownership changes and other limitations provided by the Internal
+Revenue Code and similar state and foreign tax provisions. If any such limitations apply, the tax attributes may expire or be denied before utilization.
+A reconciliation of gross unrecognized tax benefits is as follows:
+ 
+Jan 26, 2025
+Jan 28, 2024
+Jan 29, 2023
+ 
+(In millions)
+Balance at beginning of period
+$
+1,670 
+$
+1,238 
+$
+1,013 
+Increases in tax positions for current year
+1,268 
+616 
+268 
+Increases in tax positions for prior years
+48 
+87 
+1 
+Decreases in tax positions for prior years
+(88)
+(148)
+(15)
+Lapse in statute of limitations
+(27)
+(19)
+(20)
+Settlements
+(10)
+(104)
+(9)
+Balance at end of period
+$
+2,861 
+$
+1,670 
+$
+1,238 
+Included in the balance of unrecognized tax benefits as of January 26, 2025 are $2 billion of tax benefits that would affect our effective tax rate if recognized.
+We classify an unrecognized tax benefit as a current liability, or amount refundable, to the extent that we anticipate payment or receipt of cash for income taxes
+within one year. The amount is classified as a long-term liability, or reduction of long-term amount refundable, if we anticipate payment or receipt of cash for
+income taxes during a period beyond a year.
+We include interest and penalties related to unrecognized tax benefits as a component of income tax expense. We recognized net interest and penalties related
+to unrecognized tax benefits in the income tax expense line of our consolidated statements of income of $92 million, $42 million, and $33 million during fiscal
+years 2025, 2024, and 2023, respectively. As of January 26, 2025 and January 28, 2024, we have accrued $251 million and $140 million, respectively, for the
+payment of interest and penalties related to unrecognized tax benefits, which is not included as a component of our gross unrecognized tax benefits.
+While we believe that we have adequately provided for all tax positions, amounts asserted by tax authorities could be greater or less than our accrued position.
+Accordingly, our provisions on federal, state and foreign tax-related matters to be recorded in the future may change as revised estimates are made or the
+underlying matters are settled or otherwise resolved. As of January 26, 2025, we have not identified any positions for which it is reasonably possible that the total
+amounts of unrecognized tax benefits will significantly increase or decrease within the next twelve months.
+We are subject to taxation by taxing authorities both in the United States and other countries. As of January 26, 2025, the significant tax jurisdictions that may be
+subject to examination include the United States for fiscal years after 2021, as well as China, Germany, Hong Kong, India, Israel, Taiwan, and the United
+Kingdom for fiscal years 2014 through 2024. As of January  26, 2025, the significant tax jurisdictions for which we are currently under examination include
+Germany, Hong Kong, India, Israel, and Taiwan for fiscal years 2014 through 2024, and the State of California for fiscal years 2020 to 2022.
+Note 14 - Shareholders’ Equity
+Capital Return Program
+On August 26, 2024, our Board of Directors approved an additional $50 billion to our share repurchase authorization, without expiration. In fiscal years 2025 and
+2024, we repurchased 310 million and 210 million shares of our common stock for $34.0 billion and $9.7 billion, respectively. As of January 26, 2025, we were
+authorized, subject to certain specifications, to repurchase up to $38.7 billion of our common stock. Our share repurchase program aims to offset dilution from
+shares issued to employees while maintaining adequate liquidity to meet our operating requirements. We may pursue additional share repurchases as we weigh
+market factors and other investment opportunities.
+From January 27, 2025 through February 21, 2025, we repurchased 29 million shares for $3.7 billion pursuant to a pre-established trading plan.
+77

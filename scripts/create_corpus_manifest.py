@@ -41,7 +41,11 @@ def git_value(*args: str) -> str:
 
 def source_tree_sha256() -> str:
     digest = hashlib.sha256()
-    tracked = git_value("ls-files").splitlines()
+    # Include tracked and non-ignored files so a local reproducibility
+    # manifest cannot silently omit a new test or script that has not been
+    # committed yet. Secrets, virtual environments, reports, and data remain
+    # excluded by the repository's ignore rules.
+    tracked = git_value("ls-files", "--cached", "--others", "--exclude-standard").splitlines()
     for relative in sorted(tracked):
         if not (
             relative.startswith(("strategic_graphrag/", "frontend/src/", "scripts/", "tests/"))

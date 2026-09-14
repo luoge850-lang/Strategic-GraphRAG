@@ -1,0 +1,47 @@
+Table of Contents
+demand, access to global markets, hiring, and profitability. For example, other countries have restricted and may continue in the future to restrict business with
+the State of Israel, where we have engineering, sales support operations and manufacturing, and companies with Israeli operations, including by economic
+boycotts. Our operations could be harmed and our costs could increase if manufacturing, logistics, or other operations are disrupted for any reason, including
+natural disasters, high heat events, water shortages, power shortages, information technology system failures or cyber-attacks, military actions or economic, and
+business, labor, environmental, public health, or political issues. The ultimate impact on us, our third-party foundries and other suppliers of being located and
+consolidated in certain geographical areas is unknown. In the event a disaster, war, or catastrophic event affects us, the third-party systems on which we rely, or
+our customers, our business could be harmed as a result of declines in revenue, increases in expenses, and substantial expenditures and time spent to fully
+resume operations. Our business continuity and disaster recovery planning may not be sufficient for all eventualities. All of these risks and conditions could
+materially adversely affect our future sales and operating results.
+We are monitoring the impact of the geopolitical conflict in and around Israel on our operations, including the health and safety of our approximately 4,700
+employees in the region who primarily support the research and development, operations, and sales and marketing of our networking products. Some of our
+employees in the region have been on active military duty for an extended period and may continue to be absent, which may cause disruption to our product
+development or operations. We have not experienced significant impact or expense to our business; however, if the conflict is further extended or expanded, it
+could impact future product development, operations, and revenue or create other uncertainty for our business.
+Additionally, interruptions or delays in services from CSPs, data center co-location partners, and other third parties on which we rely, including due to the events
+described above or other events such as the insolvency of these parties, could impair our ability to provide our products and services and harm our business. As
+we increase our reliance on these third-party systems and services, our exposure to damage from service interruptions, defects, disruptions, outages, shortages
+and other performance and quality problems may increase. Data centers depend on access to clean water and predictable energy. Power or water shortages,
+land or permitting constraints, or regulations that limit energy, water, or land availability, could impair the ability of our customers to expand their data center
+capacity and consume our products and services, which may in turn negatively impact our business.
+Climate change may have a long-term impact on our business.
+Climate change may have an increasingly adverse impact on our business and on our customers, partners and vendors. Water and energy availability and
+reliability in the regions where we conduct business is critical, and certain of our facilities may be vulnerable to the impacts of extreme weather events. Extreme
+heat and wind coupled with dry conditions in Northern California may lead to power safety shut offs due to wildfire risk, which can have adverse implications for
+our Santa Clara, California headquarter offices and data centers, including impairing the ability of our employees to work effectively. Climate change, its impact
+on our supply chain and critical infrastructure worldwide and its potential to increase political instability in regions where we, our customers, partners and our
+vendors do business, may disrupt our business and cause us to experience higher attrition, losses and costs to maintain or resume operations. Although we
+maintain insurance coverage for a variety of property, casualty, and other risks, the types and amounts of insurance we obtain vary depending on availability and
+cost. Some of our policies have large deductibles and broad exclusions, and our insurance providers may be unable or unwilling to pay a claim. Losses not
+covered by insurance may be large, which could harm our results of operations and financial condition.
+Our business and those of our suppliers and customers may also be subject to climate-related laws, regulations and lawsuits. New or proposed regulations
+relating to carbon taxes, fuel or energy taxes, pollution limits, sustainability-related disclosure and governance and supply chain governance could result in
+greater direct costs, including costs associated with changes to manufacturing processes or the procurement of raw materials used in manufacturing processes,
+increased capital expenditures to improve facilities and equipment, higher compliance and energy costs to reduce emissions, other compliance costs, and
+greater indirect costs resulting from our customers and/or suppliers incurring additional compliance costs that are passed on to us. These costs and restrictions
+could harm our business and results of operations by increasing our expenses or requiring us to alter our operations and product design activities.
+Stakeholder groups may find us insufficiently responsive to the implications of climate change, and therefore we may face legal action or reputational harm. We
+may not achieve our stated sustainability-related goals, which could harm our reputation, or we may incur additional, unexpected costs to achieve such goals.
+We may also experience contractual disputes due to supply chain delays arising from climate change-related disruptions, which could result in increased
+litigation and costs.
+We also face risks related to business trends that may be influenced by climate change concerns. Our business could be negatively impacted by concerns
+around the high absolute energy requirements of our GPUs, despite their much more energy efficient design and operation relative to alternative computing
+platforms.
+We may not be able to realize the potential benefits of business investments or acquisitions, and we may not be able to successfully integrate
+acquired companies, which could hurt our ability to grow our business, develop new products or sell our products.
+22
