@@ -1,0 +1,1099 @@
+{
+  "schema": "strategic-graphrag-graph-semantic-consistency/v1",
+  "generated_at_utc": "2026-09-15T06:51:48.627759+00:00",
+  "scope": "all EvidenceClaim records and native business edges in current Neo4j",
+  "read_only": true,
+  "neo4j_write_queries": 0,
+  "pdf_dir": "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs",
+  "pdf_search_dirs": [
+    "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs",
+    "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs_other"
+  ],
+  "status": "WARN",
+  "connection": {
+    "status": "PASS",
+    "documents_loaded": 3
+  },
+  "counts": {
+    "claims": 381,
+    "native_business_edges": 381,
+    "duplicate_normalized_triple_groups": 69,
+    "same_evidence_duplicate_groups": 0,
+    "different_evidence_duplicate_groups": 69,
+    "missing_field_instances": 0,
+    "quote_mismatches": 0,
+    "ontology_direction_type_conflicts": 0,
+    "linkage_direction_type_conflicts": 0,
+    "documents": 3
+  },
+  "sections": {
+    "field_completeness": {
+      "status": "PASS",
+      "claims_checked": 381,
+      "missing_field_instances": 0,
+      "missing_field_counts": {},
+      "samples": []
+    },
+    "normalized_triples": {
+      "status": "WARN",
+      "normalized_triple_groups": 129,
+      "duplicate_normalized_triple_groups": 69,
+      "same_evidence_duplicate_groups": 0,
+      "different_evidence_duplicate_groups": 69,
+      "samples": [
+        {
+          "normalized_triple": {
+            "source": "nvidia_corporation",
+            "relation": "OPERATES_IN",
+            "target": "gaming_market"
+          },
+          "claim_ids": [
+            "claim_v2_c0e6381363f310b18bb309b8",
+            "claim_v2_83ccf7d6a5c097681cec6a60",
+            "claim_v2_40d2c6d20da5575fe5a785c4"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 4,
+              "quote": "fueled by the sustained demand for exceptional 3d graphics and the scale of the gaming market, nvidia has leveraged its gpu architecture to create platforms for scientific computing, artificial intelligence, or ai, data science, autonomous vehicles, or av, robotics, metaverse and 3d internet applications."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 36,
+              "quote": "fueled by the sustained demand for exceptional 3d graphics and the scale of the gaming market, nvidia has leveraged its gpu architecture to create platforms for scientific computing, ai, data science, av, robotics, and digital twin applications."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 36,
+              "quote": "fueled by the sustained demand for exceptional 3d graphics and the scale of the gaming market, nvidia has leveraged its gpu architecture to create platforms for scientific computing, ai, data science, av, robotics, metaverse and 3d internet applications."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "nvidia_corporation",
+            "relation": "PRODUCES",
+            "target": "gpu"
+          },
+          "claim_ids": [
+            "claim_v2_35160f4cf6b3a4a5766c7004",
+            "claim_v2_54d9ded04915c304e8666afa",
+            "claim_v2_9816fc066fe8026b8508eb18",
+            "claim_v2_8285a647079fc8a30108d8af",
+            "claim_v2_e40676a0daeebd1ee31cd4e5",
+            "claim_v2_c0962027aab98769b9083b2d",
+            "claim_v2_497e9325f9df9db0eb72c132",
+            "claim_v2_bb6977d072f0c8639b572694",
+            "claim_v2_b769f69830bab2b81b729092",
+            "claim_v2_9f4e607cd4eff22b3ed5b44b",
+            "claim_v2_db0ba30f2197d8ed7da90b8d",
+            "claim_v2_83716f16da8600b62d8ea04b",
+            "claim_v2_225f180dc6389a5f25b7ea1d",
+            "claim_v2_352bcc8f2df95aafa77bd952",
+            "claim_v2_3634a838e9605ccea8f61737",
+            "claim_v2_1eecf05446180653f148096a",
+            "claim_v2_04912a019aa923e0d984d5e4"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 4,
+              "quote": "gamers choose nvidia gpus to enjoy immersive, increasingly cinematic virtual worlds."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 5,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu, or vgpu, software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating metaverse and 3d internet applications."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 6,
+              "quote": "at the foundation of the nvidia accelerated computing platform are our gpus, which excel at parallel workloads such as the training and inferencing of neural networks."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 7,
+              "quote": "professional visualization we serve the professional visualization market by working closely with independent software vendors, or isvs, to optimize their offerings for nvidia gpus."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 8,
+              "quote": "our computer graphics platforms leverage not only our industry-leading geforce and nvidia rtx gpus, but also optimized software stacks."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 36,
+              "quote": "in gaming, we launched the geforce rtx 4060 and 4070 gpus based on the nvidia ada lovelace architecture."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 4,
+              "quote": "our full-stack includes the foundational cuda programming model that runs on all nvidia gpus, as well as hundreds of domain-specific software libraries, software development kits, or sdks, and application programming interfaces, or apis."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 5,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu, or vgpu, software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating industrial ai and digital twin applications."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 6,
+              "quote": "in fiscal year 2025, we launched the nvidia blackwell architecture, a full set of data center scale infrastructure that includes gpus, cpus, dpus, interconnects, switch chips and systems, and networking adapters."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 25,
+              "quote": "we have also received, and continue to receive, broad requests for information from competition regulators in the european union, the united states, the united kingdom, china, and south korea regarding our sales of gpus and other nvidia products, our efforts to allocate supply, foundation models and our investments, partnerships and other agreements with companies developing foundation models, the markets in which we compete and our competition, our strategies, roadmaps, and efforts to develop,"
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 4,
+              "quote": "our full-stack includes the foundational cuda programming model that runs on all nvidia gpus, as well as hundreds of domain-specific software libraries, software development kits, or sdks, and application programming interfaces, or apis."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 5,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu, or vgpu, software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating metaverse and 3d internet applications."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 6,
+              "quote": "table of contents at the foundation of the nvidia accelerated computing platform are our gpus, which excel at parallel workloads such as the training and inferencing of neural networks."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 38,
+              "quote": "in professional visualization, we added new nvidia ampere architecture rtx gpus for workstations."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 78,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; vgpu software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating industrial ai and digital twin applications."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 84,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; vgpu software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating metaverse and 3d internet applications."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 78,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating 3d internet applications."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "nvidia_corporation",
+            "relation": "OPERATES_IN",
+            "target": "data_center_market"
+          },
+          "claim_ids": [
+            "claim_v2_8b7fb1268e8ec77255e9242f",
+            "claim_v2_40b7f14c5d240fac6954a65c",
+            "claim_v2_2506af10db6dc67cac494cec",
+            "claim_v2_61fd22364b1d888bc0d55e6b",
+            "claim_v2_a9dc70658db271cc7888a2d5",
+            "claim_v2_a06629ad17c59fd2dcd48ba6",
+            "claim_v2_c653d123fa2751532165fd9f",
+            "claim_v2_136e398d275b5b930d67877a",
+            "claim_v2_01ee0fa65f5ae47ff97cceff",
+            "claim_v2_7a8ca0fc5b62400b0532f824",
+            "claim_v2_d616b0c1ac4412b4e4f19127",
+            "claim_v2_268fb0c93e2ec9ef83903aae",
+            "claim_v2_401214bb7dc75a41cd71635f",
+            "claim_v2_f83ad7cfbc2ffb974052a2b4",
+            "claim_v2_0b89241fbf2a3b5313a16329"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 5,
+              "quote": "the compute & networking segment includes our data center accelerated computing platform; networking; automotive ai cockpit, autonomous driving development agreements, and autonomous vehicle solutions; electric vehicle computing platforms; jetson for robotics and other embedded platforms; nvidia ai enterprise and other software; and cryptocurrency mining processors, or cmp."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 6,
+              "quote": "nvidia has partnered with leading cloud service providers to host these services in their data centers."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 8,
+              "quote": "in addition, we offer a scalable data center-based simulation solution, nvidia drive sim, based on nvidia omniverse software, for digital cockpit development, as well as for testing and validating a self-driving platform."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 17,
+              "quote": "nvidia has partnered with leading cloud service providers to host these services in their data centers, and we entered into multi-year cloud service agreements in the second half of fiscal year 2023 to support these offerings and our research and development activities."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 5,
+              "quote": "data center the nvidia data center platform is focused on accelerating the most compute-intensive workloads, such as ai, data analytics, graphics, and scientific computing, delivering significantly better performance and power efficiency relative to conventional cpu-only approaches."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 6,
+              "quote": "in addition to software delivered to customers as an integral part of our data center computing platform, we offer paid licenses to nvidia ai enterprise, a comprehensive suite of enterprise-grade ai software and nvidia vgpu software for graphics-rich virtual desktops and workstations."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 7,
+              "quote": "our unified ai computing architecture starts with training deep neural networks using our data center computing solutions, and then running a full perception, fusion, planning, and control stack within the vehicle on the nvidia drive hyperion platform."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 5,
+              "quote": "the compute & networking segment is comprised of our data center accelerated computing platforms and end-to-end networking platforms including quantum for infiniband and spectrum for ethernet; our nvidia drive automated-driving platform and automotive development agreements; jetson robotics and other embedded platforms; nvidia ai enterprise and other software; and dgx cloud software and services."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 6,
+              "quote": "in addition to software delivered to customers as an integral part of our data center computing platform, we offer paid licenses to nvidia ai enterprise, a comprehensive suite of enterprise-grade ai software and nvidia vgpu software for graphics-rich virtual desktops and workstations."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 7,
+              "quote": "our unified ai computing architecture starts with training deep neural networks using our data center computing solutions, and then running a full perception, fusion, planning, and control stack within the vehicle on the nvidia drive hyperion platform."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 36,
+              "quote": "in data center, we launched ai inference platforms that combine our full-stack inference software with nvidia ada, nvidia hopper and nvidia grace hopper processors optimized for generative ai, llms and other ai workloads."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 36,
+              "quote": "nvidia has partnered with leading cloud service providers to host these services in their data centers."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 38,
+              "quote": "table of contents data center revenue was up 41% from a year ago led by strong growth from hyperscale customers and also reflects purchases made by several csp partners to support multi-year cloud service agreements for our new nvidia ai cloud service offerings and our research and development activities."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 84,
+              "quote": "the compute & networking segment includes our data center accelerated computing platform; networking; automotive ai cockpit, autonomous driving development agreements, and autonomous vehicle solutions; electric vehicle computing platforms; jetson for robotics and other embedded platforms; and nvidia ai enterprise and other software; and cmp."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 78,
+              "quote": "the compute & networking segment includes our data center accelerated computing platform; networking; automotive artificial intelligence, or ai, cockpit, autonomous driving development agreements, and autonomous vehicle solutions; electric vehicle computing platforms; jetson for robotics and other embedded platforms; nvidia ai enterprise and other software; and dgx cloud."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "nvidia_corporation",
+            "relation": "PRODUCES",
+            "target": "geforcertx4090"
+          },
+          "claim_ids": [
+            "claim_v2_a1660d55c6fdf0efb3f745cb",
+            "claim_v2_bca03de1dae7868082b6f68a",
+            "claim_v2_ee2d76b19e6b223ea1b84f6c",
+            "claim_v2_2adb48667ff616b3a921390d",
+            "claim_v2_b73184fe064daa21ccaa8a0a",
+            "claim_v2_4d25026e4abfdc2469bff323",
+            "claim_v2_3465617ebce74b26384ccf8f"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 5,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu, or vgpu, software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating metaverse and 3d internet applications."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 8,
+              "quote": "our computer graphics platforms leverage not only our industry-leading geforce and nvidia rtx gpus, but also optimized software stacks."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 36,
+              "quote": "in gaming, we launched the geforce rtx 4060 and 4070 gpus based on the nvidia ada lovelace architecture."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 5,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu, or vgpu, software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating metaverse and 3d internet applications."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 7,
+              "quote": "our technologies are instrumental in driving the gaming, design, and creative industries forward, as developers leverage our libraries and algorithms to deliver an optimized experience on our geforce and nvidia rtx platforms."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 84,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; vgpu software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating metaverse and 3d internet applications."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 78,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating 3d internet applications."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "nvidia_corporation",
+            "relation": "PRODUCES",
+            "target": "jetson_platform"
+          },
+          "claim_ids": [
+            "claim_v2_097dd0c96e0fcd68a7ba1d86",
+            "claim_v2_600a19622388a77ad254800d",
+            "claim_v2_baf6f9a9f29e0a71773a690c",
+            "claim_v2_523030797e5da175603462f9"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 5,
+              "quote": "the compute & networking segment includes our data center accelerated computing platform; networking; automotive ai cockpit, autonomous driving development agreements, and autonomous vehicle solutions; electric vehicle computing platforms; jetson for robotics and other embedded platforms; nvidia ai enterprise and other software; and cryptocurrency mining processors, or cmp."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 5,
+              "quote": "the compute & networking segment is comprised of our data center accelerated computing platforms and end-to-end networking platforms including quantum for infiniband and spectrum for ethernet; our nvidia drive automated-driving platform and automotive development agreements; jetson robotics and other embedded platforms; nvidia ai enterprise and other software; and dgx cloud software and services."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 84,
+              "quote": "the compute & networking segment includes our data center accelerated computing platform; networking; automotive ai cockpit, autonomous driving development agreements, and autonomous vehicle solutions; electric vehicle computing platforms; jetson for robotics and other embedded platforms; and nvidia ai enterprise and other software; and cmp."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 78,
+              "quote": "the compute & networking segment includes our data center accelerated computing platform; networking; automotive artificial intelligence, or ai, cockpit, autonomous driving development agreements, and autonomous vehicle solutions; electric vehicle computing platforms; jetson for robotics and other embedded platforms; nvidia ai enterprise and other software; and dgx cloud."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "nvidia_corporation",
+            "relation": "PRODUCES",
+            "target": "omniverse_platform"
+          },
+          "claim_ids": [
+            "claim_v2_5597679903b7f56a078e4e83",
+            "claim_v2_675aaccbfa408c2957fff836",
+            "claim_v2_ad5a8443823fdd9d00897e18",
+            "claim_v2_c922371dccc74e41d4ed11f2",
+            "claim_v2_4c66cfd5b684ce951b7bc13d",
+            "claim_v2_ef3fe41cd63972247c8ea8dc",
+            "claim_v2_62d29ea6e2fa9cbe9c4485d5",
+            "claim_v2_04c49b0e4b425856ead7347d",
+            "claim_v2_e0f47911d41e5d12b24e8e11",
+            "claim_v2_43432e24d81ef0dc728721aa",
+            "claim_v2_d6b755afe4a6fcda26a03117",
+            "claim_v2_fc13873d2166aa2683d586ea",
+            "claim_v2_4aedfc8a15af0de13f842904",
+            "claim_v2_215ce37ac0e56150fd768d7d",
+            "claim_v2_a1a3574ddb79d58d10164deb",
+            "claim_v2_d316428eca95a9d1d2eb3767",
+            "claim_v2_6c5ae0e3545cb77802f6682b",
+            "claim_v2_826cef8a0aa7ef7f7320fcda",
+            "claim_v2_c919d5c9f0b8da284461fe62",
+            "claim_v2_bd74f961587986713f4d1bb1",
+            "claim_v2_017d11fceef80185e0f4dd0f",
+            "claim_v2_87f591e1e56e4e9393731eff",
+            "claim_v2_cd95ca445c088b11bef6dcfe",
+            "claim_v2_b99123de3e9b771149e28e13",
+            "claim_v2_64af7d6153459795acb58d58"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 5,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu, or vgpu, software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating metaverse and 3d internet applications."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 7,
+              "quote": "nvidia omniverse is a virtual world simulation and collaboration platform for 3d workflows, such as building and operating metaverse and 3d internet applications, available as a software subscription for enterprise use and free for individual use."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 8,
+              "quote": "the drive software platform includes drive chauffeur for autonomous driving, mapping and parking services, drive concierge for intelligent in-vehicle experiences, and real time conversational ai capability based on nvidia omniverse avatar software."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 12,
+              "quote": "we plan to build earth-2, a digital twin of the earth on nvidia ai and nvidia omniverse platforms."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 17,
+              "quote": "we also offer or plan to offer standalone software solutions for ai including nvidia ai enterprise, nvidia omniverse, nvidia drive for automotive, and several other software solutions."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 36,
+              "quote": "in professional visualization, we announced new gpus based on the nvidia rtx ada lovelace architecture, and announced nvidia omniverse cloud, a fully managed service running in microsoft azure, for the development and deployment of industrial metaverse applications."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 15,
+              "quote": "we also offer or plan to offer standalone software solutions, including nvidia ai enterprise, nvidia omniverse, nvidia drive, and several other software solutions."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 17,
+              "quote": "we build technology and introduce products for new and innovative use cases and applications, such as nvidia dgx cloud services, nvidia ai foundations, omniverse platform, llms, and generative ai models."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 4,
+              "quote": "over the past 5 years, we have built full software stacks that run on top of our gpus and cuda to bring ai to the world’s largest industries, including nvidia drive stack for autonomous driving, clara for healthcare, and omniverse for industrial digitalization; and introduced the nvidia ai enterprise software – essentially an operating system for enterprise ai applications."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 5,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu, or vgpu, software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating industrial ai and digital twin applications."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 6,
+              "quote": "we offer nvidia omniverse as a development platform and operating system for building and running virtual world simulation applications, available as a software subscription for enterprise use and free for individual use."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 7,
+              "quote": "in addition, we offer a scalable data center-based simulation solution based on nvidia omniverse software to develop synthetic data for ai model training, as well as for testing and validating a self-driving platform."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 11,
+              "quote": "we launched our earth-2 initiative to create a digital twin of the earth on nvidia ai and nvidia omniverse platforms."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 15,
+              "quote": "we also offer or plan to offer standalone software solutions, including nvidia ai enterprise, nvidia omniverse, nvidia drive, and other software products."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 4,
+              "quote": "over the past 5 years, we have built full software stacks that run on top of our gpus and cuda to bring ai to the world’s largest industries, including nvidia drive stack for autonomous driving, clara for healthcare, and omniverse for industrial digitalization; and introduced the nvidia ai enterprise software – essentially an operating system for enterprise ai applications."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 5,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu, or vgpu, software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating metaverse and 3d internet applications."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 6,
+              "quote": "we offer nvidia omniverse as a development platform and operating system for building virtual world simulation applications, available as a software subscription for enterprise use and free for individual use."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 34,
+              "quote": "we build technology and introduce products for new and innovative use cases and applications such as our nvidia dgx cloud services, omniverse platform, llms, and generative ai models."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 7,
+              "quote": "in addition, we offer a scalable data center-based simulation solution, nvidia drive sim, based on nvidia omniverse software, for digital cockpit development, as well as for testing and validating a self-driving platform."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 11,
+              "quote": "we plan to build earth-2, a digital twin of the earth on nvidia ai and nvidia omniverse platforms."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 36,
+              "quote": "we also offer or plan to offer standalone software solutions for ai including nvidia ai enterprise, nvidia omniverse, nvidia drive for automotive, and several other software solutions."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 38,
+              "quote": "the nvidia ovx server reference design launched for digital twins and other omniverse applications."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 78,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; vgpu software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating industrial ai and digital twin applications."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 84,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; vgpu software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating metaverse and 3d internet applications."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 78,
+              "quote": "the graphics segment includes geforce gpus for gaming and pcs, the geforce now game streaming service and related infrastructure, and solutions for gaming platforms; quadro/nvidia rtx gpus for enterprise workstation graphics; virtual gpu software for cloud-based visual and virtual computing; automotive platforms for infotainment systems; and omniverse enterprise software for building and operating 3d internet applications."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "nvidia_corporation",
+            "relation": "PRODUCES",
+            "target": "tensor_core_gpu"
+          },
+          "claim_ids": [
+            "claim_v2_41003b0e0a88f8a6b83b0f1a",
+            "claim_v2_4938851f83150bf62ecf4002"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 7,
+              "quote": "the 40 series features our third generation rtx technology, third generation nvidia dlss, and fourth generation tensor cores to deliver up to 4x the performance of the previous generation."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 38,
+              "quote": "in data center, we announced the nvidia hopper gpu architecture and began ramping the first products based on the architecture, including the nvidia h100 tensor core gpu."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "nvidia_corporation",
+            "relation": "PRODUCES",
+            "target": "drive_platform"
+          },
+          "claim_ids": [
+            "claim_v2_58602008c86dffe3423f61ae",
+            "claim_v2_ca6d5bc523570c074384e403",
+            "claim_v2_2d261f72ddf8a35d38653d2c",
+            "claim_v2_baac2bf77edb4617ae38f9c5",
+            "claim_v2_71c0ee3076320e16b401abf9",
+            "claim_v2_a37f78e67ef1f106c56de826",
+            "claim_v2_42d302da1a9ca149e2a6e5e2",
+            "claim_v2_1cecce8beecfe2d3693681a8",
+            "claim_v2_c0dd5e381d9af60e8173a208",
+            "claim_v2_5cf7577fb7e9bc501540d1f8",
+            "claim_v2_590ca0291338592e3a2a3396",
+            "claim_v2_230e3fe5e7ed807a56505994",
+            "claim_v2_d49516e5f7ab7f0400163d4f"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 7,
+              "quote": "our unified ai computing architecture starts with training deep neural networks using our gpus, and then running a full perception, fusion, planning and control stack within the vehicle on the nvidia drive hyperion platform."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 8,
+              "quote": "in addition, we offer a scalable data center-based simulation solution, nvidia drive sim, based on nvidia omniverse software, for digital cockpit development, as well as for testing and validating a self-driving platform."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 17,
+              "quote": "we also offer or plan to offer standalone software solutions for ai including nvidia ai enterprise, nvidia omniverse, nvidia drive for automotive, and several other software solutions."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 37,
+              "quote": "table of contents electric vehicles, and announced further adoption of nvidia drive platform with byd, xpeng, gwm, li auto, zeekr and xiaomi."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 15,
+              "quote": "we also offer or plan to offer standalone software solutions, including nvidia ai enterprise, nvidia omniverse, nvidia drive, and several other software solutions."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 4,
+              "quote": "over the past 5 years, we have built full software stacks that run on top of our gpus and cuda to bring ai to the world’s largest industries, including nvidia drive stack for autonomous driving, clara for healthcare, and omniverse for industrial digitalization; and introduced the nvidia ai enterprise software – essentially an operating system for enterprise ai applications."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 7,
+              "quote": "our unified ai computing architecture starts with training deep neural networks using our data center computing solutions, and then running a full perception, fusion, planning, and control stack within the vehicle on the nvidia drive hyperion platform."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 15,
+              "quote": "we also offer or plan to offer standalone software solutions, including nvidia ai enterprise, nvidia omniverse, nvidia drive, and other software products."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 4,
+              "quote": "over the past 5 years, we have built full software stacks that run on top of our gpus and cuda to bring ai to the world’s largest industries, including nvidia drive stack for autonomous driving, clara for healthcare, and omniverse for industrial digitalization; and introduced the nvidia ai enterprise software – essentially an operating system for enterprise ai applications."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 5,
+              "quote": "the compute & networking segment is comprised of our data center accelerated computing platforms and end-to-end networking platforms including quantum for infiniband and spectrum for ethernet; our nvidia drive automated-driving platform and automotive development agreements; jetson robotics and other embedded platforms; nvidia ai enterprise and other software; and dgx cloud software and services."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 7,
+              "quote": "our unified ai computing architecture starts with training deep neural networks using our data center computing solutions, and then running a full perception, fusion, planning, and control stack within the vehicle on the nvidia drive hyperion platform."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 36,
+              "quote": "we also offer or plan to offer standalone software solutions for ai including nvidia ai enterprise, nvidia omniverse, nvidia drive for automotive, and several other software solutions."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 39,
+              "quote": "in automotive, we started production of the nvidia drive orin autonomous vehicle soc and introduced next-generation nvidia drive thor."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "nvidia_corporation",
+            "relation": "OPERATES_IN",
+            "target": "professionalvizmarket"
+          },
+          "claim_ids": [
+            "claim_v2_47b4125f14fb2b67e22a33f4",
+            "claim_v2_9cf52edb19c7cb923d91a0e2",
+            "claim_v2_84cf7df537163eac99dc5dc4"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 7,
+              "quote": "professional visualization we serve the professional visualization market by working closely with independent software vendors, or isvs, to optimize their offerings for nvidia gpus."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 6,
+              "quote": "professional visualization we serve the professional visualization market by working closely with independent software vendors, or isvs, to optimize their offerings for nvidia gpus."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 6,
+              "quote": "professional visualization we serve the professional visualization market by working closely with independent software vendors, or isvs, to optimize their offerings for nvidia gpus."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "advanced_micro_devices",
+            "relation": "PRODUCES",
+            "target": "gpu"
+          },
+          "claim_ids": [
+            "claim_v2_ac9e6d805168bc8fe8caf1d0",
+            "claim_v2_b5a42bc696f6311b58960a96",
+            "claim_v2_4522ce92e9e0454ba138eac0"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 10,
+              "quote": "our current competitors include: • suppliers and licensors of hardware and software for discrete and integrated gpus, custom chips and other accelerated computing solutions, including solutions offered for ai, such as advanced micro devices, inc., or amd, and intel corporation, or intel; • large cloud services companies with internal teams designing chips and software that incorporate accelerated or ai computing functionality as part of their internal solutions or platforms, such as alibaba grou"
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 9,
+              "quote": "our current competitors include: • suppliers and licensors of hardware and software for discrete and integrated gpus, custom chips and other accelerated computing solutions, including solutions offered for ai, such as advanced micro devices, inc., or amd, huawei technologies co."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 9,
+              "quote": "our current competitors include: • suppliers and licensors of hardware and software for discrete and integrated gpus, custom chips and other accelerated computing solutions, including solutions offered for ai, such as advanced micro devices, inc., or amd, huawei technologies co."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "united_states",
+            "relation": "EXPOSED_TO",
+            "target": "governmentregulationrisk"
+          },
+          "claim_ids": [
+            "claim_v2_e722168e839dc5b96dfe16c7",
+            "claim_v2_142da8b28b88f192d977f2c1",
+            "claim_v2_5fe1f34ae5b49c30776c8bdb"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 11,
+              "quote": "government regulations our worldwide business activities are subject to various laws, rules, and regulations of the united states as well as of foreign governments."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 10,
+              "quote": "government regulations our worldwide business activities are subject to various laws, rules, and regulations of the united states as well as of foreign governments."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 10,
+              "quote": "table of contents government regulations our worldwide business activities are subject to various laws, rules, and regulations of the united states as well as of foreign governments."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "cyberattacks",
+            "relation": "DECREASES",
+            "target": "financialcondition"
+          },
+          "claim_ids": [
+            "claim_v2_61452bf3fac1b1c53cac8180",
+            "claim_v2_907ea4e818f5b9e879091f10",
+            "claim_v2_664327798dc45500c30634c8"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 16,
+              "quote": "product, system security, and data breaches and cyber-attacks could disrupt our operations and adversely affect our financial condition, stock price and reputation."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 14,
+              "quote": "product, system security and data breaches and cyber-attacks could disrupt our operations and adversely affect our financial condition, stock price and reputation."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 14,
+              "quote": "product, system security and data breaches and cyber-attacks could disrupt our operations and adversely affect our financial condition, stock price and reputation."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "producttransitions",
+            "relation": "DECREASES",
+            "target": "revenue"
+          },
+          "claim_ids": [
+            "claim_v2_c6efc2776dcf459e9b97cd7a",
+            "claim_v2_c37c9f6a36813f909dc46995"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 19,
+              "quote": "product transitions are complex and frequently negatively impact our revenue as we often ship both new and legacy architecture products simultaneously"
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 17,
+              "quote": "qualification time for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product introductions can reduce, or create volatility in, our revenue."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "product_transition_risk",
+            "relation": "DECREASES",
+            "target": "revenue"
+          },
+          "claim_ids": [
+            "claim_v2_d31d533b162bf31da1d74c4b",
+            "claim_v2_eddaa2a226f3eeecde53e244"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 19,
+              "quote": "product transitions are complex and frequently negatively impact our revenue as we often ship both new and legacy architecture products simultaneously and we and our channel partners prepare to ship and support new products."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 17,
+              "quote": "qualification time for new products, customers anticipating product transitions, and channel partners reducing channel inventory of prior architectures ahead of new product introductions can reduce, or create volatility in, our revenue."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "supply_chain_disruption",
+            "relation": "DECREASES",
+            "target": "revenue"
+          },
+          "claim_ids": [
+            "claim_v2_08caabbfb89adb68eb486764",
+            "claim_v2_9db7b7012768316d0d9632ed"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 20,
+              "quote": "we face several risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 18,
+              "quote": "we face several risks which have adversely affected or could adversely affect our ability to meet customer demand and scale our supply chain, negatively impact longer-term demand for our products and services, and adversely affect our business operations, gross margin, revenue and/or financial results"
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "covid_19",
+            "relation": "CAUSES",
+            "target": "supply_chain_disruption"
+          },
+          "claim_ids": [
+            "claim_v2_910eff69338ea6f5467e7cd4",
+            "claim_v2_f25d470095803132a2dd3e11",
+            "claim_v2_b37b4c27112b4f16ef451bb2",
+            "claim_v2_53b6bc39885f3903b99360e6",
+            "claim_v2_adad2e1adf408deb518ceffe"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 20,
+              "quote": "extended lead times may occur if we experience other supply constraints caused by natural disasters, pandemics or other events, such as the covid-19 pandemic."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 27,
+              "quote": "covid-19-related disruptions have created and may continue to create supply chain and logistics constraints, and covid-19 containment around the world has put restrictions on, among other areas, manufacturing facilities, commerce, and support operations."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 17,
+              "quote": "extended lead times may occur if we experience other supply constraints caused by natural disasters, pandemics or other events."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 17,
+              "quote": "extended lead times may occur if we experience other supply constraints caused by natural disasters, pandemics or other events."
+            },
+            {
+              "doc_id": "2023-10-K",
+              "page": 37,
+              "quote": "covid-19-related disruptions have created and may continue to create supply chain and logistics constraints."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "natural_disaster",
+            "relation": "CAUSES",
+            "target": "supply_chain_disruption"
+          },
+          "claim_ids": [
+            "claim_v2_23eb9fa255b317011cfb1c22",
+            "claim_v2_4b6e475d109b59098808823f",
+            "claim_v2_f0c9fde284ba968945fa6905"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 20,
+              "quote": "extended lead times may occur if we experience other supply constraints caused by natural disasters, pandemics or other events, such as the covid-19 pandemic."
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 17,
+              "quote": "extended lead times may occur if we experience other supply constraints caused by natural disasters, pandemics or other events."
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 17,
+              "quote": "extended lead times may occur if we experience other supply constraints caused by natural disasters, pandemics or other events."
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "macroeconomic_conditions",
+            "relation": "INCREASES",
+            "target": "capex"
+          },
+          "claim_ids": [
+            "claim_v2_27a6b3132332bed887035f11",
+            "claim_v2_68c817259f3163d83b6106d7",
+            "claim_v2_6851020eb9f224e2c8ec2935"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 22,
+              "quote": "economic and industry uncertainty or changes, including recession or slowing growth, inflation, changes or uncertainty in fiscal, monetary, or trade policy, disruptions to capital markets, currency fluctuations, higher interest rates, tighter credit, lower capital expenditures by businesses, including on it infrastructure, increases in unemployment, labor shortages, and lower consumer confidence and spending, have in the past and/or could in the future have adverse, wide-ranging effects on our b"
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 19,
+              "quote": "economic and industry uncertainty or changes, including recession or slowing growth, inflation, changes or uncertainty in fiscal, monetary or trade policy, disruptions to capital markets and the banking system, currency fluctuations, higher interest rates, tighter credit, lower capital expenditures by businesses, including on it infrastructure, increases in unemployment, labor shortages, and lower consumer confidence and spending, global supply chain constraints and global economic and geopoliti"
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 19,
+              "quote": "economic and industry uncertainty or changes, including recession or slowing growth, inflation, changes or uncertainty in fiscal, monetary, or trade policy, disruptions to capital markets and the banking system, currency fluctuations, higher interest rates, tighter credit, lower capital expenditures by businesses, including on it infrastructure, increases in unemployment, labor shortages, and lower consumer confidence and spending, global supply chain constraints, and global economic and geopoli"
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "foreign_exchange_risk",
+            "relation": "INCREASES",
+            "target": "capex"
+          },
+          "claim_ids": [
+            "claim_v2_7c1061d6b8de8545f512ad87",
+            "claim_v2_9ed59ed13a7b249f38559ad0",
+            "claim_v2_44489769490b467d1554cf86"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 22,
+              "quote": "economic and industry uncertainty or changes, including recession or slowing growth, inflation, changes or uncertainty in fiscal, monetary, or trade policy, disruptions to capital markets, currency fluctuations, higher interest rates, tighter credit, lower capital expenditures by businesses, including on it infrastructure, increases in unemployment, labor shortages, and lower consumer confidence and spending, have in the past and/or could in the future have adverse, wide-ranging effects on our b"
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 19,
+              "quote": "economic and industry uncertainty or changes, including recession or slowing growth, inflation, changes or uncertainty in fiscal, monetary or trade policy, disruptions to capital markets and the banking system, currency fluctuations, higher interest rates, tighter credit, lower capital expenditures by businesses, including on it infrastructure, increases in unemployment, labor shortages, and lower consumer confidence and spending, global supply chain constraints and global economic and geopoliti"
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 19,
+              "quote": "economic and industry uncertainty or changes, including recession or slowing growth, inflation, changes or uncertainty in fiscal, monetary, or trade policy, disruptions to capital markets and the banking system, currency fluctuations, higher interest rates, tighter credit, lower capital expenditures by businesses, including on it infrastructure, increases in unemployment, labor shortages, and lower consumer confidence and spending, global supply chain constraints, and global economic and geopoli"
+            }
+          ]
+        },
+        {
+          "normalized_triple": {
+            "source": "cyberattacks",
+            "relation": "DECREASES",
+            "target": "revenue"
+          },
+          "claim_ids": [
+            "claim_v2_f1fd93fd621eb6b82a1f2b3c",
+            "claim_v2_1cffd1e469b11cf270da1329",
+            "claim_v2_2794ebf5e85d028d21cee501"
+          ],
+          "same_evidence_duplicate": false,
+          "different_evidence_duplicate": true,
+          "evidence_fingerprints": [
+            {
+              "doc_id": "2023-10-K",
+              "page": 23,
+              "quote": "product, system security, and data protection breaches, as well as cyber-attacks, could disrupt our operations, reduce our expected revenue and increase our expenses"
+            },
+            {
+              "doc_id": "2024-10-K",
+              "page": 20,
+              "quote": "product, system security, and data protection breaches, as well as cyber-attacks, could disrupt our operations, reduce our expected revenue"
+            },
+            {
+              "doc_id": "2025-10-K",
+              "page": 20,
+              "quote": "product, system security, and data protection incidents or breaches, as well as cyber-attacks, could disrupt our operations, reduce our expected revenue, increase our expenses, and significantly harm our business and reputation."
+            }
+          ]
+        }
+      ],
+      "note": "This machine audit only classifies duplicate normalized triples; it cannot prove semantic consistency. Duplicate normalized triples are not independently treated as errors."
+    },
+    "quote_traceability": {
+      "status": "PASS",
+      "claims_with_local_pdf_page": 381,
+      "quote_checks": 381,
+      "quote_mismatches": 0,
+      "pdf_unavailable_for_claims": 0,
+      "mismatches": [],
+      "missing_pdf_samples": [],
+      "pdf_issues": []
+    },
+    "relation_direction_and_type": {
+      "status": "PASS",
+      "relation_type_counts": {
+        "OPERATES_IN": 22,
+        "PRODUCES": 112,
+        "EXPOSED_TO": 3,
+        "INCREASES": 44,
+        "DECREASES": 62,
+        "CAUSES": 15,
+        "REPORTS_METRIC": 119,
+        "CONSTRAINS": 2,
+        "MITIGATES": 2
+      },
+      "ontology_direction_type_conflicts": 0,
+      "linkage_direction_type_conflicts": 0,
+      "ontology_samples": [],
+      "linkage_samples": [],
+      "note": "Ontology validation identifies obvious category/direction conflicts; it does not prove causal semantics."
+    }
+  },
+  "pdf_resolution": {
+    "status": "PASS",
+    "search_dirs": [
+      "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs",
+      "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs_other"
+    ],
+    "found": [
+      {
+        "doc_id": "2023-10-K",
+        "filename": "2023-10-K.pdf",
+        "path": "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs_other\\2023-10-K.pdf",
+        "directory": "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs_other"
+      },
+      {
+        "doc_id": "2024-10-K",
+        "filename": "2024-10-K.pdf",
+        "path": "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs_other\\2024-10-K.pdf",
+        "directory": "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs_other"
+      },
+      {
+        "doc_id": "2025-10-K",
+        "filename": "2025-10-K.pdf",
+        "path": "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs\\2025-10-K.pdf",
+        "directory": "C:\\Users\\32875\\OneDrive\\Desktop\\Nvidia-GraphRAG-Engine\\data\\pdfs"
+      }
+    ],
+    "missing": [],
+    "read_errors": [],
+    "note": "found lists local files resolved by exact filename; missing lists filenames absent from every search directory."
+  },
+  "limitations": [
+    "Duplicate normalized triples are classified, not independently failed; repeated claims may be valid restatements.",
+    "PDF quote checks use normalized text containment and do not establish semantic correctness or causal validity.",
+    "Ontology direction/type checks cover explicit schema rules and obvious linkage conflicts only.",
+    "This audit is not human Golden QA and does not measure answer quality or retrieval superiority."
+  ]
+}

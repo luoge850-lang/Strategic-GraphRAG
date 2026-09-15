@@ -1,0 +1,83 @@
+{
+  "schema": "strategic-graphrag-corpus-manifest/v2",
+  "generated_at_utc": "2026-09-15T07:35:12.277063+00:00",
+  "corpus_id": "nvidia-10k-2023-2025-v3",
+  "active_filings": [
+    {
+      "filename": "2023-10-K.pdf",
+      "sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+      "bytes": 1578179
+    },
+    {
+      "filename": "2024-10-K.pdf",
+      "sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+      "bytes": 1074533
+    },
+    {
+      "filename": "2025-10-K.pdf",
+      "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+      "bytes": 1274715
+    }
+  ],
+  "graph_inventory": [
+    {
+      "filing": "2023-10-K.pdf",
+      "claims": 126,
+      "evidence_pages": 44,
+      "evidence_chunks": 63
+    },
+    {
+      "filing": "2024-10-K.pdf",
+      "claims": 129,
+      "evidence_pages": 41,
+      "evidence_chunks": 58
+    },
+    {
+      "filing": "2025-10-K.pdf",
+      "claims": 126,
+      "evidence_pages": 43,
+      "evidence_chunks": 56
+    }
+  ],
+  "temporal_inventory": {
+    "disclosure_links": 96,
+    "temporal_changes": 99,
+    "quantitative_changes": 22
+  },
+  "claim_id_version": "v2",
+  "ontology_sha256": "6a33d57635d41a55547ab5a992f3b47657eed306f2e40fe72c10cd5f305db29a",
+  "provider": "deepseek",
+  "extraction_model": "deepseek-v4-flash",
+  "query_model": "deepseek-v4-flash",
+  "report_model": "deepseek-v4-flash",
+  "embedding": {
+    "backend": "sentence_transformers",
+    "model": "all-MiniLM-L6-v2",
+    "collection": "nvidia_sec_filings_active",
+    "chunk_count": 1686
+  },
+  "pipeline": {
+    "prompt_version": "v2-evidence-claim-1",
+    "source_tree_sha256": "97842ee9eb2417cdd9068494785e9bfb190a17c9cf593cb9012ce8279aefc2ba"
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "packages": {
+      "neo4j": "6.2.0",
+      "chromadb": "1.5.9",
+      "onnxruntime": "1.28.0",
+      "fastapi": "0.141.1",
+      "sentence-transformers": "5.7.0"
+    }
+  },
+  "git": {
+    "branch": "codex/v3-three-filing-evidence-graphrag",
+    "release_source_commit": "c704ae8f5fa5791b6860dd2953ab56fc9f9a79eb",
+    "dirty": true
+  },
+  "evaluation": {
+    "extraction_baseline": "reports/2026-08-14_extraction_quality_baseline.json",
+    "human_annotation_status": "UNLABELED_STRATIFIED_SAMPLE",
+    "golden_qa_status": "NO_CURRENT_HUMAN_GOLDEN_QA"
+  }
+}
