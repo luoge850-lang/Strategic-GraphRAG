@@ -80,10 +80,10 @@ The observed mean/p95 wall latency changed as follows:
 
 | Mode | Previous mean / p95 ms | Optimized mean / p95 ms |
 |---|---:|---:|
-| Vector | 33.60 / 60.54 | 41.92 / 68.64 |
-| Graph | 2352.61 / 4566.63 | 2054.45 / 4642.05 |
-| Hybrid | 4147.22 / 7621.06 | 3473.01 / 6678.56 |
-| Hybrid Temporal | 4173.81 / 8259.60 | 2994.10 / 4723.26 |
+| Vector | 33.60 / 60.54 | 57.09 / 123.46 |
+| Graph | 2352.61 / 4566.63 | 1624.89 / 2592.52 |
+| Hybrid | 4147.22 / 7621.06 | 3349.32 / 5025.02 |
+| Hybrid Temporal | 4173.81 / 8259.60 | 3496.11 / 6622.61 |
 
 These are uncached development observations. Graph mean latency improved while
 its p95 was statistically noisy; Vector regressed in this run. The safe
