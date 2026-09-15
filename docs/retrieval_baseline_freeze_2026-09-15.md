@@ -80,12 +80,15 @@ The observed mean/p95 wall latency changed as follows:
 
 | Mode | Previous mean / p95 ms | Optimized mean / p95 ms |
 |---|---:|---:|
-| Vector | 33.60 / 60.54 | 57.09 / 123.46 |
-| Graph | 2352.61 / 4566.63 | 1624.89 / 2592.52 |
-| Hybrid | 4147.22 / 7621.06 | 3349.32 / 5025.02 |
-| Hybrid Temporal | 4173.81 / 8259.60 | 3496.11 / 6622.61 |
+| Vector | 33.60 / 60.54 | 44.36 / 70.39 |
+| Graph | 2352.61 / 4566.63 | 2078.02 / 4141.55 |
+| Hybrid | 4147.22 / 7621.06 | 4294.11 / 10081.16 |
+| Hybrid Temporal | 4173.81 / 8259.60 | 5422.08 / 10222.07 |
 
-These are uncached development observations. Graph mean latency improved while
-its p95 was statistically noisy; Vector regressed in this run. The safe
-conclusion is that Hybrid and Hybrid Temporal improved on this rerun, not that
-all modes are universally faster. No database or PDF was changed.
+These are uncached development observations. The latest run encountered a
+transient Aura routing failure during evaluation, so its Hybrid p95 and
+Hybrid-Temporal p95 are not evidence of a stable performance regression or
+improvement. The implementation change is still valid at the contract level:
+retrieval-only mode no longer performs a filing-wide negative-evidence scan.
+Stable latency claims require repeated cold/warm runs with a controlled Neo4j
+endpoint and must keep cache state separate. No database or PDF was changed.

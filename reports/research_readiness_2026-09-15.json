@@ -1,6 +1,6 @@
 {
   "schema": "strategic-graphrag-research-readiness/v1",
-  "generated_at_utc": "2026-09-15T08:35:17.125589+00:00",
+  "generated_at_utc": "2026-09-15T08:44:11.517130+00:00",
   "status": "NOT_READY",
   "blocking_failures": [
     "human_golden_qa_available",
