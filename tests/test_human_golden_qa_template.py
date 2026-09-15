@@ -8,6 +8,7 @@ from scripts.prepare_human_golden_qa import (
     DEFAULT_OUTPUT,
     CURRENT_CANDIDATE,
     HUMAN_FIELDS,
+    _select_candidates,
     prepare_human_golden_qa,
 )
 
@@ -82,6 +83,33 @@ class HumanGoldenQATemplateTests(unittest.TestCase):
             self.assertEqual(reviewed_rows[0]["reviewer"], "")
             self.assertEqual(reviewed_rows[0]["review_notes"], "")
             self.assertTrue(all(not reviewed_rows[0][field] for field in HUMAN_FIELDS))
+
+    def test_minimum_workset_preserves_multi_hop_and_abstention_strata(self):
+        candidates = [
+            {"id": f"S-{index}", "question_type": "single_hop"}
+            for index in range(25)
+        ] + [
+            {"id": f"M-{index}", "question_type": "multi_hop"}
+            for index in range(9)
+        ] + [
+            {"id": f"U-{index}", "question_type": "unanswerable_temporal"}
+            for index in range(5)
+        ]
+
+        selected = _select_candidates(candidates, 30)
+        self.assertEqual(len(selected), 30)
+        self.assertEqual(
+            {row["question_type"] for row in selected[-10:]},
+            {"multi_hop", "unanswerable_temporal"},
+        )
+        self.assertEqual(
+            sum(row["question_type"] == "multi_hop" for row in selected),
+            5,
+        )
+        self.assertEqual(
+            sum(row["question_type"] == "unanswerable_temporal" for row in selected),
+            5,
+        )
 
     def test_candidate_input_cannot_be_selected_as_output(self):
         with tempfile.TemporaryDirectory() as directory:

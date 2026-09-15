@@ -221,7 +221,7 @@ export default function GoldenQAReviewPanel() {
       </div>
 
       <div className="card-mono" style={{ border: "1px solid var(--grid)", marginBottom: 18, fontSize: 10.5, lineHeight: 1.65 }}>
-        <strong>你只需要完成三件事：</strong>先读问题和证据句子；再选“可回答”或“不可回答 / 应拒答”；最后填写一句简短事实、勾选证据和页码。当前工作集有 {summary.total} 条，已经超过最低 30 条，不需要额外创建文件。遇到看不懂或证据不清楚的题，可以选择不可回答并在备注写“证据不足”，不要猜测。
+        <strong>你只需要完成三件事：</strong>先读问题和证据句子；再选“可回答”或“不可回答 / 应拒答”；最后填写一句简短事实、勾选证据和页码。当前工作集有 {summary.total} 条，包含单跳、多跳和拒答题，满足最低 30 条，不需要额外创建文件。遇到看不懂或证据不清楚的题，可以选择不可回答并在备注写“证据不足”，不要猜测。
       </div>
 
       <div className="card-mono" style={{ border: "1px solid var(--grid)", marginBottom: 18 }}>

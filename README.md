@@ -44,8 +44,9 @@ sample than the original 60-row three-filing baseline; they are not Recall/F1
 and should not be reported as a statistically significant before/after result.
 Neither file is an independent human Golden QA set and neither should be
 reported as one.
-The current Golden QA worklist is `evaluation/golden_qa_human_v2.jsonl` with 39
-blank, claim-ID-v2-linked rows. The older `golden_qa_human_v1.jsonl` is a
+The current Golden QA worklist is `evaluation/golden_qa_human_v2.jsonl` with 30
+blank, stratified claim-ID-v2-linked rows (20 single-hop, 5 multi-hop, and 5
+abstention cases). The full 39-row candidate remains separate. The older `golden_qa_human_v1.jsonl` is a
 historical worklist whose candidate IDs no longer resolve in the current graph.
 The latest machine-readable readiness audit is
 `reports/research_readiness_2026-09-15.json` and is intentionally fail-closed.

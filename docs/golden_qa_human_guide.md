@@ -11,7 +11,7 @@
 金标准，候选答案、`answerable` 和证据 ID 都可能有错。
 
 `evaluation/golden_qa_human_v2.jsonl` 是根据当前 claim ID v2 图谱重新生成的
-人工填写工作副本，共 39 条，超过最低 30 条。旧的
+人工填写工作副本，共 30 条，按 20 条单跳、5 条多跳、5 条不可回答分层，满足最低 30 条。完整的 39 条自动候选仍保留在候选文件中。旧的
 `evaluation/golden_qa_human_v1.jsonl` 使用旧候选 ID，只保留作历史证据，不能
 继续作为当前工作集。当前 Demo 优先读取 v2。运行
 `scripts/prepare_human_golden_qa.py` 也会优先使用当前候选集并生成 v2。新工作副本与候选答案字段分离，
