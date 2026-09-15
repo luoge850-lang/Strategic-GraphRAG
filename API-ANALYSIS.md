@@ -2,15 +2,23 @@
 
 > 不带滤镜，纯数据对比。目标：先用免费 API 完成开发，后续实验阶段再切换付费。
 
+> **审计校正（2026-09-15）**：本文是历史候选方案选型笔记，不是当前运行
+> 配置，也不是本项目的实验结果。当前 `.env` 已核实的运行 Provider/Model
+> 是 `deepseek/deepseek-v4-flash`；Gemini、Groq/Llama 和 OpenRouter 仅是
+> 候选方案。价格、配额、速度、上下文窗口和第三方 benchmark 都具有时效性，
+> 且未在本项目中独立核验，不能直接写入论文作为事实。
+
 ---
 
 ## 一句话结论
 
-**开发阶段用 Gemini 2.5 Flash 做提取 + Groq 做批量管线。两者完全免费，无需信用卡。实验阶段迁移到 DeepSeek V4-Flash（~¥20 完成全部实验）。**
+**历史建议曾考虑 Gemini 2.5 Flash 与 Groq/Llama 作为开发候选；当前项目实际
+运行使用 DeepSeek V4-Flash。任何成本和免费额度结论都必须按运行时和账单
+重新核验。**
 
 ---
 
-## 1. 免费 API 硬数据对比（2026 年 7 月）
+## 1. 免费 API 历史快照对比（2026 年 7 月，待重新核验）
 
 |  | **Gemini 2.5 Flash** | **Groq (Llama 3.3 70B)** | **OpenRouter 免费** | **DeepSeek V4-Flash** |
 |---|---|---|---|---|
@@ -148,9 +156,13 @@ GROQ_API_KEY=你的Groq key (去 console.groq.com 创建，免费)
 
 **事实 3**：在你的项目里，80% 的 LLM 调用是结构化 JSON 提取。Gemini 和 DeepSeek 都原生支持 JSON mode（通过 response_format 参数约束输出必须是合法 JSON）。Groq/Llama 不支持——你必须靠 prompt engineering 让模型输出 JSON，失败率更高。
 
-**事实 4**：在 2026 年 7 月发布的最新提取基准测试中，Gemini 2.5 Flash 以 0.76 mean concordance 排名第一，超越了 GPT-5 Instant (0.63)。Llama 3.3 70B 未出现在该测试中。
+**未核实项 4**：原文提到的 2026 年 7 月第三方提取 benchmark 及其中的
+0.76/0.63 数值没有在本项目中提供可复核来源，不能作为论文事实或本项目
+模型效果结论。Llama 3.3 70B 也没有当前项目的实际运行证据。
 
-**事实 5**：如果论文中写 "We use Llama 3.3 70B via Groq for extraction"，审稿人的反应是"为什么用 Groq？"。如果写 "We use DeepSeek V4-Flash / Gemini 2.5 Flash"，审稿人的反应是"好的，这个模型我知道"。
+**写作边界 5**：论文应只写实际运行并记录在实验报告中的 Provider、Model、
+Prompt、temperature 和缓存状态；不要把候选模型、主观审稿人反应或未核验
+benchmark 当作项目事实。
 
 **客观结论**：Groq 在速度上有绝对优势，但在结构化提取质量、学术引用规范性和 JSON mode 支持上处于劣势。**作为开发阶段的辅助工具完全合适，但不适合作为论文中的主力模型。**
 

@@ -44,9 +44,11 @@ Strategic-GraphRAG 是一个面向 NVIDIA SEC 10-K 财报的证据约束型 Grap
 - 其中两个旧 claim ID 在 2025 替换后已经失效或发生变化，必须重新映射。
 - 当前的 27/30 relation/evidence 结果只能作为 precision-like 诊断，不能
   直接当作 Recall 或 F1。
-- Golden QA 还没有全部完成人工复核，因此四种检索模式还没有正式准确率。
-- 2025 图谱替换后，`TemporalFact` 和 `TemporalChange` 等派生模型需要重新
-  物化；在完成前不要报告旧的时序节点数量或时序准确率。
+- Golden QA 还没有全部完成人工复核，因此四种检索模式目前只有自动 Silver
+  回归指标，没有独立人工金标准下的正式答案质量结论。
+- 2025 图谱替换后的 `TemporalFact` 和 `TemporalChange` 等派生模型已经重新
+  物化并通过结构检查；未来任何图谱重建后都必须重新物化、捕获快照并审计，
+  不能沿用旧的时序数量或时序结果。
 - 财报中的 `CAUSES` 表示公司披露的关系，不等同于经过计量识别的因果效应，
   不能据此宣称投资收益、概率或反事实结论。
 
@@ -79,8 +81,9 @@ EvidenceClaim、四种检索模式、170 次 LLM 调用全部成功的 2025 重�
 
 ## 接下来按这个顺序推进
 
-1. 先保存 Neo4j 当前快照，并重新物化 disclosure links、financial
-   observations、TemporalFact 和 TemporalChange；完成后重新捕获快照和审计。
+1. **已完成（当前冻结状态）**：保存 Neo4j 快照并重新物化 disclosure links、
+   financial observations、TemporalFact 和 TemporalChange；未来重建时重复这
+   一流程，并在替换前后重新捕获快照和审计。
 2. 基于当前 claim ID 生成新的抽取标注候选集，保留旧样本为历史对照，不覆盖。
 3. 建立至少 30 条人工 Golden QA：每条只需核对问题、证据、是否可回答、标准
    答案和拒答条件；不需要判断公司经营好坏。

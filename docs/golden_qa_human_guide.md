@@ -10,10 +10,11 @@
 `AUTO_GENERATED_REGRESSION_CANDIDATE`。它可以帮助发现检索退化，但不是人工
 金标准，候选答案、`answerable` 和证据 ID 都可能有错。
 
-`evaluation/golden_qa_human_v1.jsonl` 是从候选复制出的独立空白审阅集。脚本
-会把候选字段改名为 `candidate_*` 供追溯，并将人工填写字段留空，状态设为
+`evaluation/golden_qa_human_v1.jsonl` 是从候选生成的人工填写工作副本。它与
+候选答案字段分离，但问题来源仍然不是独立人工设计；脚本会把候选字段改名
+为 `candidate_*` 供追溯，并将人工填写字段留空，状态设为
 `HUMAN_REVIEW_PENDING`。生成这个模板不等于完成审阅，也不能把它直接当作
-Golden QA 使用。
+独立 Golden QA 使用。
 
 最终只有人工核对完成、状态改为 `HUMAN_REVIEWED` 的记录，才能进入 Golden
 QA。候选字段是参考和审计线索，不是人工结论；不要直接复制候选答案或

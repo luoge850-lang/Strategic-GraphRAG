@@ -57,6 +57,145 @@ def _latest_file(directory: Path, *patterns: str) -> Path | None:
     return max(candidates, key=lambda path: (path.stat().st_mtime_ns, path.name))
 
 
+def _cache_replay_evidence(root: Path, reports_dir: Path) -> tuple[dict[str, Any], bool]:
+    """Read matching cache reports without treating replay as fresh repeatability."""
+
+    record_path = _latest_file(reports_dir, "rebuild_2025_cache_record_*.json")
+    replay_path = _latest_file(reports_dir, "rebuild_2025_cache_replay_*.json")
+    evidence: dict[str, Any] = {
+        "record_report": str(record_path.relative_to(root)) if record_path else None,
+        "replay_report": str(replay_path.relative_to(root)) if replay_path else None,
+        "cache_path": None,
+        "cache_file_records": None,
+        "cache_file_unique_keys": None,
+        "record": None,
+        "replay": None,
+        "same_frozen_context": False,
+        "same_normalized_output": False,
+        "errors": [],
+        "interpretation": (
+            "Deterministic replay of a frozen response artifact only; this is not fresh "
+            "external-model repeatability, semantic correctness, or human Golden QA."
+        ),
+    }
+
+    def read_run(path: Path | None) -> dict[str, Any] | None:
+        if path is None:
+            evidence["errors"].append("missing cache record/replay report matching the required naming pattern")
+            return None
+        try:
+            report = _load_json(path)
+        except (OSError, ValueError) as exc:
+            evidence["errors"].append(f"invalid report {path.relative_to(root)}: {exc}")
+            return None
+        files = report.get("files")
+        if not isinstance(files, list) or not files or not isinstance(files[0], dict):
+            evidence["errors"].append(f"missing files[0] in {path.relative_to(root)}")
+            return None
+        file_report = files[0]
+        llm_report = file_report.get("llm") or {}
+        cache_report = llm_report.get("cache") or {}
+        if not isinstance(cache_report, dict):
+            evidence["errors"].append(f"missing llm.cache in {path.relative_to(root)}")
+            return None
+        return {
+            "path": str(path.relative_to(root)),
+            "status": file_report.get("status"),
+            "dry_run": bool(file_report.get("dry_run", False)),
+            "document_sha256": file_report.get("document_sha256"),
+            "triples_extracted": file_report.get("triples_extracted"),
+            "accepted_triples": llm_report.get("accepted_triples"),
+            "network_calls": llm_report.get("network_calls"),
+            "llm_provider": file_report.get("llm_provider"),
+            "llm_model": file_report.get("llm_model"),
+            "prompt_version": file_report.get("prompt_version"),
+            "extraction_temperature": llm_report.get("extraction_temperature"),
+            "cache": {
+                "mode": cache_report.get("mode"),
+                "path": cache_report.get("path"),
+                "schema_version": cache_report.get("schema_version"),
+                "hits": cache_report.get("hits"),
+                "misses": cache_report.get("misses"),
+                "writes": cache_report.get("writes"),
+                "key_count": cache_report.get("key_count"),
+                "corrupt_records": cache_report.get("corrupt_records"),
+                "duplicate_keys": cache_report.get("duplicate_keys"),
+            },
+        }
+
+    record = read_run(record_path)
+    replay = read_run(replay_path)
+    evidence["record"] = record
+    evidence["replay"] = replay
+    if not record or not replay:
+        return evidence, False
+
+    record_cache = record["cache"]
+    replay_cache = replay["cache"]
+    cache_path_value = record_cache.get("path") or replay_cache.get("path")
+    if cache_path_value:
+        cache_path = Path(str(cache_path_value))
+        if not cache_path.is_absolute():
+            cache_path = root / cache_path
+        evidence["cache_path"] = str(cache_path.relative_to(root)) if cache_path.exists() else str(cache_path)
+        if cache_path.exists():
+            try:
+                cache_rows = _load_jsonl(cache_path)
+                cache_keys = [row.get("key") for row in cache_rows]
+                evidence["cache_file_records"] = len(cache_rows)
+                evidence["cache_file_unique_keys"] = len({key for key in cache_keys if key})
+            except (OSError, ValueError) as exc:
+                evidence["errors"].append(f"invalid cache file {cache_path}: {exc}")
+        else:
+            evidence["errors"].append(f"missing cache file: {cache_path}")
+    else:
+        evidence["errors"].append("cache path is absent from both reports")
+
+    context_fields = (
+        "document_sha256",
+        "llm_provider",
+        "llm_model",
+        "prompt_version",
+        "extraction_temperature",
+    )
+    evidence["same_frozen_context"] = all(record.get(field) == replay.get(field) for field in context_fields)
+    evidence["same_normalized_output"] = (
+        record.get("triples_extracted") == replay.get("triples_extracted")
+        and record.get("accepted_triples") == replay.get("accepted_triples")
+    )
+    same_cache = (
+        record_cache.get("path") == replay_cache.get("path")
+        and record_cache.get("schema_version") == replay_cache.get("schema_version")
+        and record_cache.get("key_count") == replay_cache.get("key_count")
+        and record_cache.get("key_count") == evidence.get("cache_file_unique_keys")
+        and int(record_cache.get("key_count") or 0) > 0
+    )
+    passed = (
+        not evidence["errors"]
+        and record.get("status") == "completed"
+        and replay.get("status") == "completed"
+        and record.get("dry_run")
+        and replay.get("dry_run")
+        and evidence["same_frozen_context"]
+        and evidence["same_normalized_output"]
+        and record.get("network_calls") == record_cache.get("writes")
+        and int(record.get("network_calls") or 0) > 0
+        and replay.get("network_calls") == 0
+        and record_cache.get("mode") == "record"
+        and replay_cache.get("mode") == "replay"
+        and record_cache.get("hits") == 0
+        and replay_cache.get("hits") == replay_cache.get("key_count")
+        and record_cache.get("writes") == record_cache.get("key_count")
+        and replay_cache.get("writes") == 0
+        and record_cache.get("corrupt_records") == 0
+        and replay_cache.get("corrupt_records") == 0
+        and record_cache.get("duplicate_keys") == 0
+        and replay_cache.get("duplicate_keys") == 0
+        and same_cache
+    )
+    return evidence, passed
+
+
 def _check(
     checks: list[dict[str, Any]],
     name: str,
@@ -504,7 +643,19 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
         len(extraction_runs) >= 2 and len(run_fingerprints) == 1,
         {"successful_frozen_runs": len(extraction_runs), "runs": extraction_runs},
         "same output under the same frozen configuration",
-        note="At least two successful runs with the same corpus, model, prompt, temperature, and output count are required before claiming repeatability.",
+        note="This gate intentionally requires matching independent external invocations. Cache replay is reported separately and cannot satisfy fresh external-model repeatability.",
+    )
+
+    cache_evidence, cache_replay_passed = _cache_replay_evidence(root, reports_dir)
+    facts["cache_repeatability"] = cache_evidence
+    _check(
+        checks,
+        "cache_replay_is_deterministic",
+        cache_replay_passed,
+        cache_evidence,
+        "dated record/replay reports and cache keys agree with zero replay network calls",
+        blocking=False,
+        note="This is deterministic replay of a frozen response artifact only; it is not fresh external-model repeatability, semantic correctness, or human Golden QA.",
     )
 
     has_legacy_src = (root / "src").exists()

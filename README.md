@@ -5,7 +5,7 @@ filings. The project turns SEC PDFs into a strict Neo4j evidence graph,
 combines graph traversal with filing-scoped vector retrieval, and returns
 structured answers whose citations can be joined back to verbatim PDF text.
 
-> Research status as of 2026-09-14: the engineering baseline is usable, the
+> Research status as of 2026-09-15: the engineering baseline is usable, the
 > strict graph audit passes, and an automatic 37-question Silver retrieval
 > regression is available for all four modes. This is not human gold. The
 > fail-closed readiness audit remains `NOT_READY` because independent human
@@ -44,8 +44,9 @@ sample than the original 60-row three-filing baseline; they are not Recall/F1
 and should not be reported as a statistically significant before/after result.
 Neither file is an independent human Golden QA set and neither should be
 reported as one.
-The machine-readable readiness audit is
-`reports/research_readiness_current.json` and is intentionally fail-closed.
+The latest machine-readable readiness audit is
+`reports/research_readiness_2026-09-15.json` and is intentionally fail-closed.
+The default audit output remains `reports/research_readiness_current.json`.
 The latest 30-row machine-readable annotation audit is
 `reports/extraction_annotation_audit_2025_post_rebuild_2026-09-03.json`; the
 historical audit is
@@ -149,8 +150,10 @@ After building the frontend, the repeatable Windows launcher is:
 .\scripts\start_demo.ps1 -Restart
 ```
 
-The launcher waits for `/health/live`; `/health/ready` can still report
-`degraded` when Neo4j or an external LLM is unavailable.
+The launcher waits for `/health/ready`, including a bounded retry window for a
+waking cloud Neo4j instance. It fails with the last dependency error and log
+tail if readiness is not achieved; a merely live API is not treated as ready
+for graph queries.
 
 If `/health/live` is `alive` but `/health/ready` is `503`, the frontend process
 is running and the missing graph is an external dependency problem. Re-copy the
@@ -165,7 +168,7 @@ python -m pytest -q
 python scripts/check_runtime.py
 python -m compileall -q strategic_graphrag scripts tests
 python scripts/plan_incremental_update.py `
-  --manifest reports/2026-08-14_corpus_manifest.json `
+  --manifest reports/corpus_manifest_2026-09-15.json `
   --output reports/incremental_plan.json
 python scripts/audit_strict_chains.py --output reports/strict_chains.json
 python scripts/audit_research_readiness.py
@@ -179,7 +182,7 @@ cd frontend
 npm run build
 ```
 
-The current working tree passed 84 Python tests, including focused Python
+The current working tree passed 94 Python tests, including focused Python
 contracts plus reproducibility checks, Python compilation,
 frontend TypeScript/Vite production build, Neo4j/Chroma post-clean checks, stable
 ID consistency, strict path validation, API health, and browser rendering. The
@@ -241,7 +244,7 @@ This is a strong engineering candidate, not yet a completed research result:
   intensified/mitigated/resolved labels and an independently labeled temporal
   benchmark remain open.
 - The four retrieval modes are implemented and evaluated on the automatic
-  Silver set in `reports/retrieval_benchmark_silver_2026-09-14.json`. On its
+  Silver set in `reports/retrieval_benchmark_silver_2026-09-15.json`. On its
   common page-level unit and 32 answerable questions, the observed macro
   Recall@5/MRR are Vector 0.2188/0.0828, Graph 0.7009/0.7083, Hybrid
   0.5134/0.4740, and Hybrid Temporal 0.5446/0.5000. Graph is higher than
@@ -261,7 +264,9 @@ This is a strong engineering candidate, not yet a completed research result:
   governance, consent, retention, and provider-failure behavior.
 
 See [the P0/P1 acceptance audit](reports/2026-08-14_p0_p1_acceptance.md) and the
-[machine-readable corpus manifest](reports/2026-08-14_corpus_manifest.json).
+[current machine-readable corpus manifest](reports/corpus_manifest_2026-09-15.json).
+The older `reports/2026-08-14_corpus_manifest.json` is retained as historical
+evidence and must not be used as the current graph inventory.
 The current frozen baseline is documented in the
 [v3.1 release notes](reports/2026-08-17_v3.1_release_notes.md) and
 [v3.1 freeze manifest](reports/2026-08-17_v3.1_freeze_manifest.json).
@@ -274,6 +279,9 @@ The delivery cleanup and retained/deleted-file decisions are recorded in
 [delivery_cleanup_manifest.md](docs/delivery_cleanup_manifest.md).
 The graduation-project and application-material positioning is summarized in
 [graduation_application_brief.md](docs/graduation_application_brief.md).
+The current four-mode baseline is summarized in
+`docs/retrieval_baseline_freeze_2026-09-15.md`; the machine-only semantic
+consistency audit is in `reports/graph_semantic_consistency_2026-09-15.json`.
 
 ## Next research milestones
 

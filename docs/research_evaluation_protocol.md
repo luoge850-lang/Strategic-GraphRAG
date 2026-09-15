@@ -149,8 +149,15 @@ quality, or statistical superiority. The report must keep the status
 `AUTO_GENERATED_SILVER_NOT_HUMAN_GOLD`, explicitly identify the data as
 auto-generated Silver, and state that independent human Golden QA is missing.
 
-The 2026-09-14 rerun in
-`reports/retrieval_benchmark_silver_2026-09-14.json` observed the following
+The 2026-09-15 read-only semantic audit found 381 claims with complete linkage,
+zero normalized quote mismatches, and zero obvious ontology direction/type
+conflicts. It classified 69 repeated normalized-triple groups as different-
+evidence duplicates and 0 as same-evidence duplicate groups. These counts are
+machine classifications for review; different evidence is not proof of
+semantic consistency and this audit is not human Golden QA.
+
+The 2026-09-15 rerun in
+`reports/retrieval_benchmark_silver_2026-09-15.json` observed the following
 page-level macro results on 32 answerable questions (plus 5 deterministic
 unsupported questions):
 
@@ -183,7 +190,10 @@ confounded with the retrieval comparison.
 --require_llm --dry_run --output_stats reports/rebuild_2025_repeatability.json`
 performs an extraction-only replay: it parses the same PDF, uses the configured
 provider and prompt, and deliberately skips Neo4j writes and post-processing.
-The readiness audit compares the document hash, model, prompt version,
+The current corpus manifest is
+`reports/corpus_manifest_2026-09-15.json`; the older
+`reports/2026-08-14_corpus_manifest.json` is historical and is not the current
+inventory. The readiness audit compares the document hash, model, prompt version,
 temperature, and extracted-claim count. In the 2026-09-09 replay, the frozen
 run produced 126 accepted claims and the second external-LLM call produced 131
 at temperature 0.0. This 126-versus-131 observation remains historical context

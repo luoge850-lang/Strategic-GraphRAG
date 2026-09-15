@@ -71,43 +71,100 @@ $process = Start-Process `
     -RedirectStandardOutput $stdoutPath `
     -RedirectStandardError $stderrPath
 
-$deadline = (Get-Date).AddSeconds(30)
-$live = $null
-do {
-    Start-Sleep -Milliseconds 750
-    try {
-        $live = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/health/live" -TimeoutSec 3
-    } catch {
-        $live = $null
+function Get-ReadinessDependencyError($payload) {
+    $parts = @()
+    if ($null -ne $payload -and $null -ne $payload.dependencies) {
+        foreach ($dependency in $payload.dependencies.PSObject.Properties) {
+            $value = $dependency.Value
+            if (-not [bool]$value.ready) {
+                $detail = $value.error
+                if (-not $detail) { $detail = $value.status }
+                if (-not $detail) { $detail = "not ready" }
+                $parts += "$($dependency.Name): $detail"
+            }
+        }
     }
-} while ($null -eq $live -and (Get-Date) -lt $deadline)
+    if ($parts.Count -eq 0) {
+        if ($null -ne $payload -and $payload.status) {
+            return "readiness status: $($payload.status)"
+        }
+        return "No readiness payload received."
+    }
+    return ($parts -join "; ")
+}
 
-if ($null -eq $live) {
-    $errorTail = if (Test-Path -LiteralPath $stderrPath) {
-        (Get-Content -LiteralPath $stderrPath -Tail 20) -join [Environment]::NewLine
-    } else {
-        "No stderr log was created."
+function Get-LogTail([string]$path) {
+    if (Test-Path -LiteralPath $path) {
+        return (Get-Content -LiteralPath $path -Tail 30) -join [Environment]::NewLine
     }
-    throw "Demo failed to become live within 30 seconds. $errorTail"
+    return "No log was created."
+}
+
+# /health/ready may return 503 while the cloud Neo4j dependency is waking up.
+# Keep retrying the dependency-aware probe within a bounded startup window.
+$readinessTimeoutSeconds = 120
+$readinessRequestTimeoutSeconds = 5
+$readinessPollMilliseconds = 1000
+$deadline = (Get-Date).AddSeconds($readinessTimeoutSeconds)
+$ready = $null
+$lastDependencyError = "No readiness response received."
+while ((Get-Date) -lt $deadline) {
+    Start-Sleep -Milliseconds $readinessPollMilliseconds
+    try {
+        $candidate = Invoke-RestMethod `
+            -Uri "http://127.0.0.1:$Port/health/ready" `
+            -TimeoutSec $readinessRequestTimeoutSeconds `
+            -ErrorAction Stop
+        $ready = $candidate
+        if ($ready.status -eq "ready") { break }
+        $lastDependencyError = Get-ReadinessDependencyError $ready
+    } catch {
+        $lastDependencyError = $_.Exception.Message
+        $errorBody = $_.ErrorDetails.Message
+        if (-not $errorBody -and $null -ne $_.Exception.Response) {
+            try {
+                $reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
+                $errorBody = $reader.ReadToEnd()
+                $reader.Dispose()
+            } catch {
+                # Keep the transport error when the response body is unavailable.
+            }
+        }
+        if ($errorBody) {
+            try {
+                $errorPayload = $errorBody | ConvertFrom-Json
+                $lastDependencyError = Get-ReadinessDependencyError $errorPayload
+            } catch {
+                # Keep the transport error when the response is not JSON.
+            }
+        }
+    }
+}
+
+if ($null -eq $ready -or $ready.status -ne "ready") {
+    $stderrTail = Get-LogTail $stderrPath
+    $stdoutTail = Get-LogTail $stdoutPath
+    throw @"
+Demo failed to become ready within $readinessTimeoutSeconds seconds.
+Last dependency error: $lastDependencyError
+Stderr log tail:
+$stderrTail
+Stdout log tail:
+$stdoutTail
+"@
 }
 
 # Python may expose a child process as the actual listener on Windows. Report
 # the listener PID because that is the process controlled by -Restart.
 $listenerPids = @(Get-ListeningPids)
-$ready = $null
-try {
-    $ready = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/health/ready" -TimeoutSec 3
-} catch {
-    $ready = $null
-}
-
 [PSCustomObject]@{
     url = "http://127.0.0.1:$Port/"
     pid = if ($listenerPids.Count -eq 1) { $listenerPids[0] } else { $listenerPids }
     launcher_pid = $process.Id
-    status = $live.status
-    readiness = if ($ready) { $ready.status } else { "unknown" }
-    version = $live.version
+    status = $ready.status
+    readiness = $ready.status
+    dependencies = $ready.dependencies
+    version = $ready.version
     stdout_log = $stdoutPath
     stderr_log = $stderrPath
 } | ConvertTo-Json -Compress

@@ -29,10 +29,14 @@
 - 向量集合为 `nvidia_sec_filings_active`，当前有 1,686 个 chunks。
 - FastAPI/React Demo 已有固定启动脚本；健康检查同时验证本地 API、Neo4j、
   向量库和 LLM。
-- 自动 Silver 检索集有 37 条问题，四种模式均已运行，结果保存在
-  `reports/retrieval_benchmark_silver_2026-09-09.json`。
+- 自动 Silver 检索集有 37 条问题，四种模式均已运行，当前冻结结果保存在
+  `reports/retrieval_benchmark_silver_2026-09-15.json`，配置说明见
+  `docs/retrieval_baseline_freeze_2026-09-15.md`。
 - Silver 结果只用于工程回归和消融：其期望证据来自当前图谱，不能当作独立
   人工金标准，也不能证明抽取语义 Recall 或论文优越性。
+- 当前三份 PDF、图谱 inventory、claim ID 版本、向量集合和运行时配置的派生
+  清单见 `reports/corpus_manifest_2026-09-15.json`；
+  `reports/2026-08-14_corpus_manifest.json` 是历史清单，不应覆盖当前事实。
 
 ## 当前明确限制
 
@@ -44,7 +48,9 @@
    不能写成正式论文指标。
 2. 同一 PDF、同一模型、同一 prompt、temperature 0.0 的第二次外部 LLM 抽取
    得到 131 条，而冻结写入运行得到 126 条。temperature 0 不能保证外部服务
-   完全确定性；论文实验应使用版本化响应缓存或冻结抽取产物，并明确记录。
+   完全确定性。版本化 response cache 的 record/replay 已通过（126 条、170
+   个唯一键、replay 零网络调用），但这只能证明冻结响应的确定性回放，不能
+   把它写成 fresh external-LLM exact repeatability。
 
 这两个限制不是图谱结构审计失败：前者是金标准缺失，后者是外部模型复现性
 不足。当前结果适合作为高质量工程原型和毕业设计基础，正式语义结论仍需补齐
@@ -56,8 +62,8 @@
    输出新报告、通过连接安全门，再替换单一 filing。
 2. 用自动 Silver 作为每次代码修改后的回归门，观察四种模式是否出现错误、
    证据页错配、跨年度遗漏或拒答失效。
-3. 为抽取过程增加版本化 response cache 或保存完整的冻结抽取 JSON；在此
-   之前不宣称外部 LLM exact repeatability。
+3. 维护版本化 response cache，并把 fresh external-LLM repeatability 与 cache
+   replay 分开报告；在此基础上不宣称外部 LLM exact repeatability 已满足。
 4. 如果要写正式论文实验，再进行独立人工关系 inventory 和 30--50 条
    Golden QA；人工只判断证据和问题是否被支持，不需要判断股票涨跌。
 5. 四种基线稳定后再加入只读 Agent。Agent 只能分解问题、选择检索工具和
@@ -71,6 +77,7 @@
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe -m compileall -q strategic_graphrag scripts tests
 .\scripts\audit_research_readiness.py
+.\.venv\Scripts\python.exe scripts/audit_graph_semantic_consistency.py
 .\scripts\start_demo.ps1 -Restart
 ```
 
