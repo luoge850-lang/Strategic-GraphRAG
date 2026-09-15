@@ -306,8 +306,22 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
     sample_path = root / "evaluation" / "annotation" / "extraction_sample_2025_post_repair_v2.jsonl"
     human_annotation_path = root / "evaluation" / "annotation" / "extraction_sample_2025_post_repair_human_v1.jsonl"
     baseline_path = root / "evaluation" / "annotation" / "extraction_sample_v1.jsonl"
-    golden_candidate_path = root / "data" / "evaluation" / "golden_qa_v2.jsonl"
-    human_golden_path = root / "evaluation" / "golden_qa_human_v1.jsonl"
+    golden_candidate_paths = (
+        root / "data" / "evaluation" / "golden_qa_v3_current.jsonl",
+        root / "data" / "evaluation" / "golden_qa_v2.jsonl",
+    )
+    golden_candidate_path = next(
+        (path for path in golden_candidate_paths if path.exists()),
+        golden_candidate_paths[0],
+    )
+    human_golden_paths = (
+        root / "evaluation" / "golden_qa_human_v2.jsonl",
+        root / "evaluation" / "golden_qa_human_v1.jsonl",
+    )
+    human_golden_path = next(
+        (path for path in human_golden_paths if path.exists()),
+        human_golden_paths[0],
+    )
     silver_benchmark_path = root / "evaluation" / "silver_retrieval_v1.jsonl"
     retrieval_path = _latest_file(reports_dir, "retrieval_baselines_*.json") or (
         reports_dir / "retrieval_baselines_smoke.json"
@@ -538,7 +552,7 @@ def audit(root: Path = ROOT) -> dict[str, Any]:
             "invalid_examples": human_invalid_rows[:5],
         },
         {
-            "source": "evaluation/golden_qa_human_v1.jsonl",
+            "source": str(human_golden_path.relative_to(root)),
             "minimum_rows": 30,
             "all_rows": "HUMAN_REVIEWED",
             "all_core_fields": "valid",

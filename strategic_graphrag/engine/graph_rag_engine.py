@@ -1152,6 +1152,7 @@ CRITICAL STYLE RULES:
                 vector_engine=vector_engine,
                 vector_hits=vector_retrieval.get("hits", []),
                 source_filing=source_filing,
+                skip=not synthesize,
             )
             fallback = self._fallback_response(
                 user_query,
@@ -1245,6 +1246,7 @@ CRITICAL STYLE RULES:
             vector_engine=vector_engine,
             vector_hits=vector_retrieval.get("hits", []),
             source_filing=source_filing,
+            skip=not synthesize,
         )
         if answer_evidence_status == "BACKGROUND_ONLY":
             safe = negative_audit["safe_absence_statement"]
@@ -2514,8 +2516,24 @@ Now generate the analysis report:"""
         vector_engine,
         vector_hits: List[Dict[str, Any]],
         source_filing: Optional[str],
+        skip: bool = False,
     ) -> Dict[str, Any]:
         """Scan every indexed chunk before allowing a corpus-absence statement."""
+        if skip:
+            return {
+                "performed": False,
+                "status": "SKIPPED",
+                "not_applicable": True,
+                "reason": "RETRIEVAL_ONLY_SYNTHESIS_DISABLED",
+                "scope": source_filing or "the indexed filing corpus",
+                "chunks_scanned": 0,
+                "query_concepts": [],
+                "matches": [],
+                "safe_absence_statement": (
+                    "The full indexed-corpus audit was skipped in retrieval-only mode; "
+                    "no filing-wide absence conclusion is permitted."
+                ),
+            }
         try:
             if vector_engine is None:
                 from .vector_rag_baseline import VectorRAGBaseline

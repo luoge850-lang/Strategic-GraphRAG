@@ -44,6 +44,9 @@ sample than the original 60-row three-filing baseline; they are not Recall/F1
 and should not be reported as a statistically significant before/after result.
 Neither file is an independent human Golden QA set and neither should be
 reported as one.
+The current Golden QA worklist is `evaluation/golden_qa_human_v2.jsonl` with 39
+blank, claim-ID-v2-linked rows. The older `golden_qa_human_v1.jsonl` is a
+historical worklist whose candidate IDs no longer resolve in the current graph.
 The latest machine-readable readiness audit is
 `reports/research_readiness_2026-09-15.json` and is intentionally fail-closed.
 The default audit output remains `reports/research_readiness_current.json`.
@@ -217,7 +220,7 @@ This is a strong engineering candidate, not yet a completed research result:
   duplicate-triple label agreement is 0.75. See
   `archive/cleanup-2026-09-14/historical-reports/extraction_annotation_audit_v1.json`
   for the historical machine-readable audit.
-- The existing 38-item auto-generated QA file is stale after the evidence-ID
+- The historical 38-item auto-generated QA file is stale after the evidence-ID
   migration and is not a valid Golden QA benchmark. There is no independent
   human Golden QA in the current checkout; the current extraction-annotation
   artifact is only an AI-assisted working set (`human_v1`). The separate

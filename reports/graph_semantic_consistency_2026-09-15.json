@@ -1,6 +1,6 @@
 {
   "schema": "strategic-graphrag-graph-semantic-consistency/v1",
-  "generated_at_utc": "2026-09-15T06:51:48.627759+00:00",
+  "generated_at_utc": "2026-09-15T08:20:03.866978+00:00",
   "scope": "all EvidenceClaim records and native business edges in current Neo4j",
   "read_only": true,
   "neo4j_write_queries": 0,

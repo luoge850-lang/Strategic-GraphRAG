@@ -1,6 +1,6 @@
 {
   "schema": "strategic-graphrag-research-readiness/v1",
-  "generated_at_utc": "2026-09-15T07:35:13.009896+00:00",
+  "generated_at_utc": "2026-09-15T08:20:03.656978+00:00",
   "status": "NOT_READY",
   "blocking_failures": [
     "human_golden_qa_available",
@@ -90,23 +90,23 @@
       "labeled": 30
     },
     "golden_qa_candidate": {
-      "source": "data\\evaluation\\golden_qa_v2.jsonl",
-      "rows": 38,
+      "source": "data\\evaluation\\golden_qa_v3_current.jsonl",
+      "rows": 39,
       "status_counts": {
-        "AUTO_GENERATED_REGRESSION_CANDIDATE": 38
+        "AUTO_GENERATED_REGRESSION_CANDIDATE": 39
       },
       "dataset_status": "AUTO_GENERATED_REGRESSION_CANDIDATE",
       "eligible_as_human_gold": false
     },
     "human_gold": {
-      "source": "evaluation\\golden_qa_human_v1.jsonl",
-      "rows": 38,
+      "source": "evaluation\\golden_qa_human_v2.jsonl",
+      "rows": 39,
       "status_counts": {
-        "IN_PROGRESS": 38
+        "HUMAN_REVIEW_PENDING": 39
       },
       "human_reviewed": 0,
-      "answerable": 7,
-      "invalid_rows": 38,
+      "answerable": 0,
+      "invalid_rows": 39,
       "invalid_examples": [
         {
           "id": "GQ-001",
@@ -114,7 +114,8 @@
             "review_status",
             "reviewer",
             "reference_answer",
-            "gold_evidence_ids(nonempty for answerable row)"
+            "answerable",
+            "requires_abstention"
           ]
         },
         {
@@ -123,7 +124,8 @@
             "review_status",
             "reviewer",
             "reference_answer",
-            "gold_evidence_ids(nonempty for answerable row)"
+            "answerable",
+            "requires_abstention"
           ]
         },
         {
@@ -132,7 +134,8 @@
             "review_status",
             "reviewer",
             "reference_answer",
-            "gold_evidence_ids(nonempty for answerable row)"
+            "answerable",
+            "requires_abstention"
           ]
         },
         {
@@ -141,7 +144,8 @@
             "review_status",
             "reviewer",
             "reference_answer",
-            "gold_evidence_ids(nonempty for answerable row)"
+            "answerable",
+            "requires_abstention"
           ]
         },
         {
@@ -149,20 +153,22 @@
           "missing": [
             "review_status",
             "reviewer",
-            "reference_answer"
+            "reference_answer",
+            "answerable",
+            "requires_abstention"
           ]
         }
       ]
     },
     "golden_qa": {
-      "source": "evaluation\\golden_qa_human_v1.jsonl",
-      "rows": 38,
+      "source": "evaluation\\golden_qa_human_v2.jsonl",
+      "rows": 39,
       "status_counts": {
-        "IN_PROGRESS": 38
+        "HUMAN_REVIEW_PENDING": 39
       },
       "human_reviewed": 0,
-      "answerable": 7,
-      "invalid_rows": 38,
+      "answerable": 0,
+      "invalid_rows": 39,
       "invalid_examples": [
         {
           "id": "GQ-001",
@@ -170,7 +176,8 @@
             "review_status",
             "reviewer",
             "reference_answer",
-            "gold_evidence_ids(nonempty for answerable row)"
+            "answerable",
+            "requires_abstention"
           ]
         },
         {
@@ -179,7 +186,8 @@
             "review_status",
             "reviewer",
             "reference_answer",
-            "gold_evidence_ids(nonempty for answerable row)"
+            "answerable",
+            "requires_abstention"
           ]
         },
         {
@@ -188,7 +196,8 @@
             "review_status",
             "reviewer",
             "reference_answer",
-            "gold_evidence_ids(nonempty for answerable row)"
+            "answerable",
+            "requires_abstention"
           ]
         },
         {
@@ -197,7 +206,8 @@
             "review_status",
             "reviewer",
             "reference_answer",
-            "gold_evidence_ids(nonempty for answerable row)"
+            "answerable",
+            "requires_abstention"
           ]
         },
         {
@@ -205,7 +215,9 @@
           "missing": [
             "review_status",
             "reviewer",
-            "reference_answer"
+            "reference_answer",
+            "answerable",
+            "requires_abstention"
           ]
         }
       ]
@@ -222,7 +234,7 @@
     },
     "retrieval_benchmark": {
       "dataset": "evaluation\\silver_retrieval_v1.jsonl",
-      "report": "reports\\retrieval_benchmark_silver_2026-09-15.json",
+      "report": "reports\\retrieval_benchmark_silver_2026-09-15_latency_optimized.json",
       "question_count": 37,
       "evaluated_questions": 37,
       "dataset_status": "AUTO_GENERATED_SILVER_NOT_HUMAN_GOLD",
@@ -495,12 +507,12 @@
       "status": "BLOCKED",
       "blocking": true,
       "observed": {
-        "source": "evaluation\\golden_qa_human_v1.jsonl",
-        "rows": 38,
+        "source": "evaluation\\golden_qa_human_v2.jsonl",
+        "rows": 39,
         "status_counts": {
-          "IN_PROGRESS": 38
+          "HUMAN_REVIEW_PENDING": 39
         },
-        "invalid_rows": 38,
+        "invalid_rows": 39,
         "invalid_examples": [
           {
             "id": "GQ-001",
@@ -508,7 +520,8 @@
               "review_status",
               "reviewer",
               "reference_answer",
-              "gold_evidence_ids(nonempty for answerable row)"
+              "answerable",
+              "requires_abstention"
             ]
           },
           {
@@ -517,7 +530,8 @@
               "review_status",
               "reviewer",
               "reference_answer",
-              "gold_evidence_ids(nonempty for answerable row)"
+              "answerable",
+              "requires_abstention"
             ]
           },
           {
@@ -526,7 +540,8 @@
               "review_status",
               "reviewer",
               "reference_answer",
-              "gold_evidence_ids(nonempty for answerable row)"
+              "answerable",
+              "requires_abstention"
             ]
           },
           {
@@ -535,7 +550,8 @@
               "review_status",
               "reviewer",
               "reference_answer",
-              "gold_evidence_ids(nonempty for answerable row)"
+              "answerable",
+              "requires_abstention"
             ]
           },
           {
@@ -543,13 +559,15 @@
             "missing": [
               "review_status",
               "reviewer",
-              "reference_answer"
+              "reference_answer",
+              "answerable",
+              "requires_abstention"
             ]
           }
         ]
       },
       "expected": {
-        "source": "evaluation/golden_qa_human_v1.jsonl",
+        "source": "evaluation\\golden_qa_human_v2.jsonl",
         "minimum_rows": 30,
         "all_rows": "HUMAN_REVIEWED",
         "all_core_fields": "valid"
@@ -727,7 +745,7 @@
       "status": "WARNING",
       "blocking": false,
       "observed": {
-        "files": 51,
+        "files": 52,
         "logs": 0
       },
       "expected": {

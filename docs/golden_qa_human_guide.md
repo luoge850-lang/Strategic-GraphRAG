@@ -6,13 +6,16 @@
 
 ## 空白抽取集和 Golden QA 的区别
 
-`data/evaluation/golden_qa_v2.jsonl` 是自动生成的回归候选集，状态为
+`data/evaluation/golden_qa_v3_current.jsonl` 是当前自动生成的回归候选集，状态为
 `AUTO_GENERATED_REGRESSION_CANDIDATE`。它可以帮助发现检索退化，但不是人工
 金标准，候选答案、`answerable` 和证据 ID 都可能有错。
 
-`evaluation/golden_qa_human_v1.jsonl` 是从候选生成的人工填写工作副本。它与
-候选答案字段分离，但问题来源仍然不是独立人工设计；脚本会把候选字段改名
-为 `candidate_*` 供追溯，并将人工填写字段留空，状态设为
+`evaluation/golden_qa_human_v2.jsonl` 是根据当前 claim ID v2 图谱重新生成的
+人工填写工作副本，共 39 条，超过最低 30 条。旧的
+`evaluation/golden_qa_human_v1.jsonl` 使用旧候选 ID，只保留作历史证据，不能
+继续作为当前工作集。当前 Demo 优先读取 v2。运行
+`scripts/prepare_human_golden_qa.py` 也会优先使用当前候选集并生成 v2。新工作副本与候选答案字段分离，
+但问题来源仍然不是独立人工设计；脚本会把候选字段改名为 `candidate_*` 供追溯，并将人工填写字段留空，状态设为
 `HUMAN_REVIEW_PENDING`。生成这个模板不等于完成审阅，也不能把它直接当作
 独立 Golden QA 使用。
 

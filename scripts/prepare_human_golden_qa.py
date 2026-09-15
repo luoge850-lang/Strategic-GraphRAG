@@ -15,8 +15,10 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_INPUT = ROOT / "data" / "evaluation" / "golden_qa_v2.jsonl"
-DEFAULT_OUTPUT = ROOT / "evaluation" / "golden_qa_human_v1.jsonl"
+CURRENT_CANDIDATE = ROOT / "data" / "evaluation" / "golden_qa_v3_current.jsonl"
+LEGACY_CANDIDATE = ROOT / "data" / "evaluation" / "golden_qa_v2.jsonl"
+DEFAULT_INPUT = CURRENT_CANDIDATE if CURRENT_CANDIDATE.exists() else LEGACY_CANDIDATE
+DEFAULT_OUTPUT = ROOT / "evaluation" / "golden_qa_human_v2.jsonl"
 
 HUMAN_FIELDS = (
     "reference_answer",

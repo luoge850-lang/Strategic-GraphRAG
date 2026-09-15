@@ -43,7 +43,7 @@
 `reports/research_readiness_current.json` 采用 fail-closed 规则，当前仍为
 `NOT_READY`，原因是：
 
-1. `evaluation/golden_qa_human_v1.jsonl` 尚未完成独立人工复核；因此答案级
+1. `evaluation/golden_qa_human_v2.jsonl` 尚未完成独立人工复核；因此答案级
    faithfulness、relevance、completeness、citation correctness 和 abstention
    不能写成正式论文指标。
 2. 同一 PDF、同一模型、同一 prompt、temperature 0.0 的第二次外部 LLM 抽取
@@ -64,8 +64,9 @@
    证据页错配、跨年度遗漏或拒答失效。
 3. 维护版本化 response cache，并把 fresh external-LLM repeatability 与 cache
    replay 分开报告；在此基础上不宣称外部 LLM exact repeatability 已满足。
-4. 如果要写正式论文实验，再进行独立人工关系 inventory 和 30--50 条
-   Golden QA；人工只判断证据和问题是否被支持，不需要判断股票涨跌。
+4. 如果要写正式论文实验，使用当前 claim-ID-v2 链接的
+   `evaluation/golden_qa_human_v2.jsonl` 完成至少 30 条 Golden QA；旧 v1
+   工作集不能混入。人工只判断证据和问题是否被支持，不需要判断股票涨跌。
 5. 四种基线稳定后再加入只读 Agent。Agent 只能分解问题、选择检索工具和
    汇总证据，不得写 Neo4j、改 label 或绕过 citation guard。
 6. 最后再做容器化、认证、CORS、限流、超时、成本和日志治理；当前本地 Demo

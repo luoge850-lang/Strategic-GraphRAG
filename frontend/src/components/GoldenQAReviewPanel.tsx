@@ -36,6 +36,45 @@ function parseIds(value: string): string[] {
   return Array.from(new Set(value.split(",").map((part) => part.trim()).filter(Boolean)));
 }
 
+const relationGloss: Record<string, string> = {
+  CAUSES: "导致 / 可能导致",
+  DECREASES: "降低 / 产生不利影响",
+  INCREASES: "增加 / 产生有利影响",
+  MITIGATES: "缓解",
+  EXPOSED_TO: "暴露于",
+  CONSTRAINS: "限制",
+  PRODUCES: "生产或提供",
+  OPERATES_IN: "参与或经营于",
+  REPORTS_METRIC: "报告某项指标",
+};
+
+const humanizeId = (value: string) => value
+  .replace(/_/g, " ")
+  .replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+function CandidateTriples({ row }: { row: GoldenQARow }) {
+  const triples = row.candidate_supporting_triples || [];
+  if (!triples.length) return null;
+  return (
+    <div style={{ marginTop: 12, padding: "10px 11px", border: "1px solid var(--grid)", borderRadius: 10 }}>
+      <div style={{ fontSize: 10, fontWeight: 700 }}>候选关系的通俗提示（不是标准答案）</div>
+      <div style={{ marginTop: 5, fontSize: 10, color: "var(--muted)", lineHeight: 1.55 }}>
+        只把它当作阅读方向。你要回到上面的证据句子，判断句子是否真的支持这条关系；编号只用于系统定位，不需要理解编号本身。
+      </div>
+      {triples.map((triple, index) => {
+        const relation = String(triple.relation || "").toUpperCase();
+        return (
+          <div key={`${relation}-${index}`} style={{ marginTop: 8, fontSize: 11, lineHeight: 1.55 }}>
+            <strong>{humanizeId(String(triple.source || "未知主体"))}</strong>
+            <span style={{ margin: "0 5px", color: "var(--muted)" }}>—[{relationGloss[relation] || relation}]→</span>
+            <strong>{humanizeId(String(triple.target || "未知对象"))}</strong>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function draftFromRow(row: GoldenQARow): Draft {
   return {
     reference_answer: row.reference_answer || "",
@@ -181,6 +220,10 @@ export default function GoldenQAReviewPanel() {
         </div>
       </div>
 
+      <div className="card-mono" style={{ border: "1px solid var(--grid)", marginBottom: 18, fontSize: 10.5, lineHeight: 1.65 }}>
+        <strong>你只需要完成三件事：</strong>先读问题和证据句子；再选“可回答”或“不可回答 / 应拒答”；最后填写一句简短事实、勾选证据和页码。当前工作集有 {summary.total} 条，已经超过最低 30 条，不需要额外创建文件。遇到看不懂或证据不清楚的题，可以选择不可回答并在备注写“证据不足”，不要猜测。
+      </div>
+
       <div className="card-mono" style={{ border: "1px solid var(--grid)", marginBottom: 18 }}>
         <div style={{ display: "flex", justifyContent: "space-between", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
           <div>
@@ -211,6 +254,7 @@ export default function GoldenQAReviewPanel() {
           <div style={{ padding: "15px 16px", borderLeft: "3px solid var(--ink)", background: "rgba(28,28,26,0.035)", fontSize: 14, lineHeight: 1.7, marginBottom: 15 }}>{current.question}</div>
 
           <CandidateEvidence row={current} />
+          <CandidateTriples row={current} />
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10, marginBottom: 15 }}>
             <button className={draft.answerable === true ? "btn-ink" : "btn-outline"} aria-pressed={draft.answerable === true} onClick={() => chooseAnswerable(true)} style={{ padding: "10px 12px", textAlign: "left" }}><strong>可回答</strong><span style={{ display: "block", marginTop: 4, fontSize: 10, opacity: 0.75 }}>证据直接支持问题</span></button>
@@ -223,7 +267,7 @@ export default function GoldenQAReviewPanel() {
 
           <div style={{ border: "1px solid var(--grid)", borderRadius: 12, padding: "12px 13px", marginBottom: 12 }}>
             <div style={{ fontSize: 11, fontWeight: 700, marginBottom: 6 }}>标准证据</div>
-            <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.5, marginBottom: 9 }}>勾选真正支持答案的 EvidenceClaim ID。不可回答的问题通常不填证据 ID。</div>
+            <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.5, marginBottom: 9 }}>勾选真正支持答案的 EvidenceClaim ID。ID 只是编号，不需要理解；候选页码也只是线索，标准页码必须以证据句子对应的财报页码为准。不可回答的问题通常不填证据 ID。</div>
             {candidateIds.map((id) => <label key={id} style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "monospace", fontSize: 10, marginTop: 7 }}><input type="checkbox" checked={draft.gold_evidence_ids.includes(id)} onChange={() => toggleEvidence(id)} />{id}</label>)}
             <input className="input-mono" style={{ marginTop: 9, fontSize: 10 }} placeholder="也可以手动填写 ID，逗号分隔" value={draft.gold_evidence_ids.filter((id) => !candidateIds.includes(id)).join(", ")} onChange={(event) => update({ gold_evidence_ids: [...candidateIds.filter((id) => draft.gold_evidence_ids.includes(id)), ...parseIds(event.target.value)] })} />
             <input className="input-mono" style={{ marginTop: 9, fontSize: 10 }} placeholder="标准页码，例如 80, 81" value={pageInput(draft.gold_pages)} onChange={(event) => update({ gold_pages: parsePages(event.target.value) })} />

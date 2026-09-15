@@ -95,6 +95,26 @@ class PipelineContractTests(unittest.TestCase):
         self.assertIn("bounded retrieval result", result["safe_absence_statement"])
         self.assertNotIn("filing contains no", result["safe_absence_statement"].lower())
 
+    def test_retrieval_only_negative_audit_is_explicitly_skipped(self):
+        class NoCorpusRead:
+            def corpus_documents(self, source_filing=None):
+                raise AssertionError("retrieval-only mode must not scan the corpus")
+
+        engine = GraphRAGEngine.__new__(GraphRAGEngine)
+        result = engine._negative_evidence_audit(
+            "What risks are disclosed?",
+            vector_engine=NoCorpusRead(),
+            vector_hits=[],
+            source_filing=None,
+            skip=True,
+        )
+
+        self.assertEqual(result["status"], "SKIPPED")
+        self.assertTrue(result["not_applicable"])
+        self.assertFalse(result["performed"])
+        self.assertEqual(result["chunks_scanned"], 0)
+        self.assertIn("no filing-wide absence conclusion", result["safe_absence_statement"])
+
     def test_fallback_metadata_has_common_numeric_contract(self):
         engine = GraphRAGEngine.__new__(GraphRAGEngine)
         engine.llm = None

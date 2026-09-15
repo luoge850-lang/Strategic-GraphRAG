@@ -183,7 +183,11 @@ EXTRACTION_SAMPLE_PATHS = {
 }
 HUMAN_EXTRACTION_SAMPLE_KEY = "2025_post_repair_human_v1"
 _EXTRACTION_SAMPLE_LOCK = threading.Lock()
-GOLDEN_QA_PATH = PROJECT_ROOT / "evaluation" / "golden_qa_human_v1.jsonl"
+# Prefer the claim-ID-v2 worklist generated from the current graph. Keep the
+# older v1 path as a compatibility fallback, but never merge the two datasets.
+_GOLDEN_QA_V2_PATH = PROJECT_ROOT / "evaluation" / "golden_qa_human_v2.jsonl"
+_GOLDEN_QA_V1_PATH = PROJECT_ROOT / "evaluation" / "golden_qa_human_v1.jsonl"
+GOLDEN_QA_PATH = _GOLDEN_QA_V2_PATH if _GOLDEN_QA_V2_PATH.exists() else _GOLDEN_QA_V1_PATH
 _GOLDEN_QA_LOCK = threading.Lock()
 _GOLDEN_QA_STATUSES = {"HUMAN_REVIEW_PENDING", "IN_PROGRESS", "HUMAN_REVIEWED"}
 

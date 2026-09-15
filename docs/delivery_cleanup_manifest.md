@@ -92,10 +92,12 @@ render history remains recoverable.
 - `data/evaluation/golden_qa_v2.jsonl` remains the generated candidate set. It
   is useful for reproducibility and regression comparison, but its labels are
   not treated as human truth.
-- `evaluation/golden_qa_human_v1.jsonl` is the independent human-review work
-  file. It starts blank and becomes a usable Golden QA set only row by row
+- `evaluation/golden_qa_human_v2.jsonl` is the current claim-ID-v2 human-review
+  work file. It starts blank and becomes a usable Golden QA set only row by row
   after a reviewer records the answerability decision, reference answer,
-  evidence IDs, pages, and reviewer identity.
+  evidence IDs, pages, and reviewer identity. The older v1 file is retained as
+  historical evidence because its candidate IDs no longer resolve in the
+  current graph.
 - The original extraction samples, frozen filing artifacts, graph snapshots,
   and audit reports remain preserved because they are required to reproduce
   and explain earlier measurements. They are not disposable cache files.

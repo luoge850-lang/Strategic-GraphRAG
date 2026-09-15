@@ -3,10 +3,21 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.prepare_human_golden_qa import HUMAN_FIELDS, prepare_human_golden_qa
+from scripts.prepare_human_golden_qa import (
+    DEFAULT_INPUT,
+    DEFAULT_OUTPUT,
+    CURRENT_CANDIDATE,
+    HUMAN_FIELDS,
+    prepare_human_golden_qa,
+)
 
 
 class HumanGoldenQATemplateTests(unittest.TestCase):
+    def test_repository_defaults_point_to_current_claim_id_v2_worklist(self):
+        self.assertEqual(DEFAULT_OUTPUT.name, "golden_qa_human_v2.jsonl")
+        if CURRENT_CANDIDATE.exists():
+            self.assertEqual(DEFAULT_INPUT, CURRENT_CANDIDATE)
+
     def test_template_is_separate_and_blank_without_changing_candidates(self):
         candidates = [
             {
