@@ -31,7 +31,12 @@ class ResearchReadinessAuditTests(unittest.TestCase):
         )
         self.assertFalse(ai_check["blocking"])
         self.assertEqual(ai_check["status"], "PASS")
-        self.assertIn("human_golden_qa_available", report["blocking_failures"])
+        human_check = next(
+            item for item in report["checks"]
+            if item["name"] == "human_golden_qa_available"
+        )
+        self.assertEqual(human_check["status"], "PASS")
+        self.assertNotIn("human_golden_qa_available", report["blocking_failures"])
         benchmark = report["facts"].get("retrieval_benchmark") or {}
         if benchmark.get("question_count", 0) >= 30:
             self.assertNotIn("retrieval_benchmark_has_multiple_questions", report["blocking_failures"])

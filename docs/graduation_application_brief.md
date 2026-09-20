@@ -34,6 +34,12 @@ Strategic-GraphRAG 是一个面向 NVIDIA SEC 10-K 财报的证据约束型 Grap
   阶段使用失效的 Aura 路由连接。
 - 自动 Silver 检索回归集已经建立为 37 条问题，四种模式均已运行；它用于
   工程回归，不冒充独立人工金标准。
+- 已建立 canonical state、精确依赖锁、60 条表格质量标注候选队列和公开
+  FinanceBench/FinQA/TAT-QA 的独立数据注册；这些新增资产目前是可复现性和
+  评测准备工作，不是已完成的外部 benchmark 分数。
+- 已加入独立运行时基准脚本，能分离四种模式的 cache miss、cache hit/fill、
+  阶段耗时、P50/P95/P99、错误率和有限并发吞吐；它不把 cache miss 错写成
+  进程冷启动，也不把 retrieval-only 延迟和 LLM synthesis 延迟混在一起。
 - 同一 2025 PDF 的抽取复现已实际执行：固定 temperature=0.0 仍出现
   126 与 131 条 accepted claims 的差异，因此 exact external-LLM
   repeatability 仍被明确标记为未满足。
@@ -44,8 +50,9 @@ Strategic-GraphRAG 是一个面向 NVIDIA SEC 10-K 财报的证据约束型 Grap
 - 其中两个旧 claim ID 在 2025 替换后已经失效或发生变化，必须重新映射。
 - 当前的 27/30 relation/evidence 结果只能作为 precision-like 诊断，不能
   直接当作 Recall 或 F1。
-- Golden QA 还没有全部完成人工复核，因此四种检索模式目前只有自动 Silver
-  回归指标，没有独立人工金标准下的正式答案质量结论。
+- 当前 30 条 Golden QA 已完成单人复核，四种检索模式已有答案级工程评估；但
+  这不是双人独立标注和仲裁后的论文级金标准，因此不能写成普适准确率或方法
+  优势结论。
 - 2025 图谱替换后的 `TemporalFact` 和 `TemporalChange` 等派生模型已经重新
   物化并通过结构检查；未来任何图谱重建后都必须重新物化、捕获快照并审计，
   不能沿用旧的时序数量或时序结果。
@@ -85,11 +92,10 @@ EvidenceClaim、四种检索模式、170 次 LLM 调用全部成功的 2025 重�
    financial observations、TemporalFact 和 TemporalChange；未来重建时重复这
    一流程，并在替换前后重新捕获快照和审计。
 2. 基于当前 claim ID 生成新的抽取标注候选集，保留旧样本为历史对照，不覆盖。
-3. 建立至少 30 条人工 Golden QA：每条只需核对问题、证据、是否可回答、标准
-   答案和拒答条件；不需要判断公司经营好坏。
-4. 先将 Silver 回归固定为开发质量门；若要写论文结果，再对独立 Golden QA
-   问题集运行四种 retrieval baseline，报告逐题结果、宏平均和 bootstrap 区间；
-   缓存命中和冷启动延迟分开统计。
+3. **已完成工程检查点**：30 条人工 Golden QA 已完成单人复核，并已运行四种
+   retrieval baseline 和答案级评估；后续仍需第二名独立复核者和仲裁。
+4. 继续将 Silver 回归固定为开发质量门；论文实验应使用经过独立复核的 Golden
+   QA，报告逐题结果、宏平均和 bootstrap 区间；缓存命中和冷启动延迟分开统计。
 5. 在主实验完成后再加入只读 Agent，让 Agent 负责问题分解和调用检索工具，
    不允许 Agent 写图谱或写标注；额外评估工具调用次数、延迟、成本和拒答。
 

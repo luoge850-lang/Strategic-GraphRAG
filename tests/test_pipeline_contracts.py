@@ -1,4 +1,5 @@
 import json
+import tempfile
 import unittest
 
 from strategic_graphrag.ontology.entity_registry import resolve_entity
@@ -7,13 +8,15 @@ from strategic_graphrag.pipeline.financial_table_extractor import (
     _periods_for_evidence,
     extract_financial_table_triples,
 )
-from strategic_graphrag.pipeline.pipeline import KnowledgeGraphPipeline
+from strategic_graphrag.pipeline.pipeline import KnowledgeGraphPipeline, PipelineConfig
 from strategic_graphrag.ontology.intent_classifier import extract_financial_entities_from_query
 from strategic_graphrag.engine.query_understanding import parse_query
 from strategic_graphrag.engine.graph_rag_engine import CausalPath, GraphRAGEngine
 from strategic_graphrag.engine.evidence_quality import (
     apply_directness_ranking,
     audit_documents,
+    contains_absence_claim,
+    select_answer_evidence,
     semantic_scope,
 )
 from strategic_graphrag.engine.retrieval import QueryRouter, personalized_pagerank
@@ -31,6 +34,71 @@ class _FakePage:
 
 
 class PipelineContractTests(unittest.TestCase):
+    def test_table_candidate_identity_and_pending_queue_are_round_trip_safe(self):
+        triple = {
+            "table_id": "Consolidated Statements of Income",
+            "row_id": "REVENUE",
+            "metric_values_json": json.dumps([
+                {"period": "2025", "value": "100"},
+                {"period": "2024", "value": "90"},
+            ]),
+            "row_evidence": "Revenue 100 90",
+            "source": "",
+            "subject_resolution_status": "PENDING_COMPANY_REVIEW",
+            "target": "REVENUE",
+        }
+        first = KnowledgeGraphPipeline._annotate_table_candidate(
+            dict(triple), filename="2025-10-K.pdf", page_num=52
+        )
+        second = KnowledgeGraphPipeline._annotate_table_candidate(
+            dict(triple), filename="2025-10-K.pdf", page_num=52
+        )
+        self.assertEqual(first["candidate_id"], second["candidate_id"])
+        self.assertEqual(first["queue_id"], first["candidate_id"])
+        self.assertEqual(first["column_ids"], ["2025", "2024"])
+        self.assertIn("2025-10-K.pdf:52", first["row_id"])
+
+        with tempfile.TemporaryDirectory() as directory:
+            queue_path = f"{directory}/pending.jsonl"
+            pipeline = KnowledgeGraphPipeline.__new__(KnowledgeGraphPipeline)
+            pipeline.config = PipelineConfig(pending_table_queue_path=queue_path)
+            record = pipeline._table_review_record(
+                first,
+                review_status="UNLABELED_CANDIDATE",
+                reason="MISSING_VERIFIED_COMPANY_ID",
+            )
+            self.assertEqual(pipeline._write_pending_table_queue([record]), 1)
+            self.assertEqual(pipeline._write_pending_table_queue([record]), 0)
+            rows = [json.loads(line) for line in open(queue_path, encoding="utf-8")]
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0]["review_status"], "UNLABELED_CANDIDATE")
+            self.assertEqual(rows[0]["gold"]["cell_supported"], "")
+
+    def test_document_registry_binds_company_to_filename_and_hash(self):
+        with tempfile.TemporaryDirectory() as directory:
+            registry_path = f"{directory}/documents.json"
+            with open(registry_path, "w", encoding="utf-8") as handle:
+                json.dump({"documents": [{
+                    "filename": "2025-10-K.pdf",
+                    "document_sha256": "a" * 64,
+                    "company_id": "nvidia",
+                    "review_status": "VERIFIED",
+                }]}, handle)
+            pipeline = KnowledgeGraphPipeline.__new__(KnowledgeGraphPipeline)
+            pipeline.config = PipelineConfig(document_registry_path=registry_path)
+            company_id, source = pipeline._resolve_registered_company(
+                filename="2025-10-K.pdf",
+                document_sha256="a" * 64,
+            )
+            self.assertEqual(company_id, "NVIDIA_CORPORATION")
+            self.assertEqual(source, "document_registry")
+            pending, pending_source = pipeline._resolve_registered_company(
+                filename="2025-10-K.pdf",
+                document_sha256="b" * 64,
+            )
+            self.assertIsNone(pending)
+            self.assertEqual(pending_source, "pending_registry_review")
+
     @staticmethod
     def _path(path_id, nodes, relationships, evidence):
         hops = len(relationships)
@@ -71,6 +139,100 @@ class PipelineContractTests(unittest.TestCase):
         self.assertEqual(ranked[0].path_id, "direct")
         self.assertEqual(ranked[0].evidence_role, "ANSWER_CRITICAL")
         self.assertEqual(ranked[1].evidence_role, "BACKGROUND_CONTEXT")
+
+    def test_structural_relation_requires_explicit_predicate_support(self):
+        direct = self._path(
+            "direct_produces",
+            ["NVIDIA_CORPORATION", "DRIVE_PLATFORM"],
+            ["PRODUCES"],
+            ["NVIDIA built the NVIDIA DRIVE software stack for autonomous driving."],
+        )
+        weak = self._path(
+            "weak_produces",
+            ["NVIDIA_CORPORATION", "GPU"],
+            ["PRODUCES"],
+            ["Our full-stack includes the CUDA programming model that runs on all NVIDIA GPUs."],
+        )
+        ranked = apply_directness_ranking(
+            [weak, direct],
+            "What evidence-backed PRODUCES relationship connects NVIDIA_CORPORATION and DRIVE_PLATFORM?",
+            "CAUSAL_CHAIN",
+        )
+        ranked.sort(key=GraphRAGEngine._path_sort_key)
+        self.assertEqual(ranked[0].evidence_role, "ANSWER_CRITICAL")
+        self.assertEqual(ranked[0].path_id, "direct_produces")
+        self.assertEqual(weak.evidence_role, "BACKGROUND_CONTEXT")
+
+    def test_stronger_produces_variant_becomes_primary_evidence(self):
+        path = self._path(
+            "variant_priority",
+            ["NVIDIA_CORPORATION", "DRIVE_PLATFORM"],
+            ["PRODUCES"],
+            ["We offer NVIDIA DRIVE as a software solution."],
+        )
+        path.evidence_variants = [[
+            {
+                "evidence": "We offer NVIDIA DRIVE as a software solution.",
+                "page": 15,
+                "year": 2025,
+                "evidence_id": "claim_offer",
+                "filing": "2025-10-K.pdf",
+            },
+            {
+                "evidence": "We built full software stacks that run on top of our GPUs, including NVIDIA DRIVE for autonomous driving.",
+                "page": 4,
+                "year": 2025,
+                "evidence_id": "claim_built",
+                "filing": "2025-10-K.pdf",
+            },
+        ]]
+        apply_directness_ranking(
+            [path],
+            "What evidence-backed PRODUCES relationship connects NVIDIA_CORPORATION and DRIVE_PLATFORM?",
+            "CAUSAL_CHAIN",
+        )
+        self.assertEqual(path.evidence_ids, ["claim_built"])
+        self.assertEqual(path.pages, [4])
+
+    def test_produces_rejects_membership_and_composition_wording(self):
+        membership = self._path(
+            "membership",
+            ["NVIDIA_CORPORATION", "OMNIVERSE_PLATFORM"],
+            ["PRODUCES"],
+            ["The Graphics segment includes Omniverse Enterprise software."],
+        )
+        composition = self._path(
+            "composition",
+            ["NVIDIA_CORPORATION", "OMNIVERSE_PLATFORM"],
+            ["PRODUCES"],
+            ["We offer a simulation solution based on NVIDIA Omniverse software."],
+        )
+        apply_directness_ranking(
+            [membership, composition],
+            "What evidence-backed PRODUCES relationship connects NVIDIA_CORPORATION and OMNIVERSE_PLATFORM?",
+            "CAUSAL_CHAIN",
+        )
+        self.assertEqual(membership.evidence_role, "BACKGROUND_CONTEXT")
+        self.assertEqual(composition.evidence_role, "BACKGROUND_CONTEXT")
+
+    def test_produces_accepts_explicit_enumerated_product(self):
+        path = self._path(
+            "enumerated",
+            ["NVIDIA_CORPORATION", "DRIVE_PLATFORM"],
+            ["PRODUCES"],
+            ["We built full software stacks, including NVIDIA DRIVE for autonomous driving."],
+        )
+        apply_directness_ranking(
+            [path],
+            "What evidence-backed PRODUCES relationship connects NVIDIA_CORPORATION and DRIVE_PLATFORM?",
+            "CAUSAL_CHAIN",
+        )
+        self.assertEqual(path.evidence_role, "ANSWER_CRITICAL")
+
+    def test_absence_guard_does_not_reject_local_qualification(self):
+        self.assertTrue(contains_absence_claim("The filings do not contain this disclosure."))
+        self.assertFalse(contains_absence_claim("The evidence claim does not explicitly state production."))
+        self.assertFalse(contains_absence_claim("The graph structure should not be characterized as a causal pathway."))
 
     def test_single_graph_hop_can_contain_embedded_text_mechanism(self):
         path = self._path(
@@ -244,6 +406,40 @@ class PipelineContractTests(unittest.TestCase):
             QueryRouter.route("How did revenue change between 2023 and 2025?", "auto", "REVENUE").mode,
             "hybrid_temporal",
         )
+        explicit_edge = QueryRouter.route(
+            "What evidence-backed PRODUCES relationship connects NVIDIA_CORPORATION and DRIVE_PLATFORM?",
+            "auto",
+        )
+        self.assertEqual(explicit_edge.mode, "graph")
+        self.assertEqual(explicit_edge.confidence, 0.96)
+
+    def test_answer_critical_path_survives_wide_candidate_pool(self):
+        critical = self._path(
+            "critical",
+            ["NVIDIA_CORPORATION", "DRIVE_PLATFORM"],
+            ["PRODUCES"],
+            ["We built and introduced NVIDIA DRIVE for autonomous driving."],
+        )
+        background = self._path(
+            "background",
+            ["NVIDIA_CORPORATION", "DRIVE_PLATFORM"],
+            ["PRODUCES"],
+            ["Our software stack runs on GPUs, including NVIDIA DRIVE."],
+        )
+        paths = [critical, background]
+        for path in paths:
+            path.evidence_role = "ANSWER_CRITICAL" if path is critical else "BACKGROUND_CONTEXT"
+        selected = select_answer_evidence(paths, 1)
+        self.assertEqual(selected, [critical])
+
+    def test_answer_selection_preserves_requested_years(self):
+        older = self._path("older", ["A", "B"], ["CAUSES"], ["Older evidence."])
+        older.years = [2023]
+        newer = self._path("newer", ["A", "B"], ["CAUSES"], ["Newer evidence."])
+        newer.years = [2025]
+        older.evidence_role = newer.evidence_role = "MECHANISM_SUPPORT"
+        selected = select_answer_evidence([newer, older], 2, required_years=[2023, 2025])
+        self.assertEqual({selected[0].years[0], selected[1].years[0]}, {2023, 2025})
 
     def test_ppr_discovers_bridge_without_reversing_path_semantics(self):
         scores = personalized_pagerank(

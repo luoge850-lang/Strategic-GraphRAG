@@ -24,9 +24,10 @@ import tempfile
 import uuid
 from collections import OrderedDict, defaultdict, deque
 from copy import deepcopy
-from typing import Optional, List, Dict, Literal, Union
+from typing import Any, Optional, List, Dict, Literal, Union
 
 from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
@@ -34,6 +35,14 @@ from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from dotenv import load_dotenv
 from pathlib import Path
+from ..response_contract import (
+    ANSWER_STATUSES,
+    EXECUTION_STATUSES,
+    GROUNDING_STATUSES,
+    OUTCOMES,
+    apply_response_contract,
+    response_state,
+)
 
 # Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -100,6 +109,10 @@ async def request_guard(request: Request, call_next):
             return JSONResponse(
                 status_code=401,
                 content={
+                    "execution_status": "AUTH_ERROR",
+                    "answer_status": "NOT_REQUESTED",
+                    "grounding_status": "NOT_EXECUTED",
+                    "outcome": "AUTH_ERROR",
                     "error": {
                         "code": "UNAUTHORIZED",
                         "message": "A valid X-API-Key is required.",
@@ -118,6 +131,10 @@ async def request_guard(request: Request, call_next):
         return JSONResponse(
             status_code=429,
             content={
+                "execution_status": "RATE_LIMITED",
+                "answer_status": "NOT_REQUESTED",
+                "grounding_status": "NOT_EXECUTED",
+                "outcome": "RATE_LIMITED",
                 "error": {
                     "code": "RATE_LIMITED",
                     "message": "Too many requests. Retry later.",
@@ -135,6 +152,10 @@ async def request_guard(request: Request, call_next):
         response = JSONResponse(
             status_code=500,
             content={
+                "execution_status": "INTERNAL_ERROR",
+                "answer_status": "NOT_REQUESTED",
+                "grounding_status": "NOT_EXECUTED",
+                "outcome": "INTERNAL_ERROR",
                 "error": {
                     "code": "INTERNAL_SERVER_ERROR",
                     "message": "The request could not be completed.",
@@ -166,9 +187,47 @@ async def structured_http_error(request: Request, exc: HTTPException):
     else:
         error = {"code": "HTTP_ERROR", "message": str(exc.detail)}
     error["request_id"] = request_id
+    state = response_state(
+        {"outcome": error.get("outcome"), "error": error},
+        http_status=exc.status_code,
+    )
+    error.update({
+        "execution_status": state["execution_status"],
+        "answer_status": state["answer_status"],
+        "grounding_status": state["grounding_status"],
+    })
     return JSONResponse(
         status_code=exc.status_code,
-        content={"error": error},
+        content={
+            "execution_status": state["execution_status"],
+            "answer_status": state["answer_status"],
+            "grounding_status": state["grounding_status"],
+            "outcome": state["outcome"],
+            "status_provenance": state["status_provenance"],
+            "error": error,
+        },
+        headers={"X-Request-ID": request_id},
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def structured_validation_error(request: Request, exc: RequestValidationError):
+    """Keep FastAPI request-shape failures in the same machine contract."""
+    request_id = getattr(request.state, "request_id", str(uuid.uuid4()))
+    return JSONResponse(
+        status_code=422,
+        content={
+            "execution_status": "VALIDATION_ERROR",
+            "answer_status": "NOT_REQUESTED",
+            "grounding_status": "NOT_EXECUTED",
+            "outcome": "VALIDATION_ERROR",
+            "error": {
+                "code": "VALIDATION_ERROR",
+                "message": "The request did not satisfy the API schema.",
+                "request_id": request_id,
+                "details": exc.errors(),
+            },
+        },
         headers={"X-Request-ID": request_id},
     )
 
@@ -183,6 +242,28 @@ EXTRACTION_SAMPLE_PATHS = {
 }
 HUMAN_EXTRACTION_SAMPLE_KEY = "2025_post_repair_human_v1"
 _EXTRACTION_SAMPLE_LOCK = threading.Lock()
+TABLE_QUALITY_PATH = PROJECT_ROOT / "evaluation" / "annotation" / "table_quality_candidate_2026-09-19.jsonl"
+_TABLE_QUALITY_LOCK = threading.Lock()
+_TABLE_QUALITY_GOLD_FIELDS = (
+    "company_id",
+    "fiscal_year",
+    "metric_id",
+    "value",
+    "unit",
+    "source_filing",
+    "page",
+    "row_label",
+    "column_label",
+    "table_name",
+    "evidence_text",
+    "cell_supported",
+)
+_TABLE_QUALITY_STATUS = {"UNLABELED_CANDIDATE", "IN_PROGRESS", "HUMAN_REVIEWED"}
+_TABLE_QUALITY_SOURCE_FILES = {
+    "2023-10-K.pdf": PROJECT_ROOT / "data" / "pdfs_other" / "2023-10-K.pdf",
+    "2024-10-K.pdf": PROJECT_ROOT / "data" / "pdfs_other" / "2024-10-K.pdf",
+    "2025-10-K.pdf": PROJECT_ROOT / "data" / "pdfs" / "2025-10-K.pdf",
+}
 # Prefer the claim-ID-v2 worklist generated from the current graph. Keep the
 # older v1 path as a compatibility fallback, but never merge the two datasets.
 _GOLDEN_QA_V2_PATH = PROJECT_ROOT / "evaluation" / "golden_qa_human_v2.jsonl"
@@ -236,6 +317,129 @@ def extraction_sample_path(sample: str = "baseline") -> Path:
 def extraction_sample_summary(rows: List[Dict]) -> Dict[str, int]:
     labeled = sum(1 for row in rows if row.get("annotation_status") == "LABELED")
     return {"total": len(rows), "labeled": labeled, "unlabeled": len(rows) - labeled}
+
+
+def read_table_quality(path: Optional[Path] = None) -> List[Dict]:
+    """Read the table-quality queue without changing candidate or gold values."""
+    queue_path = path or TABLE_QUALITY_PATH
+    with queue_path.open("r", encoding="utf-8", newline="") as handle:
+        rows = []
+        for line_number, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Invalid JSON on table-quality line {line_number}") from exc
+            if not isinstance(row, dict) or not row.get("queue_id"):
+                raise ValueError(f"Invalid table-quality row on line {line_number}")
+            rows.append(row)
+    return rows
+
+
+def table_quality_summary(rows: List[Dict]) -> Dict[str, int]:
+    reviewed = sum(row.get("review_status") == "HUMAN_REVIEWED" for row in rows)
+    in_progress = sum(row.get("review_status") == "IN_PROGRESS" for row in rows)
+    return {
+        "total": len(rows),
+        "reviewed": reviewed,
+        "in_progress": in_progress,
+        "pending": len(rows) - reviewed,
+    }
+
+
+def _normalize_table_gold(gold: Dict[str, Any]) -> Dict[str, Any]:
+    unknown = set(gold) - set(_TABLE_QUALITY_GOLD_FIELDS)
+    if unknown:
+        raise ValueError(f"Unsupported table gold fields: {sorted(unknown)}")
+    normalized = dict(gold)
+    for field in ("fiscal_year", "page"):
+        value = normalized.get(field)
+        if value in (None, ""):
+            continue
+        try:
+            normalized[field] = int(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"{field} must be an integer") from exc
+        if field == "page" and normalized[field] < 1:
+            raise ValueError("page must be a positive integer")
+    source_filing = normalized.get("source_filing")
+    if source_filing not in (None, "") and source_filing not in _TABLE_QUALITY_SOURCE_FILES:
+        raise ValueError("source_filing must reference an allowlisted active filing")
+    if "value" in normalized and normalized["value"] not in (None, ""):
+        value = normalized["value"]
+        if isinstance(value, bool):
+            raise ValueError("value must be numeric or a raw numeric string")
+        try:
+            normalized["value"] = float(value)
+        except (TypeError, ValueError):
+            if not isinstance(value, str):
+                raise ValueError("value must be numeric or a raw numeric string")
+    if "cell_supported" in normalized:
+        value = normalized["cell_supported"]
+        if value not in (True, False, "uncertain", None, ""):
+            raise ValueError("cell_supported must be true, false, uncertain, or null")
+    return normalized
+
+
+def update_table_quality(queue_id: str, updates: Dict[str, Any], path: Optional[Path] = None) -> tuple[Dict, List[Dict]]:
+    """Atomically update one table annotation while preserving system predictions."""
+    allowed = {"gold", "reviewer", "review_notes", "review_status"}
+    unknown = set(updates) - allowed
+    if unknown:
+        raise ValueError(f"Unsupported table annotation fields: {sorted(unknown)}")
+    if "gold" in updates:
+        if not isinstance(updates["gold"], dict):
+            raise ValueError("gold must be an object")
+        updates = {**updates, "gold": _normalize_table_gold(updates["gold"])}
+    status = updates.get("review_status")
+    if status is not None and status not in _TABLE_QUALITY_STATUS:
+        raise ValueError(f"review_status must be one of: {', '.join(sorted(_TABLE_QUALITY_STATUS))}")
+
+    queue_path = path or TABLE_QUALITY_PATH
+    with _TABLE_QUALITY_LOCK:
+        rows = read_table_quality(queue_path)
+        updated_row = None
+        for row in rows:
+            if row.get("queue_id") != queue_id:
+                continue
+            if "gold" in updates:
+                gold = dict(row.get("gold") or {})
+                gold.update(updates["gold"])
+                row["gold"] = _normalize_table_gold(gold)
+            for field in ("reviewer", "review_notes", "review_status"):
+                if field in updates:
+                    row[field] = updates[field]
+            if row.get("review_status") == "HUMAN_REVIEWED":
+                gold = row.get("gold") or {}
+                if not str(row.get("reviewer") or "").strip():
+                    raise ValueError("reviewer is required before marking HUMAN_REVIEWED")
+                if gold.get("cell_supported") not in (True, False):
+                    raise ValueError("cell_supported must be true or false before marking HUMAN_REVIEWED")
+                if gold.get("cell_supported") is True:
+                    missing = [field for field in _TABLE_QUALITY_GOLD_FIELDS if field != "cell_supported" and gold.get(field) in (None, "")]
+                    if missing:
+                        raise ValueError(f"supported cells require gold fields: {missing}")
+            updated_row = row
+            break
+        if updated_row is None:
+            raise KeyError(queue_id)
+        temp_path = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", newline="", dir=str(queue_path.parent),
+                prefix=f".{queue_path.name}.", suffix=".tmp", delete=False,
+            ) as handle:
+                temp_path = Path(handle.name)
+                for row in rows:
+                    handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temp_path, queue_path)
+        finally:
+            if temp_path is not None and temp_path.exists():
+                temp_path.unlink()
+    return updated_row, rows
 
 
 def update_extraction_sample(
@@ -691,6 +895,11 @@ class QueryResponse(BaseModel):
     intent: str
     intent_display: str
     answer: str
+    execution_status: str = "SUCCEEDED"
+    answer_status: str = "ABSTAINED"
+    grounding_status: str = "NOT_EXECUTED"
+    outcome: str = "ABSTAINED"
+    status_provenance: Dict = Field(default_factory=dict)
     structured_report: Optional[Dict] = None
     paths: List[Dict]
     evidence_sentences: List[str]
@@ -701,6 +910,12 @@ class VectorQueryResponse(BaseModel):
     query: str
     answer: str
     documents: List[str]
+    execution_status: str = "SUCCEEDED"
+    answer_status: str = "NOT_REQUESTED"
+    grounding_status: str = "NOT_EXECUTED"
+    outcome: str = "PARTIALLY_ANSWERED"
+    status_provenance: Dict = Field(default_factory=dict)
+    metadata: Dict = Field(default_factory=dict)
 
 
 class GraphStats(BaseModel):
@@ -809,6 +1024,15 @@ class GoldenQAPatch(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class TableQualityPatch(BaseModel):
+    gold: Optional[Dict[str, Any]] = None
+    reviewer: Optional[StrictStr] = None
+    review_notes: Optional[StrictStr] = None
+    review_status: Optional[StrictStr] = None
+
+    model_config = ConfigDict(extra="forbid")
+
+
 # =============================================================================
 # Endpoints
 # =============================================================================
@@ -839,6 +1063,16 @@ async def annotation_page():
 @app.get("/golden-qa/")
 async def golden_qa_page():
     """Serve the standalone human Golden QA review UI."""
+    index_path = get_frontend_index()
+    if index_path.exists():
+        return FileResponse(index_path)
+    raise HTTPException(status_code=404, detail="Frontend build not found")
+
+
+@app.get("/table-qa")
+@app.get("/table-qa/")
+async def table_quality_page():
+    """Serve the independent table-cell annotation UI."""
     index_path = get_frontend_index()
     if index_path.exists():
         return FileResponse(index_path)
@@ -917,6 +1151,40 @@ async def patch_golden_qa(qa_id: str, req: GoldenQAPatch):
     return {"row": updated_row, **golden_qa_summary(rows)}
 
 
+@app.get("/evaluation/table-quality")
+async def get_table_quality():
+    try:
+        rows = read_table_quality()
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Table-quality queue not found")
+    except (ValueError, OSError) as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+    return {"rows": rows, **table_quality_summary(rows)}
+
+
+@app.patch("/evaluation/table-quality/{queue_id}")
+async def patch_table_quality(queue_id: str, req: TableQualityPatch):
+    try:
+        updated_row, rows = update_table_quality(queue_id, req.model_dump(exclude_unset=True))
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Table-quality queue not found")
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Table-quality row not found: {queue_id}")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except OSError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    return {"row": updated_row, **table_quality_summary(rows)}
+
+
+@app.get("/evaluation/table-quality/source/{filename}")
+async def get_table_quality_source(filename: str):
+    source_path = _TABLE_QUALITY_SOURCE_FILES.get(filename)
+    if source_path is None or not source_path.exists():
+        raise HTTPException(status_code=404, detail="Source filing not found")
+    return FileResponse(source_path, media_type="application/pdf", filename=filename)
+
+
 @app.post("/query", response_model=QueryResponse)
 async def graphrag_query(req: QueryRequest):
     """
@@ -937,7 +1205,7 @@ async def graphrag_query(req: QueryRequest):
                 "ttl_seconds": _QUERY_CACHE_TTL_SECONDS,
             }
             _QUERY_CACHE.move_to_end(cache_key)
-            return QueryResponse(**result)
+            return QueryResponse(**apply_response_contract(result, provenance_note="api_cache_hit"))
         if cached:
             _QUERY_CACHE.pop(cache_key, None)
         engine = get_graph_engine()
@@ -963,6 +1231,26 @@ async def graphrag_query(req: QueryRequest):
             vector_top_k=req.vector_top_k,
             synthesize=req.synthesize,
         )
+        result = apply_response_contract(result, provenance_note="api_engine_result")
+        engine_status = str(result.get("execution_status") or "").upper()
+        if engine_status != "SUCCEEDED":
+            status_code = {
+                "DEPENDENCY_ERROR": 503,
+                "MODEL_ERROR": 502,
+                "TIMEOUT": 504,
+                "RATE_LIMITED": 429,
+                "AUTH_ERROR": 401,
+                "VALIDATION_ERROR": 422,
+                "CONTRACT_ERROR": 500,
+                "INTERNAL_ERROR": 500,
+            }.get(engine_status, 500)
+            error = result.get("metadata", {}).get("error") or {
+                "code": engine_status,
+                "message": "The query could not be completed.",
+            }
+            error = dict(error)
+            error["outcome"] = result.get("outcome")
+            raise HTTPException(status_code=status_code, detail=error)
         result.setdefault("metadata", {})["cache"] = {
             "hit": False,
             "ttl_seconds": _QUERY_CACHE_TTL_SECONDS,
@@ -978,7 +1266,10 @@ async def graphrag_query(req: QueryRequest):
         raise
     except Exception as e:
         logger.error(f"Query error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail={"code": "INTERNAL_ERROR", "outcome": "INTERNAL_ERROR"},
+        )
 
 
 @app.post("/query/vector", response_model=VectorQueryResponse)
@@ -988,17 +1279,69 @@ async def vector_query(req: QueryRequest):
     """
     try:
         engine = get_vector_engine()
-        answer, docs = engine.ask(
+        retrieval = engine.retrieve_with_metadata(
             req.question,
             k=5,
             source_filing=resolve_source_filing(req.source_filing, req.cross_filing),
         )
-        return VectorQueryResponse(query=req.question, answer=answer, documents=docs)
+        if retrieval.get("status") == "ERROR":
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "code": "DEPENDENCY_ERROR",
+                    "outcome": "DEPENDENCY_ERROR",
+                    "dependency": "chroma",
+                    "message": "Vector retrieval is unavailable.",
+                },
+            )
+        docs = [hit.get("document", "") for hit in retrieval.get("hits", [])]
+        execution_status = "SUCCEEDED"
+        generation_error = None
+        if req.synthesize and docs:
+            try:
+                answer = engine.generate(req.question, docs)
+            except TimeoutError as exc:
+                answer = "[TIMEOUT] Vector synthesis timed out."
+                execution_status = "TIMEOUT"
+                generation_error = type(exc).__name__
+            except Exception as exc:
+                answer = "[MODEL ERROR] Vector synthesis failed."
+                execution_status = "MODEL_ERROR"
+                generation_error = type(exc).__name__
+        elif docs:
+            answer = "\n\n".join(docs[:5])
+        else:
+            answer = "[INSUFFICIENT EVIDENCE] No vector chunks were retrieved."
+        answer_status = (
+            "NOT_REQUESTED" if not req.synthesize
+            else "ABSTAINED" if not docs
+            else "ANSWERED" if execution_status == "SUCCEEDED"
+            else "NOT_REQUESTED"
+        )
+        result = {
+            "query": req.question,
+            "answer": answer,
+            "documents": docs,
+            "metadata": {
+                "retrieval": retrieval,
+                "error": {"code": execution_status, "detail": generation_error} if generation_error else None,
+            },
+        }
+        return VectorQueryResponse(**apply_response_contract(
+            result,
+            execution_status=execution_status,
+            answer_status=answer_status,
+            grounding_status="NOT_EXECUTED",
+            provenance_note="api_vector_result",
+        ))
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Vector query error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail={"code": "INTERNAL_ERROR", "outcome": "INTERNAL_ERROR"},
+        )
 
 
 @app.get("/graph/statistics", response_model=GraphStats)

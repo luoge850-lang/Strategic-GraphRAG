@@ -22,18 +22,23 @@ async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}
 
 async function throwApiError(operation: string, response: Response): Promise<never> {
   let detail = "";
+  let executionStatus = "";
+  let outcome = "";
   try {
     const payload = await response.clone().json() as Record<string, any>;
-    detail = payload.detail || payload.error?.message || payload.dependencies?.neo4j?.error || "";
+    executionStatus = String(payload.execution_status || payload.error?.execution_status || "");
+    outcome = String(payload.outcome || payload.error?.outcome || "");
+    const rawDetail = payload.detail || payload.error?.message || payload.dependencies?.neo4j?.error || "";
+    detail = typeof rawDetail === "string" ? rawDetail : JSON.stringify(rawDetail);
   } catch {
     // Keep a stable user-facing error even when a proxy returns non-JSON text.
   }
   if (response.status === 503) {
     throw new Error(
-      `${operation} 暂不可用（503）：本地 API 已启动，但 Neo4j 等外部依赖未就绪。请检查 /health/ready 和 .env 中的连接配置。${detail ? ` [${detail}]` : ""}`,
+      `${operation} 暂不可用（503）：本地 API 已启动，但外部依赖未就绪。请检查 /health/ready 和 .env 中的连接配置。${executionStatus || outcome ? ` [${executionStatus || outcome}]` : ""}${detail ? ` ${detail}` : ""}`,
     );
   }
-  throw new Error(`${operation} ${response.status}${detail ? `: ${detail}` : ""}`);
+  throw new Error(`${operation} ${response.status}${executionStatus || outcome ? ` [${executionStatus || outcome}]` : ""}${detail ? `: ${detail}` : ""}`);
 }
 
 export interface CausalPath {
@@ -60,6 +65,11 @@ export interface QueryResult {
   intent: string;
   intent_display: string;
   answer: string;
+  execution_status: "SUCCEEDED" | "DEPENDENCY_ERROR" | "MODEL_ERROR" | "TIMEOUT" | "RATE_LIMITED" | "AUTH_ERROR" | "VALIDATION_ERROR" | "CONTRACT_ERROR" | "INTERNAL_ERROR";
+  answer_status: "NOT_REQUESTED" | "ANSWERED" | "PARTIALLY_ANSWERED" | "ABSTAINED";
+  grounding_status: "VERIFIED" | "FAILED" | "NOT_EXECUTED" | "NOT_APPLICABLE" | "INSUFFICIENT";
+  outcome: string;
+  status_provenance?: Record<string, unknown>;
   structured_report?: {
     format?: string;
     status?: string;
@@ -69,6 +79,9 @@ export interface QueryResult {
       evidence_claim_ids: string[];
       pages: number[];
       fiscal_years: number[];
+      source_filings?: string[];
+      numeric_fields?: unknown;
+      citation_audit?: Record<string, unknown>;
       support_level?: string;
     }>;
     evidence_quality?: string;
@@ -374,6 +387,89 @@ export async function patchGoldenQA(
   if (!r.ok) {
     const payload = await r.json().catch(() => null);
     const detail = payload?.detail || `Golden QA save ${r.status}`;
+    throw new Error(detail);
+  }
+  return r.json();
+}
+
+export type TableQualityStatus = "UNLABELED_CANDIDATE" | "IN_PROGRESS" | "HUMAN_REVIEWED";
+
+export interface TableQualityGold {
+  company_id?: string;
+  fiscal_year?: number | string;
+  metric_id?: string;
+  value?: number | string;
+  unit?: string;
+  source_filing?: string;
+  page?: number | string;
+  row_label?: string;
+  column_label?: string;
+  table_name?: string;
+  evidence_text?: string;
+  cell_supported?: boolean | "uncertain" | null | "";
+  [key: string]: unknown;
+}
+
+export interface TableQualityRow {
+  queue_id: string;
+  id: string;
+  company_id: string;
+  metric_id: string;
+  fiscal_year: number;
+  value: number;
+  raw_value: string;
+  unit: string;
+  source_filing: string;
+  page: number;
+  row_label: string;
+  column_label: string;
+  table_name: string;
+  evidence_sentence: string;
+  table_context?: string | null;
+  review_status: TableQualityStatus;
+  reviewer: string;
+  review_notes: string;
+  gold: TableQualityGold;
+  annotation_instruction: string;
+}
+
+export interface TableQualityResponse {
+  rows: TableQualityRow[];
+  total: number;
+  reviewed: number;
+  in_progress: number;
+  pending: number;
+}
+
+export interface TableQualityPatch {
+  gold?: TableQualityGold;
+  reviewer?: string;
+  review_notes?: string;
+  review_status?: TableQualityStatus;
+}
+
+export interface TableQualityPatchResponse extends Omit<TableQualityResponse, "rows"> {
+  row: TableQualityRow;
+}
+
+export async function getTableQuality(): Promise<TableQualityResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/table-quality`);
+  if (!r.ok) throw new Error(`Table QA ${r.status}`);
+  return r.json();
+}
+
+export async function patchTableQuality(
+  queueId: string,
+  patch: TableQualityPatch,
+): Promise<TableQualityPatchResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/table-quality/${encodeURIComponent(queueId)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  if (!r.ok) {
+    const payload = await r.json().catch(() => null);
+    const detail = payload?.detail || payload?.error?.message || `Table QA save ${r.status}`;
     throw new Error(detail);
   }
   return r.json();

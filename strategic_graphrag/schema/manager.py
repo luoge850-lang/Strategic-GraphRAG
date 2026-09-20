@@ -14,12 +14,13 @@ import os
 import sys
 import json
 import logging
+import threading
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 from dotenv import load_dotenv
 from neo4j import GraphDatabase, Query, READ_ACCESS
-from neo4j.exceptions import Neo4jError, ServiceUnavailable
+from neo4j.exceptions import Neo4jError, ServiceUnavailable, SessionExpired
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 ENV_PATH = PROJECT_ROOT / ".env"
@@ -144,50 +145,96 @@ class SchemaManager:
         self.database = os.getenv("NEO4J_DATABASE", "neo4j")
         self.query_timeout = max(float(os.getenv("NEO4J_QUERY_TIMEOUT_SECONDS", "8")), 0.5)
         self.driver = None
+        self._connection_lock = threading.RLock()
 
     def connect(self) -> bool:
-        try:
-            self.driver = GraphDatabase.driver(
-                self.uri,
-                auth=(self.user, self.password),
-                max_connection_pool_size=max(
-                    int(os.getenv("NEO4J_POOL_SIZE", "8")), 1
-                ),
-                connection_acquisition_timeout=max(
-                    float(os.getenv("NEO4J_ACQUISITION_TIMEOUT_SECONDS", "5")), 0.5
-                ),
-                max_transaction_retry_time=max(
-                    float(os.getenv("NEO4J_MAX_RETRY_SECONDS", "3")), 0.0
-                ),
-                keep_alive=True,
-            )
-            self.driver.verify_connectivity()
-            logger.info(f"Connected to Neo4j: {self.uri}")
-            return True
-        except ServiceUnavailable as e:
-            logger.error(f"Cannot connect to Neo4j: {e}")
-            return False
+        """Create and verify a fresh driver, replacing a stale Aura connection.
+
+        Aura free-tier databases can suspend and later drop the driver's pooled
+        routing connection.  Treat reconnection as a normal lifecycle event:
+        close the old pool, verify the replacement, and leave ``driver`` unset
+        when verification fails so callers cannot accidentally reuse it.
+        """
+        with self._connection_lock:
+            old_driver = self.driver
+            self.driver = None
+            if old_driver is not None:
+                try:
+                    old_driver.close()
+                except Exception as exc:
+                    logger.debug("Closing stale Neo4j driver failed: %s", exc)
+
+            candidate = None
+            try:
+                candidate = GraphDatabase.driver(
+                    self.uri,
+                    auth=(self.user, self.password),
+                    max_connection_pool_size=max(
+                        int(os.getenv("NEO4J_POOL_SIZE", "8")), 1
+                    ),
+                    connection_acquisition_timeout=max(
+                        float(os.getenv("NEO4J_ACQUISITION_TIMEOUT_SECONDS", "5")), 0.5
+                    ),
+                    max_transaction_retry_time=max(
+                        float(os.getenv("NEO4J_MAX_RETRY_SECONDS", "3")), 0.0
+                    ),
+                    keep_alive=True,
+                )
+                candidate.verify_connectivity()
+                self.driver = candidate
+                logger.info(f"Connected to Neo4j: {self.uri}")
+                return True
+            except Exception as e:
+                if candidate is not None:
+                    try:
+                        candidate.close()
+                    except Exception:
+                        pass
+                logger.warning(f"Cannot connect to Neo4j: {e}")
+                return False
 
     def close(self):
         if self.driver:
             self.driver.close()
 
     def _run(self, cypher, **params):
-        with self.driver.session(database=self.database) as session:
-            query = Query(cypher, timeout=self.query_timeout)
-            return [r.data() for r in session.run(query, **params)]
+        last_error = None
+        for attempt in range(2):
+            if self.driver is None and not self.connect():
+                raise ServiceUnavailable("Neo4j driver is unavailable")
+            try:
+                with self.driver.session(database=self.database) as session:
+                    query = Query(cypher, timeout=self.query_timeout)
+                    return [r.data() for r in session.run(query, **params)]
+            except (ServiceUnavailable, SessionExpired, OSError) as exc:
+                last_error = exc
+                if attempt == 0 and self.connect():
+                    continue
+                raise
+        raise last_error or ServiceUnavailable("Neo4j operation failed")
 
     def _read(self, cypher, **params):
-        with self.driver.session(
-            database=self.database,
-            default_access_mode=READ_ACCESS,
-        ) as session:
-            query = Query(
-                cypher,
-                timeout=self.query_timeout,
-                metadata={"app": "strategic-graphrag", "operation": "read"},
-            )
-            return [r.data() for r in session.run(query, **params)]
+        last_error = None
+        for attempt in range(2):
+            if self.driver is None and not self.connect():
+                raise ServiceUnavailable("Neo4j driver is unavailable")
+            try:
+                with self.driver.session(
+                    database=self.database,
+                    default_access_mode=READ_ACCESS,
+                ) as session:
+                    query = Query(
+                        cypher,
+                        timeout=self.query_timeout,
+                        metadata={"app": "strategic-graphrag", "operation": "read"},
+                    )
+                    return [r.data() for r in session.run(query, **params)]
+            except (ServiceUnavailable, SessionExpired, OSError) as exc:
+                last_error = exc
+                if attempt == 0 and self.connect():
+                    continue
+                raise
+        raise last_error or ServiceUnavailable("Neo4j read failed")
 
     def _exec_many(self, statements: List[str]) -> int:
         count = 0

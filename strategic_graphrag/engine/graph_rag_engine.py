@@ -24,6 +24,7 @@ import json
 import hashlib
 import logging
 import time
+from copy import deepcopy
 from typing import Any, Dict, List, Optional, Tuple, Set
 from dataclasses import dataclass, field
 
@@ -40,12 +41,22 @@ from .evidence_quality import (
     audit_documents,
     contains_absence_claim,
     select_answer_evidence,
+    score_path_directness,
     semantic_scope,
+)
+from ..response_contract import (
+    apply_response_contract,
+    classify_outcome,
+    has_substantive_claims,
+    substantive_fragments,
 )
 from ..ontology.relation_inference import VALID_RELATIONS, CAUSAL_STRENGTHS, detect_causal_strength
 
 load_dotenv()
 logger = logging.getLogger("GraphRAGEngine")
+_EVIDENCE_ID_RE = re.compile(
+    r"\b(?:claim(?:_[A-Za-z0-9-]+)+|[A-Za-z0-9-]+(?:_[A-Za-z0-9-]+)*_claim(?:_[A-Za-z0-9-]+)*)\b"
+)
 
 # =============================================================================
 # Data Structures
@@ -852,6 +863,7 @@ CRITICAL STYLE RULES:
         vector_engine=None,
         vector_top_k: int = 5,
         synthesize: bool = True,
+        use_llm_anchors: Optional[bool] = None,
     ) -> Dict:
         """
         Execute the complete GraphRAG inference pipeline.
@@ -926,21 +938,28 @@ CRITICAL STYLE RULES:
 
         # Pre-flight: ensure Neo4j is connected
         if not self._ensure_connection():
-            return {
+            return apply_response_contract({
                 "query": user_query,
                 "intent": "FALLBACK",
                 "intent_display": "Connection Error",
                 "answer": "[CONNECTION ERROR] Neo4j database is unavailable. The AuraDB free tier may be restarting. Please wait 30 seconds and retry.",
+                "outcome": "DEPENDENCY_ERROR",
                 "paths": [],
                 "evidence_sentences": [],
                 "metadata": {
+                    "outcome": "DEPENDENCY_ERROR",
+                    "error": {
+                        "code": "DEPENDENCY_ERROR",
+                        "dependency": "neo4j",
+                        "retryable": True,
+                    },
                     "total_candidates": 0,
                     "top_paths": 0,
                     "anchors_used": [],
                     "avg_score": 0,
                     "latency_ms": {"total_ms": round((time.perf_counter() - started_at) * 1000, 2)},
                 },
-            }
+            }, execution_status="DEPENDENCY_ERROR", answer_status="NOT_REQUESTED", grounding_status="NOT_EXECUTED")
 
         # Step 1: Intent Analysis
         intent_started = time.perf_counter()
@@ -955,6 +974,7 @@ CRITICAL STYLE RULES:
             for relation in VALID_RELATIONS
             if relation in query_upper
         ]
+        explicit_direct_relation_query = bool(explicit_relations)
         if explicit_relations:
             strategy["relation_preference"] = list(
                 dict.fromkeys(explicit_relations + strategy["relation_preference"])
@@ -978,21 +998,43 @@ CRITICAL STYLE RULES:
         query_entities = extract_financial_entities_from_query(user_query)
         explicit_entity_tokens = [
             token
-            for token in re.findall(r"\b[A-Z][A-Z0-9_]{3,}\b", user_query)
+            for token in re.findall(r"\b[A-Z][A-Z0-9_]{2,}\b", user_query)
             if token not in VALID_RELATIONS
         ]
         query_entities = list(dict.fromkeys(query_entities + explicit_entity_tokens))
-        # Add LLM-extracted anchors
-        llm_anchors = self._llm_extract_anchors(user_query)
         lexical_anchors = self.path_finder.find_text_anchors(user_query, limit=8)
         vector_anchors = self.path_finder.find_vector_evidence_anchors(
             vector_retrieval.get("hits", []), limit=12
         ) if router_decision.use_vector else []
+        # Retrieval-only baselines must not call a remote model just to
+        # expand anchors: that adds latency and makes the benchmark depend on
+        # provider-side sampling.  Normal synthesized answers keep the
+        # optional expansion unless the caller explicitly disables it.
+        llm_anchor_enabled = synthesize if use_llm_anchors is None else bool(use_llm_anchors)
+        # A query that explicitly names both endpoints and an ontology
+        # relation already has deterministic anchors.  Calling the external
+        # query model here only adds latency and can introduce an unrelated
+        # high-frequency anchor before the strict endpoint filter runs.
+        llm_anchors = []
+        if explicit_direct_relation_query and explicit_entity_tokens:
+            llm_anchor_strategy = "skipped_explicit_relation_endpoints"
+        elif not llm_anchor_enabled:
+            llm_anchor_strategy = "disabled_retrieval_only"
+        else:
+            llm_anchors = self._llm_extract_anchors(user_query)
+            llm_anchor_strategy = "llm_fallback_or_cached"
         all_anchors = list(dict.fromkeys(query_entities + lexical_anchors + vector_anchors + llm_anchors))
         target_metric = structured_query.target_metric
         explicit_chain_query = bool(
             re.search(r"\b(?:through|two[- ]step|chain)\b", user_query, re.IGNORECASE)
         )
+        if explicit_direct_relation_query and explicit_entity_tokens and not explicit_chain_query:
+            # A direct ontology-relation question already names both endpoint
+            # entities.  Vector and PPR anchor expansion can otherwise pull in
+            # unrelated, high-frequency graph branches before the named edge
+            # reaches Top-K.  Keep vector retrieval active for page fusion, but
+            # make graph traversal deterministic around the explicit endpoints.
+            all_anchors = list(dict.fromkeys(query_entities + explicit_entity_tokens))
         metric_only = bool(target_metric) and not explicit_chain_query and not re.search(
             r"\b(affect|impact|cause|risk|control|constraint|exposure|supply chain|why|how)\b",
             user_query,
@@ -1016,8 +1058,12 @@ CRITICAL STYLE RULES:
                 ["REPORTS_METRIC"] + strategy["relation_preference"]
             ))
         logger.info(f"Anchors: {all_anchors}")
+        stage_times["anchor_resolution_ms"] = round(
+            (time.perf_counter() - anchor_started) * 1000, 2
+        )
         ppr_results: List[Dict[str, Any]] = []
-        if router_decision.use_ppr and all_anchors:
+        ppr_started = time.perf_counter()
+        if router_decision.use_ppr and all_anchors and not explicit_direct_relation_query:
             try:
                 ppr_results = self.ppr_retriever.rank(
                     all_anchors,
@@ -1030,9 +1076,7 @@ CRITICAL STYLE RULES:
                 all_anchors = list(dict.fromkeys(all_anchors + ppr_anchors))
             except Exception as exc:
                 logger.warning("PPR retrieval unavailable: %s", type(exc).__name__)
-        stage_times["anchor_resolution_ms"] = round(
-            (time.perf_counter() - anchor_started) * 1000, 2
-        )
+        stage_times["ppr_ms"] = round((time.perf_counter() - ppr_started) * 1000, 2)
 
         # Step 3: Multi-Hop Path Search
         graph_started = time.perf_counter()
@@ -1172,7 +1216,13 @@ CRITICAL STYLE RULES:
             })
             fallback["answer"] += "\n\n" + negative_audit["safe_absence_statement"]
             fallback["structured_report"]["limitations"] = negative_audit["safe_absence_statement"]
-            return fallback
+            return apply_response_contract(
+                fallback,
+                execution_status="SUCCEEDED",
+                answer_status="ABSTAINED",
+                grounding_status="NOT_APPLICABLE",
+                provenance_note="no_answer_path",
+            )
 
         # Step 4: Score Paths
         scoring_started = time.perf_counter()
@@ -1187,18 +1237,32 @@ CRITICAL STYLE RULES:
             year_end=effective_year_end,
         )
         candidate_paths = self._deduplicate_paths(candidate_paths)
-        apply_directness_ranking(candidate_paths, user_query, intent_id)
+        apply_directness_ranking(
+            candidate_paths,
+            user_query,
+            intent_id,
+            preferred_relations=strategy["relation_preference"],
+        )
         candidate_paths.sort(key=self._path_sort_key)
 
         # Step 5: Semantic Reranking (if Cross-Encoder available)
         if self.reranker and len(candidate_paths) > top_k:
             candidate_paths = self._rerank_paths(user_query, candidate_paths)
-        top_paths = self._select_temporal_paths(
+        # Keep a wider bounded pool until evidence roles are known.  The old
+        # order selected Top-K by aggregate score first, which could discard
+        # an ANSWER_CRITICAL path before select_answer_evidence had a chance to
+        # promote it above background variants.
+        selection_pool_limit = min(len(candidate_paths), max(top_k, path_budget))
+        candidate_pool = self._select_temporal_paths(
             candidate_paths,
             temporal_context,
-            limit=top_k,
+            limit=selection_pool_limit,
         )
-        top_paths = select_answer_evidence(top_paths, top_k)
+        top_paths = select_answer_evidence(
+            candidate_pool,
+            top_k,
+            required_years=temporal_context.get("requested_years", []),
+        )
         stage_times["scoring_rerank_ms"] = round(
             (time.perf_counter() - scoring_started) * 1000, 2
         )
@@ -1283,8 +1347,9 @@ CRITICAL STYLE RULES:
                 "Retrieval-only mode: external LLM synthesis was disabled.",
                 status="RETRIEVAL_ONLY",
             )
+        raw_model_output = deepcopy(structured_report)
         structured_report = self._canonicalize_report_citations(
-            structured_report,
+            deepcopy(structured_report),
             top_paths,
         )
         structured_report = self._enforce_negative_claim_policy(
@@ -1306,13 +1371,15 @@ CRITICAL STYLE RULES:
         ):
             answer = "[INSUFFICIENT EVIDENCE] " + answer
             structured_report["support_status"] = "INSUFFICIENT_EVIDENCE"
-        if structured_report.get("status") in {
-            "INSUFFICIENT_DIRECT_EVIDENCE",
-            "NEGATIVE_CLAIM_GUARD",
-        }:
+        # A negative-claim guard only removes or rewrites unsafe absence
+        # statements.  It does not prove that any factual claim left in the
+        # report is grounded.  Keep the applicability decision tied to the
+        # remaining answer content, not to the guard status itself.
+        grounding_required = has_substantive_claims(structured_report)
+        if not grounding_required:
             grounding = {
                 "status": "NOT_APPLICABLE",
-                "reason": "Background-only evidence was excluded from synthesis.",
+                "reason": "Pure refusal or non-substantive report contains no factual claim.",
                 "unknown_evidence_ids": [],
                 "unknown_pages": [],
                 "unknown_years": [],
@@ -1322,7 +1389,10 @@ CRITICAL STYLE RULES:
                 answer,
                 top_paths,
                 structured_report=structured_report,
+                query=user_query,
+                intent=intent_id,
             )
+        normalized_structured_report = deepcopy(structured_report)
         llm_route = self._llm_route_metadata()
         if grounding["status"] not in {"VERIFIED", "NOT_APPLICABLE"}:
             logger.warning(
@@ -1336,7 +1406,22 @@ CRITICAL STYLE RULES:
             answer = self._grounding_failure_response(grounding, top_paths)
             structured_report = self._grounding_failure_report(grounding, top_paths)
 
-        return {
+        answer_status = (
+            "NOT_REQUESTED" if not synthesize
+            else "PARTIALLY_ANSWERED"
+            if structured_report.get("negative_claim_guard", {}).get("triggered")
+            and grounding["status"] in {"VERIFIED", "NOT_APPLICABLE"}
+            and has_substantive_claims(structured_report)
+            else "ABSTAINED" if not grounding_required
+            else "ANSWERED"
+        )
+        grounding_status = {
+            "VERIFIED": "VERIFIED",
+            "NOT_APPLICABLE": "NOT_APPLICABLE",
+            "PARTIALLY_VERIFIED": "INSUFFICIENT",
+            "UNSUPPORTED": "FAILED",
+        }.get(grounding.get("status"), "NOT_EXECUTED")
+        response = {
             "query": user_query,
             "intent": intent_id,
             "intent_display": intent_sig.display_name,
@@ -1350,14 +1435,23 @@ CRITICAL STYLE RULES:
                 "deduplicated_candidates": len(candidate_paths),
                 "top_paths": len(top_paths),
                 "anchors_used": all_anchors,
+                "llm_anchor_strategy": llm_anchor_strategy,
+                "llm_anchor_enabled": llm_anchor_enabled,
                 "avg_score": round(np.mean([p.aggregate_score for p in top_paths]), 4) if top_paths else 0,
                 "temporal": temporal_status,
                 "grounding": grounding,
+                "response_audit": {
+                    "raw_model_output": raw_model_output,
+                    "normalized_structured_report": normalized_structured_report,
+                    "final_display_answer": answer,
+                },
                 "negative_evidence_audit": negative_audit,
                 "answer_evidence_status": answer_evidence_status,
                 "llm": llm_route,
                 "source_filing": source_filing,
                 "retrieval": retrieval,
+                "vector_retrieval": vector_retrieval,
+                "vector_fusion": retrieval,
                 "temporal_fusion": temporal_fusion,
                 "router": router_decision.to_dict(),
                 "ppr": {
@@ -1373,6 +1467,13 @@ CRITICAL STYLE RULES:
                 },
             },
         }
+        return apply_response_contract(
+            response,
+            execution_status="SUCCEEDED",
+            answer_status=answer_status,
+            grounding_status=grounding_status,
+            provenance_note="engine_final_response",
+        )
 
     @staticmethod
     def _resolve_retrieval_mode(
@@ -1402,8 +1503,19 @@ CRITICAL STYLE RULES:
         """Return the vector-only control group using the common API contract."""
         hits = retrieval.get("hits", []) or []
         documents = [hit.get("document", "") for hit in hits if hit.get("document")]
-        if synthesize and vector_engine is not None and documents:
-            answer = vector_engine.generate(query, documents)
+        execution_status = "DEPENDENCY_ERROR" if retrieval.get("status") in {"ERROR", "UNAVAILABLE"} else "SUCCEEDED"
+        error = None
+        if synthesize and vector_engine is not None and documents and execution_status == "SUCCEEDED":
+            try:
+                answer = vector_engine.generate(query, documents)
+            except TimeoutError as exc:
+                answer = "[TIMEOUT] Vector synthesis timed out."
+                execution_status = "TIMEOUT"
+                error = type(exc).__name__
+            except Exception as exc:
+                answer = "[MODEL ERROR] Vector synthesis failed."
+                execution_status = "MODEL_ERROR"
+                error = type(exc).__name__
         elif documents:
             answer = "\n\n".join(documents[:5])
         else:
@@ -1417,7 +1529,13 @@ CRITICAL STYLE RULES:
                 "page": metadata.get("page"),
                 "chunk_id": metadata.get("chunk_id"),
             })
-        return {
+        answer_status = (
+            "NOT_REQUESTED" if not synthesize
+            else "ABSTAINED" if not documents
+            else "ANSWERED" if execution_status == "SUCCEEDED"
+            else "NOT_REQUESTED"
+        )
+        response = {
             "query": query,
             "intent": "VECTOR_BASELINE",
             "intent_display": "Vector RAG Baseline",
@@ -1444,12 +1562,20 @@ CRITICAL STYLE RULES:
                 "source_filing": source_filing,
                 "retrieval": retrieval,
                 "vector_citations": citations,
+                "error": {"code": execution_status, "detail": error} if error else None,
                 "latency_ms": {
                     **stage_times,
                     "total_ms": round((time.perf_counter() - started_at) * 1000, 2),
                 },
             },
         }
+        return apply_response_contract(
+            response,
+            execution_status=execution_status,
+            answer_status=answer_status,
+            grounding_status="NOT_EXECUTED",
+            provenance_note="vector_baseline_response",
+        )
 
     def _apply_temporal_fact_fusion(
         self,
@@ -1475,8 +1601,10 @@ CRITICAL STYLE RULES:
             with self.driver.session() as session:
                 rows = list(session.run(
                     """
-                    MATCH (fact:TemporalFact)-[:SUPPORTED_BY_CLAIM]->(claim:EvidenceClaim)
-                    WHERE claim.id IN $claim_ids AND fact.model_version='bitemporal_fact_v2'
+                    UNWIND $claim_ids AS claim_id
+                    MATCH (claim:EvidenceClaim {id: claim_id})
+                    MATCH (fact:TemporalFact)-[:SUPPORTED_BY_CLAIM]->(claim)
+                    WHERE fact.model_version='bitemporal_fact_v2'
                       AND ($year_start IS NULL OR fact.disclosure_order >= $year_start)
                       AND ($year_end IS NULL OR fact.disclosure_order <= $year_end)
                     RETURN claim.id AS claim_id, fact.is_current_record AS current,
@@ -1578,7 +1706,7 @@ CRITICAL STYLE RULES:
         llm = getattr(self, "llm", None)
         if llm is None:
             return {"status": "NOT_CONFIGURED"}
-        return {
+        response = {
             "configured_provider": getattr(llm, "provider", None),
             "configured_model": getattr(llm, "default_model", None),
             "success_provider": getattr(llm, "last_success_provider", None),
@@ -1725,10 +1853,11 @@ CRITICAL STYLE RULES:
             for evidence in path.evidence
             if evidence and len(evidence) > 10
         ][:20]
-        return {
+        response = {
             "query": query,
             "intent": "TEMPORAL_GUARD",
             "intent_display": "Insufficient Temporal Evidence",
+            "outcome": "ABSTAINED",
             "answer": (
                 "[INSUFFICIENT TEMPORAL EVIDENCE] The requested comparison "
                 f"requires {requested}, but the retrieved evidence covers {covered}. "
@@ -1738,6 +1867,7 @@ CRITICAL STYLE RULES:
             "structured_report": {
                 "format": "evidence_claim_v1",
                 "status": "INSUFFICIENT_TEMPORAL_EVIDENCE",
+                "outcome": "ABSTAINED",
                 "executive_summary": "The requested time comparison is not supported.",
                 "claims": [],
                 "evidence_quality": "Retrieved evidence does not cover all requested years.",
@@ -1751,18 +1881,26 @@ CRITICAL STYLE RULES:
                 "anchors_used": anchors,
                 "avg_score": round(np.mean([path.aggregate_score for path in paths]), 4) if paths else 0.0,
                 "temporal": temporal_status,
+                "outcome": "ABSTAINED",
                 "llm": self._llm_route_metadata(),
                 "grounding": {"status": "NOT_APPLICABLE"},
                 "retrieval": retrieval or {"mode": "GRAPH_ONLY"},
             },
         }
+        return apply_response_contract(
+            response,
+            execution_status="SUCCEEDED",
+            answer_status="ABSTAINED",
+            grounding_status="NOT_APPLICABLE",
+            provenance_note="temporal_coverage_guard",
+        )
 
     @staticmethod
     def _canonicalize_report_citations(
         structured_report: Optional[Dict[str, Any]],
         paths: List[CausalPath],
     ) -> Optional[Dict[str, Any]]:
-        """Replace model-supplied pages/years with graph-backed metadata.
+        """Canonicalize citations while retaining the submitted values for audit.
 
         The LLM is allowed to choose which retrieved EvidenceClaims support a
         statement, but it is not the source of truth for a Claim's page or
@@ -1774,15 +1912,23 @@ CRITICAL STYLE RULES:
         if not structured_report or not paths:
             return structured_report
 
-        evidence_index: Dict[str, set[Tuple[int, int]]] = {}
+        def _filing_key(value: Any) -> str:
+            return str(value or "").strip().lower().removesuffix(".pdf")
+
+        evidence_index: Dict[str, set[Tuple[int, int, str]]] = {}
         for path in paths:
             for index, evidence_id in enumerate(path.evidence_ids):
                 if not evidence_id or evidence_id == "?":
                     continue
                 if index >= len(path.pages) or index >= len(path.years):
                     continue
+                filing = (
+                    path.filings[index]
+                    if index < len(path.filings)
+                    else ""
+                )
                 evidence_index.setdefault(str(evidence_id), set()).add(
-                    (int(path.pages[index]), int(path.years[index]))
+                    (int(path.pages[index]), int(path.years[index]), _filing_key(filing))
                 )
 
         normalized_claims = []
@@ -1794,18 +1940,133 @@ CRITICAL STYLE RULES:
                 for value in claim.get("evidence_claim_ids", []) or []
                 if value
             ]
+            submitted_page_values = [
+                int(value)
+                for value in claim.get("pages", []) or []
+                if str(value).isdigit()
+            ]
+            submitted_year_values = [
+                int(value)
+                for value in claim.get("fiscal_years", []) or []
+                if str(value).isdigit()
+            ]
+            submitted_filing_values = [
+                _filing_key(value)
+                for value in (
+                    claim.get("source_filings")
+                    or claim.get("filings")
+                    or []
+                )
+                if value
+            ]
+            submitted_pages = {
+                int(value)
+                for value in submitted_page_values
+            }
+            submitted_years = {
+                int(value)
+                for value in submitted_year_values
+            }
+            submitted_filings = {
+                _filing_key(value)
+                for value in submitted_filing_values
+            }
+            known_claim_ids = set(evidence_index)
+            normalization_issues = []
+            unknown_ids = sorted(set(claim_ids) - known_claim_ids)
+            if unknown_ids:
+                normalization_issues.append({
+                    "reason": "UNKNOWN_EVIDENCE_ID",
+                    "evidence_claim_ids": unknown_ids,
+                })
             canonical_pairs = {
                 pair
                 for claim_id in claim_ids
                 for pair in evidence_index.get(claim_id, set())
             }
             if not canonical_pairs:
-                # Drop empty/malformed claim objects from the presentation
-                # layer.  Unknown IDs remain visible in the executive
-                # summary and therefore still fail the global validator.
+                # Preserve malformed claims so the validator can report the
+                # failure.  Dropping them here would turn a bad citation into
+                # a clean-looking report with no auditable trace.
+                claim["citation_audit"] = {
+                    "submitted_pages": sorted(submitted_pages),
+                    "submitted_fiscal_years": sorted(submitted_years),
+                    "submitted_source_filings": sorted(submitted_filings),
+                    "normalization_issues": normalization_issues or [{
+                        "reason": "CLAIM_HAS_NO_RESOLVABLE_EVIDENCE_ID",
+                    }],
+                }
+                normalized_claims.append(claim)
                 continue
-            claim["pages"] = sorted({page for page, _ in canonical_pairs})
-            claim["fiscal_years"] = sorted({year for _, year in canonical_pairs})
+            canonical_pages = {page for page, _, _ in canonical_pairs}
+            canonical_years = {year for _, year, _ in canonical_pairs}
+            canonical_filings = {filing for _, _, filing in canonical_pairs if filing}
+            if submitted_pages and not submitted_pages.issubset(canonical_pages):
+                normalization_issues.append({
+                    "reason": "SUBMITTED_PAGE_MISMATCH",
+                    "submitted": sorted(submitted_pages),
+                    "canonical": sorted(canonical_pages),
+                })
+            if submitted_years and not submitted_years.issubset(canonical_years):
+                normalization_issues.append({
+                    "reason": "SUBMITTED_FISCAL_YEAR_MISMATCH",
+                    "submitted": sorted(submitted_years),
+                    "canonical": sorted(canonical_years),
+                })
+            if submitted_filings and not submitted_filings.issubset(canonical_filings):
+                normalization_issues.append({
+                    "reason": "SUBMITTED_SOURCE_FILING_MISMATCH",
+                    "submitted": sorted(submitted_filings),
+                    "canonical": sorted(canonical_filings),
+                })
+            submitted_citations = claim.get("citations")
+            if isinstance(submitted_citations, list) and submitted_citations:
+                for citation in submitted_citations:
+                    if not isinstance(citation, dict):
+                        normalization_issues.append({
+                            "reason": "INVALID_CITATION_RECORD",
+                            "citation": citation,
+                        })
+                        continue
+                    citation_id = str(
+                        citation.get("evidence_claim_id")
+                        or citation.get("claim_id")
+                        or ""
+                    )
+                    citation_pair = (
+                        int(citation.get("page")),
+                        int(citation.get("fiscal_year")),
+                        _filing_key(citation.get("source_filing")),
+                    ) if str(citation.get("page")).isdigit() and str(citation.get("fiscal_year")).isdigit() else None
+                    if not citation_id or citation_pair is None or citation_pair not in evidence_index.get(citation_id, set()):
+                        normalization_issues.append({
+                            "reason": "SUBMITTED_CITATION_PAIR_MISMATCH",
+                            "citation": citation,
+                        })
+            elif len(claim_ids) > 1 and (
+                len(submitted_page_values) not in {0, len(claim_ids)}
+                or len(submitted_year_values) not in {0, len(claim_ids)}
+                or submitted_filing_values and len(submitted_filing_values) not in {len(claim_ids)}
+            ):
+                normalization_issues.append({
+                    "reason": "UNPAIRED_CITATION_FIELDS",
+                    "evidence_claim_ids": claim_ids,
+                    "pages": submitted_page_values,
+                    "fiscal_years": submitted_year_values,
+                    "source_filings": submitted_filing_values,
+                })
+            claim["citation_audit"] = {
+                "submitted_pages": sorted(submitted_pages),
+                "submitted_fiscal_years": sorted(submitted_years),
+                "submitted_source_filings": sorted(submitted_filings),
+                "canonical_pages": sorted(canonical_pages),
+                "canonical_fiscal_years": sorted(canonical_years),
+                "canonical_source_filings": sorted(canonical_filings),
+                "normalization_issues": normalization_issues,
+            }
+            claim["pages"] = sorted(canonical_pages)
+            claim["fiscal_years"] = sorted(canonical_years)
+            claim["source_filings"] = sorted(canonical_filings)
             normalized_claims.append(claim)
 
         # Some provider responses omit the claims array even though the
@@ -1816,7 +2077,7 @@ CRITICAL STYLE RULES:
         inline_ids = [
             value
             for value in re.findall(
-                r"\b[A-Za-z0-9][A-Za-z0-9_-]*_claim\b",
+                _EVIDENCE_ID_RE,
                 summary_text,
             )
             if value in evidence_index
@@ -1828,9 +2089,19 @@ CRITICAL STYLE RULES:
                     {
                         "statement": summary_text,
                         "evidence_claim_ids": [claim_id],
-                        "pages": sorted({page for page, _ in pairs}),
-                        "fiscal_years": sorted({year for _, year in pairs}),
+                        "pages": sorted({page for page, _, _ in pairs}),
+                        "fiscal_years": sorted({year for _, year, _ in pairs}),
+                        "source_filings": sorted({filing for _, _, filing in pairs if filing}),
                         "support_level": "LIMITED",
+                        "citation_audit": {
+                            "submitted_pages": [],
+                            "submitted_fiscal_years": [],
+                            "submitted_source_filings": [],
+                            "canonical_pages": sorted({page for page, _, _ in pairs}),
+                            "canonical_fiscal_years": sorted({year for _, year, _ in pairs}),
+                            "canonical_source_filings": sorted({filing for _, _, filing in pairs if filing}),
+                            "normalization_issues": [],
+                        },
                     }
                 )
         structured_report["claims"] = normalized_claims
@@ -1868,18 +2139,202 @@ CRITICAL STYLE RULES:
         return structured_report
 
     @staticmethod
+    def _statement_tokens(value: Any) -> Set[str]:
+        text = str(value or "").lower().replace("_", " ")
+        return {
+            token
+            for token in re.findall(r"[a-z][a-z0-9-]{2,}|\d+(?:[,.]\d+)?", text)
+            if token not in {
+                "the", "and", "for", "from", "with", "that", "this", "these",
+                "those", "was", "were", "are", "is", "reported", "reports",
+                "evidence", "filing", "relationship", "claim", "could", "may",
+                "might", "would", "should", "only", "also", "such", "into",
+            }
+        }
+
+    @staticmethod
+    def _statement_numbers(value: Any) -> Set[str]:
+        return {
+            token.replace(",", "")
+            for token in re.findall(r"\d[\d,]*(?:\.\d+)?", str(value or ""))
+        }
+
+    @staticmethod
+    def _signed_statement_numbers(value: Any) -> Dict[str, Set[str]]:
+        """Return explicit sign evidence without guessing semantic direction."""
+        signs: Dict[str, Set[str]] = {}
+        pattern = re.compile(
+            r"(?<![A-Za-z])(?P<token>[+-]?\(?\$?\d[\d,]*(?:\.\d+)?%?\)?)"
+        )
+        for match in pattern.finditer(str(value or "")):
+            token = match.group("token")
+            magnitude = re.sub(r"[^\d.]", "", token.replace(",", ""))
+            if not magnitude:
+                continue
+            sign = "negative" if token.startswith("-") or token.startswith("(") else "positive"
+            signs.setdefault(magnitude, set()).add(sign)
+        return signs
+
+    @classmethod
+    def _statement_support_for_path(
+        cls,
+        statement: str,
+        path: CausalPath,
+        *,
+        query: Optional[str] = None,
+        intent: Optional[str] = None,
+        numeric_fields: Any = None,
+        unit: Any = None,
+        fiscal_years: Any = None,
+    ) -> Dict[str, Any]:
+        """Check statement content against the cited path, not just its IDs.
+
+        This is a deterministic safety gate rather than a claim of general
+        natural-language entailment. Numeric tokens must occur in the cited
+        evidence or structured numeric fields. Textual statements must share
+        enough non-stopword content with the evidence/path, and the existing
+        relation-support diagnostic is retained for relation questions.
+        """
+        statement_tokens = cls._statement_tokens(statement)
+        statement_numbers = cls._statement_numbers(statement)
+        evidence_text = " ".join([
+            *(str(value or "") for value in path.evidence),
+            *(str(value or "") for value in path.nodes),
+            *(str(value or "") for value in path.relationships),
+        ]).lower().replace("_", " ")
+        evidence_tokens = cls._statement_tokens(evidence_text)
+        evidence_numbers = cls._statement_numbers(evidence_text)
+        numeric_field_numbers = cls._statement_numbers(numeric_fields)
+        year_values = (
+            fiscal_years
+            if isinstance(fiscal_years, (list, tuple, set))
+            else [fiscal_years] if fiscal_years is not None else []
+        )
+        allowed_period_years = {
+            int(value) for value in year_values if str(value).isdigit()
+        }
+        missing_numbers = sorted(
+            number for number in statement_numbers
+            if number not in evidence_numbers
+            and number not in numeric_field_numbers
+            and not (number.isdigit() and int(number) in allowed_period_years)
+        )
+        statement_signs = cls._signed_statement_numbers(statement)
+        evidence_signs = cls._signed_statement_numbers(evidence_text)
+        sign_mismatches = sorted(
+            number for number, signs in statement_signs.items()
+            if "negative" in signs
+            and number in evidence_signs
+            and "negative" not in evidence_signs[number]
+        )
+        unit_text = str(unit or "").strip().lower()
+        statement_lower = str(statement or "").lower()
+        evidence_lower = evidence_text.lower()
+        unit_mismatch = False
+        if unit_text and unit_text not in {"reported units", "unknown", "none"}:
+            if "percent" in unit_text or "%" in unit_text:
+                unit_mismatch = not (
+                    "%" in statement_lower
+                    and ("%" in evidence_lower or "percent" in evidence_lower)
+                )
+            elif "million" in unit_text:
+                unit_mismatch = "million" not in evidence_lower and "million" not in str(numeric_fields or "").lower()
+            elif "thousand" in unit_text:
+                unit_mismatch = "thousand" not in evidence_lower and "thousand" not in str(numeric_fields or "").lower()
+        statement_is_modal = bool(re.search(r"\b(?:may|might|could|expected to|likely)\b", statement_lower))
+        evidence_is_modal = bool(re.search(r"\b(?:may|might|could|expected to|likely)\b", evidence_lower))
+        statement_is_negative = bool(re.search(r"\b(?:not|no|never|does not|did not)\b", statement_lower))
+        evidence_is_negative = bool(re.search(r"\b(?:not|no|never|does not|did not)\b", evidence_lower))
+        modality_mismatch = (evidence_is_modal and not statement_is_modal) or (
+            evidence_is_negative and not statement_is_negative
+        )
+        overlap = len(statement_tokens & evidence_tokens) / max(len(statement_tokens), 1)
+        directness = score_path_directness(
+            path,
+            query or statement,
+            intent or "CAUSAL_CHAIN",
+        )
+        explicit_relation_query = bool(re.search(
+            r"\b(?:PRODUCES|OPERATES_IN|COMPETES_WITH|DEPENDS_ON|"
+            r"REPORTS_METRIC|IMPLEMENTS)\b",
+            str(query or "").upper(),
+        ))
+        if explicit_relation_query:
+            # For a relation-specific question, endpoint-bound directional
+            # evidence is mandatory.  General lexical overlap is insufficient:
+            # a sentence about another producer can still mention the queried
+            # company, product, and predicate.
+            supported = not missing_numbers and not sign_mismatches and not unit_mismatch and not modality_mismatch and (
+                directness.get("relation_evidence_support", 0.0) > 0.0
+            )
+        else:
+            supported = not missing_numbers and not sign_mismatches and not unit_mismatch and not modality_mismatch and (
+                overlap >= 0.34
+                or directness.get("relation_evidence_support", 0.0) > 0.0
+            )
+        return {
+            "path_id": getattr(path, "path_id", ""),
+            "overlap": round(overlap, 4),
+            "missing_numbers": missing_numbers,
+            "sign_mismatches": sign_mismatches,
+            "unit_mismatch": unit_mismatch,
+            "modality_mismatch": modality_mismatch,
+            "relation_evidence_support": directness.get("relation_evidence_support", 0.0),
+            "supported": supported,
+        }
+
+    @classmethod
+    def _summary_claim_mismatches(
+        cls,
+        summary: str,
+        claims: List[Dict[str, Any]],
+    ) -> List[Dict[str, Any]]:
+        """Find substantive summary fragments absent from structured claims."""
+        mismatches = []
+        claim_statements = [
+            str(claim.get("statement") or "")
+            for claim in claims
+            if isinstance(claim, dict)
+        ]
+        claim_tokens = [cls._statement_tokens(statement) for statement in claim_statements]
+        claim_numbers = [cls._statement_numbers(statement) for statement in claim_statements]
+        for fragment in substantive_fragments(summary):
+            lowered = fragment.lower()
+            if lowered.startswith(("graph evidence trace", "llm synthesis withheld", "retrieval-only mode")):
+                continue
+            tokens = cls._statement_tokens(fragment)
+            numbers = cls._statement_numbers(fragment)
+            covered = False
+            for candidate_tokens, candidate_numbers in zip(claim_tokens, claim_numbers):
+                overlap = len(tokens & candidate_tokens) / max(len(tokens), 1)
+                numbers_match = not numbers or numbers.issubset(candidate_numbers)
+                if numbers_match and (overlap >= 0.34 or fragment.strip().lower() in " ".join(claim_statements).lower()):
+                    covered = True
+                    break
+            if not covered:
+                mismatches.append({
+                    "reason": "SUMMARY_NOT_COVERED_BY_CLAIMS",
+                    "statement": fragment[:500],
+                    "summary_numbers": sorted(numbers),
+                })
+        return mismatches
+
+    @staticmethod
     def _validate_report_grounding(
         answer: str,
         paths: List[CausalPath],
         structured_report: Optional[Dict[str, Any]] = None,
+        query: Optional[str] = None,
+        intent: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Validate report citations against the exact retrieved evidence.
 
         This is deliberately conservative. It does not attempt to prove that
         every English sentence is factually correct, but it rejects unknown
         claim IDs, pages, years, and reports with no traceable citation at all.
-        The remaining semantic claim verification is an evaluation concern,
-        while these structural checks are safe to enforce at runtime.
+        It also performs conservative statement-to-evidence checks and refuses
+        to mark summary-only facts as verified when no structured claim covers
+        them.
         """
         if not paths:
             return {"status": "NOT_APPLICABLE"}
@@ -1902,9 +2357,15 @@ CRITICAL STYLE RULES:
             for year in path.years
             if isinstance(year, (int, np.integer)) and int(year) > 0
         }
+        valid_filings = {
+            str(filing).strip().lower().removesuffix(".pdf")
+            for path in paths
+            for filing in path.filings
+            if filing
+        }
 
         text = answer or ""
-        cited_ids = set(re.findall(r"\b[A-Za-z0-9][A-Za-z0-9_-]*_claim\b", text))
+        cited_ids = set(_EVIDENCE_ID_RE.findall(text))
         cited_pages = {
             int(page)
             for page in re.findall(r"\b(?:p|page)\s*\.?\s*(\d+)\b", text, re.IGNORECASE)
@@ -1915,6 +2376,7 @@ CRITICAL STYLE RULES:
         # answers to fail when an executive summary named all requested years.
         cited_years = set()
         claim_citation_mismatches = []
+        claim_support_failures = []
 
         # Structured citations are authoritative. The narrative is only the
         # presentation layer and does not need to repeat every identifier.
@@ -1935,9 +2397,24 @@ CRITICAL STYLE RULES:
                     for value in claim.get("fiscal_years", []) or []
                     if str(value).isdigit()
                 }
+                claim_filings = {
+                    str(value).strip().lower().removesuffix(".pdf")
+                    for value in (
+                        claim.get("source_filings")
+                        or claim.get("filings")
+                        or []
+                    )
+                    if value
+                }
                 cited_ids.update(claim_ids)
                 cited_pages.update(claim_pages)
                 cited_years.update(claim_years)
+                citation_audit = claim.get("citation_audit") or {}
+                for issue in citation_audit.get("normalization_issues", []) or []:
+                    claim_citation_mismatches.append({
+                        "reason": "CITATION_NORMALIZATION_MISMATCH",
+                        "issue": issue,
+                    })
                 if not claim_ids or not claim_pages:
                     claim_citation_mismatches.append({
                         "reason": "CLAIM_MISSING_ID_OR_PAGE",
@@ -1947,21 +2424,80 @@ CRITICAL STYLE RULES:
                     continue
                 for claim_id in claim_ids:
                     matching_hops = [
-                        (path.pages[index], path.years[index])
+                        (
+                            path.pages[index],
+                            path.years[index],
+                            str(path.filings[index]).strip().lower().removesuffix(".pdf")
+                            if index < len(path.filings) else "",
+                        )
                         for path in paths
                         for index, evidence_id in enumerate(path.evidence_ids)
                         if evidence_id == claim_id
                     ]
                     if not any(
-                        page in claim_pages and (not claim_years or year in claim_years)
-                        for page, year in matching_hops
+                        page in claim_pages
+                        and (not claim_years or year in claim_years)
+                        and (not claim_filings or filing in claim_filings)
+                        for page, year, filing in matching_hops
                     ):
                         claim_citation_mismatches.append({
-                            "reason": "CLAIM_ID_PAGE_YEAR_MISMATCH",
+                            "reason": "CLAIM_ID_PAGE_YEAR_OR_FILING_MISMATCH",
                             "claim_id": claim_id,
                             "pages": sorted(claim_pages),
                             "years": sorted(claim_years),
+                            "filings": sorted(claim_filings),
                         })
+
+                # A valid ID/page pair is not sufficient when the retrieved
+                # sentence is background context that does not support the
+                # asserted relation.  Explicit relation queries require a
+                # supported endpoint-bound path; this catches real evidence
+                # cited for the wrong relationship rather than rewarding ID
+                # existence alone.
+                if has_substantive_claims({"claims": [claim]}):
+                    cited_paths = [
+                        path
+                        for path in paths
+                        if any(evidence_id in claim_ids for evidence_id in path.evidence_ids)
+                    ]
+                    unsupported_ids = []
+                    statement_diagnostics = []
+                    for claim_id in sorted(claim_ids):
+                        id_paths = [
+                            path for path in cited_paths if claim_id in path.evidence_ids
+                        ]
+                        id_diagnostics = [
+                            self_diagnostic
+                            for self_diagnostic in (
+                                GraphRAGEngine._statement_support_for_path(
+                                    str(claim.get("statement") or ""),
+                                    path,
+                                    query=query,
+                                    intent=intent,
+                                    numeric_fields=claim.get("numeric_fields"),
+                                    unit=claim.get("unit"),
+                                    fiscal_years=claim.get("fiscal_years"),
+                                )
+                                for path in id_paths
+                            )
+                        ]
+                        statement_diagnostics.extend(id_diagnostics)
+                        if not id_diagnostics or not any(item["supported"] for item in id_diagnostics):
+                            unsupported_ids.append(claim_id)
+                    if unsupported_ids:
+                        claim_support_failures.append({
+                            "reason": "EVIDENCE_DOES_NOT_SUPPORT_ASSERTED_STATEMENT",
+                            "statement": str(claim.get("statement") or "")[:240],
+                            "evidence_claim_ids": sorted(claim_ids),
+                            "unsupported_evidence_claim_ids": unsupported_ids,
+                            "diagnostics": statement_diagnostics,
+                        })
+
+            summary_mismatches = GraphRAGEngine._summary_claim_mismatches(
+                str(structured_report.get("executive_summary") or ""),
+                [claim for claim in structured_report.get("claims", []) or [] if isinstance(claim, dict)],
+            )
+            claim_support_failures.extend(summary_mismatches)
 
         cited_ids = sorted(cited_ids)
         cited_pages = sorted(cited_pages)
@@ -1972,7 +2508,13 @@ CRITICAL STYLE RULES:
         unknown_years = sorted(set(cited_years) - valid_years)
         missing_required_citation = not cited_ids or not cited_pages
 
-        if unknown_ids or unknown_pages or unknown_years or claim_citation_mismatches:
+        if (
+            unknown_ids
+            or unknown_pages
+            or unknown_years
+            or claim_citation_mismatches
+            or claim_support_failures
+        ):
             status = "UNSUPPORTED"
         elif missing_required_citation:
             status = "PARTIALLY_VERIFIED"
@@ -1988,9 +2530,11 @@ CRITICAL STYLE RULES:
             "unknown_pages": unknown_pages,
             "unknown_years": unknown_years,
             "claim_citation_mismatches": claim_citation_mismatches,
+            "claim_support_failures": claim_support_failures,
             "available_evidence_ids": sorted(valid_ids),
             "available_pages": sorted(valid_pages),
             "available_years": sorted(valid_years),
+            "available_source_filings": sorted(valid_filings),
         }
 
     @staticmethod
@@ -2008,6 +2552,8 @@ CRITICAL STYLE RULES:
             reasons.append("year not present in retrieved evidence")
         if grounding.get("claim_citation_mismatches"):
             reasons.append("EvidenceClaim ID does not match its cited page/year")
+        if grounding.get("claim_support_failures"):
+            reasons.append("retrieved evidence does not support the asserted relation")
         if not grounding.get("cited_evidence_ids"):
             reasons.append("no EvidenceClaim citation")
         if not grounding.get("cited_pages"):
@@ -2315,12 +2861,24 @@ Now generate the analysis report:"""
                 pages = [pages]
             if isinstance(years, (int, str)):
                 years = [years]
+            numeric_fields = item.get("numeric_fields")
+            source_filings = item.get("source_filings", item.get("filings", []))
+            if isinstance(source_filings, str):
+                source_filings = [source_filings]
+            citations = item.get("citations", [])
+            if not isinstance(citations, list):
+                citations = []
             normalized_claims.append(
                 {
                     "statement": str(item.get("statement", "")).strip(),
                     "evidence_claim_ids": [str(value) for value in ids if value],
                     "pages": [int(value) for value in pages if str(value).isdigit()],
                     "fiscal_years": [int(value) for value in years if str(value).isdigit()],
+                    "source_filings": [str(value) for value in source_filings if value],
+                    "numeric_fields": numeric_fields,
+                    "citations": citations,
+                    "metric_id": item.get("metric_id"),
+                    "unit": item.get("unit"),
                     "support_level": str(item.get("support_level", "LIMITED")).upper(),
                 }
             )
@@ -2588,15 +3146,31 @@ Now generate the analysis report:"""
             claim for claim in report.get("claims", []) or []
             if not contains_absence_claim(str(claim.get("statement", "")))
         ]
+        removed_claims = [
+            {
+                "statement": str(claim.get("statement", ""))[:500],
+                "evidence_claim_ids": list(claim.get("evidence_claim_ids", []) or []),
+                "action": "REMOVED",
+                "reason": "UNVERIFIED_CORPUS_ABSENCE_CLAIM",
+            }
+            for claim in original_claims
+            if contains_absence_claim(str(claim.get("statement", "")))
+        ]
         report = dict(report)
         report["claims"] = cleaned_claims
+        rewritten_fields = []
         if contains_absence_claim(str(report.get("executive_summary", ""))):
             report["executive_summary"] = safe
+            rewritten_fields.append("executive_summary")
         report["limitations"] = safe
+        rewritten_fields.append("limitations")
         report["negative_claim_guard"] = {
             "triggered": True,
             "audit_status": audit.get("status"),
             "removed_claims": len(original_claims) - len(cleaned_claims),
+            "claim_actions": removed_claims,
+            "rewritten_fields": rewritten_fields,
+            "retained_claim_count": len(cleaned_claims),
         }
         report["status"] = "NEGATIVE_CLAIM_GUARD"
         report["narrative"] = self._report_narrative(report)
@@ -2629,9 +3203,11 @@ Now generate the analysis report:"""
             "intent": "FALLBACK",
             "intent_display": "No Results",
             "answer": answer,
+            "outcome": "ABSTAINED",
             "structured_report": {
                 "format": "evidence_claim_v1",
                 "status": "INSUFFICIENT_EVIDENCE",
+                "outcome": "ABSTAINED",
                 "executive_summary": answer,
                 "claims": [],
                 "evidence_quality": "No verified causal path was retrieved.",
@@ -2640,6 +3216,7 @@ Now generate the analysis report:"""
             "paths": [],
             "evidence_sentences": [],
             "metadata": {
+                "outcome": "ABSTAINED",
                 "total_candidates": 0,
                 "top_paths": 0,
                 "anchors_used": anchors,

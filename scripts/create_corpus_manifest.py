@@ -62,7 +62,10 @@ def source_tree_sha256() -> str:
 
 def package_versions() -> dict[str, str]:
     result = {}
-    for name in ("neo4j", "chromadb", "onnxruntime", "fastapi", "sentence-transformers"):
+    for name in (
+        "neo4j", "chromadb", "onnxruntime", "fastapi", "sentence-transformers",
+        "pytest", "python-dotenv", "pydantic", "uvicorn", "pymupdf", "pdfplumber",
+    ):
         try:
             result[name] = importlib.metadata.version(name)
         except importlib.metadata.PackageNotFoundError:
@@ -133,6 +136,21 @@ def main() -> None:
             "prompt_version": os.getenv("GRAPHRAG_PROMPT_VERSION", "v2-evidence-claim-1"),
             "source_tree_sha256": source_tree_sha256(),
         },
+        "configuration_contract": {
+            "active_filing": os.getenv("GRAPH_ACTIVE_FILING"),
+            "vector_collection": collection_name,
+            "embedding_backend": os.getenv("GRAPH_EMBEDDING_BACKEND", "sentence_transformers"),
+            "embedding_model": os.getenv("GRAPH_EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
+            "extraction_temperature": os.getenv("LLM_EXTRACTION_TEMPERATURE", "0.0"),
+            "query_temperature": os.getenv("LLM_QUERY_TEMPERATURE", "unset"),
+            "report_temperature": os.getenv("LLM_REPORT_TEMPERATURE", "unset"),
+            "cache_path": os.getenv("LLM_RESPONSE_CACHE_PATH", "evaluation/cache/llm_extraction_v1.jsonl"),
+            "cache_mode": os.getenv("LLM_RESPONSE_CACHE_MODE", "off"),
+        },
+        "dependency_lock": {
+            "path": "requirements-lock-2026-09-19.txt",
+            "sha256": sha256(ROOT / "requirements-lock-2026-09-19.txt"),
+        },
         "runtime": {
             "python": sys.version.split()[0],
             "packages": package_versions(),
@@ -143,9 +161,13 @@ def main() -> None:
             "dirty": bool(git_value("status", "--porcelain")),
         },
         "evaluation": {
-            "extraction_baseline": "reports/2026-08-14_extraction_quality_baseline.json",
-            "human_annotation_status": "UNLABELED_STRATIFIED_SAMPLE",
-            "golden_qa_status": "NO_CURRENT_HUMAN_GOLDEN_QA",
+            "readiness_report": "reports/research_readiness_current.json",
+            "extraction_annotation": "evaluation/annotation/extraction_sample_2025_post_repair_v2.jsonl",
+            "human_golden_qa": "evaluation/golden_qa_human_v2.jsonl",
+            "silver_retrieval": "evaluation/silver_retrieval_v1.jsonl",
+            "extraction_baseline": "reports/extraction_quality_2025_current_2026-09-05.json",
+            "human_annotation_status": "AI_ASSISTED_WORKING_SET_AND_SEPARATE_HUMAN_GOLD",
+            "golden_qa_status": "HUMAN_REVIEWED_SINGLE_REVIEWER_30_ROWS",
         },
     }
     output.parent.mkdir(parents=True, exist_ok=True)

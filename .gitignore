@@ -29,6 +29,7 @@ Thumbs.db
 
 # Data — Regeneratable Artifacts
 data/chroma_db/
+data/external/benchmarks/
 data/processed/
 data/raw/
 data/processed_pdfs/
@@ -65,3 +66,6 @@ frontend/pnpm-workspace.yaml
 *.swp
 *.swo
 *~
+
+# User-authored working material (preserved locally, not a release artifact)
+GraphRAG初稿.docx

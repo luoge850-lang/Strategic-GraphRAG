@@ -30,6 +30,7 @@ from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+from strategic_graphrag.response_contract import classify_outcome, is_abstention, response_state
 MODES = ("vector", "graph", "hybrid", "hybrid_temporal")
 DEFAULT_DATASET = ROOT / "evaluation" / "silver_retrieval_v1.jsonl"
 DEFAULT_OUTPUT = ROOT / "reports" / "retrieval_benchmark_silver_2026-09-09.json"
@@ -172,12 +173,20 @@ def _ndcg(ranked: list[str], relevant: set[str], k: int) -> float:
 
 
 def _is_abstention(result: dict[str, Any]) -> bool:
-    structured = result.get("structured_report") or {}
-    status = str(structured.get("status") or "").upper()
-    answer = str(result.get("answer") or "").upper()
-    if status.startswith("INSUFFICIENT") or status in {"NEGATIVE_CLAIM_GUARD", "NO_HITS", "EMPTY"}:
-        return True
-    return any(marker in answer for marker in ("INSUFFICIENT EVIDENCE", "INSUFFICIENT_DIRECT_EVIDENCE", "GROUNDING FAILURE", "NO VECTOR CHUNKS"))
+    return is_abstention(result)
+
+
+def _execution_status(row: dict[str, Any]) -> str:
+    """Read the v2 status while keeping old metric fixtures interpretable."""
+    explicit = str(row.get("execution_status") or "").upper().strip()
+    if explicit:
+        return explicit
+    if row.get("error"):
+        error_text = str(row.get("error")).upper()
+        return "TIMEOUT" if "TIMEOUT" in error_text or "TIMED OUT" in error_text else "DEPENDENCY_ERROR"
+    # Historical metric-only rows predate the response contract.  They carry
+    # no error and therefore represent a successful retrieval measurement.
+    return "SUCCEEDED"
 
 
 def _latency(result: dict[str, Any]) -> float | None:
@@ -199,12 +208,22 @@ def _score_record(item: dict[str, Any], mode: str, result: dict[str, Any], elaps
         "ranked_page_keys": ranked_pages,
         "retrieved_evidence_ids": _graph_evidence_ids(result),
         "abstained": _is_abstention(result),
+        "outcome": classify_outcome(result),
         "runtime_latency_ms": round(elapsed_ms, 2),
         "engine_latency_ms": _latency(result),
         "retrieval_status": ((result.get("metadata") or {}).get("retrieval") or {}).get("status"),
         "grounding_status": ((result.get("metadata") or {}).get("grounding") or {}).get("status"),
         "error": None,
     }
+    state = response_state(result, http_status=result.get("http_status"))
+    row.update({
+        "execution_status": state["execution_status"],
+        "answer_status": state["answer_status"],
+        "grounding_status": state["grounding_status"],
+        "status_provenance": state["status_provenance"],
+    })
+    if state["execution_status"] != "SUCCEEDED":
+        row["error"] = {"type": state["execution_status"]}
     if item.get("answerable"):
         row["first_relevant_rank"] = next((rank for rank, page in enumerate(ranked_pages, 1) if page in relevant), None)
         row["mrr"] = _mrr(ranked_pages, relevant)
@@ -226,12 +245,20 @@ def _metrics(
     bootstrap_resamples: int = DEFAULT_BOOTSTRAP_RESAMPLES,
     bootstrap_seed: int = DEFAULT_BOOTSTRAP_SEED,
 ) -> dict[str, Any]:
-    answerable = [row for row in rows if row.get("answerable") and not row.get("error")]
-    unsupported = [row for row in rows if not row.get("answerable") and not row.get("error")]
+    answerable = [row for row in rows if row.get("answerable") and _execution_status(row) == "SUCCEEDED"]
+    unsupported = [row for row in rows if not row.get("answerable") and _execution_status(row) == "SUCCEEDED"]
     output: dict[str, Any] = {
         "answerable_questions": len(answerable),
         "unsupported_questions": len(unsupported),
-        "error_count": sum(bool(row.get("error")) for row in rows),
+        "error_count": sum(_execution_status(row) != "SUCCEEDED" for row in rows),
+        "outcome_counts": {
+            outcome: sum(row.get("outcome") == outcome for row in rows)
+            for outcome in sorted({row.get("outcome") for row in rows if row.get("outcome")})
+        },
+        "successful_execution_questions": sum(_execution_status(row) == "SUCCEEDED" for row in rows),
+        "execution_success_rate": round(
+            sum(_execution_status(row) == "SUCCEEDED" for row in rows) / len(rows), 4
+        ) if rows else None,
         "precision_at_k": {},
         "recall_at_k": {},
         "ndcg_at_k": {},
@@ -420,6 +447,10 @@ def evaluate(
                         "id": item["id"],
                         "question_type": item.get("question_type"),
                         "answerable": bool(item.get("answerable")),
+                        "outcome": "TIMEOUT" if isinstance(exc, TimeoutError) else "DEPENDENCY_ERROR",
+                        "execution_status": "TIMEOUT" if isinstance(exc, TimeoutError) else "DEPENDENCY_ERROR",
+                        "answer_status": "NOT_REQUESTED",
+                        "grounding_status": "NOT_EXECUTED",
                         "error": f"{type(exc).__name__}: {exc}",
                         "runtime_latency_ms": round((time.perf_counter() - started) * 1000, 2),
                     })

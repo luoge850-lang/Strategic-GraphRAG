@@ -35,6 +35,7 @@ from .extractor import TripleExtractor
 from .ingestor import GraphIngestor
 from .financial_table_extractor import extract_financial_table_triples
 from ..llm_response_cache import LLMResponseCacheError
+from ..ontology.entity_registry import resolve_entity
 
 logger = logging.getLogger("Pipeline")
 
@@ -77,6 +78,10 @@ class PipelineConfig:
     min_content_chars: int = 200
     llm_provider: Optional[str] = None
     model_name: Optional[str] = None
+    # Do not infer the disclosure company from the filename.  The caller must
+    # supply a verified document-registration identity; otherwise table facts
+    # remain explicitly pending review.
+    company_id: Optional[str] = None
     llm_cache_mode: Optional[str] = None
     llm_cache_path: Optional[str] = None
     require_llm: bool = False
@@ -87,6 +92,13 @@ class PipelineConfig:
     # not connect to Neo4j or run post-processing, so a second extraction can
     # be compared without changing the frozen graph.
     dry_run: bool = False
+    # Optional explicit destination for unresolved financial-table candidates.
+    # No queue file is written unless the caller opts in.
+    pending_table_queue_path: Optional[str] = None
+    # Optional JSON/JSONL document-registration registry. When supplied, a
+    # company identity is accepted only for a filename+SHA256 match marked
+    # VERIFIED/HUMAN_REVIEWED.
+    document_registry_path: Optional[str] = None
 
 
 # =============================================================================
@@ -180,6 +192,179 @@ class KnowledgeGraphPipeline:
         end_index = min(start + len(collapsed_evidence) - 1, len(original_offsets) - 1)
         return original_offsets[start], original_offsets[end_index] + 1
 
+    @staticmethod
+    def _annotate_table_candidate(
+        triple: Dict,
+        *,
+        filename: str,
+        page_num: int,
+        document_sha256: Optional[str] = None,
+        company_resolution_source: str = "pending_review",
+    ) -> Dict:
+        """Attach deterministic review/round-trip identity to a table row."""
+        source_table_id = str(
+            triple.get("table_id") or triple.get("table_name") or "UNKNOWN_TABLE"
+        )
+        source_row_id = str(
+            triple.get("row_id") or triple.get("target") or "UNKNOWN_ROW"
+        )
+        periods = []
+        try:
+            periods = [
+                str(item.get("period"))
+                for item in json.loads(triple.get("metric_values_json") or "[]")
+                if isinstance(item, dict) and item.get("period") is not None
+            ]
+        except (TypeError, ValueError, json.JSONDecodeError):
+            periods = []
+        identity_payload = "|".join([
+            filename,
+            str(page_num),
+            source_table_id,
+            source_row_id,
+            ",".join(periods),
+            str(triple.get("row_evidence") or triple.get("evidence_sentence") or ""),
+        ])
+        candidate_id = hashlib.sha256(identity_payload.encode("utf-8")).hexdigest()[:20]
+        table_instance_id = (
+            f"{filename}:{page_num}:table_"
+            f"{hashlib.sha256(source_table_id.encode('utf-8')).hexdigest()[:12]}"
+        )
+        triple.update({
+            "candidate_id": candidate_id,
+            "queue_id": candidate_id,
+            "table_instance_id": table_instance_id,
+            "source_table_id": source_table_id,
+            "source_row_id": source_row_id,
+            "row_id": f"{table_instance_id}:row_{source_row_id}",
+            "column_ids": periods or [str(triple.get("column_id") or "")],
+            "source_span_type": "text",
+            "bbox": None,
+            "raw_values": triple.get("metric_values_json"),
+            "unit_source": "table_header_or_row",
+            "source_filing": filename,
+            "source_page": page_num,
+            "document_sha256": document_sha256,
+            "company_resolution_source": company_resolution_source,
+        })
+        return triple
+
+    @staticmethod
+    def _load_document_registry(path_value: Optional[str]) -> List[Dict]:
+        if not path_value:
+            return []
+        path = Path(path_value)
+        if not path.exists():
+            raise FileNotFoundError(f"Document registry not found: {path}")
+        if path.suffix.lower() == ".jsonl":
+            with path.open("r", encoding="utf-8") as handle:
+                return [
+                    item for line in handle if line.strip()
+                    for item in [json.loads(line)]
+                    if isinstance(item, dict)
+                ]
+        value = json.loads(path.read_text(encoding="utf-8"))
+        if isinstance(value, dict):
+            value = value.get("documents", value.get("rows", []))
+        return [item for item in value if isinstance(item, dict)] if isinstance(value, list) else []
+
+    def _resolve_registered_company(
+        self,
+        *,
+        filename: str,
+        document_sha256: str,
+    ) -> Tuple[Optional[str], str]:
+        """Resolve only a canonical Company identity bound to this document."""
+        configured = str(self.config.company_id or "").strip()
+        registry = self._load_document_registry(self.config.document_registry_path)
+        if registry:
+            matches = [
+                row for row in registry
+                if str(row.get("filename") or row.get("source_filing") or "") == filename
+                and str(row.get("document_sha256") or row.get("sha256") or "") == document_sha256
+                and str(row.get("review_status") or row.get("status") or "").upper()
+                in {"VERIFIED", "HUMAN_REVIEWED"}
+            ]
+            if not matches:
+                return None, "pending_registry_review"
+            raw_company = str(matches[0].get("company_id") or "").strip()
+            if not raw_company:
+                return None, "pending_registry_review"
+            canonical, label = resolve_entity(raw_company, "Company")
+            if label != "Company":
+                return None, "pending_registry_review"
+            if configured:
+                configured_canonical, configured_label = resolve_entity(configured, "Company")
+                if configured_label != "Company" or configured_canonical != canonical:
+                    raise ValueError(
+                        f"company_id conflicts with the verified document registry for {filename}"
+                    )
+            return canonical, "document_registry"
+        if not configured:
+            return None, "pending_review"
+        canonical, label = resolve_entity(configured, "Company")
+        if label != "Company":
+            raise ValueError("company_id must resolve to a canonical Company entity")
+        return canonical, "verified_config"
+
+    @staticmethod
+    def _table_review_record(
+        triple: Dict,
+        *,
+        review_status: str,
+        reason: str,
+    ) -> Dict:
+        """Return a JSON-safe, auditable copy for the annotation queue."""
+        record = dict(triple)
+        record["review_status"] = review_status
+        record["review_reason"] = reason
+        record["candidate_schema_version"] = "table-candidate/v1"
+        record.setdefault("reviewer", "")
+        record.setdefault("review_notes", "")
+        record.setdefault("gold", {
+            "company_id": "",
+            "fiscal_year": "",
+            "metric_id": "",
+            "value": "",
+            "unit": "",
+            "source_filing": "",
+            "page": "",
+            "row_label": "",
+            "column_label": "",
+            "table_name": "",
+            "evidence_text": "",
+            "cell_supported": "",
+        })
+        return record
+
+    def _write_pending_table_queue(self, candidates: List[Dict]) -> int:
+        """Append new pending table candidates when an explicit path is set."""
+        path_value = self.config.pending_table_queue_path
+        if not path_value or not candidates:
+            return 0
+        path = Path(path_value)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        existing_ids = set()
+        if path.exists():
+            with path.open("r", encoding="utf-8") as handle:
+                for line in handle:
+                    try:
+                        item = json.loads(line)
+                    except json.JSONDecodeError:
+                        continue
+                    if isinstance(item, dict) and item.get("candidate_id"):
+                        existing_ids.add(str(item["candidate_id"]))
+        written = 0
+        with path.open("a", encoding="utf-8") as handle:
+            for candidate in candidates:
+                candidate_id = str(candidate.get("candidate_id") or "")
+                if not candidate_id or candidate_id in existing_ids:
+                    continue
+                handle.write(json.dumps(candidate, ensure_ascii=False, default=str) + "\n")
+                existing_ids.add(candidate_id)
+                written += 1
+        return written
+
     # ── PDF Text Extraction ──
 
     def extract_text_from_pdf(self, pdf_path: str) -> Tuple[str, List[Dict]]:
@@ -221,6 +406,10 @@ class KnowledgeGraphPipeline:
         filename = os.path.basename(pdf_path)
         with open(pdf_path, "rb") as pdf_file:
             document_sha256 = hashlib.sha256(pdf_file.read()).hexdigest()
+        registered_company_id, company_resolution_source = self._resolve_registered_company(
+            filename=filename,
+            document_sha256=document_sha256,
+        )
         logger.info(f"\n{'='*60}")
         logger.info(f"PROCESSING: {filename}")
         logger.info(f"{'='*60}")
@@ -286,6 +475,8 @@ class KnowledgeGraphPipeline:
             all_triples = []
             total_ingested = 0
             pending_batches = []
+            pending_table_candidates: List[Dict] = []
+            rejected_table_candidates: List[Dict] = []
             page_stats = []
             target_index_set = set(target_indices)
             coverage_pages = []
@@ -318,6 +509,9 @@ class KnowledgeGraphPipeline:
                     "llm_calls": 0,
                     "llm_accepted_triples": 0,
                     "table_candidates": 0,
+                    "table_pending_candidates": 0,
+                    "table_rejected_candidates": 0,
+                    "table_accepted_candidates": 0,
                     "table_strict_triples": 0,
                     "filter_rejection_counts": {},
                 }
@@ -369,12 +563,46 @@ class KnowledgeGraphPipeline:
                 table_triples = []
                 if section_id in {"MD_AND_A", "FINANCIAL_STATEMENTS"}:
                     table_triples = extract_financial_table_triples(
-                        page, text, year
+                        page,
+                        text,
+                        year,
+                        company_id=registered_company_id,
+                        document_id=os.path.basename(pdf_path),
+                        report_period=f"FY{year}",
                     )
+                    table_triples = [
+                        self._annotate_table_candidate(
+                            triple,
+                            filename=filename,
+                            page_num=page_num,
+                            document_sha256=document_sha256,
+                            company_resolution_source=company_resolution_source,
+                        )
+                        for triple in table_triples
+                    ]
+                    raw_table_candidates = list(table_triples)
+                    verified_table_triples = []
+                    for triple in raw_table_candidates:
+                        if triple.get("subject_resolution_status") == "PENDING_COMPANY_REVIEW":
+                            pending_table_candidates.append(
+                                self._table_review_record(
+                                    triple,
+                                    review_status="UNLABELED_CANDIDATE",
+                                    reason="MISSING_VERIFIED_COMPANY_ID",
+                                )
+                            )
+                        else:
+                            verified_table_triples.append(triple)
+                    # Pending identity candidates remain visible in the
+                    # annotation queue but never enter filter_triples or the
+                    # active graph as company facts.
+                    table_triples = verified_table_triples
                     for triple in table_triples:
                         triple["_source"] = "table"
                         triple["statement_type"] = section_id
                     page_triples.extend(table_triples)
+                else:
+                    raw_table_candidates = []
 
                 # ── Rule extraction on FULL page text ──
                 # P0-FIX: Rules need the full page to find entities that co-occur
@@ -416,6 +644,24 @@ class KnowledgeGraphPipeline:
                 page_triples = self.extractor.filter_triples(page_triples, text)
                 filtered_candidate_count = len(page_triples)
                 filter_rejection_counts = _get_filter_rejection_counts(self.extractor)
+
+                accepted_table_candidate_ids = {
+                    str(triple.get("candidate_id"))
+                    for triple in page_triples
+                    if triple.get("_source") == "table" and triple.get("candidate_id")
+                }
+                rejected_on_filter = [
+                    triple for triple in table_triples
+                    if str(triple.get("candidate_id")) not in accepted_table_candidate_ids
+                ]
+                for triple in rejected_on_filter:
+                    rejected_table_candidates.append(
+                        self._table_review_record(
+                            triple,
+                            review_status="REJECTED_FILTER",
+                            reason="TABLE_CANDIDATE_FILTER_REJECTED",
+                        )
+                    )
 
                 for triple in page_triples:
                     evidence_start, evidence_end = self._evidence_span(
@@ -499,7 +745,13 @@ class KnowledgeGraphPipeline:
                     "llm_accepted_triples": (
                         self.extractor.llm_accepted_triples - llm_accepted_before
                     ),
-                    "table_candidates": len(table_triples),
+                    "table_candidates": len(raw_table_candidates),
+                    "table_pending_candidates": sum(
+                        1 for candidate in pending_table_candidates
+                        if candidate.get("source_page") == page_num
+                    ),
+                    "table_rejected_candidates": len(rejected_on_filter),
+                    "table_accepted_candidates": len(accepted_table_candidate_ids),
                     "table_strict_triples": sum(
                         1 for triple in unique_triples
                         if triple.get("extraction_method") == "TABLE_EXTRACTION"
@@ -543,7 +795,13 @@ class KnowledgeGraphPipeline:
                     "raw_candidate_triples": raw_candidate_count,
                     "filtered_candidate_triples": filtered_candidate_count,
                     "deduplicated_triples": len(unique_triples),
-                    "table_candidates": len(table_triples),
+                    "table_candidates": len(raw_table_candidates),
+                    "table_pending_candidates": sum(
+                        1 for candidate in pending_table_candidates
+                        if candidate.get("source_page") == page_num
+                    ),
+                    "table_rejected_candidates": len(rejected_on_filter),
+                    "table_accepted_candidates": len(accepted_table_candidate_ids),
                     "table_strict_triples": sum(
                         1 for triple in unique_triples
                         if triple.get("extraction_method") == "TABLE_EXTRACTION"
@@ -666,6 +924,27 @@ class KnowledgeGraphPipeline:
             "pages": coverage_pages,
         }
 
+        table_quality = {
+            "schema_version": "table-quality/v1",
+            "candidate_count": sum(
+                page.get("table_candidates", 0) for page in coverage_pages
+            ),
+            "accepted_count": sum(
+                page.get("table_accepted_candidates", 0) for page in coverage_pages
+            ),
+            "pending_count": len(pending_table_candidates),
+            "rejected_count": len(rejected_table_candidates),
+            "conservation_holds": (
+                sum(page.get("table_candidates", 0) for page in coverage_pages)
+                == sum(page.get("table_accepted_candidates", 0) for page in coverage_pages)
+                + len(pending_table_candidates)
+                + len(rejected_table_candidates)
+            ),
+            "pending_queue_path": self.config.pending_table_queue_path,
+            "pending_candidates": pending_table_candidates,
+            "rejected_candidates": rejected_table_candidates,
+        }
+
         return {
             "filename": filename,
             "document_sha256": document_sha256,
@@ -681,6 +960,8 @@ class KnowledgeGraphPipeline:
             "prompt_version": getattr(self.ingestor, "prompt_version", None),
             "extraction_run_id": getattr(self.ingestor, "run_id", None),
             "extraction_method_counts": extraction_method_counts,
+            "table_quality": table_quality,
+            "pending_table_candidates": pending_table_candidates,
             "page_stats": page_stats,
             "coverage_ledger": coverage_ledger,
             "pages_with_strict_triples": sum(
@@ -753,6 +1034,9 @@ class KnowledgeGraphPipeline:
                 logger.info(f"\n[{i}/{len(pdf_files)}] Processing: {os.path.basename(pdf_path)}")
                 try:
                     result = self.process_pdf(pdf_path)
+                    result["pending_table_queue_written"] = self._write_pending_table_queue(
+                        result.get("pending_table_candidates", [])
+                    )
                     results.append(result)
                 except Exception as e:
                     logger.error(f"ERROR processing {pdf_path}: {e}")
@@ -831,6 +1115,27 @@ def main():
         help="Optional provider-specific model override; otherwise use provider default"
     )
     parser.add_argument(
+        "--company_id", type=str, default=None,
+        help=(
+            "Verified disclosure company ID from document registration only; "
+            "omit to keep table facts pending human review"
+        )
+    )
+    parser.add_argument(
+        "--pending_table_queue", type=str, default=None,
+        help=(
+            "Optional JSONL path for unresolved table candidates; no queue is "
+            "written unless this flag is supplied"
+        )
+    )
+    parser.add_argument(
+        "--document_registry", type=str, default=None,
+        help=(
+            "Optional JSON/JSONL filename+SHA256 registry; only verified "
+            "company identities from a matching row are accepted"
+        )
+    )
+    parser.add_argument(
         "--require_llm", action="store_true",
         help="Abort before replacement if any LLM extraction call fails or yields no accepted triples"
     )
@@ -867,12 +1172,15 @@ def main():
         use_llm=not args.no_llm,
         llm_provider=args.llm_provider,
         model_name=args.model_name,
+        company_id=args.company_id,
         llm_on_all_target_pages=not args.llm_risk_only,
         require_llm=args.require_llm,
         allow_multiple_pdfs=args.allow_multiple_pdfs,
         replace_existing_filing=args.replace_existing_filing,
         year_override=args.year,
         dry_run=args.dry_run,
+        pending_table_queue_path=args.pending_table_queue,
+        document_registry_path=args.document_registry,
     )
 
     pipeline = KnowledgeGraphPipeline(config)

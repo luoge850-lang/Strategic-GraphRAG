@@ -4,7 +4,8 @@
 
 The read-only semantic audit found 69 normalized-triple groups supported by
 different evidence records. This review uses the reproducible 20-group sample
-stored in `reports/graph_semantic_consistency_2026-09-15.json`. The sample is a
+stored in the refreshed `reports/graph_semantic_consistency_2026-09-19.json`.
+The sample is a
 machine-assisted semantic screening by the main review thread, not an
 independent human annotation set and not a claim-level accuracy estimate.
 

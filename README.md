@@ -1,17 +1,30 @@
 # Strategic-GraphRAG v3.1
 
+[![CI](https://github.com/luoge850-lang/Strategic-GraphRAG/actions/workflows/ci.yml/badge.svg)](https://github.com/luoge850-lang/Strategic-GraphRAG/actions/workflows/ci.yml)
+
 Evidence-grounded GraphRAG for NVIDIA's fiscal 2023, 2024, and 2025 10-K
 filings. The project turns SEC PDFs into a strict Neo4j evidence graph,
 combines graph traversal with filing-scoped vector retrieval, and returns
 structured answers whose citations can be joined back to verbatim PDF text.
 
-> Research status as of 2026-09-15: the engineering baseline is usable, the
-> strict graph audit passes, and an automatic 37-question Silver retrieval
-> regression is available for all four modes. This is not human gold. The
-> fail-closed readiness audit remains `NOT_READY` because independent human
-> Golden QA is incomplete and a repeated external-LLM extraction produced 126
-> versus 131 accepted claims at temperature 0.0; neither issue is hidden behind
-> a fabricated score.
+> Research status as of 2026-09-20: A (trusted paper experiment) is `BLOCKED`,
+> B (engineering stable) is `BLOCKED` pending clean-environment and real-
+> dependency acceptance, and C (production candidate) is `NOT_RUN`. The local
+> code contracts and regression suite pass, but that is not a paper-level or
+> production-readiness claim. Fresh evidence is recorded in
+> [`docs/reliability_audit_2026-09-20_followup.md`](docs/reliability_audit_2026-09-20_followup.md).
+
+## Current acceptance status
+
+| Gate | Status | What is verified | Blocking condition |
+|---|---|---|---|
+| A — trusted paper experiment | `BLOCKED` | Three active filings, reproducible asset identities, human-reviewed engineering QA and separate Silver regression exist | No independent second reviewer/adjudication, fresh extraction repeatability, or completed public benchmark matched to the research claim |
+| B — engineering stable | `BLOCKED` | Response/grounding contracts, table queue, evaluator denominator fixes, full local tests and frontend build pass | Clean-environment deployment, real dependency fault injection, cache/recovery and load acceptance are not complete |
+| C — production candidate | `NOT_RUN` | Configuration points and an executable acceptance plan exist | Authentication/permissions, monitoring, backup/rollback, cost limits and production load/failure tests are not accepted |
+
+The status vocabulary is deliberately limited to `PASS`, `FAIL`, `BLOCKED`,
+`NOT_RUN`, and `NOT_APPLICABLE`. A passing local test is evidence for that
+test, not evidence that a higher-level gate is complete.
 
 ![Strategic-GraphRAG dashboard](docs/demo-dashboard-v3.png)
 
@@ -44,13 +57,24 @@ sample than the original 60-row three-filing baseline; they are not Recall/F1
 and should not be reported as a statistically significant before/after result.
 Neither file is an independent human Golden QA set and neither should be
 reported as one.
-The current Golden QA worklist is `evaluation/golden_qa_human_v2.jsonl` with 30
-blank, stratified claim-ID-v2-linked rows (20 single-hop, 5 multi-hop, and 5
-abstention cases). The full 39-row candidate remains separate. The older `golden_qa_human_v1.jsonl` is a
-historical worklist whose candidate IDs no longer resolve in the current graph.
+The current Golden QA set is `evaluation/golden_qa_human_v2.jsonl` with 30
+human-reviewed, claim-ID-v2-linked rows (7 answerable and 23 abstention cases;
+20 unique question texts because 10 rows are deliberate repeated-evidence
+cases). All rows are marked `HUMAN_REVIEWED` by reviewer `louis`. This is a
+single-reviewer engineering Gold set, not an independently adjudicated
+multi-annotator benchmark. The full 39-row candidate remains separate. The
+older `golden_qa_human_v1.jsonl` is a historical worklist whose candidate IDs
+no longer resolve in the current graph.
+The 60-row table-quality queue is deliberately separate from answer-level
+Golden QA. Open the local Demo at `/table-qa` to review one candidate at a time:
+the workbench opens the allowlisted source PDF at the recorded page, hides the
+system prediction by default, requires a reviewer decision, and preserves the
+original candidate row. The exact field-by-field protocol is in
+`docs/table_quality_annotation_guide_2026-09-20.md`. Until a second reviewer
+independently labels the same rows and disagreements are adjudicated, this is
+an engineering Gold candidate set, not a publication-grade annotation set.
 The latest machine-readable readiness audit is
-`reports/research_readiness_2026-09-15.json` and is intentionally fail-closed.
-The default audit output remains `reports/research_readiness_current.json`.
+`reports/research_readiness_current.json` and is intentionally fail-closed.
 The latest 30-row machine-readable annotation audit is
 `reports/extraction_annotation_audit_2025_post_rebuild_2026-09-03.json`; the
 historical audit is
@@ -59,6 +83,32 @@ historical audit is
 `extraction_quality_2025_post_repair_v2.json` file is historical, retained under
 `archive/cleanup-2026-09-14/historical-reports/`, and must not be cited as the
 current result.
+
+The candidate-conditioned answer-level four-mode report is
+`reports/golden_qa_human_v2_answer_level_2026-09-18_ranking_v2.json`. It evaluates all 30
+rows with synthesis enabled and records faithfulness, answer relevance,
+completeness, citation correctness, abstention accuracy, per-row evidence
+traces, and deterministic row-level bootstrap intervals. Because repeated
+question text can have different candidate-evidence labels, the derived
+question-level report is
+`reports/golden_qa_human_v2_question_level_answer_2026-09-18_semantic_gate.json`:
+20 unique questions, 5 answerable, 15 abstention-required, with three
+candidate-label conflict groups explicitly retained as metadata. The
+question-level view is the safer answer benchmark; it does not rewrite the
+original 30 candidate-conditioned annotations. The configured judge is
+DeepSeek V4 Flash at temperature 0.0; synthesis uses the current report
+contract at temperature 0.3. These scores are engineering checkpoints from
+one human reviewer and an LLM judge in the same provider family as synthesis,
+not independent human ratings or a universal GraphRAG accuracy claim.
+
+The extraction pipeline now applies a strict structural gate to future
+`PRODUCES` assertions: direct production/offer/development predicates or
+explicit product enumerations are allowed, while mere membership (`includes`),
+runtime (`runs on`), and composition (`based on`) are rejected. A frozen-cache
+2025 dry run produced 112 strict candidates versus the current 126 claims;
+this is a measured repair candidate, not a graph replacement. Neo4j was not
+rebuilt because 2023/2024 lack equivalent frozen extraction caches and a
+partial fresh rebuild would weaken reproducibility.
 
 Legacy storage is now physically isolated: the post-clean check found zero
 out-of-scope business edges, zero old evidence nodes, and zero old Chroma
@@ -101,6 +151,16 @@ Key implementation decisions:
 - `QueryRouter` exposes four reproducible modes: `vector`, `graph`, `hybrid`,
   and `hybrid_temporal`. Hybrid modes use vector-to-graph anchor expansion and
   PPR; Hybrid+Temporal additionally scores bitemporal fact matches.
+- Evidence ranking first merges semantically identical paths while retaining
+  evidence variants, then promotes only evidence-backed direct paths. Explicit
+  structural relations require endpoint alignment and a direct predicate;
+  membership (`includes`), runtime (`runs on`), and composition (`based on`)
+  variants remain background evidence.
+- PPR uses a bounded five-minute process-local cache keyed by anchors, filing,
+  year range, and limit. Temporal fact fusion resolves claim IDs before
+  traversing support edges, and the API reports `anchor_resolution_ms` and
+  `ppr_ms` separately. These are read-only latency optimizations and do not
+  change the frozen graph or PDF corpus.
 - Identical successful API requests can use a bounded TTL cache. Responses
   expose `cache.hit`, selected retrieval mode, and per-stage latency so cached
   and uncached performance are not mixed.
@@ -154,10 +214,22 @@ After building the frontend, the repeatable Windows launcher is:
 .\scripts\start_demo.ps1 -Restart
 ```
 
+For normal use after shutting down or restarting the computer, double-click
+`open_demo.cmd` in the project root. It starts the local API if necessary,
+waits until Neo4j, the vector store, and the LLM all report ready, and only
+then opens the browser. It is intentionally a click-to-run launcher, not a
+Windows startup service; no process is started automatically at system boot.
+Use `open_demo.cmd -Restart` only when a controlled restart is needed.
+
 The launcher waits for `/health/ready`, including a bounded retry window for a
 waking cloud Neo4j instance. It fails with the last dependency error and log
 tail if readiness is not achieved; a merely live API is not treated as ready
 for graph queries.
+
+The runtime replaces a stale Neo4j Aura driver once after a transient read or
+write connection failure. Explicit ontology-relation questions that name both
+endpoints are automatically routed to Graph-only retrieval, avoiding unrelated
+vector chunks; the four benchmark modes remain explicitly selectable.
 
 If `/health/live` is `alive` but `/health/ready` is `503`, the frontend process
 is running and the missing graph is an external dependency problem. Re-copy the
@@ -168,17 +240,15 @@ into `.env`; do not infer a new URI from an old database ID. Then run
 ## Reproducibility and checks
 
 ```powershell
-python -m pytest -q
-python scripts/check_runtime.py
-python -m compileall -q strategic_graphrag scripts tests
-python scripts/plan_incremental_update.py `
-  --manifest reports/corpus_manifest_2026-09-15.json `
+\.\.venv\Scripts\python.exe -m pytest -q
+\.\.venv\Scripts\python.exe scripts/check_runtime.py
+\.\.venv\Scripts\python.exe -m compileall -q strategic_graphrag scripts tests
+\.\.venv\Scripts\python.exe scripts/plan_incremental_update.py `
+  --manifest reports/corpus_manifest_2026-09-19.json `
   --output reports/incremental_plan.json
-python scripts/audit_strict_chains.py --output reports/strict_chains.json
-python scripts/audit_research_readiness.py
-python scripts/migrate_financial_observations.py --apply
-python scripts/build_temporal_change_model.py --apply
-python scripts/run_retrieval_baselines.py `
+\.\.venv\Scripts\python.exe scripts/audit_strict_chains.py --output reports/strict_chains.json
+\.\.venv\Scripts\python.exe scripts/audit_research_readiness.py
+\.\.venv\Scripts\python.exe scripts/run_retrieval_baselines.py `
   --question "How did NVIDIA revenue change between 2023 and 2025?" `
   --cross-filing `
   --output reports/retrieval_baselines_smoke.json
@@ -186,12 +256,23 @@ cd frontend
 npm run build
 ```
 
-The current working tree passed 94 Python tests, including focused Python
-contracts plus reproducibility checks, Python compilation,
-frontend TypeScript/Vite production build, Neo4j/Chroma post-clean checks, stable
-ID consistency, strict path validation, API health, and browser rendering. The
-largest JavaScript chunk is about 422 kB after splitting React, Motion,
-vis-data, and vis-network.
+The migration and temporal-materialization commands are intentionally not part
+of the default verification block: they write to the graph and must first run
+against an isolated database with a rollback plan. The current audit did not
+run either active-graph write.
+
+`.venv\Scripts\python.exe` is the canonical project runner. The system `py`
+launcher may resolve to a different Python installation without the project
+dependencies, so its pytest failure is not evidence that the project
+environment is broken. Exact installed versions are frozen in
+`requirements-lock-2026-09-19.txt`; the corpus, graph inventory, vector index,
+prompt and evaluation paths are recorded in
+`reports/corpus_manifest_2026-09-19.json`. The 2026-09-20 local verification
+completed with 144 Python tests, 2 known FastAPI deprecation warnings, an AST
+parse pass, and a successful Vite production build. A no-LLM 2025 filing
+dry-run extracted 38 triples and conserved 51 table candidates as pending
+review without writing Neo4j or Chroma. These are local checks, not clean-CI,
+production-load, or paper-level results.
 
 In the latest local check, the all-filing statistics endpoint took 4.07 s cold
 and 5-19 ms cached; the visualization subgraph took 1.44 s cold and 25-32 ms
@@ -222,10 +303,13 @@ This is a strong engineering candidate, not yet a completed research result:
   `archive/cleanup-2026-09-14/historical-reports/extraction_annotation_audit_v1.json`
   for the historical machine-readable audit.
 - The historical 38-item auto-generated QA file is stale after the evidence-ID
-  migration and is not a valid Golden QA benchmark. There is no independent
-  human Golden QA in the current checkout; the current extraction-annotation
-  artifact is only an AI-assisted working set (`human_v1`). The separate
-  retrieval artifact is an auto-generated Silver regression, not human gold.
+  migration and is not a valid Golden QA benchmark. The current checkout now
+  contains a separate 30-row, single-reviewer human Golden QA set (`human_v2`)
+  and answer-level four-mode evaluation. It is valid as an engineering Gold
+  checkpoint, but it is not an independently adjudicated multi-annotator
+  benchmark. The older extraction-annotation artifact remains an AI-assisted
+  working set (`human_v1`), and the separate retrieval artifact remains an
+  auto-generated Silver regression.
 - A real DeepSeek Flash Hybrid query and the corresponding browser flow were
   tested across all three filings. This is a smoke test, not a Golden QA score.
 - Filing disclosures support attributed relationships; they do not prove
@@ -248,16 +332,18 @@ This is a strong engineering candidate, not yet a completed research result:
   intensified/mitigated/resolved labels and an independently labeled temporal
   benchmark remain open.
 - The four retrieval modes are implemented and evaluated on the automatic
-  Silver set in `reports/retrieval_benchmark_silver_2026-09-15.json`. On its
-  common page-level unit and 32 answerable questions, the observed macro
-  Recall@5/MRR are Vector 0.2188/0.0828, Graph 0.7009/0.7083, Hybrid
-  0.5134/0.4740, and Hybrid Temporal 0.5446/0.5000. Graph is higher than
+  Silver set in `reports/retrieval_benchmark_silver_2026-09-18_ranking_v2_metrics.json`.
+  On its common page-level unit and 32 answerable questions, the observed macro
+  Recall@5/MRR are Vector 0.2188/0.0828, Graph 0.8259/0.8073, Hybrid
+  0.8259/0.7604, and Hybrid Temporal 0.7946/0.7500. Graph is higher than
   Vector on this self-generated Silver regression, but this is not evidence
   that GraphRAG is generally superior to Vector RAG: expected pages are
-  derived from the graph under test, so the benchmark has self-test bias and
-  no independent human Golden QA. Hybrid Temporal did not exceed Graph on this
-  snapshot; with only two temporal-metric questions, that does not establish
-  that the temporal module is ineffective. The report now includes
+  derived from the graph under test, so the Silver benchmark has self-test
+  bias. A separate 30-row human-reviewed QA set exists, but it is a
+  single-reviewer engineering checkpoint rather than an independently
+  adjudicated benchmark. Hybrid Temporal did not exceed Graph on this snapshot;
+  with only two temporal-metric questions, that does not establish that the
+  temporal module is ineffective. The report now includes
   question-type strata, question-ID paired win/tie/loss counts, and descriptive
   question-level bootstrap intervals. A human-reviewed QA/evidence set remains
   required for paper-level Recall@K, Precision@K, faithfulness, answer
@@ -267,9 +353,9 @@ This is a strong engineering candidate, not yet a completed research result:
 - DeepSeek Flash is an external processor. Production use needs documented data
   governance, consent, retention, and provider-failure behavior.
 
-See [the P0/P1 acceptance audit](reports/2026-08-14_p0_p1_acceptance.md) and the
-[current machine-readable corpus manifest](reports/corpus_manifest_2026-09-15.json).
-The older `reports/2026-08-14_corpus_manifest.json` is retained as historical
+See [the P0/P1 acceptance audit](archive/cleanup-2026-09-18/historical-reports/2026-08-14_p0_p1_acceptance.md) and the
+[current machine-readable corpus manifest](reports/corpus_manifest_2026-09-19.json).
+The older `archive/cleanup-2026-09-18/historical-reports/2026-08-14_corpus_manifest.json` is retained as historical
 evidence and must not be used as the current graph inventory.
 The current frozen baseline is documented in the
 [v3.1 release notes](reports/2026-08-17_v3.1_release_notes.md) and
@@ -285,7 +371,17 @@ The graduation-project and application-material positioning is summarized in
 [graduation_application_brief.md](docs/graduation_application_brief.md).
 The current four-mode baseline is summarized in
 `docs/retrieval_baseline_freeze_2026-09-15.md`; the machine-only semantic
-consistency audit is in `reports/graph_semantic_consistency_2026-09-15.json`.
+consistency audit is in `reports/graph_semantic_consistency_2026-09-19.json`.
+The canonical state and retained/archive decisions are in
+`docs/canonical_project_state_2026-09-19.md`. The 60-row table-quality queue is
+`evaluation/annotation/table_quality_candidate_2026-09-19.jsonl`; it is an
+unlabeled candidate queue, not a human gold set. Public FinanceBench, FinQA and
+TAT-QA samples are registered and schema-validated in
+`reports/external_benchmark_inventory_2026-09-19.json`, but their scores are
+not mixed into the NVIDIA benchmark because the active corpus contains only
+NVIDIA filings. Runtime profiling is performed by
+`scripts/benchmark_runtime_performance.py`, which separates cache-miss,
+cache-hit/fill, stage timing, error rate and tail latency.
 
 ## Next research milestones
 
@@ -295,13 +391,16 @@ consistency audit is in `reports/graph_semantic_consistency_2026-09-15.json`.
    keys, 170 record network calls, and 0 replay network calls. This demonstrates
    deterministic replay of the frozen response artifact only; it is not fresh
    external-model repeatability, semantic correctness, or human gold.
-2. **Deferred:** create a blind human annotation set with a complete gold
-   relation inventory and an independent adjudication pass; only then report
-   entity/relation precision, recall, F1, and error categories.
-3. **Deferred:** build a 30-50 question independently human-reviewed Golden QA
-   set with stable evidence IDs and unanswerable cases; report retrieval
-   Recall@K, Precision@K, faithfulness, answer relevance, abstention accuracy,
-   and latency distributions.
+2. **Partially complete:** the 30-row `human_v2` Golden QA set is fully
+   reviewed by one reviewer and is used for an engineering answer-level
+   checkpoint. Deferred work is a blind second review, adjudication, and a
+   complete independently reviewed relation inventory before reporting
+   publication-level entity/relation precision, recall, F1, or agreement.
+3. **Partially complete:** the four-mode answer-level evaluation now reports
+   faithfulness, relevance, completeness, citation correctness, abstention,
+   latency, and descriptive bootstrap intervals on the 30-row set. Deferred
+   work is expanding and independently adjudicating the set before making
+   general semantic or superiority claims.
 4. Extend observed numeric changes with independently labeled narrative states
    such as new, intensified, mitigated, and resolved; evaluate them separately.
 5. Run a targeted, human-reviewed temporal ablation: add cross-filing questions
@@ -314,6 +413,19 @@ consistency audit is in `reports/graph_semantic_consistency_2026-09-15.json`.
    evidence-guard ablations only after the main-model benchmark is stable.
 7. Containerize and deploy behind authentication, restricted CORS, observability,
    request timeouts, and cost controls.
+
+### Current controlled gates
+
+The next implementation gate is deliberately not a graph rebuild. First fill
+the exported table annotation queue with an independent reviewer, then run the
+same rows through `scripts/evaluate_table_quality.py`. In parallel, use the
+validated public-dataset inventory to build separate adapters only when the
+matching source documents are available. Run
+`scripts/benchmark_runtime_performance.py` without `--synthesize` for
+retrieval-only latency, and run a separately labelled synthesis benchmark when
+answer-generation latency is needed. A process-level cold-start claim still
+requires an explicit service restart; `use_cache=false` measures an API cache
+miss, not a full process cold start.
 
 ### 2025 extraction cache dry-run
 

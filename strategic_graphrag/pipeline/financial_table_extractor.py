@@ -90,7 +90,11 @@ def _find_metric(row_text: str) -> Optional[Tuple[str, str]]:
     return None
 
 
-def _numeric_values(row_text: str) -> List[str]:
+def _numeric_values(
+    row_text: str,
+    *,
+    drop_trailing_change: Optional[bool] = None,
+) -> List[str]:
     # Change annotations such as "Up 114%" are not reported values.
     row_text = re.sub(
         r"\bup\s+[-(]?\d[\d,]*(?:\.\d+)?%?\)?(?:\s+pts?)?",
@@ -98,19 +102,28 @@ def _numeric_values(row_text: str) -> List[str]:
         row_text,
         flags=re.IGNORECASE,
     )
-    # Financial tables commonly append a year-over-year change percentage
-    # after the reported dollar values (``$ 12,914 ... 49 %``).  It is not a
-    # value belonging to the metric row.  Percentage-of-revenue rows do not
-    # contain a dollar marker, so they remain unaffected.
-    row_text = re.sub(
-        r"\s+\(?-?\d[\d,]*(?:\.\d+)?\)?\s*%\s*$",
-        "",
-        row_text,
-    )
+    if drop_trailing_change is None:
+        # Without table-cell/header metadata, use only a conservative fallback:
+        # a percent tail is a change column when the row otherwise looks like
+        # an amount row.  A row such as ``Gross margin 75.0% 72.7%`` keeps both
+        # values.  Callers with page/table context should pass the explicit
+        # header decision instead of relying on this heuristic.
+        label = re.split(r"(?<![A-Za-z])\(?-?\$?\d", row_text, maxsplit=1)[0]
+        drop_trailing_change = bool(
+            re.search(r"\s\(?-?\d[\d,]*(?:\.\d+)?\)?\s*%\s*$", row_text)
+            and ("," in row_text or "$" in row_text)
+            and not re.search(r"\b(?:margin|ratio|rate|percentage)\b", label, re.IGNORECASE)
+        )
+    if drop_trailing_change:
+        row_text = re.sub(
+            r"\s+\(?-?\d[\d,]*(?:\.\d+)?\)?\s*%\s*$",
+            "",
+            row_text,
+        )
     values = []
     for match in _NUMBER_RE.findall(row_text):
         parenthesized = match.startswith("(") and match.endswith(")")
-        cleaned = match.replace("$", "").replace(",", "").strip("()")
+        cleaned = match.replace("$", "").replace(",", "").replace("%", "").strip("()")
         # SEC tables use accounting parentheses for negative amounts.  Keep
         # that sign in the structured value instead of silently turning cash
         # outflows and contra-balances into positive figures.
@@ -386,8 +399,34 @@ def _unit(page_text: str, row_text: str) -> str:
     return "reported units"
 
 
-def extract_financial_table_triples(page, page_text: str, filing_year: int) -> List[Dict]:
-    """Extract strict numeric disclosure triples from one PDF page."""
+def _has_change_column_header(page_text: str, evidence: str) -> bool:
+    """Detect a reported change column from the nearby table header."""
+    lines = [line.strip() for line in str(page_text or "").splitlines() if line.strip()]
+    target = _normalise(evidence)
+    row_index = next(
+        (index for index, line in enumerate(lines) if _normalise(line) == target),
+        len(lines),
+    )
+    header = " ".join(lines[max(0, row_index - 5):row_index])
+    return bool(re.search(r"\b(?:change|yoy|year[- ]over[- ]year)\b", header, re.IGNORECASE))
+
+
+def extract_financial_table_triples(
+    page,
+    page_text: str,
+    filing_year: int,
+    *,
+    company_id: Optional[str] = None,
+    document_id: Optional[str] = None,
+    report_period: Optional[str] = None,
+) -> List[Dict]:
+    """Extract strict numeric disclosure triples from one PDF page.
+
+    ``company_id`` is intentionally optional for backwards-compatible dry
+    runs, but the extractor never guesses a company when it is absent.  Such
+    records are marked ``PENDING_COMPANY_REVIEW`` and must not be presented as
+    verified company facts.
+    """
     try:
         tables = page.extract_tables() or []
     except Exception:
@@ -425,7 +464,7 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 # an amount or a growth metric.
                 continue
             row_evidence = _find_exact_row(page_text, row_text, metric_alias)
-            if len(row_evidence) < 20:
+            if not row_evidence.strip():
                 continue
             evidence = _table_context(page_text, row_evidence)
             periods = _periods_for_evidence(page_text, row_evidence, filing_year)
@@ -441,7 +480,10 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
             seen.add(key)
             # pdfplumber may split currency symbols into separate cells.  The
             # exact page line is the authoritative row for values and units.
-            values = _numeric_values(row_evidence)
+            values = _numeric_values(
+                row_evidence,
+                drop_trailing_change=_has_change_column_header(page_text, row_evidence),
+            )
             if not values:
                 values = _numeric_values(row_text)
             # Values are positionally paired with the reported period columns.
@@ -455,9 +497,17 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 {"period": str(period), "value": value}
                 for period, value in zip(periods, values)
             ]
+            resolved_company_id = str(company_id or "").strip() or None
             triples.append({
-                "source": "NVIDIA_CORPORATION",
-                "source_category": "Company",
+                "source": resolved_company_id or "",
+                "source_category": "Company" if resolved_company_id else "UnresolvedCompany",
+                "company_id": resolved_company_id,
+                "subject_resolution_status": (
+                    "VERIFIED_INPUT" if resolved_company_id else "PENDING_COMPANY_REVIEW"
+                ),
+                "document_id": document_id,
+                "report_period": report_period or f"FY{filing_year}",
+                "fiscal_period": str(periods[0]) if periods else f"FY{filing_year}",
                 "target": metric_id,
                 "target_category": "FinancialMetric",
                 "relation": "REPORTS_METRIC",
@@ -474,6 +524,14 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 "metric_values_json": json.dumps(period_values, ensure_ascii=False),
                 "metric_value": values[0],
                 "metric_unit": _unit(page_text, row_evidence),
+                "unit": _unit(page_text, row_evidence),
+                "currency": "USD" if _unit(page_text, row_evidence).upper().startswith("USD") else None,
+                "scale": (
+                    "millions" if "million" in _unit(page_text, row_evidence).lower()
+                    else "thousands" if "thousand" in _unit(page_text, row_evidence).lower()
+                    else None
+                ),
+                "sign": "negative" if str(values[0]).startswith("-") else "positive",
                 "metric_period": str(periods[0]) if periods else str(filing_year),
                 # Resolve the heading from the exact row, not from the
                 # multi-line citation context.  Passing the full context
@@ -481,6 +539,10 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 # heading near the end of the page.
                 "table_name": _table_name(page_text, row_evidence),
                 "row_label": metric_alias,
+                "table_id": _table_name(page_text, row_evidence),
+                "row_id": metric_id,
+                "column_id": str(periods[0]) if periods else str(filing_year),
+                "source_span": row_evidence,
                 "statement_type": "FINANCIAL_TABLE",
                 "comparability_status": "UNASSESSED",
             })

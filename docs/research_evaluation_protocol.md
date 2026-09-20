@@ -70,13 +70,17 @@ duplicate-triple agreement score is not inter-annotator agreement.
 candidate audit. `extraction_sample_2025_post_repair_human_v1.jsonl` is a
 30-row AI-assisted working set labeled with GPT-5.6/Sol and an explicit AI
 annotator identity. It is not an independent human gold set and must not be
-reported as human Golden QA. A publication-quality human Golden QA result
-requires a separate blind human review or two independent human annotators,
-followed by adjudication and reported inter-annotator agreement.
+reported as human Golden QA. Separately, `evaluation/golden_qa_human_v2.jsonl`
+is now complete with 30 single-reviewer rows (`HUMAN_REVIEWED`, reviewer
+`louis`) and is valid for engineering regression. A publication-quality human
+Golden QA result still requires a separate blind second human pass, followed by
+adjudication and reported inter-annotator agreement.
 
 ## Human Golden QA
 
-The final QA file should contain 30--50 hand-verified questions across:
+The current engineering QA file contains 30 hand-verified questions across the
+categories below. A publication-quality extension should add an independent
+second review and adjudication, and may expand the set toward 30--50 questions:
 
 - single-hop relation lookup;
 - multi-hop risk/strategy chains;
@@ -146,18 +150,20 @@ unit is `canonical_filing_page_key`; its paired and bootstrap unit is
 its expected evidence is derived from the graph under test, so it has
 self-test bias and cannot establish independent extraction recall, human answer
 quality, or statistical superiority. The report must keep the status
-`AUTO_GENERATED_SILVER_NOT_HUMAN_GOLD`, explicitly identify the data as
-auto-generated Silver, and state that independent human Golden QA is missing.
+`AUTO_GENERATED_SILVER_NOT_HUMAN_GOLD` and explicitly identify the data as
+auto-generated Silver. A separate 30-row human-reviewed QA set now exists, but
+it is a single-reviewer engineering checkpoint rather than an independently
+adjudicated multi-annotator benchmark.
 
-The 2026-09-15 read-only semantic audit found 381 claims with complete linkage,
+The 2026-09-19 read-only semantic audit found 381 claims with complete linkage,
 zero normalized quote mismatches, and zero obvious ontology direction/type
 conflicts. It classified 69 repeated normalized-triple groups as different-
 evidence duplicates and 0 as same-evidence duplicate groups. These counts are
 machine classifications for review; different evidence is not proof of
 semantic consistency and this audit is not human Golden QA.
 
-The 2026-09-15 rerun in
-`reports/retrieval_benchmark_silver_2026-09-15.json` observed the following
+The 2026-09-15 rerun in the historical report
+`archive/cleanup-2026-09-18/historical-reports/retrieval_benchmark_silver_2026-09-15.json` observed the following
 page-level macro results on 32 answerable questions (plus 5 deterministic
 unsupported questions):
 
@@ -191,9 +197,9 @@ confounded with the retrieval comparison.
 performs an extraction-only replay: it parses the same PDF, uses the configured
 provider and prompt, and deliberately skips Neo4j writes and post-processing.
 The current corpus manifest is
-`reports/corpus_manifest_2026-09-15.json`; the older
-`reports/2026-08-14_corpus_manifest.json` is historical and is not the current
-inventory. The readiness audit compares the document hash, model, prompt version,
+`reports/corpus_manifest_2026-09-19.json`; the older archived corpus manifest
+is historical and is not the current inventory. The readiness audit compares
+the document hash, model, prompt version,
 temperature, and extracted-claim count. In the 2026-09-09 replay, the frozen
 run produced 126 accepted claims and the second external-LLM call produced 131
 at temperature 0.0. This 126-versus-131 observation remains historical context
@@ -262,6 +268,60 @@ Use a fixed 1--5 rubric with examples for:
 Citation correctness and abstention should have deterministic checks in
 addition to human scores. An LLM judge is a supplementary rater, not the gold
 label; record its model, prompt version, temperature, and raw justifications.
+
+The current implementation records these fields in
+`reports/golden_qa_human_v2_answer_level_2026-09-16.json` for all 30 rows and
+all four modes. It also records fixed synthesis/judge configuration, primary
+and variant evidence context, and deterministic row-level percentile bootstrap
+intervals (2,000 resamples, seed `20260916`). Because the set has only 7
+answerable rows and repeated question texts, these intervals are descriptive
+engineering intervals rather than publication-grade clustered confidence
+intervals. The LLM judge uses the configured DeepSeek V4 Flash route, so its
+scores must not be presented as independent human ratings.
+
+## Table extraction quality
+
+Financial table extraction is evaluated separately from narrative relation
+extraction. The annotation unit is a table row or cell with the following
+fields: company, fiscal year, metric, value, unit, source filing, page, table,
+row, column, and evidence text. The evaluator in
+`scripts/evaluate_table_quality.py` reports row retrieval Precision/Recall/F1,
+per-field exact-match metrics, table-cell accuracy, numeric exact match, unit
+accuracy, and evidence alignment. A row is table-cell correct only when the
+required identity, value, unit, and provenance fields all agree; plausible
+language is not sufficient.
+
+`scripts/export_table_annotation_queue.py` currently exports 60 candidate rows
+to `evaluation/annotation/table_quality_candidate_2026-09-19.jsonl` with empty
+gold fields. This is an annotation queue, not a gold result. It becomes a
+human gold subset only after an independent reviewer fills the gold fields and
+the reviewer identity, source page, evidence text, and uncertainty are
+recorded. If a field cannot be verified, leave it unresolved rather than
+guessing; unresolved rows are excluded from the corresponding exact-match
+denominator and reported separately.
+
+## External benchmark separation
+
+`scripts/prepare_external_benchmarks.py` downloads and validates public samples
+without pretending that NVIDIA 10-K retrieval has been evaluated on them. The
+current inventory registers FinanceBench, FinQA and TAT-QA data, but their
+source documents and task schemas differ from the active NVIDIA corpus. Each
+dataset therefore requires a separate adapter, source-document availability
+check, and separately named report. Never combine their scores into a single
+"financial RAG accuracy".
+
+## Runtime and performance evaluation
+
+`scripts/benchmark_runtime_performance.py` is a runtime benchmark, not a
+quality benchmark. It sends the same frozen questions to all four modes and
+records wall latency, engine stage latency, cache hit/miss, errors, throughput,
+P50, P95 and P99. It separates retrieval-only (`synthesize=false`) from
+end-to-end synthesis (`synthesize=true`). A request with `use_cache=false` is
+labelled an API cache miss; it is not evidence of a process-level cold start.
+Process cold start, dependency wake-up, warm cache, cache hit, cache miss and
+concurrency must be reported as distinct phases. Latency improvements are
+accepted only if strict primary evidence precision, citation correctness and
+abstention safety do not regress.
 
 ## Agent extension
 

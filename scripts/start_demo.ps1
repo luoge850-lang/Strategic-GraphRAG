@@ -51,11 +51,14 @@ if ($existingPids.Count -gt 0) {
         }
     ) | Sort-Object -Unique
     foreach ($controlledPid in $controlledPids) {
-        $existingProcess = Get-Process -Id $controlledPid -ErrorAction Stop
+        $existingProcess = Get-Process -Id $controlledPid -ErrorAction SilentlyContinue
+        if ($null -eq $existingProcess) {
+            continue
+        }
         if ($existingProcess.ProcessName -notin @("python", "python3")) {
             throw "Refusing to stop non-Python process $controlledPid ($($existingProcess.ProcessName)) on port $Port."
         }
-        Stop-Process -Id $controlledPid -Force
+        Stop-Process -Id $controlledPid -Force -ErrorAction SilentlyContinue
     }
     Start-Sleep -Seconds 1
 }

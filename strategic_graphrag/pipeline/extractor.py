@@ -893,6 +893,70 @@ class TripleExtractor:
             return False, "ENTITY_NOT_PRESENT_IN_EVIDENCE"
 
         if relation in cls.STRUCTURAL_RELATIONS:
+            if relation == "PRODUCES":
+                # Co-occurrence is not enough for a production assertion.
+                # For example, "the segment includes Omniverse" and
+                # "software runs on NVIDIA GPUs" mention a product/entity but
+                # do not say that the company produces that target.  Keep
+                # enumeration after an explicit predicate ("built ...
+                # including DRIVE") but reject composition/runtime clauses.
+                predicate = re.compile(
+                    r"\b(?:built|develop\w*|launch\w*|introduc\w*|offer\w*|"
+                    r"provid\w*|manufactur\w*|produc\w*)\b"
+                )
+                blockers = re.compile(
+                    r"\b(?:includes?|based on|built on|runs? on|running|within|derived from)\b"
+                )
+                for match in predicate.finditer(text):
+                    # Active voice requires the source entity to be the
+                    # subject of the predicate.  A sentence that mentions
+                    # NVIDIA only after describing another producer must not
+                    # become NVIDIA -> PRODUCES merely because both names are
+                    # present.
+                    if source_position > match.start():
+                        # Preserve the useful passive form: ``DRIVE products
+                        # are produced by NVIDIA``.
+                        sentence_end_candidates = [
+                            index for index in (
+                                text.find(".", match.end()),
+                                text.find(";", match.end()),
+                            ) if index >= 0
+                        ]
+                        sentence_end = min(sentence_end_candidates) if sentence_end_candidates else len(text)
+                        passive_tail = text[match.end():sentence_end]
+                        source_alias = text[source_position:source_end]
+                        if re.search(
+                            rf"\bby\s+(?:the\s+)?{re.escape(source_alias)}\b",
+                            passive_tail,
+                        ):
+                            return True, "PASSIVE_PRODUCTION_PREDICATE"
+                        continue
+                    if match.start() > target_position:
+                        continue
+                    reporting_span = text[source_end:match.start()]
+                    if re.search(
+                        r"\b(?:said|reported|stated|noted|disclosed|announced|believes|expects)\b",
+                        reporting_span,
+                    ) and re.search(
+                        r"\b(?:another|other|a|the)\s+(?:company|manufacturer|vendor|"
+                        r"competitor|party|supplier)\b",
+                        reporting_span,
+                    ):
+                        continue
+                    between = text[match.end():target_position]
+                    subject_span = text[source_end:match.start()]
+                    if re.search(r"\b(?:does|did)\s+not\b|\bnever\b", subject_span):
+                        continue
+                    blocker = blockers.search(between)
+                    if blocker is not None:
+                        last_including = between.rfind("including")
+                        # A phrase such as "built ... including DRIVE" is a
+                        # valid enumerated product disclosure.  A phrase such
+                        # as "offer a solution based on Omniverse" is not.
+                        if last_including < 0 or blocker.start() >= last_including:
+                            continue
+                    return True, "DIRECT_PRODUCTION_PREDICATE"
+                return False, "NO_DIRECT_PRODUCTION_PREDICATE"
             return True, "STRUCTURAL_ENTITY_COOCCURRENCE"
 
         keywords = list(cls.RELATION_EVIDENCE_KEYWORDS.get(relation, []))

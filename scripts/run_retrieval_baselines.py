@@ -101,6 +101,7 @@ def main() -> None:
                     retrieval_mode=mode,
                     vector_engine=vector,
                     synthesize=args.synthesize,
+                    use_llm_anchors=args.synthesize,
                 )
                 metadata = result.get("metadata") or {}
                 records.append({
@@ -132,6 +133,7 @@ def main() -> None:
             "source_filing": args.source_filing,
             "cross_filing": args.cross_filing,
             "synthesize": args.synthesize,
+            "llm_anchor_expansion": args.synthesize,
             "git_sha": _git_sha(),
             "python": platform.python_version(),
             "llm_provider": os.getenv("LLM_PROVIDER"),

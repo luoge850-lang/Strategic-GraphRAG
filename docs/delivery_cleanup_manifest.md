@@ -115,3 +115,21 @@ render history remains recoverable.
   `data/` and its PDFs, and Chroma artifacts.
 - Did not touch `.env`, Neo4j, or Chroma contents, and performed no remote
   GitHub operation.
+
+## Follow-up report cleanup — 2026-09-18
+
+Nineteen superseded, duplicate, smoke-only, or console artifacts were moved
+to `archive/cleanup-2026-09-18/historical-reports/`; none were deleted. Three
+initially selected reports were restored because the readiness audit still
+consumes their exact filenames. The
+active report directory is now 38 files with zero logs, under the readiness
+threshold of 40. The 2025 cache record/replay reports, the 126-versus-131
+repeatability report, current four-mode evaluation reports, current readiness
+reports, graph snapshots, and the reports required by existing audit scripts
+were retained at the active level. The exact moved-file list is recorded in
+`docs/report_archive_manifest_2026-09-18.md`.
+
+After the 2026-09-18 ranking and answer-level reruns, three superseded
+2026-09-16 Golden QA outputs were moved to the same recoverable historical
+archive. The current active report set now contains only the 2026-09-18
+answer-level result plus the retained provenance and audit inputs.

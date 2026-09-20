@@ -22,6 +22,11 @@ from dotenv import load_dotenv
 from neo4j import GraphDatabase
 import pdfplumber
 
+import sys
+if str(Path(__file__).resolve().parent.parent) not in sys.path:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from strategic_graphrag.response_contract import classify_outcome
+
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_QUESTIONS = [
@@ -117,6 +122,7 @@ def run(base_url: str, pdf_path: Path, filename: str, output: Path) -> dict[str,
             )
             row["http_status"] = response.status_code
             payload = response.json()
+            row["outcome"] = classify_outcome(payload, http_status=response.status_code)
             row["answer"] = payload.get("answer", "")
             row["metadata"] = payload.get("metadata", {})
             row["paths"] = payload.get("paths", [])
@@ -132,23 +138,30 @@ def run(base_url: str, pdf_path: Path, filename: str, output: Path) -> dict[str,
                 "missing": sorted(set(cited_ids) - set(claims)),
             }
             row["pdf_quote_audit"] = [_quote_check(claims[claim_id], pages) for claim_id in cited_ids if claim_id in claims]
-            answer_text = str(row.get("answer") or "")
-            is_explicit_abstention = answer_text.startswith((
-                "[INSUFFICIENT EVIDENCE]",
-                "[INSUFFICIENT TEMPORAL EVIDENCE]",
-                "[GROUNDING FAILURE]",
-            ))
-            row["response_class"] = "abstention" if is_explicit_abstention else "grounded_answer"
+            is_explicit_abstention = row["outcome"] == "ABSTAINED"
+            row["response_class"] = (
+                "abstention" if is_explicit_abstention
+                else "error" if row["outcome"] in {"DEPENDENCY_ERROR", "MODEL_ERROR", "TIMEOUT", "VALIDATION_ERROR"}
+                else "grounded_answer"
+            )
             row["citation_audit_pass"] = (
+                grounding.get("status") == "VERIFIED"
+                and
                 not row["claim_lookup"]["missing"]
                 and all(item["quote_matches_pdf_page"] and item["char_span_present"] for item in row["pdf_quote_audit"])
-            ) if cited_ids else grounding.get("status") in {"NOT_APPLICABLE", "INSUFFICIENT"}
+            ) if cited_ids else (
+                is_explicit_abstention
+                and grounding.get("status") in {"NOT_APPLICABLE", "INSUFFICIENT"}
+            )
             if not cited_ids and is_explicit_abstention:
                 row["citation_audit_pass"] = True
             row["error_type"] = None
+            if response.status_code >= 400:
+                row["error_type"] = row["outcome"]
         except Exception as exc:  # pragma: no cover - runtime/network diagnostic path
             row["http_status"] = None
             row["answer"] = ""
+            row["outcome"] = "TIMEOUT" if isinstance(exc, requests.Timeout) else "DEPENDENCY_ERROR"
             row["error_type"] = type(exc).__name__
             row["error_message"] = str(exc)
         row["wall_latency_ms"] = round((time.perf_counter() - started) * 1000, 2)

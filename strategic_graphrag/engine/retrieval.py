@@ -3,11 +3,21 @@
 from __future__ import annotations
 
 import re
+import threading
+import time
+from collections import OrderedDict
 from dataclasses import asdict, dataclass
 from typing import Any, Dict, Iterable, List, Optional
 
 
 RETRIEVAL_MODES = {"vector", "graph", "hybrid", "hybrid_temporal"}
+EXPLICIT_RELATION_TOKENS = {
+    "CAUSES", "TRIGGERS", "AMPLIFIES", "INCREASES", "DECREASES",
+    "IMPLEMENTS", "MITIGATES", "CONSTRAINS", "EXPOSED_TO",
+    "AFFECTS_SEGMENT", "CONSTRAINS_MARKET", "EXPOSED_THROUGH", "IMPACTS",
+    "EXECUTES", "ADDRESSES", "OPERATES_IN", "PRODUCES", "COMPETES_WITH",
+    "DEPENDS_ON", "REGULATED_BY", "SUPPLIES_TO", "REPORTS_METRIC",
+}
 
 
 @dataclass(frozen=True)
@@ -57,6 +67,21 @@ class QueryRouter:
         temporal = bool(cls.TEMPORAL.search(text)) or len(re.findall(r"20\d{2}", text)) >= 2
         multihop = bool(cls.MULTIHOP.search(text))
         factoid = bool(cls.FACTOID.search(text))
+        explicit_relation = any(
+            re.search(rf"\b{re.escape(relation)}\b", text.upper())
+            for relation in EXPLICIT_RELATION_TOKENS
+        )
+        explicit_entities = [
+            token
+            for token in re.findall(r"\b[A-Z][A-Z0-9_]{2,}\b", text)
+            if token not in EXPLICIT_RELATION_TOKENS
+        ]
+
+        if explicit_relation and len(explicit_entities) >= 2 and not temporal:
+            return cls._decision(
+                "graph", 0.96,
+                "explicit ontology relation and endpoints are best resolved from the evidence graph",
+            )
 
         if temporal:
             return cls._decision(
@@ -145,8 +170,60 @@ def personalized_pagerank(
 class Neo4jPPRRetriever:
     """Load only strict EvidenceClaim edges and rank bridge entities with PPR."""
 
-    def __init__(self, driver):
+    def __init__(
+        self,
+        driver,
+        *,
+        cache_ttl_seconds: float = 300.0,
+        cache_max_entries: int = 64,
+    ):
         self.driver = driver
+        # PPR reads the frozen strict graph and is safe to cache within one
+        # API process. This bounded TTL cache reduces repeated Graph/Hybrid
+        # latency without hiding graph changes forever.
+        self.cache_ttl_seconds = max(float(cache_ttl_seconds), 0.0)
+        self.cache_max_entries = max(int(cache_max_entries), 1)
+        self._cache: OrderedDict[tuple[Any, ...], tuple[float, List[Dict[str, Any]]]] = OrderedDict()
+        self._cache_lock = threading.RLock()
+
+    @staticmethod
+    def _cache_key(
+        anchors: List[str],
+        source_filing: Optional[str],
+        year_start: Optional[int],
+        year_end: Optional[int],
+        limit: int,
+    ) -> tuple[Any, ...]:
+        return (
+            tuple(sorted({str(anchor).casefold() for anchor in anchors if str(anchor).strip()})),
+            source_filing,
+            year_start,
+            year_end,
+            limit,
+        )
+
+    def _cached(self, key: tuple[Any, ...]) -> Optional[List[Dict[str, Any]]]:
+        if self.cache_ttl_seconds <= 0:
+            return None
+        with self._cache_lock:
+            entry = self._cache.get(key)
+            if entry is None:
+                return None
+            created_at, value = entry
+            if time.monotonic() - created_at >= self.cache_ttl_seconds:
+                self._cache.pop(key, None)
+                return None
+            self._cache.move_to_end(key)
+            return [dict(item) for item in value]
+
+    def _store(self, key: tuple[Any, ...], value: List[Dict[str, Any]]) -> None:
+        if self.cache_ttl_seconds <= 0:
+            return
+        with self._cache_lock:
+            self._cache[key] = (time.monotonic(), [dict(item) for item in value])
+            self._cache.move_to_end(key)
+            while len(self._cache) > self.cache_max_entries:
+                self._cache.popitem(last=False)
 
     def rank(
         self,
@@ -159,6 +236,12 @@ class Neo4jPPRRetriever:
     ) -> List[Dict[str, Any]]:
         if not anchors:
             return []
+        cache_key = self._cache_key(
+            anchors, source_filing, year_start, year_end, max(limit, 0)
+        )
+        cached = self._cached(cache_key)
+        if cached is not None:
+            return cached
         with self.driver.session() as session:
             rows = list(session.run(
                 """
@@ -190,7 +273,9 @@ class Neo4jPPRRetriever:
             )
         scores = personalized_pagerank(edges, resolved)
         ranked = sorted(scores.items(), key=lambda item: (-item[1], item[0]))
-        return [
+        ranked = [
             {"entity_id": entity_id, "ppr_score": round(score, 8)}
             for entity_id, score in ranked[: max(limit, 0)]
         ]
+        self._store(cache_key, ranked)
+        return ranked
