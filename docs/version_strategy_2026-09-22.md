@@ -5,19 +5,21 @@
 | Ref | Role | Observed commit / state | Public policy |
 |---|---|---|---|
 | `stable` | GitHub default branch | `297379f` at audit time | Preserve as the frozen public release identity. Do not mix its metrics with development metrics. |
-| `codex/v3-three-filing-evidence-graphrag` | Active development branch | `02ce1bd` after publication; CI run `35820898052` passed | Development snapshot is published here. It is not the default branch and must not be presented as stable. |
+| `codex/v3-three-filing-evidence-graphrag` | Active development branch | `6c99910` after publication; CI run `35821223049` passed | Development snapshot is published here. It is not the default branch and must not be presented as stable. |
 | `v3.2.0-research-freeze-2026-09-14` | Historical tag | Existing immutable tag | Keep historical claims unchanged. |
-| Local HEAD | Working checkout | `02ce1bd`; clean after publication | Local tests were run before commit; GitHub CI passed for the exact pushed commit. |
+| Local HEAD | Working checkout | `6c99910`; clean after publication | Local tests were run before commit; GitHub CI passed for the exact pushed commit. |
 
 The repository API currently reports `stable` as the default branch. The local
 remote-tracking `origin/HEAD` may be stale and is not used as the authority for
 this statement; refresh it with `git fetch origin --prune` and inspect the
 repository API or GitHub branch selector.
 
-The development publication commit is
-[`02ce1bd`](https://github.com/luoge850-lang/Strategic-GraphRAG/commit/02ce1bd6f93504f1e72525bf77ff2064cd6535bd).
-Its GitHub Actions run [35820898052](https://github.com/luoge850-lang/Strategic-GraphRAG/actions/runs/35820898052)
-completed successfully. This CI result covers that commit only.
+The current development publication head is
+[`6c99910`](https://github.com/luoge850-lang/Strategic-GraphRAG/commit/6c99910e18c5072e4c19ff49b3916a70a6d40a04).
+Its GitHub Actions run [35821223049](https://github.com/luoge850-lang/Strategic-GraphRAG/actions/runs/35821223049)
+completed successfully. The preceding content commit
+[`02ce1bd`](https://github.com/luoge850-lang/Strategic-GraphRAG/commit/02ce1bd6f93504f1e72525bf77ff2064cd6535bd)
+also passed CI; neither result applies to `stable`.
 
 ## CI contract
 
