@@ -392,7 +392,9 @@ def phase_accepted(package: Path, build_id: str) -> None:
 
 def add_vectors(package: Path, build_id: str) -> Dict[str, Any]:
     vector_dir = package / "vector_index"
-    vector_dir.mkdir(parents=True, exist_ok=True)
+    writable_root = Path(tempfile.mkdtemp(prefix=f"graphrag-vector-build-{build_id}-"))
+    writable_dir = writable_root / "vector_index"
+    writable_dir.mkdir(parents=True, exist_ok=True)
     collection_name = f"isolated_{build_id.replace('-', '_')}"
     os.environ["GRAPHRAG_BUILD_ID"] = build_id
     os.environ["GRAPH_VECTOR_COLLECTION"] = collection_name
@@ -400,44 +402,61 @@ def add_vectors(package: Path, build_id: str) -> Dict[str, Any]:
     os.environ["GRAPH_EMBEDDING_BACKEND"] = configured_embedding_backend
     import chromadb
     from chromadb.utils import embedding_functions
-    client = chromadb.PersistentClient(path=str(vector_dir))
-    embedding_fn = embedding_functions.DefaultEmbeddingFunction()
     runtime_embedding_backend = "chroma_onnx"
     try:
-        collection = client.get_collection(collection_name, embedding_function=embedding_fn)
+        client = chromadb.PersistentClient(path=str(writable_dir))
+        embedding_fn = embedding_functions.DefaultEmbeddingFunction()
+        try:
+            collection = client.get_collection(collection_name, embedding_function=embedding_fn)
+        except Exception:
+            collection = client.create_collection(collection_name, embedding_function=embedding_fn)
+        splitter = RecursiveTextSplitter(chunk_size=2400, chunk_overlap=300)
+        ids: List[str] = []
+        documents: List[str] = []
+        metadatas: List[Dict[str, Any]] = []
+        for document_path in sorted((package / "documents").glob("*.pdf.json")):
+            document = json_read(document_path)
+            filename = document["filename"]
+            for page in document.get("pages", []):
+                chunks = splitter.split_text(page.get("normalized_text") or "") or ([page.get("normalized_text")] if page.get("normalized_text") else [])
+                for index, chunk in enumerate(chunks):
+                    chunk_id = f"{filename}:{page['physical_page_number']}:{index}"
+                    ids.append(chunk_id)
+                    documents.append(chunk)
+                    metadatas.append({
+                        "build_id": build_id,
+                        "source_filing": filename,
+                        "doc_id": document["document_id"],
+                        "page": int(page["physical_page_number"]),
+                        "chunk_id": chunk_id,
+                        "chunk_index": index,
+                        "pdf_sha256": document["pdf_sha256"],
+                    })
+        if ids:
+            existing = set(collection.get(include=[]).get("ids") or [])
+            add_indices = [index for index, item in enumerate(ids) if item not in existing]
+            if add_indices:
+                collection.add(
+                    ids=[ids[index] for index in add_indices],
+                    documents=[documents[index] for index in add_indices],
+                    metadatas=[metadatas[index] for index in add_indices],
+                )
+        indexed_count = collection.count()
+        # PersistentClient has no stable public close API across Chroma
+        # versions.  Drop every handle and force finalizers before taking the
+        # immutable snapshot; otherwise HNSW writers can still update files
+        # after the artifact ledger is created.
+        del collection, embedding_fn, client
+        import gc
+        gc.collect()
+        time.sleep(0.25)
     except Exception:
-        collection = client.create_collection(collection_name, embedding_function=embedding_fn)
-    splitter = RecursiveTextSplitter(chunk_size=2400, chunk_overlap=300)
-    ids: List[str] = []
-    documents: List[str] = []
-    metadatas: List[Dict[str, Any]] = []
-    for document_path in sorted((package / "documents").glob("*.pdf.json")):
-        document = json_read(document_path)
-        filename = document["filename"]
-        for page in document.get("pages", []):
-            chunks = splitter.split_text(page.get("normalized_text") or "") or ([page.get("normalized_text")] if page.get("normalized_text") else [])
-            for index, chunk in enumerate(chunks):
-                chunk_id = f"{filename}:{page['physical_page_number']}:{index}"
-                ids.append(chunk_id)
-                documents.append(chunk)
-                metadatas.append({
-                    "build_id": build_id,
-                    "source_filing": filename,
-                    "doc_id": document["document_id"],
-                    "page": int(page["physical_page_number"]),
-                    "chunk_id": chunk_id,
-                    "chunk_index": index,
-                    "pdf_sha256": document["pdf_sha256"],
-                })
-    if ids:
-        existing = set(collection.get(include=[]).get("ids") or [])
-        add_indices = [index for index, item in enumerate(ids) if item not in existing]
-        if add_indices:
-            collection.add(
-                ids=[ids[index] for index in add_indices],
-                documents=[documents[index] for index in add_indices],
-                metadatas=[metadatas[index] for index in add_indices],
-            )
+        shutil.rmtree(writable_root, ignore_errors=True)
+        raise
+    if vector_dir.exists():
+        shutil.rmtree(vector_dir)
+    shutil.copytree(writable_dir, vector_dir)
+    shutil.rmtree(writable_root, ignore_errors=True)
     manifest = {
         "schema": "staging-vector-index/v1",
         "build_id": build_id,
@@ -448,13 +467,14 @@ def add_vectors(package: Path, build_id: str) -> Dict[str, Any]:
         "runtime_embedding_backend": runtime_embedding_backend,
         "backend_consistent": configured_embedding_backend == runtime_embedding_backend,
         "storage_role": "immutable_snapshot",
+        "build_storage_role": "temporary_writable_chroma_then_closed_snapshot",
         "runtime_copy_policy": "query_uses_disposable_copy",
         "embedding_model": "all-MiniLM-L6-v2",
         "chunk_size": splitter.chunk_size,
         "chunk_overlap": splitter.chunk_overlap,
         "chunks_expected": len(ids),
-        "chunks_indexed": collection.count(),
-        "status": "PASS" if collection.count() == len(ids) else "FAIL",
+        "chunks_indexed": indexed_count,
+        "status": "PASS" if indexed_count == len(ids) else "FAIL",
     }
     json_write(package / "vector_index_manifest.json", manifest)
     return manifest
