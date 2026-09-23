@@ -6,6 +6,12 @@ the local Neo4j/Chroma stores are external assets and are not currently bound
 to an immutable repository build ID. It must not be silently replaced by a
 marketing version number.
 
+The rows use `50f696a` when that is the source/evaluation baseline for a
+recorded result. The public documentation and current source are published at
+`02ce1bd`; the version strategy records its successful CI run. This distinction
+prevents a publication commit from being mistaken for a fresh rerun of every
+historical benchmark.
+
 | ID | Allowed public statement | Commit/tag | Build ID | Data scope | Source report / artifact | Test or audit command | This run? | Limit / prohibited wording |
 |---|---|---|---|---|---|---|---|---|
 | C01 | The development checkout covers NVIDIA fiscal 2023/2024/2025 10-K filings. | `50f696a` dev baseline | `NOT_BOUND` | Three filings | `docs/canonical_project_state_2026-09-19.md`; corpus-manifest workflow | `scripts/create_corpus_manifest.py` | No; recorded inventory | Raw PDFs are local/ignored. Do not imply the public repository ships the filings. |

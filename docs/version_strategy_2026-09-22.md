@@ -5,14 +5,19 @@
 | Ref | Role | Observed commit / state | Public policy |
 |---|---|---|---|
 | `stable` | GitHub default branch | `297379f` at audit time | Preserve as the frozen public release identity. Do not mix its metrics with development metrics. |
-| `codex/v3-three-filing-evidence-graphrag` | Active development branch | `50f696a` before this publication commit; local work was dirty | Publish new work here first. CI must pass for the resulting commit before any release decision. |
+| `codex/v3-three-filing-evidence-graphrag` | Active development branch | `02ce1bd` after publication; CI run `35820898052` passed | Development snapshot is published here. It is not the default branch and must not be presented as stable. |
 | `v3.2.0-research-freeze-2026-09-14` | Historical tag | Existing immutable tag | Keep historical claims unchanged. |
-| Local HEAD | Working checkout | Dirty before publication work | A dirty checkout has no inherited CI status. Record the final commit after review. |
+| Local HEAD | Working checkout | `02ce1bd`; clean after publication | Local tests were run before commit; GitHub CI passed for the exact pushed commit. |
 
 The repository API currently reports `stable` as the default branch. The local
 remote-tracking `origin/HEAD` may be stale and is not used as the authority for
 this statement; refresh it with `git fetch origin --prune` and inspect the
 repository API or GitHub branch selector.
+
+The development publication commit is
+[`02ce1bd`](https://github.com/luoge850-lang/Strategic-GraphRAG/commit/02ce1bd6f93504f1e72525bf77ff2064cd6535bd).
+Its GitHub Actions run [35820898052](https://github.com/luoge850-lang/Strategic-GraphRAG/actions/runs/35820898052)
+completed successfully. This CI result covers that commit only.
 
 ## CI contract
 
