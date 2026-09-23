@@ -8,7 +8,7 @@ marketing version number.
 
 The rows use `50f696a` when that is the source/evaluation baseline for a
 recorded result. The public documentation and current source are published at
-`6c99910` (with content first published at `02ce1bd`); the version strategy
+`8106c76` (with content first published at `02ce1bd`); the version strategy
 records the successful CI runs. This distinction
 prevents a publication commit from being mistaken for a fresh rerun of every
 historical benchmark.
