@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Tuple, Optional
 import chromadb
 from chromadb.utils import embedding_functions
 from dotenv import load_dotenv
+from ..build_identity import build_id_from_env
 
 load_dotenv()
 logger = logging.getLogger("VectorRAG")
@@ -46,6 +47,7 @@ class VectorRAGBaseline:
         self.embedding_backend = os.getenv(
             "GRAPH_EMBEDDING_BACKEND", "chroma_onnx"
         ).strip().lower()
+        self.build_id = build_id_from_env()
 
         # ChromaDB
         self.client = chromadb.PersistentClient(path=db_path)
@@ -108,7 +110,10 @@ class VectorRAGBaseline:
         ``source_filing`` metadata field and failures are reported explicitly.
         """
         if not self.collection or self.collection.count() == 0:
-            return {"status": "EMPTY", "hits": [], "collection": self.collection_name}
+            return {
+                "status": "EMPTY", "hits": [], "collection": self.collection_name,
+                "build_id": self.build_id,
+            }
 
         kwargs: Dict[str, Any] = {
             "query_texts": [query],
@@ -134,9 +139,13 @@ class VectorRAGBaseline:
                     "collection": self.collection_name,
                     "source_filing": source_filing,
                     "error": type(e).__name__,
+                    "build_id": self.build_id,
                 }
             logger.error(f"Retrieval error: {e}")
-            return {"status": "ERROR", "hits": [], "collection": self.collection_name}
+            return {
+                "status": "ERROR", "hits": [], "collection": self.collection_name,
+                "build_id": self.build_id,
+            }
 
         documents = (results.get("documents") or [[]])[0] or []
         metadatas = (results.get("metadatas") or [[]])[0] or []
@@ -160,6 +169,7 @@ class VectorRAGBaseline:
             "source_filing": source_filing,
             "embedding_backend": self.embedding_backend,
             "embedding_model": self.embedding_model,
+            "build_id": self.build_id,
         }
 
     def diagnostics(self) -> Dict[str, Any]:
@@ -171,6 +181,7 @@ class VectorRAGBaseline:
             "count": count,
             "embedding_backend": self.embedding_backend,
             "embedding_model": self.embedding_model,
+            "build_id": self.build_id,
         }
 
     def corpus_documents(self, source_filing: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -219,7 +230,7 @@ Provide a concise, factual answer. Do not make up information not in the context
             max_tokens=1000,
         )
         if result is None:
-            return f"[Generation error: LLM call failed]"
+            return "[MODEL ERROR] Vector synthesis failed."
         return result
 
     def ask(

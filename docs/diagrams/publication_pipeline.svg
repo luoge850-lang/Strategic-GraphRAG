@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1378" height="426" viewBox="0 0 1378 426" role="img" aria-labelledby="title desc">
+<title>publication_pipeline</title>
+<desc>Deterministic SVG rendering of the checked-in Mermaid source.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#526071"/></marker></defs>
+<style>.node{stroke-width:2}.implemented{fill:#e8f1ff;stroke:#2b5dab}.boundary{fill:#fff5d6;stroke:#a56b00}.unknown{fill:#f4f5f7;stroke:#526071}.label{font-family:Arial,sans-serif;font-size:16px;fill:#10213b}.edge{stroke:#526071;stroke-width:2;fill:none;marker-end:url(#arrow)}.dashed{stroke-dasharray:8 6}</style>
+<path class="edge" d="M330.0,87.0 C353.0,87.0 353.0,87.0 376.0,87.0"/>
+<path class="edge" d="M666.0,87.0 C689.0,87.0 689.0,87.0 712.0,87.0"/>
+<path class="edge" d="M1002.0,87.0 C1025.0,87.0 1025.0,87.0 1048.0,87.0"/>
+<path class="edge" d="M1048.0,87.0 C689.0,87.0 689.0,213.0 330.0,213.0"/>
+<path class="edge" d="M330.0,213.0 C353.0,213.0 353.0,213.0 376.0,213.0"/>
+<path class="edge" d="M666.0,213.0 C689.0,213.0 689.0,213.0 712.0,213.0"/>
+<path class="edge" d="M1002.0,213.0 C1025.0,213.0 1025.0,213.0 1048.0,213.0"/>
+<path class="edge" d="M1048.0,213.0 C689.0,213.0 689.0,339.0 330.0,339.0"/>
+<path class="edge" d="M330.0,339.0 C353.0,339.0 353.0,339.0 376.0,339.0"/>
+<path class="edge" d="M666.0,339.0 C689.0,339.0 689.0,339.0 712.0,339.0"/>
+<path class="edge" d="M666.0,339.0 C857.0,339.0 857.0,339.0 1048.0,339.0"/>
+<rect class="node unknown" x="40" y="44" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="185.0" y="87.0">
+<tspan x="185.0" dy="0">Source PDFs + config</tspan>
+</text>
+<rect class="node unknown" x="376" y="44" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="521.0" y="87.0">
+<tspan x="521.0" dy="0">Build identity</tspan>
+</text>
+<rect class="node unknown" x="712" y="44" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="857.0" y="87.0">
+<tspan x="857.0" dy="0">Isolated staging build</tspan>
+</text>
+<rect class="node unknown" x="1048" y="44" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="1193.0" y="87.0">
+<tspan x="1193.0" dy="0">Completeness / provenance / schema checks</tspan>
+</text>
+<rect class="node unknown" x="40" y="170" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="185.0" y="213.0">
+<tspan x="185.0" dy="0">Read-only retrieval and answer checks</tspan>
+</text>
+<rect class="node unknown" x="376" y="170" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="521.0" y="213.0">
+<tspan x="521.0" dy="0">Immutable snapshot</tspan>
+</text>
+<rect class="node unknown" x="712" y="170" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="857.0" y="213.0">
+<tspan x="857.0" dy="0">Runtime copy</tspan>
+</text>
+<rect class="node unknown" x="1048" y="170" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="1193.0" y="213.0">
+<tspan x="1193.0" dy="0">Development publication</tspan>
+</text>
+<rect class="node unknown" x="40" y="296" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="185.0" y="339.0">
+<tspan x="185.0" dy="0">CI on exact commit</tspan>
+</text>
+<rect class="node unknown" x="376" y="296" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="521.0" y="339.0">
+<tspan x="521.0" dy="0">AB</tspan>
+</text>
+<rect class="node unknown" x="712" y="296" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="857.0" y="339.0">
+<tspan x="857.0" dy="0">Stable release / tag</tspan>
+</text>
+<rect class="node unknown" x="1048" y="296" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="1193.0" y="339.0">
+<tspan x="1193.0" dy="0">Rollback to prior snapshot</tspan>
+</text>
+</svg>

@@ -41,6 +41,7 @@ from ..response_contract import (
     GROUNDING_STATUSES,
     OUTCOMES,
     apply_response_contract,
+    is_generation_error_text,
     response_state,
 )
 
@@ -895,6 +896,8 @@ class QueryResponse(BaseModel):
     intent: str
     intent_display: str
     answer: str
+    calculation: Optional[Dict] = None
+    citations: List[Dict] = Field(default_factory=list)
     execution_status: str = "SUCCEEDED"
     answer_status: str = "ABSTAINED"
     grounding_status: str = "NOT_EXECUTED"
@@ -1300,6 +1303,9 @@ async def vector_query(req: QueryRequest):
         if req.synthesize and docs:
             try:
                 answer = engine.generate(req.question, docs)
+                if is_generation_error_text(answer):
+                    execution_status = "MODEL_ERROR"
+                    generation_error = "GENERATION_SENTINEL"
             except TimeoutError as exc:
                 answer = "[TIMEOUT] Vector synthesis timed out."
                 execution_status = "TIMEOUT"

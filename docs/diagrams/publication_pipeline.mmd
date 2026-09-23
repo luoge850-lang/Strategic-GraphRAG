@@ -1,0 +1,17 @@
+flowchart LR
+    S[Source PDFs + config] --> T[Build identity]
+    T --> U[Isolated staging build]
+    U --> V[Completeness / provenance / schema checks]
+    V --> W[Read-only retrieval and answer checks]
+    W --> X[Immutable snapshot]
+    X --> Y[Runtime copy]
+    Y --> Z[Development publication]
+    Z --> AA[CI on exact commit]
+    AA --> AB{Release acceptance}
+    AB -->|accepted| AC[Stable release / tag]
+    AB -->|rejected| AD[Rollback to prior snapshot]
+
+    classDef current fill:#e8f1ff,stroke:#2b5dab,color:#10213b;
+    classDef gate fill:#fff5d6,stroke:#a56b00,color:#4a3200;
+    class S,T,U,V,W,X,Y,Z,AA current;
+    class AB,AC,AD gate;

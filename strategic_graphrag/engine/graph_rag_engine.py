@@ -44,6 +44,8 @@ from .evidence_quality import (
     score_path_directness,
     semantic_scope,
 )
+from ..evidence_bundle import from_graph_paths, from_vector_hits
+from ..build_identity import build_id_from_env
 from ..response_contract import (
     apply_response_contract,
     classify_outcome,
@@ -75,6 +77,9 @@ class CausalPath:
     years: List[int]           # Years per hop
     evidence_ids: List[str]    # Claim-level provenance IDs per hop
     filings: List[str]         # Source filing per hop
+    evidence_build_ids: List[Optional[str]] = field(default_factory=list)
+    metric_values: List[Optional[float]] = field(default_factory=list)
+    metric_units: List[Optional[str]] = field(default_factory=list)
     causal_forms: List[str] = field(default_factory=list)  # Direct vs mediated form
     total_hops: int = 0
     aggregate_score: float = 0.0
@@ -479,6 +484,7 @@ class CausalPathFinder:
             [r IN rels | coalesce(r.page, 0)] AS pages,
             [r IN rels | coalesce(r.year, 0)] AS years,
             [r IN rels | coalesce(r.evidence_id, '')] AS evidence_ids,
+            [r IN rels | coalesce(r.build_id, '')] AS evidence_build_ids,
             [r IN rels | coalesce(r.source_filing, r.filing, '')] AS filings,
             [r IN rels | coalesce(r.causal_form, 'UNMODELED_DIRECT')] AS causal_forms,
             length(p) AS hops
@@ -512,6 +518,7 @@ class CausalPathFinder:
                 years=rec["years"],
                 evidence_ids=rec["evidence_ids"],
                 filings=rec["filings"],
+                evidence_build_ids=rec.get("evidence_build_ids", []),
                 causal_forms=rec["causal_forms"],
                 total_hops=rec["hops"],
             )
@@ -611,6 +618,7 @@ class CausalPathFinder:
           [coalesce(r.page, 0)] AS pages,
           [coalesce(r.year, 0)] AS years,
           [coalesce(r.evidence_id, '')] AS evidence_ids,
+          [coalesce(r.build_id, '')] AS evidence_build_ids,
           [coalesce(r.source_filing, r.filing, '')] AS filings,
           [coalesce(r.causal_form, 'FINANCIAL_RELATION')] AS causal_forms,
           1 AS hops
@@ -642,6 +650,7 @@ class CausalPathFinder:
                 years=record["years"],
                 evidence_ids=record["evidence_ids"],
                 filings=record["filings"],
+                evidence_build_ids=record.get("evidence_build_ids", []),
                 causal_forms=record["causal_forms"],
                 total_hops=1,
             )
@@ -879,15 +888,23 @@ CRITICAL STYLE RULES:
         """
         started_at = time.perf_counter()
         stage_times: Dict[str, float] = {}
-        # An explicit cross-filing query must not silently fall back to the
-        # active filing from .env.  Single-filing callers retain the stable
-        # default scope for backwards compatibility.
+        requested_retrieval_mode = (retrieval_mode or "auto").strip().lower()
+        structured_query = parse_query(user_query)
+        query_plan = structured_query.to_dict()
+        # The parsed document scope is an execution constraint, not display
+        # metadata.  An explicit cross-filing API request is the only allowed
+        # override; otherwise a filing named in the question beats the active
+        # environment default.
         if cross_filing:
             source_filing = None
         else:
-            source_filing = source_filing or os.getenv("GRAPH_ACTIVE_FILING", "").strip() or None
-        requested_retrieval_mode = (retrieval_mode or "auto").strip().lower()
-        structured_query = parse_query(user_query)
+            source_filing = (
+                source_filing
+                or structured_query.document_scope
+                or os.getenv("GRAPH_ACTIVE_FILING", "").strip()
+                or None
+            )
+        build_id = build_id_from_env()
         router_decision = QueryRouter.route(
             user_query, requested_retrieval_mode, structured_query.target_metric
         )
@@ -934,6 +951,8 @@ CRITICAL STYLE RULES:
                 stage_times,
                 source_filing,
                 synthesize,
+                query_plan=query_plan,
+                build_id=build_id,
             )
 
         # Pre-flight: ensure Neo4j is connected
@@ -956,6 +975,11 @@ CRITICAL STYLE RULES:
                     "total_candidates": 0,
                     "top_paths": 0,
                     "anchors_used": [],
+                    "query_plan": query_plan,
+                    "build_id": build_id,
+                    "evidence_bundle": from_graph_paths(
+                        [], retrieval_mode=retrieval_mode, build_id=build_id
+                    ).to_dict(),
                     "avg_score": 0,
                     "latency_ms": {"total_ms": round((time.perf_counter() - started_at) * 1000, 2)},
                 },
@@ -1208,6 +1232,11 @@ CRITICAL STYLE RULES:
                 "router": router_decision.to_dict(),
                 "retrieval": vector_retrieval,
                 "ppr": {"enabled": router_decision.use_ppr, "ranked_entities": ppr_results},
+                "query_plan": query_plan,
+                "build_id": build_id,
+                "evidence_bundle": from_graph_paths(
+                    [], retrieval_mode=retrieval_mode, build_id=build_id
+                ).to_dict(),
                 "negative_evidence_audit": negative_audit,
                 "latency_ms": {
                     **stage_times,
@@ -1421,11 +1450,32 @@ CRITICAL STYLE RULES:
             "PARTIALLY_VERIFIED": "INSUFFICIENT",
             "UNSUPPORTED": "FAILED",
         }.get(grounding.get("status"), "NOT_EXECUTED")
+        calculation = self._public_calculation(
+            top_paths,
+            query_plan=query_plan,
+            question=user_query,
+        )
+        citations = []
+        for path in top_paths:
+            for index, evidence_id in enumerate(path.evidence_ids):
+                filing = path.filings[index] if index < len(path.filings) else None
+                page = path.pages[index] if index < len(path.pages) else None
+                if evidence_id and filing and page:
+                    citations.append({
+                        "evidence_id": evidence_id,
+                        "source_filing": filing,
+                        "page": page,
+                        "original_locator": f"/evaluation/table-quality/source/{filing}#page={page}",
+                    })
+        if calculation.get("status") == "PASS" and not synthesize:
+            answer = f"{answer}\n\nCalculation\n{calculation['display']}"
         response = {
             "query": user_query,
             "intent": intent_id,
             "intent_display": intent_sig.display_name,
             "answer": answer,
+            "calculation": calculation,
+            "citations": citations,
             "paths": [self._serialize_path(p) for p in top_paths],
             "evidence_sentences": all_evidence[:20],
             "structured_report": structured_report,
@@ -1458,6 +1508,15 @@ CRITICAL STYLE RULES:
                     "enabled": router_decision.use_ppr,
                     "ranked_entities": ppr_results,
                 },
+                "query_plan": query_plan,
+                "calculation": calculation,
+                "citations": citations,
+                "build_id": build_id,
+                "evidence_bundle": from_graph_paths(
+                    [self._serialize_path(path) for path in top_paths],
+                    retrieval_mode=retrieval_mode,
+                    build_id=build_id,
+                ).to_dict(),
                 "baseline": retrieval_mode,
                 "retrieval_mode_requested": requested_retrieval_mode,
                 "retrieval_mode_selected": retrieval_mode,
@@ -1467,11 +1526,19 @@ CRITICAL STYLE RULES:
                 },
             },
         }
+        synthesis_status = str(structured_report.get("status") or "").upper()
+        execution_status = (
+            "MODEL_ERROR"
+            if synthesize and synthesis_status in {
+                "SYNTHESIS_ERROR", "INVALID_JSON", "INVALID_SCHEMA", "TRACE_ONLY",
+            }
+            else "SUCCEEDED"
+        )
         return apply_response_contract(
             response,
-            execution_status="SUCCEEDED",
-            answer_status=answer_status,
-            grounding_status=grounding_status,
+            execution_status=execution_status,
+            answer_status="NOT_REQUESTED" if execution_status != "SUCCEEDED" else answer_status,
+            grounding_status="NOT_EXECUTED" if execution_status != "SUCCEEDED" else grounding_status,
             provenance_note="engine_final_response",
         )
 
@@ -1499,6 +1566,8 @@ CRITICAL STYLE RULES:
         stage_times: Dict[str, float],
         source_filing: Optional[str],
         synthesize: bool,
+        query_plan: Optional[Dict[str, Any]] = None,
+        build_id: Optional[str] = None,
     ) -> Dict[str, Any]:
         """Return the vector-only control group using the common API contract."""
         hits = retrieval.get("hits", []) or []
@@ -1508,6 +1577,9 @@ CRITICAL STYLE RULES:
         if synthesize and vector_engine is not None and documents and execution_status == "SUCCEEDED":
             try:
                 answer = vector_engine.generate(query, documents)
+                if str(answer or "").upper().startswith(("[MODEL ERROR]", "[GENERATION ERROR]", "[LLM UNAVAILABLE]")):
+                    execution_status = "MODEL_ERROR"
+                    error = "GENERATION_FAILED"
             except TimeoutError as exc:
                 answer = "[TIMEOUT] Vector synthesis timed out."
                 execution_status = "TIMEOUT"
@@ -1540,6 +1612,16 @@ CRITICAL STYLE RULES:
             "intent": "VECTOR_BASELINE",
             "intent_display": "Vector RAG Baseline",
             "answer": answer,
+            "calculation": {
+                "schema": "deterministic-calculation/v1",
+                "status": "NOT_COMPUTED",
+                "operation": "vector_baseline",
+                "observations": [],
+                "value": None,
+                "unit": None,
+                "display": "Vector baseline does not expose graph-bound numeric observations.",
+            },
+            "citations": citations,
             "structured_report": {
                 "format": "vector_baseline_v1",
                 "status": retrieval.get("status", "UNKNOWN"),
@@ -1559,9 +1641,14 @@ CRITICAL STYLE RULES:
                 "baseline": "vector",
                 "synthesis_enabled": synthesize,
                 "router": router,
+                "query_plan": query_plan or {},
+                "build_id": build_id,
                 "source_filing": source_filing,
                 "retrieval": retrieval,
                 "vector_citations": citations,
+                "evidence_bundle": from_vector_hits(
+                    hits, retrieval_mode="vector", build_id=build_id
+                ).to_dict(),
                 "error": {"code": execution_status, "detail": error} if error else None,
                 "latency_ms": {
                     **stage_times,
@@ -1713,6 +1800,7 @@ CRITICAL STYLE RULES:
             "success_model": getattr(llm, "last_success_model", None),
             "fallback_configured": bool(os.getenv("LLM_FALLBACK_PROVIDERS", "").strip()),
         }
+        return response
 
     @staticmethod
     def _build_temporal_context(
@@ -2175,12 +2263,27 @@ CRITICAL STYLE RULES:
             signs.setdefault(magnitude, set()).add(sign)
         return signs
 
+    @staticmethod
+    def _statement_scale(value: Any) -> Optional[str]:
+        """Return an explicit numeric scale without inferring conversions."""
+        text = str(value or "").lower()
+        for scale, pattern in (
+            ("trillion", r"(?<![a-z])(?:trillion|trillions|tn)(?![a-z])"),
+            ("billion", r"(?<![a-z])(?:billion|billions|bn)(?![a-z])"),
+            ("million", r"(?<![a-z])(?:million|millions|mn|mm)(?![a-z])"),
+            ("thousand", r"(?<![a-z])(?:thousand|thousands|k)(?![a-z])"),
+        ):
+            if re.search(pattern, text):
+                return scale
+        return None
+
     @classmethod
     def _statement_support_for_path(
         cls,
         statement: str,
         path: CausalPath,
         *,
+        hop_index: Optional[int] = None,
         query: Optional[str] = None,
         intent: Optional[str] = None,
         numeric_fields: Any = None,
@@ -2197,11 +2300,25 @@ CRITICAL STYLE RULES:
         """
         statement_tokens = cls._statement_tokens(statement)
         statement_numbers = cls._statement_numbers(statement)
-        evidence_text = " ".join([
-            *(str(value or "") for value in path.evidence),
-            *(str(value or "") for value in path.nodes),
-            *(str(value or "") for value in path.relationships),
-        ]).lower().replace("_", " ")
+        if hop_index is None:
+            evidence_parts = [
+                *(str(value or "") for value in path.evidence),
+                *(str(value or "") for value in path.nodes),
+                *(str(value or "") for value in path.relationships),
+            ]
+        else:
+            # A citation to one EvidenceClaim may only borrow the evidence and
+            # relation endpoints for that exact hop.
+            evidence_parts = []
+            if 0 <= hop_index < len(path.evidence):
+                evidence_parts.append(str(path.evidence[hop_index] or ""))
+            if 0 <= hop_index < len(path.relationships):
+                evidence_parts.append(str(path.relationships[hop_index] or ""))
+            if hop_index < len(path.nodes):
+                evidence_parts.append(str(path.nodes[hop_index] or ""))
+            if hop_index + 1 < len(path.nodes):
+                evidence_parts.append(str(path.nodes[hop_index + 1] or ""))
+        evidence_text = " ".join(evidence_parts).lower().replace("_", " ")
         evidence_tokens = cls._statement_tokens(evidence_text)
         evidence_numbers = cls._statement_numbers(evidence_text)
         numeric_field_numbers = cls._statement_numbers(numeric_fields)
@@ -2213,10 +2330,12 @@ CRITICAL STYLE RULES:
         allowed_period_years = {
             int(value) for value in year_values if str(value).isdigit()
         }
+        # Model-supplied numeric_fields are candidates, not proof.  A numeric
+        # statement must occur in the exact cited evidence or be an explicitly
+        # requested period year.
         missing_numbers = sorted(
             number for number in statement_numbers
             if number not in evidence_numbers
-            and number not in numeric_field_numbers
             and not (number.isdigit() and int(number) in allowed_period_years)
         )
         statement_signs = cls._signed_statement_numbers(statement)
@@ -2230,6 +2349,11 @@ CRITICAL STYLE RULES:
         unit_text = str(unit or "").strip().lower()
         statement_lower = str(statement or "").lower()
         evidence_lower = evidence_text.lower()
+        statement_scale = cls._statement_scale(statement_lower)
+        evidence_scale = cls._statement_scale(evidence_lower)
+        scale_mismatch = bool(
+            statement_scale and evidence_scale and statement_scale != evidence_scale
+        )
         unit_mismatch = False
         if unit_text and unit_text not in {"reported units", "unknown", "none"}:
             if "percent" in unit_text or "%" in unit_text:
@@ -2248,6 +2372,7 @@ CRITICAL STYLE RULES:
         modality_mismatch = (evidence_is_modal and not statement_is_modal) or (
             evidence_is_negative and not statement_is_negative
         )
+        negation_mismatch = evidence_is_negative != statement_is_negative
         overlap = len(statement_tokens & evidence_tokens) / max(len(statement_tokens), 1)
         directness = score_path_directness(
             path,
@@ -2264,11 +2389,11 @@ CRITICAL STYLE RULES:
             # evidence is mandatory.  General lexical overlap is insufficient:
             # a sentence about another producer can still mention the queried
             # company, product, and predicate.
-            supported = not missing_numbers and not sign_mismatches and not unit_mismatch and not modality_mismatch and (
+            supported = not missing_numbers and not sign_mismatches and not scale_mismatch and not unit_mismatch and not modality_mismatch and not negation_mismatch and (
                 directness.get("relation_evidence_support", 0.0) > 0.0
             )
         else:
-            supported = not missing_numbers and not sign_mismatches and not unit_mismatch and not modality_mismatch and (
+            supported = not missing_numbers and not sign_mismatches and not scale_mismatch and not unit_mismatch and not modality_mismatch and not negation_mismatch and (
                 overlap >= 0.34
                 or directness.get("relation_evidence_support", 0.0) > 0.0
             )
@@ -2277,8 +2402,10 @@ CRITICAL STYLE RULES:
             "overlap": round(overlap, 4),
             "missing_numbers": missing_numbers,
             "sign_mismatches": sign_mismatches,
+            "scale_mismatch": scale_mismatch,
             "unit_mismatch": unit_mismatch,
             "modality_mismatch": modality_mismatch,
+            "negation_mismatch": negation_mismatch,
             "relation_evidence_support": directness.get("relation_evidence_support", 0.0),
             "supported": supported,
         }
@@ -2425,6 +2552,7 @@ CRITICAL STYLE RULES:
                 for claim_id in claim_ids:
                     matching_hops = [
                         (
+                            index,
                             path.pages[index],
                             path.years[index],
                             str(path.filings[index]).strip().lower().removesuffix(".pdf")
@@ -2438,7 +2566,7 @@ CRITICAL STYLE RULES:
                         page in claim_pages
                         and (not claim_years or year in claim_years)
                         and (not claim_filings or filing in claim_filings)
-                        for page, year, filing in matching_hops
+                        for index, page, year, filing in matching_hops
                     ):
                         claim_citation_mismatches.append({
                             "reason": "CLAIM_ID_PAGE_YEAR_OR_FILING_MISMATCH",
@@ -2472,6 +2600,7 @@ CRITICAL STYLE RULES:
                                 GraphRAGEngine._statement_support_for_path(
                                     str(claim.get("statement") or ""),
                                     path,
+                                    hop_index=index,
                                     query=query,
                                     intent=intent,
                                     numeric_fields=claim.get("numeric_fields"),
@@ -2479,6 +2608,8 @@ CRITICAL STYLE RULES:
                                     fiscal_years=claim.get("fiscal_years"),
                                 )
                                 for path in id_paths
+                                for index, evidence_id in enumerate(path.evidence_ids)
+                                if evidence_id == claim_id
                             )
                         ]
                         statement_diagnostics.extend(id_diagnostics)
@@ -3203,6 +3334,15 @@ Now generate the analysis report:"""
             "intent": "FALLBACK",
             "intent_display": "No Results",
             "answer": answer,
+            "calculation": {
+                "schema": "deterministic-calculation/v1",
+                "status": "NOT_COMPUTED",
+                "operation": "none",
+                "observations": [],
+                "value": None,
+                "unit": None,
+                "display": "No path-bound numeric observations were available.",
+            },
             "outcome": "ABSTAINED",
             "structured_report": {
                 "format": "evidence_claim_v1",
@@ -3222,9 +3362,137 @@ Now generate the analysis report:"""
                 "anchors_used": anchors,
                 "avg_score": 0.0,
                 "answer_evidence_status": "NO_GRAPH_EVIDENCE",
+                "calculation": {
+                    "schema": "deterministic-calculation/v1",
+                    "status": "NOT_COMPUTED",
+                    "operation": "none",
+                    "observations": [],
+                    "value": None,
+                    "unit": None,
+                    "display": "No path-bound numeric observations were available.",
+                },
                 "temporal": temporal_status,
                 "llm": self._llm_route_metadata(),
             },
+        }
+
+    @staticmethod
+    def _public_calculation(
+        paths: List[CausalPath],
+        *,
+        query_plan: Dict[str, Any],
+        question: str,
+    ) -> Dict[str, Any]:
+        """Expose only path-bound deterministic arithmetic in the response.
+
+        Production Neo4j paths without metric observations deliberately return
+        ``NOT_COMPUTED``.  The isolated staging adapter supplies the same
+        metric fields that a production projection must provide, allowing the
+        acceptance run to verify that arithmetic is part of the public engine
+        response rather than a test-only side calculation.
+        """
+        observations: List[Dict[str, Any]] = []
+        for path in paths:
+            values = list(path.metric_values or [])
+            units = list(path.metric_units or [])
+            for index, raw_value in enumerate(values):
+                if raw_value is None:
+                    continue
+                try:
+                    value = float(str(raw_value).replace(",", ""))
+                except (TypeError, ValueError):
+                    continue
+                observations.append({
+                    "value": value,
+                    "unit": units[index] if index < len(units) else None,
+                    "year": path.years[index] if index < len(path.years) else None,
+                    "filing": path.filings[index] if index < len(path.filings) else None,
+                    "page": path.pages[index] if index < len(path.pages) else None,
+                    "claim_id": path.evidence_ids[index] if index < len(path.evidence_ids) else None,
+                })
+        unique: List[Dict[str, Any]] = []
+        seen = set()
+        for item in observations:
+            key = (item["value"], item["unit"], item["year"], item["filing"], item["claim_id"])
+            if key not in seen:
+                seen.add(key)
+                unique.append(item)
+        if not unique:
+            return {
+                "schema": "deterministic-calculation/v1",
+                "status": "NOT_COMPUTED",
+                "operation": "none",
+                "observations": [],
+                "value": None,
+                "unit": None,
+                "display": "No path-bound numeric observations were available.",
+            }
+
+        lowered = question.lower()
+        if "convert" in lowered or "conversion" in lowered:
+            source = unique[0]
+            unit = str(source.get("unit") or "")
+            if "million" not in unit.lower() or "billion" not in lowered:
+                return {
+                    "schema": "deterministic-calculation/v1",
+                    "status": "FAILED",
+                    "operation": "unit_to_billions",
+                    "observations": unique,
+                    "value": None,
+                    "unit": None,
+                    "display": "Source unit is not verified as USD millions.",
+                }
+            value = source["value"] / 1000.0
+            return {
+                "schema": "deterministic-calculation/v1",
+                "status": "PASS",
+                "operation": "unit_to_billions",
+                "observations": unique,
+                "value": value,
+                "unit": "USD billions",
+                "display": f"{value:.3f} USD billions from {source['value']:,.3f} {unit} / 1000.",
+            }
+
+        requested_years = sorted({int(year) for year in re.findall(r"20\d{2}", question)})
+        is_comparison = (
+            str(query_plan.get("task_type") or "").upper() == "COMPARISON"
+            or bool(re.search(r"\b(compare|versus|vs\.?|across|between)\b", lowered))
+        )
+        if is_comparison:
+            by_year = {int(item["year"]): item for item in unique if item.get("year")}
+            missing = [year for year in requested_years if year not in by_year]
+            if missing:
+                return {
+                    "schema": "deterministic-calculation/v1",
+                    "status": "FAILED",
+                    "operation": "cross_year",
+                    "observations": unique,
+                    "value": None,
+                    "unit": None,
+                    "missing_years": missing,
+                    "display": f"Missing requested fiscal years: {', '.join(map(str, missing))}.",
+                }
+            ordered = [by_year[year] for year in requested_years]
+            display = "; ".join(f"FY{item['year']}: {item['value']:,.3f} {item.get('unit') or ''}".strip() for item in ordered)
+            return {
+                "schema": "deterministic-calculation/v1",
+                "status": "PASS",
+                "operation": "cross_year",
+                "observations": ordered,
+                "value": None,
+                "unit": ordered[0].get("unit") if ordered else None,
+                "display": display,
+            }
+
+        source = unique[0]
+        return {
+            "schema": "deterministic-calculation/v1",
+            "status": "PASS",
+            "operation": "fact",
+            "observations": unique,
+            "value": source["value"],
+            "unit": source.get("unit"),
+            "display": f"{source['value']:,.3f} {source.get('unit') or ''}".strip(),
         }
 
     def _serialize_path(self, path: CausalPath) -> Dict:
@@ -3241,6 +3509,9 @@ Now generate the analysis report:"""
             "pages": path.pages,
             "years": path.years,
             "evidence_ids": path.evidence_ids,
+            "evidence_build_ids": path.evidence_build_ids,
+            "metric_values": path.metric_values,
+            "metric_units": path.metric_units,
             "filings": path.filings,
             "causal_forms": path.causal_forms,
             "total_hops": path.total_hops,

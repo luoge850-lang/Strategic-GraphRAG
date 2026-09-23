@@ -78,18 +78,29 @@ _REFUSAL_RE = re.compile(
     r"(?:no|without)\s+(?:[a-z]+\s+)?absence\s+conclusion|"
     r"audit\s+(?:was\s+)?unavailable|"
     r"cannot\s+(?:establish|determine|be\s+completed)|"
-    r"not\s+(?:supported|permitted|available|established)|"
+    r"not\s+(?:supported|permitted|available|established|reported|disclosed|provided|found)|"
+    r"(?:no|without)\s+.{0,80}\b(?:information|evidence|data|value|revenue|sales|income|metric|fiscal\s+year|20\d{2})\b|"
+    r"\b(?:revenue|sales|income|expense|margin|metric|20\d{2})\b.{0,40}\b(?:is|are|was|were)?\s*(?:not|never)\s+(?:reported|disclosed|provided|available|found)|"
     r"grounding\s+failure|connection\s+error|model\s+error)",
     re.IGNORECASE,
 )
 
 _POSITIVE_FACT_RE = re.compile(
-    r"(?:\$?\d[\d,]*(?:\.\d+)?\s*(?:%|million|billion|thousand)?|"
-    r"\b(?:reported|reports|increased|decreased|"
-    r"produces|produced|introduced|caused|causes|decreases|increases|"
-    r"affects|affected|revenue|sales|income|expense|margin)\b)",
+    r"(?:(?<!\d)(?!(?:19|20)\d{2}\b)\$?\d[\d,]*(?:\.\d+)?\s*(?:%|million|billion|thousand)?|"
+    r"\b(?:increased|decreased|produces|produced|introduced|"
+    r"caused|causes|decreases|increases|affects|affected)\b)",
     re.IGNORECASE,
 )
+
+_GENERATION_ERROR_RE = re.compile(
+    r"^\s*\[?\s*(?:generation\s+error|model\s+error|llm\s+unavailable|synthesis\s+error)\b",
+    re.IGNORECASE,
+)
+
+
+def is_generation_error_text(value: Any) -> bool:
+    """Identify provider failure sentinels returned as text instead of exceptions."""
+    return bool(_GENERATION_ERROR_RE.search(str(value or "")))
 
 
 def _structured_report(payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -120,6 +131,18 @@ def _is_pure_refusal(value: Any) -> bool:
         return False
     # A concrete value or positive factual predicate means the fragment is
     # mixed content and must remain subject to grounding validation.
+    # Metric names and years inside a refusal are not answers. Only a
+    # concrete value or affirmative predicate turns the fragment into mixed
+    # content; negated predicates remain refusals.
+    if re.search(r"\b(?:no|not|never|cannot|unable|unavailable)\b", text, re.IGNORECASE):
+        positive = _POSITIVE_FACT_RE.search(text)
+        if positive and not re.search(
+            r"(?:no|not|never)\s+(?:\w+\s+){0,5}" + re.escape(positive.group(0)),
+            text,
+            re.IGNORECASE,
+        ):
+            return False
+        return True
     return not bool(_POSITIVE_FACT_RE.search(text))
 
 
@@ -209,7 +232,7 @@ def _legacy_execution(payload: Dict[str, Any]) -> Optional[str]:
         return "DEPENDENCY_ERROR"
     if "TIMEOUT" in upper_answer or "TIMED OUT" in upper_answer:
         return "TIMEOUT"
-    if "[MODEL ERROR]" in upper_answer or "LLM UNAVAILABLE" in upper_answer:
+    if is_generation_error_text(answer):
         return "MODEL_ERROR"
     return None
 

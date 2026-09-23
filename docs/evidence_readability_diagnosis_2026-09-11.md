@@ -6,7 +6,10 @@
 
 原文件 `data/pdfs/2025-10-K.pdf`，物理第 52 页：
 
-![原始利润表](../reports/system_audit_2026-09-07/2025_p52.png)
+> Historical local-only screenshot: `reports/system_audit_2026-09-07/2025_p52.png`.
+> The report asset is not tracked in the public repository; reproduce the
+> page view from the allowlisted PDF and the documented page number instead of
+> following a broken public image link.
 
 从这张表核对 Revenue（营收）这一行，只需对应表头和单位：
 

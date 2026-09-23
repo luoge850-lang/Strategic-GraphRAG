@@ -230,6 +230,7 @@ def _score_record(item: dict[str, Any], mode: str, result: dict[str, Any], elaps
         for k in (1, 3, 5, 10):
             top = ranked_pages[:k]
             overlap = len(set(top) & relevant)
+            row[f"hit_rate_at_{k}"] = 1.0 if set(top) & relevant else 0.0
             row[f"precision_at_{k}"] = round(overlap / k, 4)
             row[f"recall_at_{k}"] = round(overlap / len(relevant), 4) if relevant else None
             row[f"ndcg_at_{k}"] = _ndcg(ranked_pages, relevant, k)
@@ -260,6 +261,7 @@ def _metrics(
             sum(_execution_status(row) == "SUCCEEDED" for row in rows) / len(rows), 4
         ) if rows else None,
         "precision_at_k": {},
+        "hit_rate_at_k": {},
         "recall_at_k": {},
         "ndcg_at_k": {},
         "mrr": _mean([row.get("mrr") for row in answerable]),
@@ -271,6 +273,7 @@ def _metrics(
         },
         "bootstrap_ci_95": {
             "precision_at_k": {},
+            "hit_rate_at_k": {},
             "recall_at_k": {},
             "ndcg_at_k": {},
             "mrr": _bootstrap_ci(
@@ -282,10 +285,16 @@ def _metrics(
     }
     for k in (1, 3, 5, 10):
         output["precision_at_k"][str(k)] = _mean([row.get(f"precision_at_{k}") for row in answerable])
+        output["hit_rate_at_k"][str(k)] = _mean([row.get(f"hit_rate_at_{k}") for row in answerable])
         output["recall_at_k"][str(k)] = _mean([row.get(f"recall_at_{k}") for row in answerable])
         output["ndcg_at_k"][str(k)] = _mean([row.get(f"ndcg_at_{k}") for row in answerable])
         output["bootstrap_ci_95"]["precision_at_k"][str(k)] = _bootstrap_ci(
             [row.get(f"precision_at_{k}") for row in answerable],
+            resamples=bootstrap_resamples,
+            seed=bootstrap_seed,
+        )
+        output["bootstrap_ci_95"]["hit_rate_at_k"][str(k)] = _bootstrap_ci(
+            [row.get(f"hit_rate_at_{k}") for row in answerable],
             resamples=bootstrap_resamples,
             seed=bootstrap_seed,
         )

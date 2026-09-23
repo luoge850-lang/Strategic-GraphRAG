@@ -17,6 +17,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from .build_identity import build_id_from_env
+
 
 CACHE_SCHEMA_VERSION = "llm_response_cache_v1"
 DEFAULT_CACHE_PATH = "evaluation/cache/llm_extraction_v1.jsonl"
@@ -46,6 +48,7 @@ class CacheRequest:
     max_tokens: int
     prompt_sha256: str
     schema_version: str = CACHE_SCHEMA_VERSION
+    build_id: str = ""
 
     @property
     def key(self) -> str:
@@ -57,6 +60,7 @@ class CacheRequest:
             "max_tokens": self.max_tokens,
             "prompt_sha256": self.prompt_sha256,
             "schema_version": self.schema_version,
+            "build_id": self.build_id,
         }
         encoded = json.dumps(
             material, ensure_ascii=False, sort_keys=True, separators=(",", ":")
@@ -72,6 +76,7 @@ class CacheRequest:
             "max_tokens": self.max_tokens,
             "prompt_sha256": self.prompt_sha256,
             "schema_version": self.schema_version,
+            "build_id": self.build_id,
         }
 
 
@@ -153,6 +158,7 @@ class LLMResponseCache:
         max_tokens: int,
         prompt: str,
         system_prompt: str = "",
+        build_id: Optional[str] = None,
     ) -> CacheRequest:
         try:
             normalized_temperature = float(temperature)
@@ -174,6 +180,7 @@ class LLMResponseCache:
             temperature=normalized_temperature,
             max_tokens=normalized_max_tokens,
             prompt_sha256=cls.prompt_sha256(prompt, system_prompt),
+            build_id=str(build_id or build_id_from_env() or ""),
         )
 
     @classmethod
@@ -186,6 +193,7 @@ class LLMResponseCache:
         max_tokens: int,
         prompt: str,
         system_prompt: str = "",
+        build_id: Optional[str] = None,
     ) -> str:
         """Return the stable key used by the JSONL record."""
         return cls.make_request(
@@ -196,6 +204,7 @@ class LLMResponseCache:
             max_tokens=max_tokens,
             prompt=prompt,
             system_prompt=system_prompt,
+            build_id=build_id,
         ).key
 
     def _load(self) -> None:
@@ -271,6 +280,7 @@ class LLMResponseCache:
                 max_tokens=int(metadata["max_tokens"]),
                 prompt_sha256=str(metadata["prompt_sha256"]),
                 schema_version=self.schema_version,
+                build_id=str(metadata.get("build_id") or ""),
             ).key
         except (TypeError, ValueError, OverflowError) as exc:
             self._fail_corrupt(line_number, f"invalid request metadata ({exc})")

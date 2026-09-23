@@ -1,12 +1,14 @@
-# Strategic-GraphRAG: Evidence-Grounded Temporal Causal KG
+# Strategic-GraphRAG: Evidence-Grounded Temporal Evidence Graph
 
-> **Implementation contract: single-PDF stabilization (2026-08-11)**
+> **Implementation contract: three-filing development snapshot (2026-09-22)**
 >
 > The current runnable baseline materializes `Company`, `Product`, `Market`,
 > `Region`, `RiskFactor`, `FinancialMetric`, `Event`, `Document`, `Sentence`,
-> `EvidenceClaim`, and `Year` nodes for one SEC filing. Its verified causal
-> relation families are `CAUSES`, `DECREASES`, `INCREASES`, `EXPOSED_TO`,
-> `OPERATES_IN`, and `PRODUCES`.
+> The current development snapshot covers three NVIDIA 10-K filings and
+> stores `EvidenceClaim` records with filing, page, quote, entity, relation,
+> and claim-ID provenance. Relation families include disclosed business,
+> structural, metric, and causal-language relations. A stored relation is not
+> automatically a causal identification result.
 >
 > `Mechanism`, `BusinessSegment`, `RiskDriver`, `RegulationChange`, and
 > `MitigationAction` are extension targets. They must not be described as
@@ -18,13 +20,15 @@
 > connected through `SUPPORTED_BY`, `ABOUT_SOURCE`, and `ABOUT_TARGET`; the
 > current graph does not yet create `Document-[:DISCLOSES]->EvidenceClaim`.
 
-## Architecture: From Entity-Relation to Causal-Provenance Graph
+## Architecture: From Entity-Relation to Evidence-Provenance Graph
 
 ### Research target versus current baseline
 v1.0 allowed `EXPORT_CONTROL → DECREASES → REVENUE` — a single-hop edge that collapses
-the entire causal mechanism into one relationship. This is scientifically invalid:
-regulations do not "decrease" revenue; they *constrain market access*, which *exposes*
-business segments to *revenue concentration risk*, which *may decrease* reported revenue.
+the entire causal mechanism into one relationship. This is too coarse for a
+multi-hop evidence model: regulations do not automatically imply a direct
+revenue change. A more cautious representation is that they *constrain market
+access*, which may expose a business segment to a documented risk, which may
+be associated with a reported revenue change.
 
 The paragraph above describes the research target. In the current single-PDF
 baseline, a direct risk-to-metric edge is retained only when its filing
@@ -69,15 +73,20 @@ Layer 8: EVIDENCE         Document → EvidenceClaim → Sentence (provenance ch
 | EXECUTES | Company → MitigationAction | Company takes action |
 | ADDRESSES | MitigationAction → RiskDriver | Action targets risk driver |
 
-### Causal Strength Tiers (Judea Pearl-inspired)
+### Disclosure-language strength labels
+
+These labels describe the wording and extraction policy of a filing evidence
+item. They are not Pearl-style causal effects, counterfactual claims, or
+investment predictions. The legacy enum names remain for compatibility with
+existing records; new documentation must state their operational meaning.
 
 | Tier | Label | Condition |
 |---|---|---|
-| 1 | CONFIRMED_CAUSAL | Evidence contains explicit causal verb + both entities in same sentence |
-| 2 | STRONG_ASSOCIATION | Evidence strongly implies causation (e.g., "as a result of") |
-| 3 | WEAK_ASSOCIATION | Entities co-occur in same risk disclosure section |
-| 4 | DISCLOSED_ONLY | Entity mentioned but no causal language |
-| 5 | INFERRED | System-inferred relationship (lowest confidence) |
+| 1 | `CONFIRMED_CAUSAL` (legacy) | Evidence contains explicit causal wording and both entities in the bounded text span; call this “explicit causal language,” not identified causality. |
+| 2 | `STRONG_ASSOCIATION` | Evidence uses consequential or implied causal wording without a causal identification design. |
+| 3 | `WEAK_ASSOCIATION` | Entities co-occur in a disclosure context without a sufficient direct predicate. |
+| 4 | `DISCLOSED_ONLY` | The filing discloses the entity or metric without causal wording. |
+| 5 | `INFERRED` | System-derived relation; it is the weakest evidence tier and requires separate validation. |
 
 ### Temporal Binding (TKG-style)
 Every entity and relationship MUST carry:
@@ -90,8 +99,9 @@ Every entity and relationship MUST carry:
 - `source_type`: STRING (LLM_EXTRACTION | RULE_EXTRACTION | MANUAL_CURATION)
 
 ### Claim-Evidence Model
-- Every causal edge MUST be backed by at least one EvidenceClaim node
+- Every active business edge MUST be backed by at least one EvidenceClaim node
 - EvidenceClaim contains: claim_text, document_id, page, paragraph, verification_status
 - LLM synthesis MUST cite EvidenceClaim IDs, not just page numbers
-- Graph-constrained generation: LLM receives (Path + EvidenceClaims) → generates narrative
-  with inline citations to specific claims
+- Graph-constrained generation: the LLM receives a bounded Path plus
+  EvidenceClaims and must cite the specific claim IDs. Generation cannot turn
+  a path into a counterfactual causal claim.

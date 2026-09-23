@@ -1,0 +1,23 @@
+flowchart LR
+    A[Public SEC 10-K PDFs<br/>2023 / 2024 / 2025] --> B[Canonical document layer<br/>pages, blocks, tables, cells]
+    B --> C[Validated evidence candidates<br/>quote, page, entity, relation]
+    C --> D{Staging and validation}
+    D -->|verified snapshot| E[Neo4j strict evidence graph]
+    D -->|verified snapshot| F[Chroma vector index]
+    D -->|verified snapshot| G[Numeric / temporal indexes]
+    H[User question] --> I[QueryPlan v1<br/>scope, period, relation, mode]
+    I --> E
+    I --> F
+    I --> G
+    E --> J[EvidenceBundle<br/>claim IDs, pages, paths]
+    F --> J
+    G --> J
+    J --> K[Grounding and citation checks]
+    K --> L[Optional synthesis]
+    L --> M[FastAPI / React Demo]
+    N[JSON staging adapter<br/>read-only acceptance path] -. not production Neo4j .-> J
+
+    classDef implemented fill:#e8f1ff,stroke:#2b5dab,color:#10213b;
+    classDef boundary fill:#fff5d6,stroke:#a56b00,color:#4a3200;
+    class A,B,C,E,F,G,H,I,J,K,L,M implemented;
+    class D,N boundary;

@@ -44,6 +44,10 @@ TABLE_METRICS: Sequence[Tuple[str, str]] = (
     ("capital expenditures", "CAPEX"),
 )
 
+
+class TableParseError(RuntimeError):
+    """Raised when a table backend fails; an empty list is not a valid result."""
+
 _NUMBER_RE = re.compile(r"(?<![A-Za-z])\(?-?\$?\d[\d,]*(?:\.\d+)?%?\)?")
 _YEAR_RE = re.compile(r"(?<!\d)(20\d{2})(?!\d)")
 
@@ -429,8 +433,8 @@ def extract_financial_table_triples(
     """
     try:
         tables = page.extract_tables() or []
-    except Exception:
-        return []
+    except Exception as exc:
+        raise TableParseError(f"table extraction failed: {type(exc).__name__}: {exc}") from exc
 
     triples: List[Dict] = []
     seen = set()

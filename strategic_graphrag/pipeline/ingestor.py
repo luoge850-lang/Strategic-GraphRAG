@@ -32,6 +32,7 @@ from ..ontology.relation_inference import (
     ENTITY_CATEGORIES,
     classify_causal_form,
 )
+from ..build_identity import build_id_from_env
 
 load_dotenv()
 logger = logging.getLogger("GraphIngestor")
@@ -55,6 +56,7 @@ class GraphIngestor:
         self.driver = None
         self.run_id = os.getenv("GRAPHRAG_RUN_ID", "") or uuid.uuid4().hex
         self.prompt_version = os.getenv("GRAPHRAG_PROMPT_VERSION", "v2-evidence-claim-1")
+        self.build_id = build_id_from_env()
         self.llm_provider = os.getenv("LLM_PROVIDER", "unknown")
         self.llm_model = os.getenv("LLM_MODEL", "unknown")
 
@@ -294,6 +296,7 @@ class GraphIngestor:
             page=page,
             filing_year=year,
             section=section,
+            build_id=self.build_id,
         )
 
         # Cypher: Create nodes + native relationship + evidence chain
@@ -332,6 +335,7 @@ class GraphIngestor:
             r.llm_provider = $llm_provider,
             r.llm_model = $llm_model,
             r.prompt_version = $prompt_version
+            ,r.build_id = $build_id
 
         SET r.causal_strength = $cs,
             r.confidence = $conf,
@@ -349,6 +353,7 @@ class GraphIngestor:
             r.source_filing = $file,
             r.source_page = $pg,
             r.chunk_id = $chunk_id
+            ,r.build_id = $build_id
 
         // 3. Temporal anchors
         MERGE (y:Year {{year: $yr}})
@@ -360,6 +365,7 @@ class GraphIngestor:
             d.filename = $file,
             d.fiscal_year = $yr,
             d.ingested_at = datetime()
+            ,d.build_id = $build_id
         MERGE (d)-[:REPORTS]->(y)
 
         // 5. Sentence and claim-level provenance.  Neo4j relationships cannot
@@ -398,6 +404,7 @@ class GraphIngestor:
             ,claim.llm_provider = $llm_provider
             ,claim.llm_model = $llm_model
             ,claim.prompt_version = $prompt_version
+            ,claim.build_id = $build_id
             ,claim.chunk_id = $chunk_id
             ,claim.metric_value = $metric_value
             ,claim.metric_unit = $metric_unit
@@ -455,6 +462,7 @@ class GraphIngestor:
                     llm_provider=self.llm_provider,
                     llm_model=self.llm_model,
                     prompt_version=self.prompt_version,
+                    build_id=self.build_id,
                     chunk_id=chunk_id,
                     metric_value=metric_value,
                     metric_unit=metric_unit,
@@ -583,6 +591,7 @@ class GraphIngestor:
                 "llm_provider": self.llm_provider,
                 "llm_model": self.llm_model,
                 "prompt_version": self.prompt_version,
+                "build_id": self.build_id,
                 "metric_value": str(triple.get("metric_value", "")).strip(),
                 "metric_unit": str(triple.get("metric_unit", "")).strip(),
                 "metric_period": str(triple.get("metric_period", "")).strip(),
@@ -598,6 +607,7 @@ class GraphIngestor:
                     page=pg,
                     filing_year=year,
                     section=sec,
+                    build_id=self.build_id,
                 ),
             })
 
@@ -659,6 +669,7 @@ class GraphIngestor:
                             r.llm_provider = row.llm_provider,
                             r.llm_model = row.llm_model,
                             r.prompt_version = row.prompt_version,
+                            r.build_id = row.build_id,
                             r.evidence_id = row.claim_id,
                             r.source_filing = row.file,
                             r.source_page = row.pg,
@@ -675,7 +686,8 @@ class GraphIngestor:
                         ON CREATE SET
                             d.filename = row.file,
                             d.fiscal_year = row.yr,
-                            d.ingested_at = datetime()
+                            d.ingested_at = datetime(),
+                            d.build_id = row.build_id
                         MERGE (d)-[:REPORTS]->(y)
 
                         MERGE (es:Sentence {{id: row.es_id}})
@@ -712,6 +724,7 @@ class GraphIngestor:
                             ,claim.llm_provider = row.llm_provider
                             ,claim.llm_model = row.llm_model
                             ,claim.prompt_version = row.prompt_version
+                            ,claim.build_id = row.build_id
                             ,claim.chunk_id = row.chunk_id
                             ,claim.metric_value = row.metric_value
                             ,claim.metric_unit = row.metric_unit
@@ -765,7 +778,8 @@ class GraphIngestor:
                             r.extraction_run_id = row.run_id,
                             r.llm_provider = row.llm_provider,
                             r.llm_model = row.llm_model,
-                            r.prompt_version = row.prompt_version
+                            r.prompt_version = row.prompt_version,
+                            r.build_id = row.build_id
                             ,r.chunk_id = row.chunk_id
                         """
                         session.run(cypher, batch=group)
@@ -868,14 +882,15 @@ class GraphIngestor:
                         d.extraction_run_id = $run_id,
                         d.llm_provider = $llm_provider,
                         d.llm_model = $llm_model,
-                        d.prompt_version = $prompt_version
+                        d.prompt_version = $prompt_version,
+                        d.build_id = $build_id
                     MERGE (y:Year {year: $fy})
                     MERGE (d)-[:REPORTS]->(y)
                 """, doc_id=doc_id, fn=filename, dt=doc_type,
                    fd=filing_date, fy=fiscal_year, tp=total_pages,
                    document_sha256=document_sha256, run_id=self.run_id,
                    llm_provider=self.llm_provider, llm_model=self.llm_model,
-                   prompt_version=self.prompt_version)
+                   prompt_version=self.prompt_version, build_id=self.build_id)
             return True
         except Neo4jError as e:
             logger.warning(f"Document node error: {e}")

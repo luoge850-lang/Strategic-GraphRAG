@@ -53,6 +53,7 @@ class FinancialObservation:
     valid_from: str
     valid_to: str
     comparability_status: str
+    build_id: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -64,11 +65,18 @@ def parse_numeric_value(value: Any) -> Optional[float]:
         number = float(value)
         return number if math.isfinite(number) else None
     raw = str(value or "").strip()
+    if raw.casefold() in {
+        "nan", "+nan", "-nan", "inf", "+inf", "-inf",
+        "infinity", "+infinity", "-infinity",
+    }:
+        return None
     negative = raw.startswith("(") and raw.endswith(")")
     cleaned = raw.replace(",", "").replace("$", "").replace("%", "").strip("() ")
     try:
         number = float(cleaned)
     except ValueError:
+        return None
+    if not math.isfinite(number):
         return None
     return -abs(number) if negative else number
 
@@ -112,6 +120,7 @@ def build_financial_observations(
     page: int,
     filing_year: int,
     section: str,
+    build_id: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """Expand one REPORTS_METRIC claim into period-specific observations."""
     if str(triple.get("relation", "")).upper() != "REPORTS_METRIC":
@@ -195,6 +204,7 @@ def build_financial_observations(
                 valid_from=valid_from,
                 valid_to=valid_to,
                 comparability_status=comparability,
+                build_id=build_id,
             ).to_dict()
         )
     return observations

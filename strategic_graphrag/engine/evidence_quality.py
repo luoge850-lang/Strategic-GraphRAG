@@ -123,6 +123,12 @@ def _relation_evidence_support(
         return 0.0
 
     relation = str(relation or "").upper()
+    if relation == "REPORTS_METRIC":
+        # A verified table/numeric edge is already the structural proof of a
+        # disclosure.  Unlike PRODUCES/OPERATES_IN it does not require a
+        # causal verb in the row text; requiring one incorrectly rejects
+        # valid evidence such as ``Total revenue $130,497 ...``.
+        return 1.0 if re.search(r"(?<!\d)[\$€£]?\d[\d,]*(?:\.\d+)?", text) else 0.0
     if relation == "PRODUCES":
         predicate = re.compile(
             r"\b(?:built|develop\w*|launch\w*|introduc\w*|offer\w*|"

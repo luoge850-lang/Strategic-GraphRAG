@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1378" height="552" viewBox="0 0 1378 552" role="img" aria-labelledby="title desc">
+<title>architecture</title>
+<desc>Deterministic SVG rendering of the checked-in Mermaid source.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#526071"/></marker></defs>
+<style>.node{stroke-width:2}.implemented{fill:#e8f1ff;stroke:#2b5dab}.boundary{fill:#fff5d6;stroke:#a56b00}.unknown{fill:#f4f5f7;stroke:#526071}.label{font-family:Arial,sans-serif;font-size:16px;fill:#10213b}.edge{stroke:#526071;stroke-width:2;fill:none;marker-end:url(#arrow)}.dashed{stroke-dasharray:8 6}</style>
+<path class="edge" d="M330.0,87.0 C353.0,87.0 353.0,87.0 376.0,87.0"/>
+<path class="edge" d="M666.0,87.0 C689.0,87.0 689.0,87.0 712.0,87.0"/>
+<path class="edge" d="M1002.0,87.0 C1025.0,87.0 1025.0,87.0 1048.0,87.0"/>
+<path class="edge" d="M1048.0,87.0 C689.0,87.0 689.0,213.0 330.0,213.0"/>
+<path class="edge" d="M1048.0,87.0 C857.0,87.0 857.0,213.0 666.0,213.0"/>
+<path class="edge" d="M1048.0,87.0 C1025.0,87.0 1025.0,213.0 1002.0,213.0"/>
+<path class="edge" d="M1048.0,213.0 C689.0,213.0 689.0,339.0 330.0,339.0"/>
+<path class="edge" d="M40.0,339.0 C185.0,339.0 185.0,213.0 330.0,213.0"/>
+<path class="edge" d="M330.0,339.0 C353.0,339.0 353.0,213.0 376.0,213.0"/>
+<path class="edge" d="M330.0,339.0 C521.0,339.0 521.0,213.0 712.0,213.0"/>
+<path class="edge" d="M330.0,213.0 C353.0,213.0 353.0,339.0 376.0,339.0"/>
+<path class="edge" d="M376.0,213.0 C521.0,213.0 521.0,339.0 666.0,339.0"/>
+<path class="edge" d="M712.0,213.0 C689.0,213.0 689.0,339.0 666.0,339.0"/>
+<path class="edge" d="M666.0,339.0 C689.0,339.0 689.0,339.0 712.0,339.0"/>
+<path class="edge" d="M1002.0,339.0 C1025.0,339.0 1025.0,339.0 1048.0,339.0"/>
+<path class="edge" d="M1048.0,339.0 C689.0,339.0 689.0,465.0 330.0,465.0"/>
+<path class="edge dashed" d="M376.0,465.0 C521.0,465.0 521.0,339.0 666.0,339.0"/>
+<rect class="node implemented" x="40" y="44" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="185.0" y="77.0">
+<tspan x="185.0" dy="0">Public SEC 10-K PDFs</tspan>
+<tspan x="185.0" dy="20">2023 / 2024 / 2025</tspan>
+</text>
+<rect class="node implemented" x="376" y="44" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="521.0" y="77.0">
+<tspan x="521.0" dy="0">Canonical document layer</tspan>
+<tspan x="521.0" dy="20">pages, blocks, tables, cells</tspan>
+</text>
+<rect class="node implemented" x="712" y="44" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="857.0" y="77.0">
+<tspan x="857.0" dy="0">Validated evidence candidates</tspan>
+<tspan x="857.0" dy="20">quote, page, entity, relation</tspan>
+</text>
+<rect class="node boundary" x="1048" y="44" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="1193.0" y="87.0">
+<tspan x="1193.0" dy="0">D</tspan>
+</text>
+<rect class="node implemented" x="40" y="170" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="185.0" y="213.0">
+<tspan x="185.0" dy="0">Neo4j strict evidence graph</tspan>
+</text>
+<rect class="node implemented" x="376" y="170" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="521.0" y="213.0">
+<tspan x="521.0" dy="0">Chroma vector index</tspan>
+</text>
+<rect class="node implemented" x="712" y="170" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="857.0" y="213.0">
+<tspan x="857.0" dy="0">Numeric / temporal indexes</tspan>
+</text>
+<rect class="node implemented" x="1048" y="170" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="1193.0" y="213.0">
+<tspan x="1193.0" dy="0">User question</tspan>
+</text>
+<rect class="node implemented" x="40" y="296" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="185.0" y="329.0">
+<tspan x="185.0" dy="0">QueryPlan v1</tspan>
+<tspan x="185.0" dy="20">scope, period, relation, mode</tspan>
+</text>
+<rect class="node implemented" x="376" y="296" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="521.0" y="329.0">
+<tspan x="521.0" dy="0">EvidenceBundle</tspan>
+<tspan x="521.0" dy="20">claim IDs, pages, paths</tspan>
+</text>
+<rect class="node implemented" x="712" y="296" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="857.0" y="339.0">
+<tspan x="857.0" dy="0">Grounding and citation checks</tspan>
+</text>
+<rect class="node implemented" x="1048" y="296" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="1193.0" y="339.0">
+<tspan x="1193.0" dy="0">Optional synthesis</tspan>
+</text>
+<rect class="node implemented" x="40" y="422" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="185.0" y="465.0">
+<tspan x="185.0" dy="0">FastAPI / React Demo</tspan>
+</text>
+<rect class="node boundary" x="376" y="422" width="290" height="86" rx="12"/>
+<text class="label" text-anchor="middle" x="521.0" y="455.0">
+<tspan x="521.0" dy="0">JSON staging adapter</tspan>
+<tspan x="521.0" dy="20">read-only acceptance path</tspan>
+</text>
+</svg>

@@ -41,6 +41,7 @@ class RetrievalBenchmarkMetricTests(unittest.TestCase):
             "metadata": {"retrieval": {"status": "ok"}},
         }
         row = _score_record(item, "graph", result, 12.345, 5)
+        self.assertEqual(row["hit_rate_at_5"], 1.0)
         self.assertEqual(row["recall_at_5"], 1.0)
         self.assertEqual(row["ndcg_at_5"], 1.0)
         self.assertEqual(row["mrr"], 1.0)
@@ -69,6 +70,7 @@ class RetrievalBenchmarkMetricTests(unittest.TestCase):
                 "answerable": True,
                 "error": None,
                 "precision_at_5": 0.2,
+                "hit_rate_at_5": 1.0,
                 "recall_at_5": 0.5,
                 "ndcg_at_5": 0.5,
                 "mrr": 1.0,
@@ -80,6 +82,7 @@ class RetrievalBenchmarkMetricTests(unittest.TestCase):
                 "answerable": True,
                 "error": None,
                 "precision_at_5": 0.4,
+                "hit_rate_at_5": 1.0,
                 "recall_at_5": 1.0,
                 "ndcg_at_5": 1.0,
                 "mrr": 0.5,
@@ -98,6 +101,7 @@ class RetrievalBenchmarkMetricTests(unittest.TestCase):
         self.assertEqual(metrics["answerable_questions"], 2)
         self.assertEqual(metrics["unsupported_questions"], 1)
         self.assertEqual(metrics["recall_at_k"]["5"], 0.75)
+        self.assertEqual(metrics["hit_rate_at_k"]["5"], 1.0)
         ci = metrics["bootstrap_ci_95"]["recall_at_k"]["5"]
         self.assertEqual(ci["unit"], "question_id")
         self.assertEqual(ci["question_count"], 2)

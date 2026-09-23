@@ -34,6 +34,7 @@ from .section_detector import SectionDetector
 from .extractor import TripleExtractor
 from .ingestor import GraphIngestor
 from .financial_table_extractor import extract_financial_table_triples
+from ..document_layer import DocumentLayerReader, DOCUMENT_LAYER_SCHEMA
 from ..llm_response_cache import LLMResponseCacheError
 from ..ontology.entity_registry import resolve_entity
 
@@ -92,6 +93,10 @@ class PipelineConfig:
     # not connect to Neo4j or run post-processing, so a second extraction can
     # be compared without changing the frozen graph.
     dry_run: bool = False
+    # Optional isolated-build export.  Normal runs keep the historical compact
+    # statistics shape; staging builds can retain the accepted triples for a
+    # local graph index without writing Neo4j.
+    capture_triples: bool = False
     # Optional explicit destination for unresolved financial-table candidates.
     # No queue file is written unless the caller opts in.
     pending_table_queue_path: Optional[str] = None
@@ -99,6 +104,7 @@ class PipelineConfig:
     # company identity is accepted only for a filename+SHA256 match marked
     # VERIFIED/HUMAN_REVIEWED.
     document_registry_path: Optional[str] = None
+    build_id: Optional[str] = None
 
 
 # =============================================================================
@@ -140,6 +146,8 @@ class KnowledgeGraphPipeline:
         self.ingestor.llm_model = getattr(
             self.extractor.llm, "default_model", "unknown"
         )
+        if self.config.build_id:
+            self.ingestor.build_id = self.config.build_id
 
         # Text splitter
         self.splitter = RecursiveTextSplitter(
@@ -147,6 +155,7 @@ class KnowledgeGraphPipeline:
             chunk_overlap=self.config.chunk_overlap,
             separators=["\n\n", "\n", ". ", " ", ""],
         )
+        self.document_reader = DocumentLayerReader()
 
         # Statistics
         self.stats: Dict = {}
@@ -218,6 +227,7 @@ class KnowledgeGraphPipeline:
         except (TypeError, ValueError, json.JSONDecodeError):
             periods = []
         identity_payload = "|".join([
+            str(document_sha256 or "UNKNOWN"),
             filename,
             str(page_num),
             source_table_id,
@@ -227,7 +237,7 @@ class KnowledgeGraphPipeline:
         ])
         candidate_id = hashlib.sha256(identity_payload.encode("utf-8")).hexdigest()[:20]
         table_instance_id = (
-            f"{filename}:{page_num}:table_"
+            f"{str(document_sha256 or 'UNKNOWN')[:16]}:{filename}:{page_num}:table_"
             f"{hashlib.sha256(source_table_id.encode('utf-8')).hexdigest()[:12]}"
         )
         triple.update({
@@ -376,20 +386,21 @@ class KnowledgeGraphPipeline:
         """
         pages_meta = []
         full_text_parts = []
+        document = self.document_reader.read(pdf_path, build_id=self.config.build_id)
+        logger.info(f"  Extracting text from {document.total_pages} pages...")
 
-        with pdfplumber.open(pdf_path) as pdf:
-            total = len(pdf.pages)
-            logger.info(f"  Extracting text from {total} pages...")
-
-            for i, page in enumerate(pdf.pages):
-                page_num = i + 1
-                text = page.extract_text() or ""
-                if len(text.strip()) >= self.config.min_content_chars:
-                    full_text_parts.append(text)
-                    pages_meta.append({
-                        "page": page_num,
-                        "char_count": len(text),
-                    })
+        for page in document.pages:
+            text = page.normalized_text
+            if len(text.strip()) >= self.config.min_content_chars:
+                full_text_parts.append(text)
+                pages_meta.append({
+                    "page": page.physical_page_number,
+                    "char_count": len(text),
+                    "document_id": document.document_id,
+                    "pdf_sha256": document.pdf_sha256,
+                    "parser_version": document.parser_version,
+                    "config_hash": document.config_hash,
+                })
 
         full_text = "\n\n".join(full_text_parts)
         logger.info(f"  Extracted {len(full_text):,} chars from {len(pages_meta)} content pages")
@@ -418,9 +429,17 @@ class KnowledgeGraphPipeline:
         year_match = re.search(r"(20\d{2})", pdf_path)
         year = self.config.year_override or (int(year_match.group(1)) if year_match else 2024)
 
+        # Build the standard document layer once.  The downstream extraction
+        # loop consumes these page texts; it does not silently create a second
+        # independent text representation.
+        canonical_document = self.document_reader.read(
+            pdf_path, build_id=self.config.build_id
+        )
+        canonical_document.assert_coverage()
+
         # Step 1: Open PDF and detect sections
         with pdfplumber.open(pdf_path) as pdf:
-            total_pages = len(pdf.pages)
+            total_pages = canonical_document.total_pages
             logger.info(f"  Total pages: {total_pages}")
 
             # ISSUE-FIX #2: Detect document type from first pages.
@@ -430,7 +449,7 @@ class KnowledgeGraphPipeline:
             # avoiding repeated PDF decoding, this gives us a deterministic
             # page-level coverage ledger: every page is accounted for, even
             # when it is outside the extraction scope.
-            page_texts = [page.extract_text() or "" for page in pdf.pages]
+            page_texts = [page.normalized_text for page in canonical_document.pages]
             first_pages_text = "\n".join(page_texts[:3])
             doc_type = SectionDetector.detect_document_type(first_pages_text)
             logger.info(f"  Document type: {doc_type}")
@@ -446,6 +465,11 @@ class KnowledgeGraphPipeline:
                     "status": "skipped_non_sec",
                     "doc_type": doc_type,
                     "triples": 0,
+                    "build_id": self.config.build_id,
+                    "document_layer": {
+                        "schema": DOCUMENT_LAYER_SCHEMA,
+                        "coverage": canonical_document.coverage(),
+                    },
                 }
             if doc_type not in ("SEC_10K", "SEC_10Q"):
                 logger.warning(
@@ -457,10 +481,19 @@ class KnowledgeGraphPipeline:
                     "status": "skipped_sec_other",
                     "doc_type": doc_type,
                     "triples": 0,
+                    "build_id": self.config.build_id,
+                    "document_layer": {
+                        "schema": DOCUMENT_LAYER_SCHEMA,
+                        "coverage": canonical_document.coverage(),
+                    },
                 }
 
             # Detect sections
             self.section_detector.scan(pdf)
+            for canonical_page in canonical_document.pages:
+                canonical_page.section = self.section_detector.get_page_section_label(
+                    canonical_page.physical_page_number
+                )
             logger.info(f"  Sections detected:\n{self.section_detector.describe()}")
 
             # Get target pages (0-indexed)
@@ -469,7 +502,16 @@ class KnowledgeGraphPipeline:
 
             if not target_indices:
                 logger.warning(f"  No target pages found. Skipping {filename}")
-                return {"filename": filename, "status": "skipped", "triples": 0}
+                return {
+                    "filename": filename,
+                    "status": "skipped",
+                    "triples": 0,
+                    "build_id": self.config.build_id,
+                    "document_layer": {
+                        "schema": DOCUMENT_LAYER_SCHEMA,
+                        "coverage": canonical_document.coverage(),
+                    },
+                }
 
             # Step 2: Extract text from target pages
             all_triples = []
@@ -726,6 +768,15 @@ class KnowledgeGraphPipeline:
                     triple["chunk_id"] = (
                         chunk_ids[evidence_chunk] if chunk_ids else f"{filename}:{page_num}:0"
                     )
+                    # Keep source identity on the captured candidate itself.
+                    # The Neo4j writer already receives page/year as parallel
+                    # batch arguments, but an isolated build must be able to
+                    # materialize the same evidence without reconstructing
+                    # that positional relationship from logs.
+                    triple["source_filing"] = filename
+                    triple["source_page"] = page_num
+                    triple["filing_year"] = year
+                    triple["document_sha256"] = document_sha256
                     triple.pop("_chunk_index", None)
 
                 coverage_record.update({
@@ -948,6 +999,14 @@ class KnowledgeGraphPipeline:
         return {
             "filename": filename,
             "document_sha256": document_sha256,
+            "build_id": self.config.build_id,
+            "document_layer": {
+                "schema": DOCUMENT_LAYER_SCHEMA,
+                "document_id": canonical_document.document_id,
+                "parser_version": canonical_document.parser_version,
+                "config_hash": canonical_document.config_hash,
+                "coverage": canonical_document.coverage(),
+            },
             "year": year,
             "total_pages": total_pages,
             "target_pages": len(target_indices),
@@ -962,6 +1021,7 @@ class KnowledgeGraphPipeline:
             "extraction_method_counts": extraction_method_counts,
             "table_quality": table_quality,
             "pending_table_candidates": pending_table_candidates,
+            "accepted_triples": all_triples if self.config.capture_triples else None,
             "page_stats": page_stats,
             "coverage_ledger": coverage_ledger,
             "pages_with_strict_triples": sum(
@@ -1136,6 +1196,10 @@ def main():
         )
     )
     parser.add_argument(
+        "--build_id", type=str, default=None,
+        help="Shared build identity from a reconstruction manifest; omit only for unbound dry-runs",
+    )
+    parser.add_argument(
         "--require_llm", action="store_true",
         help="Abort before replacement if any LLM extraction call fails or yields no accepted triples"
     )
@@ -1160,6 +1224,10 @@ def main():
         help="Extract and validate without connecting to Neo4j or changing the graph"
     )
     parser.add_argument(
+        "--capture_triples", action="store_true",
+        help="Retain accepted triples in the local stats artifact for an isolated staging build",
+    )
+    parser.add_argument(
         "--output_stats", type=str, default="pipeline_stats.json",
         help="Path to save processing statistics JSON"
     )
@@ -1179,8 +1247,10 @@ def main():
         replace_existing_filing=args.replace_existing_filing,
         year_override=args.year,
         dry_run=args.dry_run,
+        capture_triples=args.capture_triples,
         pending_table_queue_path=args.pending_table_queue,
         document_registry_path=args.document_registry,
+        build_id=args.build_id,
     )
 
     pipeline = KnowledgeGraphPipeline(config)

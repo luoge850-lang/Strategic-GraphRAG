@@ -28,6 +28,7 @@ from strategic_graphrag.response_contract import (
     is_abstention,
     response_state,
 )
+from strategic_graphrag.evaluation.metric_spec import metric_registry, wilson_interval
 MODES = ("vector", "graph", "hybrid", "hybrid_temporal")
 JUDGE_PROMPT_VERSION = "answer-level-judge-v1"
 SYNTHESIS_PROMPT_VERSION = "graph-rag-report-contract-v1"
@@ -621,6 +622,15 @@ def evaluate(
             name: _bootstrap_ci(values)
             for name, values in metric_values.items()
         }
+        execution_successes = sum(
+            row.get("execution_status") == "SUCCEEDED" for row in results
+        )
+        metrics_by_mode[mode]["execution_success_interval_95"] = {
+            "successes": execution_successes,
+            "total": len(results),
+            "interval": wilson_interval(execution_successes, len(results)),
+            "method": "Wilson score interval",
+        }
 
     return {
         "dataset": "golden_qa",
@@ -659,6 +669,7 @@ def evaluate(
             }),
         },
         "metrics": metrics_by_mode,
+        "metric_specs": metric_registry(),
         "rows": results_by_mode,
         "metric_notes": {
             "evidence_recall_precision": "Exact EvidenceClaim ID overlap against human Gold. Graph-family metrics include surfaced evidence_variants; primary metrics exclude variants and show the strict representative-path view.",
