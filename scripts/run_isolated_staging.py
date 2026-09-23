@@ -893,7 +893,8 @@ def verify_package(package: Path, build_id: Optional[str] = None) -> Dict[str, A
                 hash_ok = False
                 errors.append(f"missing_ledger_file:{relative or '<empty>'}")
                 continue
-            if int(item.get("bytes") or -1) != target.stat().st_size:
+            expected_bytes = item.get("bytes")
+            if expected_bytes is None or int(expected_bytes) != target.stat().st_size:
                 hash_ok = False
                 errors.append(f"size_mismatch:{relative}")
             if file_hash(target) != str(item.get("sha256") or ""):
