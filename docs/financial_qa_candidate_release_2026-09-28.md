@@ -96,6 +96,13 @@
 | 单位换算与增长请求可能只返回事实证据而没有操作结果 | 在线图数据未绑定观察值版本；规则计算需要结构化、同构建 observations | 候选端采用有类型 observation 和明确 operation plan，并为 unsupported/ambiguous/failure 分流 | 离线测试套件通过；在线增长及换算 UI 试跑仍未给出结果，不能宣称端到端修复 |
 | 前端开发环境的引用链接曾落到 Vite 静态页面而非 API | 同源生产路径与 Vite `/api` 代理前缀处理不一致 | 前端统一通过 `API_BASE` 构造 PDF 源链接 | URL 已指向 API，直接 GET 返回 PDF/200；浏览器仍报 `ERR_BLOCKED_BY_CLIENT`，物理页点击验收仍失败 |
 | 统一验收入口按当前 PDF 重算身份，找不到本轮冻结包（首次返回 `build_98fa055e6e40d1f6: package_not_found`） | 冻结包 build ID 与当前重算身份不同，CLI 原先只支持“当前身份验证” | 增加 `--verify-build-id` 只读路径并让验收入口显式绑定冻结 build ID | 对 `build_f74bb1dfbf96b8a2` 复核返回 `PASS`，identity/graph/vector/acceptance/backend/config/ledger/hash 八项均通过；没有切换或写入发布指针 |
+| 干净前端安装的 npm 审计发现 4 个易受影响包（2 中危、2 高危） | 兼容范围内的传递依赖版本落后 | 非强制 `npm audit fix` 仅更新 `frontend/package-lock.json`，`package.json` 未改，共更新 8 个兼容传递包 | 新锁文件上重新执行 `npm ci` 后 `npm audit` 为 0 项；`npm run build` 成功（474 modules）。仅表示当前依赖审计结果，不代替应用/部署安全审查 |
+
+### 干净克隆验证（2026-09-29）
+
+从交付分支 SHA `7d045503914bd7436fc18899d07d65a39bd8a61e` 新建浅克隆，在隔离 Python 3.12.14 环境中按 `requirements-lock-2026-09-19.txt` 安装成功；`python -m pytest -q` 得到 203 passed、2 条 FastAPI 弃用警告、7 个子测试通过。按 README 参数从克隆内的 JSONL 重算，结果 JSON 与发布摘要逐字段相同，图表生成成功。此重算不需要 PDF、Neo4j、Chroma 或模型。由于本机 `py -3.12` 启动器没有注册该运行时，本次通过已安装的 Python 3.12 解释器创建隔离环境；README 给出的 `py -3.12` 命令适用于已正确安装/注册 Python Launcher 的 Windows 环境。
+
+前端在克隆内先执行 `npm ci`，首次审计发现 4 个易受影响包；随后仅更新锁文件，再执行一次干净 `npm ci`、`npm audit` 与 `npm run build`，最终审计为 0 vulnerabilities，Vite 构建成功。该环境验证没有原始年报或构建包，因此不能重跑检索矩阵；Python 依赖安装不等于完整真实服务部署验收。
 
 ### Neo4j 当前图审计
 

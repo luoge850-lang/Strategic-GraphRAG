@@ -81,11 +81,21 @@ end-to-end citation acceptance. The active Chroma collection has 1,686 items
 and null `build_id`, while the isolated candidate has 843 chunks; no live
 store was modified and the release pointer was not changed.
 
-The Python 3.12 locked clean-install and offline tests were previously checked
-in a temporary environment. Current offline suite result is 203 passed, 2
-warnings, and 7 subtests passed. Frontend production build succeeds. Live
-recovery/rollback, dependency-timeout, browser PDF rendering, concurrency,
-security, and production load acceptance remain incomplete.
+On 2026-09-29, a fresh shallow checkout of the delivery branch installed the
+Python lock into a new isolated Python 3.12.14 environment; the full suite
+passed (203 passed, 2 deprecation warnings, 7 subtests), and recomputing the
+summary from checked-in raw records produced JSON identical to the published
+summary. The local `py -3.12` launcher had no registered runtime, so the new
+environment was created using the already-installed Python 3.12 interpreter;
+the project dependencies themselves came only from the lock file.
+
+The first clean frontend install exposed four npm-audit findings (2 moderate,
+2 high) in development-tool dependencies. A non-forced lockfile-only update
+changed eight compatible transitive packages; after a second clean `npm ci`,
+`npm audit` reported 0 vulnerabilities and `npm run build` succeeded (474
+modules). This audit is not a substitute for application/deployment security
+review. Live recovery/rollback, dependency-timeout, browser PDF rendering,
+concurrency, authentication, and production load acceptance remain incomplete.
 
 ## Verified development snapshot
 
