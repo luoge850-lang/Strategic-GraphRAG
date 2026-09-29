@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional
 
 from .engine.graph_rag_engine import CausalPath
+from .schema.financial_observation import FinancialObservation, build_financial_observations
 
 
 def _key(value: Any) -> str:
@@ -93,8 +94,45 @@ class StagingGraphIndex:
     @staticmethod
     def _to_path(edges: List[Dict[str, Any]], path_id: str) -> CausalPath:
         nodes = [str(edges[0].get("source") or "")]
+        financial_observations: List[FinancialObservation] = []
         for edge in edges:
             nodes.append(str(edge.get("target") or ""))
+            if str(edge.get("relation") or "").upper() != "REPORTS_METRIC":
+                continue
+            fact_year = _year(edge.get("fact_year") or edge.get("filing_year"))
+            filing_year = _year(edge.get("filing_year") or edge.get("source_filing"))
+            claim_id = str(edge.get("claim_id") or "")
+            source_filing = str(edge.get("source_filing") or "")
+            raw_value = edge.get("metric_value")
+            if fact_year is None or filing_year is None or not claim_id or not source_filing or raw_value in (None, ""):
+                continue
+            normalized_rows = build_financial_observations(
+                {
+                    "relation": "REPORTS_METRIC",
+                    "metric_value": raw_value,
+                    "metric_values_json": json.dumps(
+                        [{"period": f"FY{fact_year}", "value": raw_value}],
+                        ensure_ascii=False,
+                    ),
+                    "metric_unit": edge.get("metric_unit") or edge.get("unit") or "",
+                    "evidence_sentence": edge.get("evidence") or "",
+                    "statement_type": edge.get("statement_type") or "UNKNOWN",
+                    "table_name": edge.get("table_instance_id") or "UNKNOWN_TABLE",
+                    "row_label": edge.get("source_row_id") or edge.get("target") or "UNKNOWN_ROW",
+                    "comparability_status": edge.get("comparability_status") or "UNASSESSED",
+                },
+                claim_id=claim_id,
+                company_id=str(edge.get("source") or ""),
+                metric_id=str(edge.get("target") or ""),
+                source_filing=source_filing,
+                page=int(edge.get("page") or 0),
+                filing_year=filing_year,
+                section=str(edge.get("section") or "UNKNOWN"),
+                build_id=str(edge.get("build_id") or "") or None,
+            )
+            financial_observations.extend(
+                FinancialObservation(**observation) for observation in normalized_rows
+            )
         return CausalPath(
             path_id=path_id,
             nodes=nodes,
@@ -110,6 +148,7 @@ class StagingGraphIndex:
             evidence_build_ids=[str(edge.get("build_id") or "") for edge in edges],
             metric_values=[edge.get("metric_value") for edge in edges],
             metric_units=[str(edge.get("unit") or edge.get("metric_unit") or "") or None for edge in edges],
+            financial_observations=financial_observations,
             causal_forms=[str(edge.get("causal_form") or "FINANCIAL_RELATION") for edge in edges],
             total_hops=len(edges),
         )
@@ -173,13 +212,18 @@ class StagingGraphIndex:
         year_start: Optional[int] = None,
         year_end: Optional[int] = None,
         source_filing: Optional[str] = None,
+        company_id: Optional[str] = None,
+        build_id: Optional[str] = None,
         limit: int = 100,
     ) -> List[CausalPath]:
+        if build_id and build_id != self.build_id:
+            raise ValueError("requested build_id does not match immutable staging graph")
         metric_key = _key(metric_id)
         edges = [
             edge for edge in self.edges
             if _key(edge.get("target")) == metric_key
             and str(edge.get("relation") or "").upper() == "REPORTS_METRIC"
+            and (not company_id or _key(edge.get("source")) == _key(company_id))
             and self._eligible(
                 edge,
                 year_start=year_start,

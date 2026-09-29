@@ -31,6 +31,8 @@ class StructuredQuery:
     document_scope: Optional[str] = None
     comparison: Optional[str] = None
     calculation: Optional[str] = None
+    calculation_target_currency: Optional[str] = None
+    calculation_target_scale: Optional[str] = None
     evidence_budget: int = 10
     ambiguity: List[str] = field(default_factory=list)
 
@@ -46,6 +48,7 @@ class StructuredQuery:
     # Time window
     fiscal_year_start: Optional[int] = None
     fiscal_year_end: Optional[int] = None
+    fiscal_years: List[int] = field(default_factory=list)
     temporal_required: bool = False
 
     # Graph search parameters
@@ -72,6 +75,8 @@ class StructuredQuery:
             "document_scope": self.document_scope,
             "comparison": self.comparison,
             "calculation": self.calculation,
+            "calculation_target_currency": self.calculation_target_currency,
+            "calculation_target_scale": self.calculation_target_scale,
             "evidence_budget": self.evidence_budget,
             "ambiguity": list(self.ambiguity),
         }
@@ -89,12 +94,15 @@ class StructuredQuery:
             "document_scope": self.document_scope,
             "comparison": self.comparison,
             "calculation": self.calculation,
+            "calculation_target_currency": self.calculation_target_currency,
+            "calculation_target_scale": self.calculation_target_scale,
             "evidence_budget": self.evidence_budget,
             "ambiguity": list(self.ambiguity),
             "analysis_type": self.analysis_type,
             "causal_direction": self.causal_direction,
             "fiscal_year_start": self.fiscal_year_start,
             "fiscal_year_end": self.fiscal_year_end,
+            "fiscal_years": list(self.fiscal_years),
             "temporal_required": self.temporal_required,
             "require_multi_year": self.require_multi_year,
             "max_hops": self.max_hops,
@@ -203,31 +211,35 @@ def parse_query(question: str) -> StructuredQuery:
     # 10-K can disclose FY2024, and treating the two as the same year leaks
     # document scope into fact scope.
     fiscal_year_token = r"(?:fy|fiscal(?:\s+year)?|financial\s+year)\s*[-:]?\s*(20\d{2})"
+    document_year_group = None
     as_of_match = re.search(
         rf"\b(20\d{{2}})\s*(?:annual\s+)?report\b.*?\b{fiscal_year_token}",
         q_lower,
     )
     if as_of_match:
         document_year, fact_year = as_of_match.group(1), as_of_match.group(2)
+        document_year_group = 1
     else:
         # Accept the common reversed wording used in filings and user
         # questions: "FY2024 revenue in the 2025 filing" or
         # "the 2025 filing discloses FY2024 revenue".  The filing year is
         # document scope; the FY year is the fact period.
         fact_first = re.search(
-            rf"\b{fiscal_year_token}\b.*?\b(20\d{{2}})\s*(?:10-k\s+)?filing\b",
+            rf"\b{fiscal_year_token}\b.*?\b(20\d{{2}})\s*(?:(?:annual\s+)?report|(?:form\s+)?10-k(?:\s+filing)?|filing)\b",
             q_lower,
         )
         filing_first = re.search(
-            rf"\b(20\d{{2}})\s*(?:10-k\s+)?filing\b.*?\b{fiscal_year_token}\b",
+            rf"\b(20\d{{2}})\s*(?:(?:annual\s+)?report|(?:form\s+)?10-k(?:\s+filing)?|filing)\b.*?\b{fiscal_year_token}\b",
             q_lower,
         )
         if fact_first:
             fact_year, document_year = fact_first.group(1), fact_first.group(2)
             as_of_match = fact_first
+            document_year_group = 2
         elif filing_first:
             document_year, fact_year = filing_first.group(1), filing_first.group(2)
             as_of_match = filing_first
+            document_year_group = 1
         else:
             document_year = fact_year = None
     if as_of_match and document_year and fact_year:
@@ -239,8 +251,35 @@ def parse_query(question: str) -> StructuredQuery:
         q.comparison = "POINT_TO_POINT"
     elif re.search(r"\b(from|over|through|across)\b", q_lower) and len(re.findall(r"20\d{2}", question)) >= 2:
         q.comparison = "DELTA_OVER_TIME"
-    if re.search(r"\b(percent|percentage|ratio|margin|difference|change|growth|increase|decrease|calculate|compute)\b", q_lower):
-        q.calculation = "DETERMINISTIC_FINANCIAL_OPERATION"
+    has_financial_metric = any(
+        keyword in q_lower for keyword in FINANCIAL_METRICS_MAP
+    )
+    if re.search(r"\b(convert|conversion)\b", q_lower):
+        q.calculation = "UNIT_CONVERSION"
+        if re.search(r"\bbillion", q_lower):
+            q.calculation_target_scale = "billions"
+        elif re.search(r"\bmillion", q_lower):
+            q.calculation_target_scale = "millions"
+        elif re.search(r"\bthousand", q_lower):
+            q.calculation_target_scale = "thousands"
+        if re.search(r"\b(?:usd|us dollars?|dollars?)\b", q_lower):
+            q.calculation_target_currency = "USD"
+        elif re.search(r"\b(?:eur|euros?)\b", q_lower):
+            q.calculation_target_currency = "EUR"
+        elif re.search(r"\b(?:gbp|pounds? sterling)\b", q_lower):
+            q.calculation_target_currency = "GBP"
+    elif has_financial_metric and re.search(r"\b(ratio|percentage of|percent of)\b", q_lower):
+        q.calculation = "RATIO"
+    elif has_financial_metric and re.search(
+        r"\b(growth(?: rate| percentage)?|percentage change|percent change|year[- ]over[- ]year|yoy)\b",
+        q_lower,
+    ):
+        q.calculation = "PERCENT_CHANGE"
+    elif has_financial_metric and re.search(
+        r"\b(absolute difference|difference|delta|calculate the change|change from .* to)\b",
+        q_lower,
+    ):
+        q.calculation = "ABSOLUTE_CHANGE"
 
     # Step 1: Detect analysis type
     for atype, patterns in ANALYSIS_PATTERNS.items():
@@ -266,24 +305,33 @@ def parse_query(question: str) -> StructuredQuery:
         q.analysis_type = "FACT"
 
     # Step 3: Extract temporal constraints
-    year_match = re.findall(r"(20\d{2})", question)
+    year_matches = list(re.finditer(r"(20\d{2})", question))
+    year_match = [match.group(1) for match in year_matches]
     fact_years = list(year_match)
     if as_of_match:
         # The filing/report year identifies the document, not the fact period.
-        # Remove only that document year; retain every explicitly requested
-        # fact year for comparisons such as FY2024 versus FY2023.
-        document_year = document_year or as_of_match.group(1)
+        # Remove the exact matched document-year occurrence. Do not remove the
+        # first equal year string: the fact endpoint may share the same year
+        # as the filing (for example FY2023 disclosed in the 2023 10-K).
+        document_span = as_of_match.span(document_year_group or 1)
+        document_occurrence = next(
+            (index for index, match in enumerate(year_matches)
+             if (match.start(1), match.end(1)) == document_span),
+            None,
+        )
+        document_year = document_year or as_of_match.group(document_year_group or 1)
         fact_years = [
             year for index, year in enumerate(year_match)
-            if year != document_year or index != year_match.index(document_year)
+            if index != document_occurrence
         ]
         if not fact_years:
             fact_years = [fact_year or as_of_match.group(2)]
     if year_match:
         years = [int(y) for y in fact_years]
+        q.fiscal_years = sorted(set(years))
         q.fiscal_year_start = min(years)
         q.fiscal_year_end = max(years)
-        if len(years) >= 2:
+        if len(set(years)) >= 2:
             q.temporal_required = True
             q.require_multi_year = True
 
@@ -300,8 +348,23 @@ def parse_query(question: str) -> StructuredQuery:
         "FACT": "CALCULATION" if q.calculation else "FACT",
         "UNCLASSIFIED": "UNCLASSIFIED",
     }.get(q.analysis_type, "UNCLASSIFIED")
+    if q.analysis_type in {"IMPACT_ANALYSIS", "MITIGATION_ANALYSIS", "RISK_EXPOSURE"}:
+        q.calculation = None
+        q.calculation_target_currency = None
+        q.calculation_target_scale = None
+    elif q.calculation:
+        q.task_type = "CALCULATION"
     if q.comparison and q.task_type == "FACT":
         q.task_type = "COMPARISON"
+    explicit_relation_query = bool(
+        re.search(r"\b(?:relationship|relation|connects?|connected|link)\b", q_lower)
+        and re.search(r"\b[A-Z][A-Z_]{2,}\b", question)
+    )
+    if explicit_relation_query and not q.calculation:
+        q.task_type = "RELATION"
+        relation_match = re.search(r"\b(REPORTS_METRIC)\b", question, re.IGNORECASE)
+        if relation_match:
+            q.relation_types = [relation_match.group(1).upper()]
     if not q.target_metric and q.task_type in {"FACT", "CALCULATION", "COMPARISON"}:
         q.ambiguity.append("metric_not_resolved")
 

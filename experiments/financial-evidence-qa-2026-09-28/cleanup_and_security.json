@@ -1,0 +1,30 @@
+{
+  "schema": "strategic-graphrag-cleanup-outcome/v1",
+  "scope": "仅记录本轮定向检查的旧 Python 环境与清理动作；不声称完整扫描所有无用文件",
+  "target": "archive/legacy-venv-2026-09-02",
+  "target_resolved_within_repository": true,
+  "python_version": "3.14.3",
+  "logical_size_bytes": 2126490538,
+  "file_count": 73884,
+  "reparse_points_found": 0,
+  "dependent_process_found": false,
+  "git_ignored": true,
+  "classification": "可重建的旧虚拟环境；只有确认被拒绝后才计划删除",
+  "attempted_action": "PowerShell Remove-Item -LiteralPath -Recurse -Force",
+  "action_result": "BLOCKED_BY_EXECUTION_POLICY_BEFORE_EXECUTION",
+  "files_deleted": 0,
+  "bytes_freed": 0,
+  "python_and_vite_cache_cleanup": "NOT_PERFORMED",
+  "scripts_deleted_merged_or_archived": 0,
+  "recovery": [
+    "保留的环境未被改动，可继续用其原目录启动",
+    "如需用受支持的环境恢复项目：py -3.12 -m venv .venv；.\\.venv\\Scripts\\python.exe -m pip install -r requirements-lock-2026-09-19.txt",
+    "不得把移动到同盘 archive 记作释放空间"
+  ],
+  "local_inventory": "完整路径与尺寸清单仅保存在本地 Git 忽略 reports/evaluation/cleanup_inventory_legacy_venv_20260928.json；未公开其中的本机绝对路径",
+  "security": {
+    "auth_enabled_in_local_demo": false,
+    "network_exposure_recommended": false,
+    "secrets_or_database_copies_in_public_bundle": false
+  }
+}

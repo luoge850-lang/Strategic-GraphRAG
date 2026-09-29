@@ -1,6 +1,7 @@
 // Vite dev uses the /api proxy; the FastAPI-hosted production build is
 // same-origin and exposes these routes at the root.
-const B = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "/api" : "");
+export const API_BASE = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "/api" : "");
+const B = API_BASE;
 
 async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}, timeoutMs = 15000) {
   const controller = new AbortController();

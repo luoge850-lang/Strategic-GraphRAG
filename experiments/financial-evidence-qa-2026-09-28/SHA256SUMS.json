@@ -1,0 +1,96 @@
+{
+  "schema": "sha256-file-manifest/v1",
+  "generated_at_utc": "2026-09-29T07:43:40.4537948Z",
+  "files": [
+    {
+      "path": "cleanup_and_security.json",
+      "bytes": 1464,
+      "sha256": "6e0eb1a8caa9b505a2d7611e99ae3114bc486e482bf940e89810668f1f45efef"
+    },
+    {
+      "path": "financial_qa_dev_source_review_20260924_v3.jsonl",
+      "bytes": 56835,
+      "sha256": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af"
+    },
+    {
+      "path": "financial_qa_dev_source_review_20260924_v3.manifest.json",
+      "bytes": 1225,
+      "sha256": "de40d9872c1d2cd2e590628caa06cc725c617d1e4ef88ec4b14e9b66d065ff66"
+    },
+    {
+      "path": "financial_qa_summary_20260928-dev20-final-v4.json",
+      "bytes": 193050,
+      "sha256": "b0a36fcf1f36e6c141a153774a63f6738085b632248eb7190cf6859170e6f2ba"
+    },
+    {
+      "path": "financial_qa_summary_20260928-dev20-final-v4.png",
+      "bytes": 295230,
+      "sha256": "6b67f3bc6f58eb780715f828b5410790dca52250f3faa23f6ff5899aafa7cf62"
+    },
+    {
+      "path": "financial_retrieval_raw_20260928-dev20-final-v4.jsonl",
+      "bytes": 2144770,
+      "sha256": "728e21444e92878b3d02c6f7b9668ef0a35d7bd7f35784285b6763b724104285"
+    },
+    {
+      "path": "financial_retrieval_raw_20260928-dev20-final-v4.manifest.json",
+      "bytes": 5755,
+      "sha256": "b36df5f6d3e05f3577eb162b1708489066ee62f8a556a6eee390f1fdcaae798e"
+    },
+    {
+      "path": "graph_audit_summary.json",
+      "bytes": 979,
+      "sha256": "cf868a20a575a5e4dd9f51b57a556fd09f65e7b1a3b22435086114dc3f5a14c5"
+    },
+    {
+      "path": "live_browser_trials.json",
+      "bytes": 2820,
+      "sha256": "ac625df9ecb8d93908de72ad22bb7b62d967b281f7e1ad0391954db52a83ce57"
+    },
+    {
+      "path": "model_dispatch_record.json",
+      "bytes": 3632,
+      "sha256": "c759ab36c060a5befab7fac288f90a848c639d39af4c50b37367e318fc15d00b"
+    },
+    {
+      "path": "protocol_v4.md",
+      "bytes": 6389,
+      "sha256": "d2a5baca4e49dcdf95444ea63e84050cbc44e2d14f0283183402e6080d28a4ee"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3207,
+      "sha256": "8f38a5d8f969f1738d7d9fd90ac90490885266eba1448d05f431bbfaa74e764f"
+    },
+    {
+      "path": "repeat_20260929/financial_qa_summary_workflowcheck-20260929.json",
+      "bytes": 193048,
+      "sha256": "c0f922090a26f23ea49942f7342fbef33c3b7940254fdb762ec69d78b343a061"
+    },
+    {
+      "path": "repeat_20260929/financial_qa_summary_workflowcheck-20260929.png",
+      "bytes": 295957,
+      "sha256": "563cde7543303bd1f13c395eec72cba4be30699bdd3e1fd9e78c60e3c3e6defd"
+    },
+    {
+      "path": "repeat_20260929/financial_retrieval_raw_workflowcheck-20260929.jsonl",
+      "bytes": 2144771,
+      "sha256": "8bf17ca40503883ccba4db0720d89716006b085465efe11c0b5339f4a8aef355"
+    },
+    {
+      "path": "repeat_20260929/financial_retrieval_raw_workflowcheck-20260929.manifest.json",
+      "bytes": 5755,
+      "sha256": "64fb7674dd1cebce0053f03ddc9052580bd28a72c1f406465ff7922b2fcb6e81"
+    },
+    {
+      "path": "run_manifest.json",
+      "bytes": 5755,
+      "sha256": "b36df5f6d3e05f3577eb162b1708489066ee62f8a556a6eee390f1fdcaae798e"
+    },
+    {
+      "path": "table_quality_ai_visual_diagnostic_2026-09-24_v2.jsonl",
+      "bytes": 81064,
+      "sha256": "9a9f9d709b10729066a2285ebad64f0c5c5dfc008ca5b1187ddf657ce3855536"
+    }
+  ]
+}

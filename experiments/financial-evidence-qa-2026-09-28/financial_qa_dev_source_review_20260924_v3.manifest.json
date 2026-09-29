@@ -1,0 +1,22 @@
+{
+  "schema": "financial-qa-source-reviewed-development/v1",
+  "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+  "gold_status": "NOT_GOLD",
+  "human_primary_review": "NOT_RUN",
+  "human_secondary_review": "NOT_RUN",
+  "adjudication": "NOT_RUN",
+  "source_pdf_sha256": {
+    "2023-10-K.pdf": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+    "2024-10-K.pdf": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+    "2025-10-K.pdf": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e"
+  },
+  "source_page_checks": 17,
+  "label_generator_sha256": "ec9648fbc9d863ed7ef9b680bce6952ec6a2f4000ecdf91e914a74a4e4b0313d",
+  "input_packet_sha256": "f46ac13485d871395e702e06ec89b0cdeddd53db353798850971b1fe5715e1ed",
+  "family_count": 20,
+  "question_count_including_variants": 26,
+  "known_positive_page_families": 19,
+  "no_positive_page_judgment_families": 1,
+  "limitation": "Only explicitly listed source pages are judged relevant. Other pages/hits are unjudged, not irrelevant; this is a development diagnostic, not an independent test or human Gold set.",
+  "dataset_sha256": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af"
+}

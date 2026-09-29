@@ -1,0 +1,72 @@
+{
+  "schema": "codex-multi-executor-audit/v1",
+  "record_scope": "Visible task dispatch metadata, tool outcomes, adopted conclusions and validation only; no hidden reasoning.",
+  "metadata_availability": {
+    "actual_model_identity": "NOT_VERIFIED: execution platform did not expose it in the accessible task metadata",
+    "actual_reasoning_effort": "NOT_VERIFIED: only requested override values were visible",
+    "exact_parent_model_and_effort": "NOT_VERIFIED",
+    "complete_timestamps_for_all_tasks": "NOT_AVAILABLE"
+  },
+  "executors": [
+    {
+      "task_id": "01a0d333-18e8-7923-945a-b7b621cfb979",
+      "requested_model": "GPT-6 Sol",
+      "requested_reasoning_effort": "High",
+      "started_at_utc": "2026-09-24T11:35:36Z",
+      "ended_at_utc": null,
+      "input_summary": "Independent repository/publication risk review.",
+      "decision_summary": "Flagged unrelated personal/cache material for exclusion from a new public change.",
+      "actual_model": "NOT_VERIFIED",
+      "actual_reasoning_effort": "NOT_VERIFIED"
+    },
+    {
+      "task_id": "01a0d333-1adb-7a80-aad2-7b1645aedda6",
+      "requested_model": "GPT-6 Astra",
+      "requested_reasoning_effort": "High",
+      "started_at_utc": "2026-09-24T11:35:36Z",
+      "ended_at_utc": null,
+      "input_summary": "Independent research-method and design critique.",
+      "decision_summary": "Findings were incorporated into the evidence-bounded protocol and claims.",
+      "actual_model": "NOT_VERIFIED",
+      "actual_reasoning_effort": "NOT_VERIFIED"
+    },
+    {
+      "task_id": "01a0d35e-d49f-7062-92f3-5c35954e6de7",
+      "requested_model": "GPT-6 Sol",
+      "requested_reasoning_effort": "High",
+      "started_at_utc": null,
+      "ended_at_utc": null,
+      "input_summary": "Review of direct-support labeling and time-only mode behavior.",
+      "decision_summary": "Separated context-only labels and removed graph expansion from the no-graph temporal diagnostic arm; targeted tests passed.",
+      "actual_model": "NOT_VERIFIED",
+      "actual_reasoning_effort": "NOT_VERIFIED"
+    },
+    {
+      "task_id": "01a0e655-19be-7620-8621-08d1af7270de",
+      "requested_model": "GPT-6 Astra",
+      "requested_reasoning_effort": "High",
+      "started_at_utc": "2026-09-28T04:45:31Z",
+      "ended_at_utc": "2026-09-28T05:02:50Z",
+      "input_summary": "Independent audit of v3's explicit-year, temporal-filter and candidate-pool contracts.",
+      "decision_summary": "Identified fail-open year matching and candidate budget/measurement defects; v4 freezes fixes and reruns the full matrix.",
+      "actual_model": "NOT_VERIFIED",
+      "actual_reasoning_effort": "NOT_VERIFIED"
+    },
+    {
+      "task_id": "01a0e668-cdfe-7070-be5b-36453a1f2add",
+      "requested_model": "GPT-6 Sol",
+      "requested_reasoning_effort": "High",
+      "started_at_utc": "2026-09-28T05:07:03Z",
+      "ended_at_utc": null,
+      "input_summary": "Independent audit of result summarization, frozen-input checks, and per-question execution reporting.",
+      "decision_summary": "Found incomplete manifest/input gates and summary denominator defects; fixes were included before full tests and final v4 run.",
+      "actual_model": "NOT_VERIFIED",
+      "actual_reasoning_effort": "NOT_VERIFIED"
+    }
+  ],
+  "adoption_validation": {
+    "full_test_suite": "203 passed, 2 warnings, 7 subtests passed after the audit fixes",
+    "matrix": "156/156 retrieval requests completed under frozen v4 protocol",
+    "limitations": "Dispatch configuration is not proof of actual execution identity. Parent execution metadata and exact end times were not accessible."
+  }
+}

@@ -84,7 +84,11 @@ def parse_numeric_value(value: Any) -> Optional[float]:
 def split_unit(unit: str) -> tuple[Optional[str], Optional[str]]:
     normalized = str(unit or "").strip()
     lower = normalized.casefold()
-    currency = "USD" if lower.startswith("usd") else None
+    currency = next(
+        (code for code in ("USD", "EUR", "GBP", "JPY", "CNY", "CAD", "AUD")
+         if lower.startswith(code.casefold())),
+        None,
+    )
     if "million" in lower:
         scale = "millions"
     elif "thousand" in lower:

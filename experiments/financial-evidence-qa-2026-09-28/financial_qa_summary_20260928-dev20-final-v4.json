@@ -1,0 +1,5407 @@
+{
+  "schema": "financial-candidate-summary/v2",
+  "raw_request_count": 156,
+  "reproducibility": {
+    "raw_jsonl_sha256": "728e21444e92878b3d02c6f7b9668ef0a35d7bd7f35784285b6763b724104285",
+    "candidate_dataset_sha256": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af",
+    "table_ai_diagnostic_sha256": "9a9f9d709b10729066a2285ebad64f0c5c5dfc008ca5b1187ddf657ce3855536",
+    "summarizer_sha256": "ba5a9ef0ee387ad0a3fc78351c46c6db78e1f5db84ffbb9a6ab05507d62c86ce",
+    "run_manifest": {
+      "schema": "financial-retrieval-raw-run/v1",
+      "created_at_utc": "2026-09-28T05:27:14.168358+00:00",
+      "run_started_at_utc": "2026-09-28T05:26:47.133168+00:00",
+      "run_completed_at_utc": "2026-09-28T05:27:14.168358+00:00",
+      "run_wall_clock_seconds": 27.033,
+      "request_throughput_per_second_including_setup_and_serial_queries": 5.771,
+      "build_id": "build_f74bb1dfbf96b8a2",
+      "source_fingerprint": "e1dfcc20f2eac50ec702afe09dba6c0f32331363b997b335eb7722074e70ecfa",
+      "protocol_sha256": "d2a5baca4e49dcdf95444ea63e84050cbc44e2d14f0283183402e6080d28a4ee",
+      "candidate_dataset_sha256": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af",
+      "runner_sha256": "367e7c3d1e0caed9bff2698f948aae03eafdc320c104b0a62935686a87011084",
+      "dependency_lock_sha256": "994e613c8846b9d1c165121d4b539489be147a097ab96ce0a8795f213afe58f8",
+      "frozen_input_sha256_before": {
+        "runner": "367e7c3d1e0caed9bff2698f948aae03eafdc320c104b0a62935686a87011084",
+        "query_parser": "f58f436172f0ab738d783d96ec28650904cb7b2bd94cde555d9f85a89f85ec5d",
+        "summarizer": "ba5a9ef0ee387ad0a3fc78351c46c6db78e1f5db84ffbb9a6ab05507d62c86ce",
+        "protocol": "d2a5baca4e49dcdf95444ea63e84050cbc44e2d14f0283183402e6080d28a4ee",
+        "dataset": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af",
+        "dependency_lock": "994e613c8846b9d1c165121d4b539489be147a097ab96ce0a8795f213afe58f8"
+      },
+      "frozen_input_sha256_after": {
+        "runner": "367e7c3d1e0caed9bff2698f948aae03eafdc320c104b0a62935686a87011084",
+        "query_parser": "f58f436172f0ab738d783d96ec28650904cb7b2bd94cde555d9f85a89f85ec5d",
+        "summarizer": "ba5a9ef0ee387ad0a3fc78351c46c6db78e1f5db84ffbb9a6ab05507d62c86ce",
+        "protocol": "d2a5baca4e49dcdf95444ea63e84050cbc44e2d14f0283183402e6080d28a4ee",
+        "dataset": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af",
+        "dependency_lock": "994e613c8846b9d1c165121d4b539489be147a097ab96ce0a8795f213afe58f8"
+      },
+      "raw_jsonl_sha256": "728e21444e92878b3d02c6f7b9668ef0a35d7bd7f35784285b6763b724104285",
+      "source_pdf_hashes": {
+        "2023-10-K.pdf": {
+          "sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+          "bytes": 1578179
+        },
+        "2024-10-K.pdf": {
+          "sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+          "bytes": 1074533
+        },
+        "2025-10-K.pdf": {
+          "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+          "bytes": 1274715
+        }
+      },
+      "vector_index_chunks": 843,
+      "accepted_triples": 198,
+      "expanded_fact_edges": 362,
+      "matrix_modes": [
+        "keyword_bm25",
+        "dense_semantic",
+        "keyword_dense_fusion_rrf",
+        "fusion_graph_expansion",
+        "fusion_graph_expansion_temporal",
+        "fusion_temporal_only"
+      ],
+      "records": 156,
+      "candidate_family_count": 20,
+      "selected_family_ids": [
+        "02e0949518b4d6c7875b",
+        "33764b55e0611be080cc",
+        "34545952401c5dd5a682",
+        "3bcb4dd7d3f1f7a7ae8f",
+        "3fbfaf549f970fd5d280",
+        "459504a0c8aab868b348",
+        "5afddf4bb22cb702148e",
+        "72398095458d46295ba0",
+        "789e153b6944977a435d",
+        "841546b4d92198e1bb46",
+        "987035dd8ccaceaef0fc",
+        "9ebad1d7a48a48c4c012",
+        "DEV-06a7af746433df32954f",
+        "DEV-2ad79e78ab860ac3675c",
+        "DEV-3c57ba0a364db4d47d0b",
+        "DEV-d687185a6ce263bdbd63",
+        "a22d89953a5d9c3be464",
+        "c2180a4fa48947a326c9",
+        "dd161d65dc8249591b85",
+        "e4a8908ea7e94a8710a1"
+      ],
+      "limited_smoke_run": false,
+      "candidate_question_count": 26,
+      "quality_metrics": "AI/PDF source-reviewed development diagnostics; not human Gold or independent test",
+      "cold_start_latency": "NOT_MEASURED",
+      "runtime": {
+        "os": "Windows-11-10.0.26100-SP0",
+        "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+        "cpu_count_logical": 16,
+        "memory_total_bytes": 16961822720,
+        "process_peak_rss_bytes": 314011648,
+        "warmup_seconds_excluded_from_request_latency": 0.4900474000023678,
+        "warmup_state": "local ONNX query embedding initialized once; result cache not used",
+        "concurrency": 1,
+        "cold_start_latency": "NOT_MEASURED",
+        "model_generation_enabled": false,
+        "query_embedding_model": "all-MiniLM-L6-v2",
+        "query_embedding_model_archive_sha256": "913d7300ceae3b2dbc2c50d1de4baacab4be7b9380491c27fab7418616a16ec3",
+        "installed_runtime_versions": {
+          "chromadb": "1.5.9",
+          "onnxruntime": "1.28.0",
+          "tokenizers": "0.22.2",
+          "numpy": "2.5.2",
+          "pillow": "12.3.0"
+        },
+        "llm_calls": 0,
+        "network_calls": 0,
+        "candidate_pool_chunks": 843,
+        "evidence_budget_unique_pages": 10,
+        "arm_candidate_budget": 50,
+        "bm25": {
+          "k1": 1.5,
+          "b": 0.75
+        },
+        "rrf_k0": 60,
+        "graph_expansion": "从关键词与语义融合检索前 10 页做一跳共享端点扩展；只使用同构建身份的事实边",
+        "temporal_filter": "structured parser fact-year/disclosure scope; fails closed if temporal scope unresolved",
+        "latency_ms": {
+          "fusion_temporal_only": {
+            "n": 26,
+            "p50": 190.958,
+            "p95": 233.387
+          },
+          "fusion_graph_expansion": {
+            "n": 26,
+            "p50": 193.155,
+            "p95": 226.452
+          },
+          "fusion_graph_expansion_temporal": {
+            "n": 26,
+            "p50": 194.318,
+            "p95": 225.599
+          },
+          "keyword_bm25": {
+            "n": 26,
+            "p50": 4.297,
+            "p95": 5.472
+          },
+          "dense_semantic": {
+            "n": 26,
+            "p50": 190.14,
+            "p95": 228.711
+          },
+          "keyword_dense_fusion_rrf": {
+            "n": 26,
+            "p50": 193.703,
+            "p95": 226.35
+          }
+        }
+      }
+    }
+  },
+  "dataset_review_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW; NOT_GOLD",
+  "retrieval_quality_by_method": {
+    "dense_semantic": {
+      "method_name_zh": "语义向量检索",
+      "labelled_requests": 23,
+      "unique_families": 17,
+      "label_scope_counts": {
+        "SCORED_KNOWN_SUPPORT_PAGES": 23
+      },
+      "direct_support_hit_and_page_coverage_at_k": {
+        "1": {
+          "labelled_page_hit": {
+            "n": 0,
+            "denominator": 23,
+            "rate": 0.0
+          },
+          "labelled_page_coverage_mean_per_request": 0.0,
+          "labelled_page_micro_coverage": {
+            "n": 0,
+            "denominator": 30,
+            "rate": 0.0
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 0,
+            "denominator": 30,
+            "rate": 0.0,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "3": {
+          "labelled_page_hit": {
+            "n": 1,
+            "denominator": 23,
+            "rate": 0.0435
+          },
+          "labelled_page_coverage_mean_per_request": 0.0435,
+          "labelled_page_micro_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "5": {
+          "labelled_page_hit": {
+            "n": 1,
+            "denominator": 23,
+            "rate": 0.0435
+          },
+          "labelled_page_coverage_mean_per_request": 0.0435,
+          "labelled_page_micro_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "10": {
+          "labelled_page_hit": {
+            "n": 1,
+            "denominator": 23,
+            "rate": 0.0435
+          },
+          "labelled_page_coverage_mean_per_request": 0.0435,
+          "labelled_page_micro_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "direct_support_MRR": {
+        "n_requests": 23,
+        "denominator_families": 17,
+        "family_weighted_mean": 0.0294,
+        "family_cluster_ci": {
+          "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+          "n_families": 17,
+          "seed": 20260924,
+          "iterations": 2000,
+          "family_weighted_estimate": 0.0294,
+          "ci_95": [
+            0.0,
+            0.0882
+          ],
+          "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+        },
+        "interpretation": "MRR to explicitly labelled direct-support page only; unjudged pages may also be relevant."
+      },
+      "nDCG": "NOT_COMPUTED_INCOMPLETE_RELEVANCE_POOL_UNJUDGED_PAGES_ARE_NOT_IRRELEVANT",
+      "canonical_recall_claim": "NOT_SUPPORTED_LABELS_ARE_NON_EXHAUSTIVE",
+      "context_only_diagnostic": {
+        "labelled_requests": 2,
+        "unique_families": 2,
+        "label_scope_counts": {
+          "SCORED_KNOWN_CONTEXT_PAGES_ONLY": 2
+        },
+        "context_only_page_diagnostic_at_k": {
+          "1": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "3": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "5": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "10": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          }
+        },
+        "interpretation": "Context-only pages are not direct answer evidence and are excluded from support-quality headline and paired metrics."
+      }
+    },
+    "fusion_graph_expansion": {
+      "method_name_zh": "融合检索＋知识图谱扩展",
+      "labelled_requests": 23,
+      "unique_families": 17,
+      "label_scope_counts": {
+        "SCORED_KNOWN_SUPPORT_PAGES": 23
+      },
+      "direct_support_hit_and_page_coverage_at_k": {
+        "1": {
+          "labelled_page_hit": {
+            "n": 0,
+            "denominator": 23,
+            "rate": 0.0
+          },
+          "labelled_page_coverage_mean_per_request": 0.0,
+          "labelled_page_micro_coverage": {
+            "n": 0,
+            "denominator": 30,
+            "rate": 0.0
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 0,
+            "denominator": 30,
+            "rate": 0.0,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "3": {
+          "labelled_page_hit": {
+            "n": 1,
+            "denominator": 23,
+            "rate": 0.0435
+          },
+          "labelled_page_coverage_mean_per_request": 0.0435,
+          "labelled_page_micro_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "5": {
+          "labelled_page_hit": {
+            "n": 1,
+            "denominator": 23,
+            "rate": 0.0435
+          },
+          "labelled_page_coverage_mean_per_request": 0.0435,
+          "labelled_page_micro_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "10": {
+          "labelled_page_hit": {
+            "n": 1,
+            "denominator": 23,
+            "rate": 0.0435
+          },
+          "labelled_page_coverage_mean_per_request": 0.0435,
+          "labelled_page_micro_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "direct_support_MRR": {
+        "n_requests": 23,
+        "denominator_families": 17,
+        "family_weighted_mean": 0.0294,
+        "family_cluster_ci": {
+          "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+          "n_families": 17,
+          "seed": 20260924,
+          "iterations": 2000,
+          "family_weighted_estimate": 0.0294,
+          "ci_95": [
+            0.0,
+            0.0882
+          ],
+          "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+        },
+        "interpretation": "MRR to explicitly labelled direct-support page only; unjudged pages may also be relevant."
+      },
+      "nDCG": "NOT_COMPUTED_INCOMPLETE_RELEVANCE_POOL_UNJUDGED_PAGES_ARE_NOT_IRRELEVANT",
+      "canonical_recall_claim": "NOT_SUPPORTED_LABELS_ARE_NON_EXHAUSTIVE",
+      "context_only_diagnostic": {
+        "labelled_requests": 2,
+        "unique_families": 2,
+        "label_scope_counts": {
+          "SCORED_KNOWN_CONTEXT_PAGES_ONLY": 2
+        },
+        "context_only_page_diagnostic_at_k": {
+          "1": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "3": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "5": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "10": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          }
+        },
+        "interpretation": "Context-only pages are not direct answer evidence and are excluded from support-quality headline and paired metrics."
+      }
+    },
+    "fusion_graph_expansion_temporal": {
+      "method_name_zh": "融合检索＋知识图谱扩展＋时间约束",
+      "labelled_requests": 23,
+      "unique_families": 17,
+      "label_scope_counts": {
+        "SCORED_KNOWN_SUPPORT_PAGES": 23
+      },
+      "direct_support_hit_and_page_coverage_at_k": {
+        "1": {
+          "labelled_page_hit": {
+            "n": 2,
+            "denominator": 23,
+            "rate": 0.087
+          },
+          "labelled_page_coverage_mean_per_request": 0.0652,
+          "labelled_page_micro_coverage": {
+            "n": 2,
+            "denominator": 30,
+            "rate": 0.0667
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 2,
+            "denominator": 30,
+            "rate": 0.0667,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0882,
+            "ci_95": [
+              0.0,
+              0.2353
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0735,
+            "ci_95": [
+              0.0,
+              0.2059
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "3": {
+          "labelled_page_hit": {
+            "n": 5,
+            "denominator": 23,
+            "rate": 0.2174
+          },
+          "labelled_page_coverage_mean_per_request": 0.1739,
+          "labelled_page_micro_coverage": {
+            "n": 5,
+            "denominator": 30,
+            "rate": 0.1667
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 5,
+            "denominator": 30,
+            "rate": 0.1667,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.2059,
+            "ci_95": [
+              0.0588,
+              0.4118
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.1765,
+            "ci_95": [
+              0.0294,
+              0.3529
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "5": {
+          "labelled_page_hit": {
+            "n": 6,
+            "denominator": 23,
+            "rate": 0.2609
+          },
+          "labelled_page_coverage_mean_per_request": 0.1957,
+          "labelled_page_micro_coverage": {
+            "n": 6,
+            "denominator": 30,
+            "rate": 0.2
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 6,
+            "denominator": 30,
+            "rate": 0.2,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.2353,
+            "ci_95": [
+              0.0588,
+              0.4412
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.1912,
+            "ci_95": [
+              0.0441,
+              0.3676
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "10": {
+          "labelled_page_hit": {
+            "n": 13,
+            "denominator": 23,
+            "rate": 0.5652
+          },
+          "labelled_page_coverage_mean_per_request": 0.4783,
+          "labelled_page_micro_coverage": {
+            "n": 14,
+            "denominator": 30,
+            "rate": 0.4667
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 14,
+            "denominator": 30,
+            "rate": 0.4667,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.4706,
+            "ci_95": [
+              0.2647,
+              0.7059
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.3971,
+            "ci_95": [
+              0.2206,
+              0.6029
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "direct_support_MRR": {
+        "n_requests": 23,
+        "denominator_families": 17,
+        "family_weighted_mean": 0.1687,
+        "family_cluster_ci": {
+          "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+          "n_families": 17,
+          "seed": 20260924,
+          "iterations": 2000,
+          "family_weighted_estimate": 0.1687,
+          "ci_95": [
+            0.0567,
+            0.3179
+          ],
+          "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+        },
+        "interpretation": "MRR to explicitly labelled direct-support page only; unjudged pages may also be relevant."
+      },
+      "nDCG": "NOT_COMPUTED_INCOMPLETE_RELEVANCE_POOL_UNJUDGED_PAGES_ARE_NOT_IRRELEVANT",
+      "canonical_recall_claim": "NOT_SUPPORTED_LABELS_ARE_NON_EXHAUSTIVE",
+      "context_only_diagnostic": {
+        "labelled_requests": 2,
+        "unique_families": 2,
+        "label_scope_counts": {
+          "SCORED_KNOWN_CONTEXT_PAGES_ONLY": 2
+        },
+        "context_only_page_diagnostic_at_k": {
+          "1": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "3": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "5": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "10": {
+            "labelled_page_hit": {
+              "n": 1,
+              "denominator": 2,
+              "rate": 0.5
+            },
+            "labelled_page_coverage_mean_per_request": 0.25,
+            "labelled_page_micro_coverage": {
+              "n": 1,
+              "denominator": 4,
+              "rate": 0.25
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.5,
+              "ci_95": [
+                0.0,
+                1.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.25,
+              "ci_95": [
+                0.0,
+                0.5
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          }
+        },
+        "interpretation": "Context-only pages are not direct answer evidence and are excluded from support-quality headline and paired metrics."
+      }
+    },
+    "fusion_temporal_only": {
+      "method_name_zh": "融合检索＋时间约束（无图扩展诊断对照）",
+      "labelled_requests": 23,
+      "unique_families": 17,
+      "label_scope_counts": {
+        "SCORED_KNOWN_SUPPORT_PAGES": 23
+      },
+      "direct_support_hit_and_page_coverage_at_k": {
+        "1": {
+          "labelled_page_hit": {
+            "n": 2,
+            "denominator": 23,
+            "rate": 0.087
+          },
+          "labelled_page_coverage_mean_per_request": 0.0652,
+          "labelled_page_micro_coverage": {
+            "n": 2,
+            "denominator": 30,
+            "rate": 0.0667
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 2,
+            "denominator": 30,
+            "rate": 0.0667,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0882,
+            "ci_95": [
+              0.0,
+              0.2353
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0735,
+            "ci_95": [
+              0.0,
+              0.2206
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "3": {
+          "labelled_page_hit": {
+            "n": 10,
+            "denominator": 23,
+            "rate": 0.4348
+          },
+          "labelled_page_coverage_mean_per_request": 0.3261,
+          "labelled_page_micro_coverage": {
+            "n": 10,
+            "denominator": 30,
+            "rate": 0.3333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 10,
+            "denominator": 30,
+            "rate": 0.3333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.3824,
+            "ci_95": [
+              0.1765,
+              0.5882
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.2794,
+            "ci_95": [
+              0.1176,
+              0.4412
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "5": {
+          "labelled_page_hit": {
+            "n": 14,
+            "denominator": 23,
+            "rate": 0.6087
+          },
+          "labelled_page_coverage_mean_per_request": 0.4783,
+          "labelled_page_micro_coverage": {
+            "n": 14,
+            "denominator": 30,
+            "rate": 0.4667
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 14,
+            "denominator": 30,
+            "rate": 0.4667,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.5294,
+            "ci_95": [
+              0.2941,
+              0.7353
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.4118,
+            "ci_95": [
+              0.2353,
+              0.5882
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "10": {
+          "labelled_page_hit": {
+            "n": 16,
+            "denominator": 23,
+            "rate": 0.6957
+          },
+          "labelled_page_coverage_mean_per_request": 0.6087,
+          "labelled_page_micro_coverage": {
+            "n": 18,
+            "denominator": 30,
+            "rate": 0.6
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 18,
+            "denominator": 30,
+            "rate": 0.6,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.6176,
+            "ci_95": [
+              0.3824,
+              0.8235
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.5294,
+            "ci_95": [
+              0.3235,
+              0.7353
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "direct_support_MRR": {
+        "n_requests": 23,
+        "denominator_families": 17,
+        "family_weighted_mean": 0.2493,
+        "family_cluster_ci": {
+          "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+          "n_families": 17,
+          "seed": 20260924,
+          "iterations": 2000,
+          "family_weighted_estimate": 0.2493,
+          "ci_95": [
+            0.1304,
+            0.3941
+          ],
+          "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+        },
+        "interpretation": "MRR to explicitly labelled direct-support page only; unjudged pages may also be relevant."
+      },
+      "nDCG": "NOT_COMPUTED_INCOMPLETE_RELEVANCE_POOL_UNJUDGED_PAGES_ARE_NOT_IRRELEVANT",
+      "canonical_recall_claim": "NOT_SUPPORTED_LABELS_ARE_NON_EXHAUSTIVE",
+      "context_only_diagnostic": {
+        "labelled_requests": 2,
+        "unique_families": 2,
+        "label_scope_counts": {
+          "SCORED_KNOWN_CONTEXT_PAGES_ONLY": 2
+        },
+        "context_only_page_diagnostic_at_k": {
+          "1": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "3": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "5": {
+            "labelled_page_hit": {
+              "n": 1,
+              "denominator": 2,
+              "rate": 0.5
+            },
+            "labelled_page_coverage_mean_per_request": 0.25,
+            "labelled_page_micro_coverage": {
+              "n": 1,
+              "denominator": 4,
+              "rate": 0.25
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.5,
+              "ci_95": [
+                0.0,
+                1.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.25,
+              "ci_95": [
+                0.0,
+                0.5
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "10": {
+            "labelled_page_hit": {
+              "n": 2,
+              "denominator": 2,
+              "rate": 1.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.5,
+            "labelled_page_micro_coverage": {
+              "n": 2,
+              "denominator": 4,
+              "rate": 0.5
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 1.0,
+              "ci_95": [
+                1.0,
+                1.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.5,
+              "ci_95": [
+                0.5,
+                0.5
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          }
+        },
+        "interpretation": "Context-only pages are not direct answer evidence and are excluded from support-quality headline and paired metrics."
+      }
+    },
+    "keyword_bm25": {
+      "method_name_zh": "关键词检索（BM25）",
+      "labelled_requests": 23,
+      "unique_families": 17,
+      "label_scope_counts": {
+        "SCORED_KNOWN_SUPPORT_PAGES": 23
+      },
+      "direct_support_hit_and_page_coverage_at_k": {
+        "1": {
+          "labelled_page_hit": {
+            "n": 4,
+            "denominator": 23,
+            "rate": 0.1739
+          },
+          "labelled_page_coverage_mean_per_request": 0.1739,
+          "labelled_page_micro_coverage": {
+            "n": 4,
+            "denominator": 30,
+            "rate": 0.1333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 4,
+            "denominator": 30,
+            "rate": 0.1333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.1471,
+            "ci_95": [
+              0.0,
+              0.3235
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.1471,
+            "ci_95": [
+              0.0,
+              0.3235
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "3": {
+          "labelled_page_hit": {
+            "n": 7,
+            "denominator": 23,
+            "rate": 0.3043
+          },
+          "labelled_page_coverage_mean_per_request": 0.2609,
+          "labelled_page_micro_coverage": {
+            "n": 7,
+            "denominator": 30,
+            "rate": 0.2333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 7,
+            "denominator": 30,
+            "rate": 0.2333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.2647,
+            "ci_95": [
+              0.0882,
+              0.4706
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.2206,
+            "ci_95": [
+              0.0588,
+              0.4265
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "5": {
+          "labelled_page_hit": {
+            "n": 10,
+            "denominator": 23,
+            "rate": 0.4348
+          },
+          "labelled_page_coverage_mean_per_request": 0.3696,
+          "labelled_page_micro_coverage": {
+            "n": 10,
+            "denominator": 30,
+            "rate": 0.3333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 10,
+            "denominator": 30,
+            "rate": 0.3333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.3529,
+            "ci_95": [
+              0.1471,
+              0.5588
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.2941,
+            "ci_95": [
+              0.1324,
+              0.4853
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "10": {
+          "labelled_page_hit": {
+            "n": 11,
+            "denominator": 23,
+            "rate": 0.4783
+          },
+          "labelled_page_coverage_mean_per_request": 0.413,
+          "labelled_page_micro_coverage": {
+            "n": 11,
+            "denominator": 30,
+            "rate": 0.3667
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 11,
+            "denominator": 30,
+            "rate": 0.3667,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.4118,
+            "ci_95": [
+              0.2059,
+              0.6176
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.3529,
+            "ci_95": [
+              0.1618,
+              0.5588
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "direct_support_MRR": {
+        "n_requests": 23,
+        "denominator_families": 17,
+        "family_weighted_mean": 0.2348,
+        "family_cluster_ci": {
+          "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+          "n_families": 17,
+          "seed": 20260924,
+          "iterations": 2000,
+          "family_weighted_estimate": 0.2348,
+          "ci_95": [
+            0.0868,
+            0.4147
+          ],
+          "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+        },
+        "interpretation": "MRR to explicitly labelled direct-support page only; unjudged pages may also be relevant."
+      },
+      "nDCG": "NOT_COMPUTED_INCOMPLETE_RELEVANCE_POOL_UNJUDGED_PAGES_ARE_NOT_IRRELEVANT",
+      "canonical_recall_claim": "NOT_SUPPORTED_LABELS_ARE_NON_EXHAUSTIVE",
+      "context_only_diagnostic": {
+        "labelled_requests": 2,
+        "unique_families": 2,
+        "label_scope_counts": {
+          "SCORED_KNOWN_CONTEXT_PAGES_ONLY": 2
+        },
+        "context_only_page_diagnostic_at_k": {
+          "1": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "3": {
+            "labelled_page_hit": {
+              "n": 1,
+              "denominator": 2,
+              "rate": 0.5
+            },
+            "labelled_page_coverage_mean_per_request": 0.25,
+            "labelled_page_micro_coverage": {
+              "n": 1,
+              "denominator": 4,
+              "rate": 0.25
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.5,
+              "ci_95": [
+                0.0,
+                1.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.25,
+              "ci_95": [
+                0.0,
+                0.5
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "5": {
+            "labelled_page_hit": {
+              "n": 1,
+              "denominator": 2,
+              "rate": 0.5
+            },
+            "labelled_page_coverage_mean_per_request": 0.25,
+            "labelled_page_micro_coverage": {
+              "n": 1,
+              "denominator": 4,
+              "rate": 0.25
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.5,
+              "ci_95": [
+                0.0,
+                1.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.25,
+              "ci_95": [
+                0.0,
+                0.5
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "10": {
+            "labelled_page_hit": {
+              "n": 1,
+              "denominator": 2,
+              "rate": 0.5
+            },
+            "labelled_page_coverage_mean_per_request": 0.25,
+            "labelled_page_micro_coverage": {
+              "n": 1,
+              "denominator": 4,
+              "rate": 0.25
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.5,
+              "ci_95": [
+                0.0,
+                1.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.25,
+              "ci_95": [
+                0.0,
+                0.5
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          }
+        },
+        "interpretation": "Context-only pages are not direct answer evidence and are excluded from support-quality headline and paired metrics."
+      }
+    },
+    "keyword_dense_fusion_rrf": {
+      "method_name_zh": "关键词与语义融合检索（RRF）",
+      "labelled_requests": 23,
+      "unique_families": 17,
+      "label_scope_counts": {
+        "SCORED_KNOWN_SUPPORT_PAGES": 23
+      },
+      "direct_support_hit_and_page_coverage_at_k": {
+        "1": {
+          "labelled_page_hit": {
+            "n": 1,
+            "denominator": 23,
+            "rate": 0.0435
+          },
+          "labelled_page_coverage_mean_per_request": 0.0435,
+          "labelled_page_micro_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 1,
+            "denominator": 30,
+            "rate": 0.0333,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0588,
+            "ci_95": [
+              0.0,
+              0.1765
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "3": {
+          "labelled_page_hit": {
+            "n": 2,
+            "denominator": 23,
+            "rate": 0.087
+          },
+          "labelled_page_coverage_mean_per_request": 0.087,
+          "labelled_page_micro_coverage": {
+            "n": 2,
+            "denominator": 30,
+            "rate": 0.0667
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 2,
+            "denominator": 30,
+            "rate": 0.0667,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0882,
+            "ci_95": [
+              0.0,
+              0.2353
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0882,
+            "ci_95": [
+              0.0,
+              0.2353
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "5": {
+          "labelled_page_hit": {
+            "n": 3,
+            "denominator": 23,
+            "rate": 0.1304
+          },
+          "labelled_page_coverage_mean_per_request": 0.1304,
+          "labelled_page_micro_coverage": {
+            "n": 3,
+            "denominator": 30,
+            "rate": 0.1
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 3,
+            "denominator": 30,
+            "rate": 0.1,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.1176,
+            "ci_95": [
+              0.0,
+              0.2647
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.1176,
+            "ci_95": [
+              0.0,
+              0.2647
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "10": {
+          "labelled_page_hit": {
+            "n": 5,
+            "denominator": 23,
+            "rate": 0.2174
+          },
+          "labelled_page_coverage_mean_per_request": 0.2174,
+          "labelled_page_micro_coverage": {
+            "n": 5,
+            "denominator": 30,
+            "rate": 0.1667
+          },
+          "non_exhaustive_judged_direct_support_page_coverage": {
+            "n": 5,
+            "denominator": 30,
+            "rate": 0.1667,
+            "interpretation": "Only the listed judged direct-support pages; not full-corpus Recall@k and not a mathematical lower bound."
+          },
+          "family_cluster_ci_page_hit": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.1765,
+            "ci_95": [
+              0.0294,
+              0.3529
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          },
+          "family_cluster_ci_page_coverage": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 17,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.1765,
+            "ci_95": [
+              0.0294,
+              0.3529
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "direct_support_MRR": {
+        "n_requests": 23,
+        "denominator_families": 17,
+        "family_weighted_mean": 0.0878,
+        "family_cluster_ci": {
+          "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+          "n_families": 17,
+          "seed": 20260924,
+          "iterations": 2000,
+          "family_weighted_estimate": 0.0878,
+          "ci_95": [
+            0.0065,
+            0.2198
+          ],
+          "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+        },
+        "interpretation": "MRR to explicitly labelled direct-support page only; unjudged pages may also be relevant."
+      },
+      "nDCG": "NOT_COMPUTED_INCOMPLETE_RELEVANCE_POOL_UNJUDGED_PAGES_ARE_NOT_IRRELEVANT",
+      "canonical_recall_claim": "NOT_SUPPORTED_LABELS_ARE_NON_EXHAUSTIVE",
+      "context_only_diagnostic": {
+        "labelled_requests": 2,
+        "unique_families": 2,
+        "label_scope_counts": {
+          "SCORED_KNOWN_CONTEXT_PAGES_ONLY": 2
+        },
+        "context_only_page_diagnostic_at_k": {
+          "1": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "3": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "5": {
+            "labelled_page_hit": {
+              "n": 0,
+              "denominator": 2,
+              "rate": 0.0
+            },
+            "labelled_page_coverage_mean_per_request": 0.0,
+            "labelled_page_micro_coverage": {
+              "n": 0,
+              "denominator": 4,
+              "rate": 0.0
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.0,
+              "ci_95": [
+                0.0,
+                0.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          },
+          "10": {
+            "labelled_page_hit": {
+              "n": 1,
+              "denominator": 2,
+              "rate": 0.5
+            },
+            "labelled_page_coverage_mean_per_request": 0.25,
+            "labelled_page_micro_coverage": {
+              "n": 1,
+              "denominator": 4,
+              "rate": 0.25
+            },
+            "non_exhaustive_judged_direct_support_page_coverage": "NOT_APPLICABLE_CONTEXT_ONLY",
+            "family_cluster_ci_page_hit": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.5,
+              "ci_95": [
+                0.0,
+                1.0
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            },
+            "family_cluster_ci_page_coverage": {
+              "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+              "n_families": 2,
+              "seed": 20260924,
+              "iterations": 2000,
+              "family_weighted_estimate": 0.25,
+              "ci_95": [
+                0.0,
+                0.5
+              ],
+              "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+            }
+          }
+        },
+        "interpretation": "Context-only pages are not direct answer evidence and are excluded from support-quality headline and paired metrics."
+      }
+    }
+  },
+  "retrieval_quality_slices_by_method": {
+    "dense_semantic": {
+      "method_name_zh": "语义向量检索",
+      "by_question_type": {
+        "cross_year_comparison": {
+          "n_direct_support_requests": 6,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 6,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 8,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "fact_year_in_later_disclosure": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 5,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation_or_conditional_risk": {
+          "n_direct_support_requests": 2,
+          "n_semantic_families": 2,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 2,
+            "rate": 0.5
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 3,
+            "rate": 0.3333
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 2,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.5,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "single_year_fact": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unanswerable_or_ambiguous": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 6,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unit_conversion_or_calculation": {
+          "n_direct_support_requests": 1,
+          "n_semantic_families": 1,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 1,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "by_fact_year_overlapping_membership": {
+        "2022": {
+          "n_direct_support_requests": 10,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 10,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 13,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2023": {
+          "n_direct_support_requests": 8,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 8,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 10,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2024": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2025": {
+          "n_direct_support_requests": 9,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 9,
+            "rate": 0.1111
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 12,
+            "rate": 0.0833
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.125,
+            "ci_95": [
+              0.0,
+              0.375
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "fact_year_note": "A multi-year question appears in each explicitly parsed fact-year slice; slices overlap and must not be summed."
+    },
+    "fusion_graph_expansion": {
+      "method_name_zh": "融合检索＋知识图谱扩展",
+      "by_question_type": {
+        "cross_year_comparison": {
+          "n_direct_support_requests": 6,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 6,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 8,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "fact_year_in_later_disclosure": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 5,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation_or_conditional_risk": {
+          "n_direct_support_requests": 2,
+          "n_semantic_families": 2,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 2,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "single_year_fact": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unanswerable_or_ambiguous": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 4,
+            "rate": 0.25
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 6,
+            "rate": 0.1667
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.25,
+            "ci_95": [
+              0.0,
+              0.75
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unit_conversion_or_calculation": {
+          "n_direct_support_requests": 1,
+          "n_semantic_families": 1,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 1,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 1,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "by_fact_year_overlapping_membership": {
+        "2022": {
+          "n_direct_support_requests": 10,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 10,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 13,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2023": {
+          "n_direct_support_requests": 8,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 8,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 10,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2024": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2025": {
+          "n_direct_support_requests": 9,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 9,
+            "rate": 0.1111
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 12,
+            "rate": 0.0833
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.125,
+            "ci_95": [
+              0.0,
+              0.375
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "fact_year_note": "A multi-year question appears in each explicitly parsed fact-year slice; slices overlap and must not be summed."
+    },
+    "fusion_graph_expansion_temporal": {
+      "method_name_zh": "融合检索＋知识图谱扩展＋时间约束",
+      "by_question_type": {
+        "cross_year_comparison": {
+          "n_direct_support_requests": 6,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 4,
+            "denominator": 6,
+            "rate": 0.6667
+          },
+          "known_page_coverage": {
+            "n": 5,
+            "denominator": 8,
+            "rate": 0.625
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.6667,
+            "ci_95": [
+              0.3333,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "fact_year_in_later_disclosure": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 4,
+            "denominator": 4,
+            "rate": 1.0
+          },
+          "known_page_coverage": {
+            "n": 4,
+            "denominator": 5,
+            "rate": 0.8
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 1.0,
+            "ci_95": [
+              1.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 3,
+            "rate": 0.3333
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 4,
+            "rate": 0.25
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.3333,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation_or_conditional_risk": {
+          "n_direct_support_requests": 2,
+          "n_semantic_families": 2,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 2,
+            "rate": 0.5
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 3,
+            "rate": 0.3333
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 2,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.5,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "single_year_fact": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 3,
+            "rate": 0.3333
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 3,
+            "rate": 0.3333
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.3333,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unanswerable_or_ambiguous": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 4,
+            "rate": 0.25
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 6,
+            "rate": 0.1667
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.25,
+            "ci_95": [
+              0.0,
+              0.75
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unit_conversion_or_calculation": {
+          "n_direct_support_requests": 1,
+          "n_semantic_families": 1,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 1,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 1.0,
+            "ci_95": [
+              1.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "by_fact_year_overlapping_membership": {
+        "2022": {
+          "n_direct_support_requests": 10,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 8,
+            "denominator": 10,
+            "rate": 0.8
+          },
+          "known_page_coverage": {
+            "n": 9,
+            "denominator": 13,
+            "rate": 0.6923
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.75,
+            "ci_95": [
+              0.4167,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2023": {
+          "n_direct_support_requests": 8,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 4,
+            "denominator": 8,
+            "rate": 0.5
+          },
+          "known_page_coverage": {
+            "n": 5,
+            "denominator": 10,
+            "rate": 0.5
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.5,
+            "ci_95": [
+              0.125,
+              0.875
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2024": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 2,
+            "denominator": 3,
+            "rate": 0.6667
+          },
+          "known_page_coverage": {
+            "n": 2,
+            "denominator": 4,
+            "rate": 0.5
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.6667,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2025": {
+          "n_direct_support_requests": 9,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 3,
+            "denominator": 9,
+            "rate": 0.3333
+          },
+          "known_page_coverage": {
+            "n": 3,
+            "denominator": 12,
+            "rate": 0.25
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.3125,
+            "ci_95": [
+              0.0625,
+              0.625
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "fact_year_note": "A multi-year question appears in each explicitly parsed fact-year slice; slices overlap and must not be summed."
+    },
+    "fusion_temporal_only": {
+      "method_name_zh": "融合检索＋时间约束（无图扩展诊断对照）",
+      "by_question_type": {
+        "cross_year_comparison": {
+          "n_direct_support_requests": 6,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 5,
+            "denominator": 6,
+            "rate": 0.8333
+          },
+          "known_page_coverage": {
+            "n": 6,
+            "denominator": 8,
+            "rate": 0.75
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.8333,
+            "ci_95": [
+              0.5,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "fact_year_in_later_disclosure": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 4,
+            "denominator": 4,
+            "rate": 1.0
+          },
+          "known_page_coverage": {
+            "n": 4,
+            "denominator": 5,
+            "rate": 0.8
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 1.0,
+            "ci_95": [
+              1.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 3,
+            "rate": 0.3333
+          },
+          "known_page_coverage": {
+            "n": 2,
+            "denominator": 4,
+            "rate": 0.5
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.3333,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation_or_conditional_risk": {
+          "n_direct_support_requests": 2,
+          "n_semantic_families": 2,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 2,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 2,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "single_year_fact": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 2,
+            "denominator": 3,
+            "rate": 0.6667
+          },
+          "known_page_coverage": {
+            "n": 2,
+            "denominator": 3,
+            "rate": 0.6667
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.6667,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unanswerable_or_ambiguous": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 3,
+            "denominator": 4,
+            "rate": 0.75
+          },
+          "known_page_coverage": {
+            "n": 3,
+            "denominator": 6,
+            "rate": 0.5
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.75,
+            "ci_95": [
+              0.25,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unit_conversion_or_calculation": {
+          "n_direct_support_requests": 1,
+          "n_semantic_families": 1,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 1,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 1.0,
+            "ci_95": [
+              1.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "by_fact_year_overlapping_membership": {
+        "2022": {
+          "n_direct_support_requests": 10,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 9,
+            "denominator": 10,
+            "rate": 0.9
+          },
+          "known_page_coverage": {
+            "n": 10,
+            "denominator": 13,
+            "rate": 0.7692
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.8333,
+            "ci_95": [
+              0.5,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2023": {
+          "n_direct_support_requests": 8,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 6,
+            "denominator": 8,
+            "rate": 0.75
+          },
+          "known_page_coverage": {
+            "n": 7,
+            "denominator": 10,
+            "rate": 0.7
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.75,
+            "ci_95": [
+              0.375,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2024": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 3,
+            "denominator": 3,
+            "rate": 1.0
+          },
+          "known_page_coverage": {
+            "n": 4,
+            "denominator": 4,
+            "rate": 1.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 1.0,
+            "ci_95": [
+              1.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2025": {
+          "n_direct_support_requests": 9,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 4,
+            "denominator": 9,
+            "rate": 0.4444
+          },
+          "known_page_coverage": {
+            "n": 4,
+            "denominator": 12,
+            "rate": 0.3333
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.4375,
+            "ci_95": [
+              0.125,
+              0.75
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "fact_year_note": "A multi-year question appears in each explicitly parsed fact-year slice; slices overlap and must not be summed."
+    },
+    "keyword_bm25": {
+      "method_name_zh": "关键词检索（BM25）",
+      "by_question_type": {
+        "cross_year_comparison": {
+          "n_direct_support_requests": 6,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 4,
+            "denominator": 6,
+            "rate": 0.6667
+          },
+          "known_page_coverage": {
+            "n": 4,
+            "denominator": 8,
+            "rate": 0.5
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.6667,
+            "ci_95": [
+              0.3333,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "fact_year_in_later_disclosure": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 3,
+            "denominator": 4,
+            "rate": 0.75
+          },
+          "known_page_coverage": {
+            "n": 3,
+            "denominator": 5,
+            "rate": 0.6
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.75,
+            "ci_95": [
+              0.25,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation_or_conditional_risk": {
+          "n_direct_support_requests": 2,
+          "n_semantic_families": 2,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 2,
+            "rate": 0.5
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 3,
+            "rate": 0.3333
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 2,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.5,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "single_year_fact": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unanswerable_or_ambiguous": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 2,
+            "denominator": 4,
+            "rate": 0.5
+          },
+          "known_page_coverage": {
+            "n": 2,
+            "denominator": 6,
+            "rate": 0.3333
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.5,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unit_conversion_or_calculation": {
+          "n_direct_support_requests": 1,
+          "n_semantic_families": 1,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 1,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 1.0,
+            "ci_95": [
+              1.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "by_fact_year_overlapping_membership": {
+        "2022": {
+          "n_direct_support_requests": 10,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 7,
+            "denominator": 10,
+            "rate": 0.7
+          },
+          "known_page_coverage": {
+            "n": 7,
+            "denominator": 13,
+            "rate": 0.5385
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.6667,
+            "ci_95": [
+              0.3333,
+              0.9167
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2023": {
+          "n_direct_support_requests": 8,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 5,
+            "denominator": 8,
+            "rate": 0.625
+          },
+          "known_page_coverage": {
+            "n": 5,
+            "denominator": 10,
+            "rate": 0.5
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.625,
+            "ci_95": [
+              0.25,
+              0.875
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2024": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2025": {
+          "n_direct_support_requests": 9,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 4,
+            "denominator": 9,
+            "rate": 0.4444
+          },
+          "known_page_coverage": {
+            "n": 4,
+            "denominator": 12,
+            "rate": 0.3333
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.4375,
+            "ci_95": [
+              0.125,
+              0.75
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "fact_year_note": "A multi-year question appears in each explicitly parsed fact-year slice; slices overlap and must not be summed."
+    },
+    "keyword_dense_fusion_rrf": {
+      "method_name_zh": "关键词与语义融合检索（RRF）",
+      "by_question_type": {
+        "cross_year_comparison": {
+          "n_direct_support_requests": 6,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 6,
+            "rate": 0.1667
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 8,
+            "rate": 0.125
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.1667,
+            "ci_95": [
+              0.0,
+              0.5
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "fact_year_in_later_disclosure": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 2,
+            "denominator": 4,
+            "rate": 0.5
+          },
+          "known_page_coverage": {
+            "n": 2,
+            "denominator": 5,
+            "rate": 0.4
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.5,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "relation_or_conditional_risk": {
+          "n_direct_support_requests": 2,
+          "n_semantic_families": 2,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 2,
+            "rate": 0.5
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 3,
+            "rate": 0.3333
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 2,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.5,
+            "ci_95": [
+              0.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "single_year_fact": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unanswerable_or_ambiguous": {
+          "n_direct_support_requests": 4,
+          "n_semantic_families": 4,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 6,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 4,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "unit_conversion_or_calculation": {
+          "n_direct_support_requests": 1,
+          "n_semantic_families": 1,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 1,
+            "rate": 1.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 1,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 1.0,
+            "ci_95": [
+              1.0,
+              1.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "by_fact_year_overlapping_membership": {
+        "2022": {
+          "n_direct_support_requests": 10,
+          "n_semantic_families": 6,
+          "known_direct_support_hit_at_10": {
+            "n": 3,
+            "denominator": 10,
+            "rate": 0.3
+          },
+          "known_page_coverage": {
+            "n": 3,
+            "denominator": 13,
+            "rate": 0.2308
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 6,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.25,
+            "ci_95": [
+              0.0,
+              0.5833
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2023": {
+          "n_direct_support_requests": 8,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 1,
+            "denominator": 8,
+            "rate": 0.125
+          },
+          "known_page_coverage": {
+            "n": 1,
+            "denominator": 10,
+            "rate": 0.1
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.125,
+            "ci_95": [
+              0.0,
+              0.375
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2024": {
+          "n_direct_support_requests": 3,
+          "n_semantic_families": 3,
+          "known_direct_support_hit_at_10": {
+            "n": 0,
+            "denominator": 3,
+            "rate": 0.0
+          },
+          "known_page_coverage": {
+            "n": 0,
+            "denominator": 4,
+            "rate": 0.0
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 3,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.0,
+            "ci_95": [
+              0.0,
+              0.0
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        },
+        "2025": {
+          "n_direct_support_requests": 9,
+          "n_semantic_families": 8,
+          "known_direct_support_hit_at_10": {
+            "n": 2,
+            "denominator": 9,
+            "rate": 0.2222
+          },
+          "known_page_coverage": {
+            "n": 2,
+            "denominator": 12,
+            "rate": 0.1667
+          },
+          "family_cluster_ci_hit_at_10": {
+            "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+            "n_families": 8,
+            "seed": 20260924,
+            "iterations": 2000,
+            "family_weighted_estimate": 0.1875,
+            "ci_95": [
+              0.0,
+              0.4375
+            ],
+            "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+          }
+        }
+      },
+      "fact_year_note": "A multi-year question appears in each explicitly parsed fact-year slice; slices overlap and must not be summed."
+    }
+  },
+  "paired_development_diagnostics": {
+    "融合检索＋知识图谱扩展 minus 关键词与语义融合检索（RRF）": {
+      "metric": "family-level direct-support page-hit@10 difference",
+      "n_paired_families": 17,
+      "family_cluster_ci": {
+        "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+        "n_families": 17,
+        "seed": 20260924,
+        "iterations": 2000,
+        "family_weighted_estimate": -0.1176,
+        "ci_95": [
+          -0.3235,
+          0.0882
+        ],
+        "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+      },
+      "note": "Diagnostic association only; AI/PDF development labels and incomplete page judgments do not establish superiority. Graph and no-graph time arms have different candidate pools."
+    },
+    "融合检索＋知识图谱扩展＋时间约束 minus 融合检索＋时间约束（无图扩展诊断对照）": {
+      "metric": "family-level direct-support page-hit@10 difference",
+      "n_paired_families": 17,
+      "family_cluster_ci": {
+        "status": "DESCRIPTIVE_FAMILY_CLUSTER_BOOTSTRAP",
+        "n_families": 17,
+        "seed": 20260924,
+        "iterations": 2000,
+        "family_weighted_estimate": -0.1471,
+        "ci_95": [
+          -0.4118,
+          0.1471
+        ],
+        "interpretation": "Development-only uncertainty interval; labels are AI/PDF source diagnostics, not human Gold or an independent test."
+      },
+      "note": "Diagnostic association only; AI/PDF development labels and incomplete page judgments do not establish superiority. Graph and no-graph time arms have different candidate pools."
+    }
+  },
+  "failure_analysis": {
+    "graph_expansion": {
+      "requests_with_at_least_one_graph_added_page_in_top10": 23,
+      "requests_with_graph_additions_denominator": 26,
+      "graph_added_pages_in_final_top10": 221,
+      "final_top10_page_slots_observed": 260,
+      "direct_support_requests_losing_a_fusion_top10_page_after_graph_expansion": 5,
+      "unique_families_with_a_direct_support_regression": 4,
+      "examples": [
+        {
+          "item_id": "FQA-459504a0c8aab868b348",
+          "family_id": "459504a0c8aab868b348",
+          "question": "What r and d expense did NVIDIA report for fiscal year 2022 in its 2023 10-K?",
+          "known_support_pages_lost_from_top10": {
+            "2023-10-K.pdf#43": 9
+          },
+          "fusion_top_pages": [
+            "2023-10-K.pdf#85",
+            "2024-10-K.pdf#79",
+            "2023-10-K.pdf#67",
+            "2024-10-K.pdf#64",
+            "2024-10-K.pdf#34",
+            "2023-10-K.pdf#36",
+            "2023-10-K.pdf#41",
+            "2023-10-K.pdf#79",
+            "2023-10-K.pdf#43",
+            "2025-10-K.pdf#71"
+          ],
+          "graph_top_pages": [
+            {
+              "page_key": "2024-10-K.pdf#50",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#52",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#54",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#56",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2024-10-K.pdf#52",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#54",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2024-10-K.pdf#54",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#38",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#10",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#27",
+              "graph_expansion": true
+            }
+          ],
+          "result_status": "OK"
+        },
+        {
+          "item_id": "FQA-9ebad1d7a48a48c4c012",
+          "family_id": "9ebad1d7a48a48c4c012",
+          "question": "What total current assets did NVIDIA report for fiscal year 2022 in its 2023 10-K?",
+          "known_support_pages_lost_from_top10": {
+            "2023-10-K.pdf#56": 2
+          },
+          "fusion_top_pages": [
+            "2023-10-K.pdf#86",
+            "2023-10-K.pdf#56",
+            "2023-10-K.pdf#42",
+            "2023-10-K.pdf#59",
+            "2025-10-K.pdf#80",
+            "2024-10-K.pdf#64",
+            "2024-10-K.pdf#69",
+            "2023-10-K.pdf#72",
+            "2023-10-K.pdf#85",
+            "2023-10-K.pdf#75"
+          ],
+          "graph_top_pages": [
+            {
+              "page_key": "2024-10-K.pdf#50",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#52",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#54",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2024-10-K.pdf#61",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#38",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#10",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#27",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#37",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#42",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#86",
+              "graph_expansion": false
+            }
+          ],
+          "result_status": "OK"
+        },
+        {
+          "item_id": "FQAV-ef6bf1e8bc6a41c5",
+          "family_id": "9ebad1d7a48a48c4c012",
+          "question": "Compare NVIDIA total current assets for FY2022 and FY2023 as disclosed in its 2023 10-K.",
+          "known_support_pages_lost_from_top10": {
+            "2023-10-K.pdf#56": 8
+          },
+          "fusion_top_pages": [
+            "2023-10-K.pdf#36",
+            "2025-10-K.pdf#70",
+            "2024-10-K.pdf#69",
+            "2023-10-K.pdf#86",
+            "2025-10-K.pdf#80",
+            "2023-10-K.pdf#75",
+            "2025-10-K.pdf#54",
+            "2023-10-K.pdf#56",
+            "2024-10-K.pdf#52",
+            "2023-10-K.pdf#88"
+          ],
+          "graph_top_pages": [
+            {
+              "page_key": "2024-10-K.pdf#50",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#52",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#54",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2024-10-K.pdf#54",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2024-10-K.pdf#61",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#38",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#62",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#43",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#10",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#27",
+              "graph_expansion": true
+            }
+          ],
+          "result_status": "OK"
+        },
+        {
+          "item_id": "FQAV-DEV-USD-BILLIONS-2025-REVENUE",
+          "family_id": "DEV-2ad79e78ab860ac3675c",
+          "question": "Convert NVIDIA FY2025 revenue of $130,497 million from its 2025 10-K into USD billions.",
+          "known_support_pages_lost_from_top10": {
+            "2025-10-K.pdf#52": 4
+          },
+          "fusion_top_pages": [
+            "2025-10-K.pdf#80",
+            "2025-10-K.pdf#71",
+            "2025-10-K.pdf#79",
+            "2025-10-K.pdf#52",
+            "2024-10-K.pdf#34",
+            "2025-10-K.pdf#70",
+            "2025-10-K.pdf#36",
+            "2025-10-K.pdf#41",
+            "2025-10-K.pdf#78",
+            "2024-10-K.pdf#38"
+          ],
+          "graph_top_pages": [
+            {
+              "page_key": "2023-10-K.pdf#56",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2024-10-K.pdf#52",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#54",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2024-10-K.pdf#61",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#62",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#43",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#10",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#27",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#37",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#80",
+              "graph_expansion": false
+            }
+          ],
+          "result_status": "OK"
+        },
+        {
+          "item_id": "FQA-c2180a4fa48947a326c9",
+          "family_id": "c2180a4fa48947a326c9",
+          "question": "What evidence-backed CAUSES relationship connects KNOWNANDUNKNOWNRISKS and ACTUALRESULTS in the NVIDIA 2025 10-K?",
+          "known_support_pages_lost_from_top10": {
+            "2025-10-K.pdf#3": 1
+          },
+          "fusion_top_pages": [
+            "2025-10-K.pdf#3",
+            "2023-10-K.pdf#3",
+            "2024-10-K.pdf#3",
+            "2023-10-K.pdf#88",
+            "2025-10-K.pdf#85",
+            "2025-10-K.pdf#36",
+            "2025-10-K.pdf#83",
+            "2024-10-K.pdf#82",
+            "2024-10-K.pdf#34",
+            "2025-10-K.pdf#126"
+          ],
+          "graph_top_pages": [
+            {
+              "page_key": "2024-10-K.pdf#50",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#52",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#54",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#56",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2024-10-K.pdf#52",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2025-10-K.pdf#54",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#58",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2023-10-K.pdf#68",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2024-10-K.pdf#54",
+              "graph_expansion": true
+            },
+            {
+              "page_key": "2024-10-K.pdf#61",
+              "graph_expansion": true
+            }
+          ],
+          "result_status": "OK"
+        }
+      ]
+    },
+    "temporal_filter": {
+      "graph_then_time_no_hit_request_count": 0,
+      "direct_support_requests_losing_a_time_only_top10_page_after_graph_then_time": 6,
+      "unique_families_with_a_graph_time_regression": 6,
+      "examples": [
+        {
+          "item_id": "FQA-34545952401c5dd5a682",
+          "family_id": "34545952401c5dd5a682",
+          "question": "In the fiscal 2024 NVIDIA 10-K, what evidence-backed REPORTS_METRIC relationship connects NVIDIA_CORPORATION to OPERATING_COST?",
+          "known_support_pages_in_temporal_only_top10_lost_after_graph_expansion": {
+            "2024-10-K.pdf#36": 8
+          },
+          "temporal_only_top_pages": [
+            "2024-10-K.pdf#79",
+            "2024-10-K.pdf#34",
+            "2024-10-K.pdf#61",
+            "2024-10-K.pdf#50",
+            "2024-10-K.pdf#78",
+            "2024-10-K.pdf#54",
+            "2024-10-K.pdf#6",
+            "2024-10-K.pdf#36"
+          ],
+          "graph_plus_temporal_top_pages": [
+            "2024-10-K.pdf#52",
+            "2024-10-K.pdf#79",
+            "2024-10-K.pdf#42",
+            "2024-10-K.pdf#34",
+            "2024-10-K.pdf#61",
+            "2024-10-K.pdf#50",
+            "2024-10-K.pdf#78",
+            "2024-10-K.pdf#51",
+            "2024-10-K.pdf#63",
+            "2024-10-K.pdf#75"
+          ],
+          "result_status": "OK"
+        },
+        {
+          "item_id": "FQAV-c282e2ba770b72ca",
+          "family_id": "459504a0c8aab868b348",
+          "question": "Compare NVIDIA research and development expense for FY2022 and FY2023 as disclosed in its 2023 10-K.",
+          "known_support_pages_in_temporal_only_top10_lost_after_graph_expansion": {
+            "2023-10-K.pdf#43": 8
+          },
+          "temporal_only_top_pages": [
+            "2023-10-K.pdf#36",
+            "2023-10-K.pdf#54",
+            "2023-10-K.pdf#81",
+            "2023-10-K.pdf#44",
+            "2023-10-K.pdf#38",
+            "2023-10-K.pdf#68",
+            "2023-10-K.pdf#17",
+            "2023-10-K.pdf#43",
+            "2023-10-K.pdf#41",
+            "2023-10-K.pdf#85"
+          ],
+          "graph_plus_temporal_top_pages": [
+            "2023-10-K.pdf#56",
+            "2023-10-K.pdf#58",
+            "2023-10-K.pdf#36",
+            "2023-10-K.pdf#54",
+            "2023-10-K.pdf#81",
+            "2023-10-K.pdf#44",
+            "2023-10-K.pdf#38",
+            "2023-10-K.pdf#68",
+            "2023-10-K.pdf#30",
+            "2023-10-K.pdf#55"
+          ],
+          "result_status": "OK"
+        },
+        {
+          "item_id": "FQA-5afddf4bb22cb702148e",
+          "family_id": "5afddf4bb22cb702148e",
+          "question": "What evidence-backed PRODUCES relationship connects NVIDIA_CORPORATION and DRIVE_PLATFORM in the NVIDIA 2025 10-K?",
+          "known_support_pages_in_temporal_only_top10_lost_after_graph_expansion": {
+            "2025-10-K.pdf#7": 3
+          },
+          "temporal_only_top_pages": [
+            "2025-10-K.pdf#36",
+            "2025-10-K.pdf#80",
+            "2025-10-K.pdf#7",
+            "2025-10-K.pdf#6",
+            "2025-10-K.pdf#5",
+            "2025-10-K.pdf#56",
+            "2025-10-K.pdf#62"
+          ],
+          "graph_plus_temporal_top_pages": [
+            "2025-10-K.pdf#52",
+            "2025-10-K.pdf#54",
+            "2025-10-K.pdf#38",
+            "2025-10-K.pdf#10",
+            "2025-10-K.pdf#27",
+            "2025-10-K.pdf#37",
+            "2025-10-K.pdf#42",
+            "2025-10-K.pdf#40",
+            "2025-10-K.pdf#43",
+            "2025-10-K.pdf#36"
+          ],
+          "result_status": "OK"
+        },
+        {
+          "item_id": "FQA-72398095458d46295ba0",
+          "family_id": "72398095458d46295ba0",
+          "question": "What evidence-backed PRODUCES relationship connects NVIDIA_CORPORATION and GEFORCE_GPU in the NVIDIA 2025 10-K?",
+          "known_support_pages_in_temporal_only_top10_lost_after_graph_expansion": {
+            "2025-10-K.pdf#5": 2
+          },
+          "temporal_only_top_pages": [
+            "2025-10-K.pdf#36",
+            "2025-10-K.pdf#5",
+            "2025-10-K.pdf#6",
+            "2025-10-K.pdf#80",
+            "2025-10-K.pdf#78",
+            "2025-10-K.pdf#56"
+          ],
+          "graph_plus_temporal_top_pages": [
+            "2025-10-K.pdf#52",
+            "2025-10-K.pdf#54",
+            "2025-10-K.pdf#38",
+            "2025-10-K.pdf#62",
+            "2025-10-K.pdf#10",
+            "2025-10-K.pdf#27",
+            "2025-10-K.pdf#37",
+            "2025-10-K.pdf#42",
+            "2025-10-K.pdf#36",
+            "2025-10-K.pdf#40"
+          ],
+          "result_status": "OK"
+        },
+        {
+          "item_id": "FQA-987035dd8ccaceaef0fc",
+          "family_id": "987035dd8ccaceaef0fc",
+          "question": "How did the relationship between export controls and NVIDIA revenue change from FY2023 to FY2025 according to the filing?",
+          "known_support_pages_in_temporal_only_top10_lost_after_graph_expansion": {
+            "2025-10-K.pdf#10": 8
+          },
+          "temporal_only_top_pages": [
+            "2023-10-K.pdf#38",
+            "2024-10-K.pdf#79",
+            "2025-10-K.pdf#28",
+            "2023-10-K.pdf#85",
+            "2025-10-K.pdf#37",
+            "2023-10-K.pdf#54",
+            "2025-10-K.pdf#26",
+            "2025-10-K.pdf#10",
+            "2024-10-K.pdf#50",
+            "2023-10-K.pdf#29"
+          ],
+          "graph_plus_temporal_top_pages": [
+            "2023-10-K.pdf#56",
+            "2024-10-K.pdf#52",
+            "2025-10-K.pdf#54",
+            "2023-10-K.pdf#68",
+            "2024-10-K.pdf#61",
+            "2025-10-K.pdf#38",
+            "2025-10-K.pdf#62",
+            "2023-10-K.pdf#43",
+            "2025-10-K.pdf#42",
+            "2023-10-K.pdf#44"
+          ],
+          "result_status": "OK"
+        },
+        {
+          "item_id": "FQA-DEV-d687185a6ce263bdbd63",
+          "family_id": "DEV-d687185a6ce263bdbd63",
+          "question": "What revenue did NVIDIA report for fiscal year 2024 in its 2024 10-K?",
+          "known_support_pages_in_temporal_only_top10_lost_after_graph_expansion": {
+            "2024-10-K.pdf#50": 5
+          },
+          "temporal_only_top_pages": [
+            "2024-10-K.pdf#79",
+            "2024-10-K.pdf#34",
+            "2024-10-K.pdf#36",
+            "2024-10-K.pdf#78",
+            "2024-10-K.pdf#50",
+            "2024-10-K.pdf#6",
+            "2024-10-K.pdf#42",
+            "2024-10-K.pdf#54"
+          ],
+          "graph_plus_temporal_top_pages": [
+            "2024-10-K.pdf#52",
+            "2024-10-K.pdf#61",
+            "2024-10-K.pdf#79",
+            "2024-10-K.pdf#34",
+            "2024-10-K.pdf#36",
+            "2024-10-K.pdf#51",
+            "2024-10-K.pdf#63",
+            "2024-10-K.pdf#75",
+            "2024-10-K.pdf#39",
+            "2024-10-K.pdf#5"
+          ],
+          "result_status": "OK"
+        }
+      ],
+      "interpretation": "No graph fact edge after filtering is not evidence that the original filing lacks support."
+    }
+  },
+  "answer_and_citation_quality": {
+    "numeric_answer_correctness": "NOT_RUN_GENERATION_DISABLED",
+    "complete_fact_correctness": "NOT_RUN_NO_SYSTEM_ANSWER_PREDICTIONS",
+    "citation_support_correctness": "NOT_RUN_NO_SYSTEM_ANSWER_CITATIONS",
+    "pdf_locator_correctness": "NOT_RUN_NO_BROWSER_CITATION_OPEN_SUCCESS",
+    "correct_abstention": "NOT_RUN_NO_SYSTEM_ANSWER_PREDICTIONS",
+    "incorrect_abstention": "NOT_RUN_NO_SYSTEM_ANSWER_PREDICTIONS",
+    "nDCG": "NOT_COMPUTED_INCOMPLETE_RELEVANCE_POOL"
+  },
+  "quality_metric_status": {
+    "known_support_page_metrics": "DIRECT_SUPPORT_ONLY_CONTEXT_PAGES_REPORTED_SEPARATELY_NON_EXHAUSTIVE_AI_PDF_DIAGNOSTIC",
+    "standard_recall_claim": "NOT_SUPPORTED_BY_NON_EXHAUSTIVE_LABELS",
+    "nDCG": "NOT_COMPUTED_UNJUDGED_PAGES_ARE_NOT_IRRELEVANT",
+    "answer_correctness": "NOT_RUN_GENERATION_DISABLED",
+    "human_quality": "NOT_RUN_NO_HUMAN_REVIEW"
+  },
+  "retrieval_runtime_by_method": {
+    "dense_semantic": {
+      "method_name_zh": "语义向量检索",
+      "n_scheduled": 26,
+      "n_success": 26,
+      "n_failed": 0,
+      "success_rate_all_requests": 1.0,
+      "p50_ms_all_requests": 190.141,
+      "p95_ms_all_requests": 228.711,
+      "p50_ms_success_subset": 190.141,
+      "p95_ms_success_subset": 228.711,
+      "result_statuses": {
+        "OK": 26
+      }
+    },
+    "fusion_graph_expansion": {
+      "method_name_zh": "融合检索＋知识图谱扩展",
+      "n_scheduled": 26,
+      "n_success": 26,
+      "n_failed": 0,
+      "success_rate_all_requests": 1.0,
+      "p50_ms_all_requests": 193.156,
+      "p95_ms_all_requests": 226.452,
+      "p50_ms_success_subset": 193.156,
+      "p95_ms_success_subset": 226.452,
+      "result_statuses": {
+        "OK": 26
+      }
+    },
+    "fusion_graph_expansion_temporal": {
+      "method_name_zh": "融合检索＋知识图谱扩展＋时间约束",
+      "n_scheduled": 26,
+      "n_success": 26,
+      "n_failed": 0,
+      "success_rate_all_requests": 1.0,
+      "p50_ms_all_requests": 194.319,
+      "p95_ms_all_requests": 225.599,
+      "p50_ms_success_subset": 194.319,
+      "p95_ms_success_subset": 225.599,
+      "result_statuses": {
+        "OK": 26
+      }
+    },
+    "fusion_temporal_only": {
+      "method_name_zh": "融合检索＋时间约束（无图扩展诊断对照）",
+      "n_scheduled": 26,
+      "n_success": 26,
+      "n_failed": 0,
+      "success_rate_all_requests": 1.0,
+      "p50_ms_all_requests": 190.959,
+      "p95_ms_all_requests": 233.387,
+      "p50_ms_success_subset": 190.959,
+      "p95_ms_success_subset": 233.387,
+      "result_statuses": {
+        "OK": 26
+      }
+    },
+    "keyword_bm25": {
+      "method_name_zh": "关键词检索（BM25）",
+      "n_scheduled": 26,
+      "n_success": 26,
+      "n_failed": 0,
+      "success_rate_all_requests": 1.0,
+      "p50_ms_all_requests": 4.297,
+      "p95_ms_all_requests": 5.472,
+      "p50_ms_success_subset": 4.297,
+      "p95_ms_success_subset": 5.472,
+      "result_statuses": {
+        "OK": 26
+      }
+    },
+    "keyword_dense_fusion_rrf": {
+      "method_name_zh": "关键词与语义融合检索（RRF）",
+      "n_scheduled": 26,
+      "n_success": 26,
+      "n_failed": 0,
+      "success_rate_all_requests": 1.0,
+      "p50_ms_all_requests": 193.703,
+      "p95_ms_all_requests": 226.35,
+      "p50_ms_success_subset": 193.703,
+      "p95_ms_success_subset": 226.35,
+      "result_statuses": {
+        "OK": 26
+      }
+    }
+  },
+  "candidate_pool_sizes_by_method": {
+    "dense_semantic": {
+      "method_name_zh": "语义向量检索",
+      "requests_with_candidate_counts": 26,
+      "counts": {
+        "bm25_retrieved_chunks": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "bm25_unique_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "dense_retrieved_chunks": {
+          "n": 26,
+          "min": 50,
+          "max": 50,
+          "mean": 50
+        },
+        "dense_unique_candidate_pages": {
+          "n": 26,
+          "min": 44,
+          "max": 50,
+          "mean": 48.538
+        },
+        "fusion_unique_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "graph_seed_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "graph_expansion_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "graph_added_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "temporal_candidate_pages_before_filter": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "temporal_candidate_pages_after_filter": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "returned_unique_pages": {
+          "n": 26,
+          "min": 10,
+          "max": 10,
+          "mean": 10
+        }
+      }
+    },
+    "fusion_graph_expansion": {
+      "method_name_zh": "融合检索＋知识图谱扩展",
+      "requests_with_candidate_counts": 26,
+      "counts": {
+        "bm25_retrieved_chunks": {
+          "n": 26,
+          "min": 50,
+          "max": 50,
+          "mean": 50
+        },
+        "bm25_unique_candidate_pages": {
+          "n": 26,
+          "min": 34,
+          "max": 50,
+          "mean": 44.346
+        },
+        "dense_retrieved_chunks": {
+          "n": 26,
+          "min": 50,
+          "max": 50,
+          "mean": 50
+        },
+        "dense_unique_candidate_pages": {
+          "n": 26,
+          "min": 44,
+          "max": 50,
+          "mean": 48.538
+        },
+        "fusion_unique_candidate_pages": {
+          "n": 26,
+          "min": 66,
+          "max": 88,
+          "mean": 78.192
+        },
+        "graph_seed_pages": {
+          "n": 26,
+          "min": 10,
+          "max": 10,
+          "mean": 10
+        },
+        "graph_expansion_candidate_pages": {
+          "n": 26,
+          "min": 69,
+          "max": 140,
+          "mean": 119.962
+        },
+        "graph_added_candidate_pages": {
+          "n": 26,
+          "min": 0,
+          "max": 61,
+          "mean": 41.769
+        },
+        "temporal_candidate_pages_before_filter": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "temporal_candidate_pages_after_filter": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "returned_unique_pages": {
+          "n": 26,
+          "min": 10,
+          "max": 10,
+          "mean": 10
+        }
+      }
+    },
+    "fusion_graph_expansion_temporal": {
+      "method_name_zh": "融合检索＋知识图谱扩展＋时间约束",
+      "requests_with_candidate_counts": 26,
+      "counts": {
+        "bm25_retrieved_chunks": {
+          "n": 26,
+          "min": 50,
+          "max": 50,
+          "mean": 50
+        },
+        "bm25_unique_candidate_pages": {
+          "n": 26,
+          "min": 34,
+          "max": 50,
+          "mean": 44.346
+        },
+        "dense_retrieved_chunks": {
+          "n": 26,
+          "min": 50,
+          "max": 50,
+          "mean": 50
+        },
+        "dense_unique_candidate_pages": {
+          "n": 26,
+          "min": 44,
+          "max": 50,
+          "mean": 48.538
+        },
+        "fusion_unique_candidate_pages": {
+          "n": 26,
+          "min": 66,
+          "max": 88,
+          "mean": 78.192
+        },
+        "graph_seed_pages": {
+          "n": 26,
+          "min": 10,
+          "max": 10,
+          "mean": 10
+        },
+        "graph_expansion_candidate_pages": {
+          "n": 26,
+          "min": 69,
+          "max": 140,
+          "mean": 119.962
+        },
+        "graph_added_candidate_pages": {
+          "n": 26,
+          "min": 0,
+          "max": 61,
+          "mean": 41.769
+        },
+        "temporal_candidate_pages_before_filter": {
+          "n": 26,
+          "min": 69,
+          "max": 140,
+          "mean": 119.962
+        },
+        "temporal_candidate_pages_after_filter": {
+          "n": 26,
+          "min": 5,
+          "max": 67,
+          "mean": 24.846
+        },
+        "returned_unique_pages": {
+          "n": 26,
+          "min": 5,
+          "max": 10,
+          "mean": 9.615
+        }
+      }
+    },
+    "fusion_temporal_only": {
+      "method_name_zh": "融合检索＋时间约束（无图扩展诊断对照）",
+      "requests_with_candidate_counts": 26,
+      "counts": {
+        "bm25_retrieved_chunks": {
+          "n": 26,
+          "min": 50,
+          "max": 50,
+          "mean": 50
+        },
+        "bm25_unique_candidate_pages": {
+          "n": 26,
+          "min": 34,
+          "max": 50,
+          "mean": 44.346
+        },
+        "dense_retrieved_chunks": {
+          "n": 26,
+          "min": 50,
+          "max": 50,
+          "mean": 50
+        },
+        "dense_unique_candidate_pages": {
+          "n": 26,
+          "min": 44,
+          "max": 50,
+          "mean": 48.538
+        },
+        "fusion_unique_candidate_pages": {
+          "n": 26,
+          "min": 66,
+          "max": 88,
+          "mean": 78.192
+        },
+        "graph_seed_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "graph_expansion_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "graph_added_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "temporal_candidate_pages_before_filter": {
+          "n": 26,
+          "min": 66,
+          "max": 88,
+          "mean": 78.192
+        },
+        "temporal_candidate_pages_after_filter": {
+          "n": 26,
+          "min": 5,
+          "max": 32,
+          "mean": 10.769
+        },
+        "returned_unique_pages": {
+          "n": 26,
+          "min": 5,
+          "max": 10,
+          "mean": 8.577
+        }
+      }
+    },
+    "keyword_bm25": {
+      "method_name_zh": "关键词检索（BM25）",
+      "requests_with_candidate_counts": 26,
+      "counts": {
+        "bm25_retrieved_chunks": {
+          "n": 26,
+          "min": 50,
+          "max": 50,
+          "mean": 50
+        },
+        "bm25_unique_candidate_pages": {
+          "n": 26,
+          "min": 34,
+          "max": 50,
+          "mean": 44.346
+        },
+        "dense_retrieved_chunks": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "dense_unique_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "fusion_unique_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "graph_seed_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "graph_expansion_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "graph_added_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "temporal_candidate_pages_before_filter": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "temporal_candidate_pages_after_filter": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "returned_unique_pages": {
+          "n": 26,
+          "min": 10,
+          "max": 10,
+          "mean": 10
+        }
+      }
+    },
+    "keyword_dense_fusion_rrf": {
+      "method_name_zh": "关键词与语义融合检索（RRF）",
+      "requests_with_candidate_counts": 26,
+      "counts": {
+        "bm25_retrieved_chunks": {
+          "n": 26,
+          "min": 50,
+          "max": 50,
+          "mean": 50
+        },
+        "bm25_unique_candidate_pages": {
+          "n": 26,
+          "min": 34,
+          "max": 50,
+          "mean": 44.346
+        },
+        "dense_retrieved_chunks": {
+          "n": 26,
+          "min": 50,
+          "max": 50,
+          "mean": 50
+        },
+        "dense_unique_candidate_pages": {
+          "n": 26,
+          "min": 44,
+          "max": 50,
+          "mean": 48.538
+        },
+        "fusion_unique_candidate_pages": {
+          "n": 26,
+          "min": 66,
+          "max": 88,
+          "mean": 78.192
+        },
+        "graph_seed_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "graph_expansion_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "graph_added_candidate_pages": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "temporal_candidate_pages_before_filter": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "temporal_candidate_pages_after_filter": {
+          "n": 0,
+          "min": "NOT_RUN",
+          "max": "NOT_RUN",
+          "mean": "NOT_RUN"
+        },
+        "returned_unique_pages": {
+          "n": 26,
+          "min": 10,
+          "max": 10,
+          "mean": 10
+        }
+      }
+    }
+  },
+  "execution_success_by_question_type": {
+    "cross_year_comparison": {
+      "n_candidate_questions": 6,
+      "n_semantic_families": 6,
+      "scheduled_counts_by_method": {
+        "fusion_graph_expansion_temporal": 6,
+        "fusion_temporal_only": 6,
+        "dense_semantic": 6,
+        "keyword_bm25": 6,
+        "fusion_graph_expansion": 6,
+        "keyword_dense_fusion_rrf": 6
+      },
+      "successful_counts_by_method": {
+        "fusion_graph_expansion_temporal": 6,
+        "fusion_temporal_only": 6,
+        "dense_semantic": 6,
+        "keyword_bm25": 6,
+        "fusion_graph_expansion": 6,
+        "keyword_dense_fusion_rrf": 6
+      }
+    },
+    "fact_year_in_later_disclosure": {
+      "n_candidate_questions": 4,
+      "n_semantic_families": 4,
+      "scheduled_counts_by_method": {
+        "keyword_dense_fusion_rrf": 4,
+        "dense_semantic": 4,
+        "fusion_graph_expansion": 4,
+        "keyword_bm25": 4,
+        "fusion_graph_expansion_temporal": 4,
+        "fusion_temporal_only": 4
+      },
+      "successful_counts_by_method": {
+        "keyword_dense_fusion_rrf": 4,
+        "dense_semantic": 4,
+        "fusion_graph_expansion": 4,
+        "keyword_bm25": 4,
+        "fusion_graph_expansion_temporal": 4,
+        "fusion_temporal_only": 4
+      }
+    },
+    "relation": {
+      "n_candidate_questions": 3,
+      "n_semantic_families": 3,
+      "scheduled_counts_by_method": {
+        "fusion_temporal_only": 3,
+        "fusion_graph_expansion": 3,
+        "fusion_graph_expansion_temporal": 3,
+        "keyword_bm25": 3,
+        "dense_semantic": 3,
+        "keyword_dense_fusion_rrf": 3
+      },
+      "successful_counts_by_method": {
+        "fusion_temporal_only": 3,
+        "fusion_graph_expansion": 3,
+        "fusion_graph_expansion_temporal": 3,
+        "keyword_bm25": 3,
+        "dense_semantic": 3,
+        "keyword_dense_fusion_rrf": 3
+      }
+    },
+    "relation_or_conditional_risk": {
+      "n_candidate_questions": 4,
+      "n_semantic_families": 4,
+      "scheduled_counts_by_method": {
+        "dense_semantic": 4,
+        "fusion_graph_expansion_temporal": 4,
+        "keyword_dense_fusion_rrf": 4,
+        "fusion_graph_expansion": 4,
+        "keyword_bm25": 4,
+        "fusion_temporal_only": 4
+      },
+      "successful_counts_by_method": {
+        "dense_semantic": 4,
+        "fusion_graph_expansion_temporal": 4,
+        "keyword_dense_fusion_rrf": 4,
+        "fusion_graph_expansion": 4,
+        "keyword_bm25": 4,
+        "fusion_temporal_only": 4
+      }
+    },
+    "single_year_fact": {
+      "n_candidate_questions": 3,
+      "n_semantic_families": 3,
+      "scheduled_counts_by_method": {
+        "dense_semantic": 3,
+        "fusion_temporal_only": 3,
+        "keyword_bm25": 3,
+        "fusion_graph_expansion_temporal": 3,
+        "fusion_graph_expansion": 3,
+        "keyword_dense_fusion_rrf": 3
+      },
+      "successful_counts_by_method": {
+        "dense_semantic": 3,
+        "fusion_temporal_only": 3,
+        "keyword_bm25": 3,
+        "fusion_graph_expansion_temporal": 3,
+        "fusion_graph_expansion": 3,
+        "keyword_dense_fusion_rrf": 3
+      }
+    },
+    "unanswerable_or_ambiguous": {
+      "n_candidate_questions": 5,
+      "n_semantic_families": 5,
+      "scheduled_counts_by_method": {
+        "dense_semantic": 5,
+        "fusion_graph_expansion_temporal": 5,
+        "keyword_dense_fusion_rrf": 5,
+        "fusion_temporal_only": 5,
+        "keyword_bm25": 5,
+        "fusion_graph_expansion": 5
+      },
+      "successful_counts_by_method": {
+        "dense_semantic": 5,
+        "fusion_graph_expansion_temporal": 5,
+        "keyword_dense_fusion_rrf": 5,
+        "fusion_temporal_only": 5,
+        "keyword_bm25": 5,
+        "fusion_graph_expansion": 5
+      }
+    },
+    "unit_conversion_or_calculation": {
+      "n_candidate_questions": 1,
+      "n_semantic_families": 1,
+      "scheduled_counts_by_method": {
+        "fusion_temporal_only": 1,
+        "keyword_bm25": 1,
+        "fusion_graph_expansion_temporal": 1,
+        "fusion_graph_expansion": 1,
+        "keyword_dense_fusion_rrf": 1,
+        "dense_semantic": 1
+      },
+      "successful_counts_by_method": {
+        "fusion_temporal_only": 1,
+        "keyword_bm25": 1,
+        "fusion_graph_expansion_temporal": 1,
+        "fusion_graph_expansion": 1,
+        "keyword_dense_fusion_rrf": 1,
+        "dense_semantic": 1
+      }
+    }
+  },
+  "answer_and_citation_error_distribution": "NOT_RUN_GENERATION_DISABLED",
+  "observed_retrieval_execution_errors": {
+    "NO_ERROR": 156
+  },
+  "table_pdf_signal_counts_not_accuracy": {
+    "tier": "AI_PDF_VISUAL_DIAGNOSTIC_NOT_HUMAN_REVIEW",
+    "candidate_rows": 60,
+    "fields": {
+      "numeric_cell_visual_match": {
+        "n": 60,
+        "denominator": 60
+      },
+      "sign_visual_match": {
+        "n": 60,
+        "denominator": 60
+      },
+      "unit_scale_visual_match": {
+        "n": 60,
+        "denominator": 60
+      },
+      "year_column_visual_match": {
+        "n": 58,
+        "denominator": 60
+      },
+      "metric_semantics_alias_match": {
+        "n": 45,
+        "denominator": 60
+      },
+      "source_physical_page_visual_match": {
+        "n": 60,
+        "denominator": 60
+      }
+    },
+    "joint_ai_diagnostic_counts_not_accuracy": {
+      "AI_VISUAL_NO_OBVIOUS_MISMATCH": 45,
+      "FLAG_PERCENTAGE_BASIS_CONTEXT": 9,
+      "FLAG_PERIOD_AND_METRIC_MISATTRIBUTION": 2,
+      "FLAG_STATEMENT_TYPE_CONTEXT": 4
+    },
+    "human_primary_review": "NOT_RUN",
+    "human_secondary_review": "NOT_RUN",
+    "adjudication": "NOT_RUN",
+    "interpretation": "These are AI visual review statuses, not estimated accuracy. Duplicate-key rows remain preserved; repeated facts can be multiple source items.",
+    "page_locator_exists_count": 60,
+    "candidate_value_appears_on_source_page_count": 60,
+    "duplicate_key_rows_preserved": true
+  },
+  "label_coverage": {
+    "source_labelled_development_queries": 23,
+    "scored_direct_support_matrix_requests_across_methods": 138,
+    "source_labelled_development_families": 17,
+    "context_only_development_queries_excluded_from_support_metrics": 2,
+    "context_only_development_families_excluded_from_support_metrics": 2,
+    "context_only_matrix_requests_reported_separately": 12,
+    "no_positive_page_judgment_queries_not_scored": 1,
+    "no_positive_page_judgment_families_not_scored": 1,
+    "unjudged_retrieved_pages_are_not_negative": true,
+    "family_level_bootstrap": "2000 resamples; seed 20260924; intervals are descriptive only"
+  }
+}

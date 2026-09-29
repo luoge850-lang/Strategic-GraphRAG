@@ -1,0 +1,70 @@
+{
+  "schema": "strategic-graphrag-live-browser-trials/v1",
+  "observed_at": "2026-09-28",
+  "environment": {
+    "frontend": "http://127.0.0.1:5173/",
+    "api": "http://127.0.0.1:8000/",
+    "neo4j_started_by_user": true,
+    "readiness_after_start": "ready",
+    "graph_ui_nodes": 134,
+    "graph_ui_edges": 381,
+    "graph_ui_types": 10,
+    "auth_enabled": false
+  },
+  "trials": [
+    {
+      "question": "What was NVIDIA revenue in FY2025?",
+      "api_execution": "SUCCEEDED",
+      "grounding": "VERIFIED",
+      "claim_ids": ["claim_v2_5754bc5fe845e1af9976af76"],
+      "source": "2025-10-K.pdf",
+      "physical_pdf_page": 80,
+      "observed_evidence": "Revenue table contains 130,497; 60,922; 26,974 (USD millions columns).",
+      "answer_acceptance": "NOT_PASSED: UI returned evidence excerpt, not a complete labelled answer"
+    },
+    {
+      "question": "Compare NVIDIA FY2024 revenue as disclosed in its 2024 and 2025 10-K filings, in USD millions.",
+      "api_execution": "SUCCEEDED",
+      "grounding": "VERIFIED",
+      "claim_ids": ["claim_v2_267cc9f2fb71d24ba78c5392"],
+      "returned_source": "2024-10-K.pdf",
+      "physical_pdf_page": 79,
+      "answer_acceptance": "FAILED_INCOMPLETE_DISCLOSURE_VERSION_COMPARISON: 2025 filing not returned"
+    },
+    {
+      "question": "Compute NVIDIA revenue growth from FY2023 to FY2025 in USD billions.",
+      "api_execution": "SUCCEEDED",
+      "paths_returned": 3,
+      "observed_issue": "Duplicate FY2025 page evidence and FY2024 page evidence; no requested calculation result.",
+      "answer_acceptance": "FAILED_NO_COMPUTED_GROWTH"
+    },
+    {
+      "question": "Convert NVIDIA FY2025 total revenue from USD millions to USD billions.",
+      "api_execution": "SUCCEEDED",
+      "observed_issue": "Source table evidence returned; no unit conversion result.",
+      "answer_acceptance": "FAILED_NO_UNIT_CONVERSION"
+    },
+    {
+      "question": "What does NVIDIA's FY2026 10-K report?",
+      "api_execution": "SUCCEEDED",
+      "candidate_count": 0,
+      "answer_status": "ABSTAINED",
+      "scope_note": "Response explicitly noted that a complete indexed-corpus audit was not performed.",
+      "answer_acceptance": "OUT_OF_CORPUS_ABSTENTION_EXAMPLE_ONLY; not an aggregate refusal metric"
+    }
+  ],
+  "citation_clickthrough": {
+    "api_get_status": 200,
+    "content_type": "application/pdf",
+    "content_disposition": "inline",
+    "browser_navigation": "ERR_BLOCKED_BY_CLIENT",
+    "accepted": false
+  },
+  "latency": "NOT_MEASURED",
+  "persisted_browser_screenshot": "NOT_SAVED",
+  "limitations": [
+    "Manual real-browser trials are functional diagnostics, not an accuracy sample.",
+    "No browser PDF page-click success is claimed.",
+    "Current live Neo4j and Chroma records are not bound to the isolated candidate build."
+  ]
+}
