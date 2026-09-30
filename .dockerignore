@@ -13,3 +13,14 @@ pipeline_stats.json
 test_answer.json
 __pycache__
 *.pyc
+.env.*
+!/.env.example
+deployment/.env
+deployment/*.local
+data/chroma_db
+reports/isolated_staging
+reports/
+archive/
+tmp/
+configs/
+experiments/

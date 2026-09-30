@@ -1,0 +1,132 @@
+{
+  "schema": "deployment-preflight/v1",
+  "status": "BLOCKED",
+  "recorded_at": "2026-09-30T10:28:03.624044+00:00",
+  "build_id": "build_7feb21b48e594a7a",
+  "elapsed_ms": 22725.097,
+  "checks": [
+    {
+      "name": "configuration",
+      "status": "FAIL",
+      "detail": {
+        "errors": [
+          "API authentication must be enabled",
+          "API_KEY must be a non-placeholder secret of at least 32 characters",
+          "production CORS requires explicit HTTPS origins"
+        ],
+        "production": true
+      }
+    },
+    {
+      "name": "immutable_candidate",
+      "status": "PASS",
+      "detail": {
+        "schema": "isolated-package-verification/v2",
+        "build_id": "build_7feb21b48e594a7a",
+        "status": "PASS",
+        "checks": {
+          "identity": true,
+          "graph": true,
+          "vector": true,
+          "acceptance": true,
+          "backend": true,
+          "execution_config": true,
+          "ledger": true,
+          "hashes": true
+        }
+      }
+    },
+    {
+      "name": "source_identity",
+      "status": "PASS",
+      "detail": {
+        "actual_source_sha256": "ab2693cf127abd39a28c6d70f576ae996778302ee225e11dec8e574b389606d2",
+        "candidate_source_sha256": "ab2693cf127abd39a28c6d70f576ae996778302ee225e11dec8e574b389606d2",
+        "selected_build_matches": true
+      }
+    },
+    {
+      "name": "source_pdfs",
+      "status": "PASS",
+      "detail": {
+        "files": [
+          {
+            "filing": "2023-10-K.pdf",
+            "hash_matches": true
+          },
+          {
+            "filing": "2024-10-K.pdf",
+            "hash_matches": true
+          },
+          {
+            "filing": "2025-10-K.pdf",
+            "hash_matches": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "neo4j_claims",
+      "status": "FAIL",
+      "detail": {
+        "count": 381,
+        "expected_count": 198,
+        "foreign_or_unbound_build": 381,
+        "source_hash_mismatch": 0,
+        "missing_page": 0,
+        "claim_id_set_matches": false,
+        "unsupported_claims": 0
+      }
+    },
+    {
+      "name": "neo4j_observations",
+      "status": "FAIL",
+      "detail": {
+        "count": 234,
+        "incomplete": 0,
+        "foreign_or_unbound_build": 234
+      }
+    },
+    {
+      "name": "neo4j_graph_identity",
+      "status": "FAIL",
+      "detail": {
+        "count": 381,
+        "expected_count": 362,
+        "foreign_or_unbound_build": 381,
+        "missing_edges": 362,
+        "extra_edges": 381
+      }
+    },
+    {
+      "name": "real_metric_projection",
+      "status": "FAIL",
+      "detail": {
+        "paths": 0,
+        "complete_paths": 0
+      }
+    },
+    {
+      "name": "chroma_identity",
+      "status": "FAIL",
+      "detail": {
+        "count": 1686,
+        "expected_count": 843,
+        "foreign_or_unbound_build": 1686,
+        "source_hash_mismatch": 1686,
+        "missing_page": 0,
+        "collection_matches_candidate": false
+      }
+    },
+    {
+      "name": "immutable_candidate_after",
+      "status": "PASS",
+      "detail": {
+        "status": "PASS"
+      }
+    }
+  ],
+  "business_data_mutations": 0,
+  "llm_calls": 0,
+  "limitations": "Metadata reads on a writable Chroma runtime can perform storage housekeeping; immutable candidate is never opened by Chroma."
+}

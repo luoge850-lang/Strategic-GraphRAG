@@ -1,0 +1,15 @@
+{
+  "schema": "artifact-hashes/v1",
+  "files": {
+    "browser-evidence.json": "d52bf75cddac2debe767995cb3b67540a4db4e89d51a76096aba8fccd3cee662",
+    "browser-pdf-page80.jpg": "9c9d76de049bf652aea5467ad2d3572e2c6a72e4af2273af5ed6dec8c0f67e89",
+    "browser-revenue-legacy.jpg": "ea179c403344cd248053f8528a420c261ee4c0bd82d014c8dda47ba033b5e737",
+    "live-http-legacy/requests.jsonl": "0c079cf76a964a1f41e1ed2aba13085a8760f43a4f3558a98ad72b68eeb97d0f",
+    "live-http-legacy/summary.json": "61f9beea6259a624ede93e86b4bbdaa1d97409664da4a4f5baa17bddb8f83264",
+    "live-http-legacy-v2/requests.jsonl": "63f36fa6ee28515597137a664f7df9465509303458b140415e149b0ddd753ed9",
+    "live-http-legacy-v2/summary.json": "3c29b054f0a025c5a6f03200d76ff5c97eff89f6c26ddb34e7a6ce3d8d78c23b",
+    "preflight-legacy-store-v2.json": "054ca65d8e7c3e84acd5a58bbe8cedd1ec258118ba51e3fee250b6b549a766a3",
+    "preflight-legacy-store.json": "68630eded71e3d54900676a9dd1fdff27ada475f26078481142278ba4f076165",
+    "README.md": "ec05b1116e41a270501e2e11e68371f0fec4c069c42e71f22130b1a72194719f"
+  }
+}
