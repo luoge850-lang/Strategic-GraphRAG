@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="390" viewBox="0 0 1440 390" role="img" aria-labelledby="title desc">
+  <title id="title">From financial question to verifiable evidence</title>
+  <desc id="desc">A four-step flow: ask a question, separate period from disclosure version, retrieve the filing and page, and return an answer with explicit limits.</desc>
+  <defs>
+    <linearGradient id="wash" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7faff"/>
+      <stop offset="1" stop-color="#edf4fb"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#8aa1bc"/>
+    </marker>
+    <style>
+      .title{font:700 24px Inter,Segoe UI,Arial,sans-serif;fill:#14243b;letter-spacing:.02em}
+      .step{font:700 12px Inter,Segoe UI,Arial,sans-serif;fill:#4e6888;letter-spacing:.15em}
+      .head{font:700 19px Inter,Segoe UI,Arial,sans-serif;fill:#14243b}
+      .body{font:400 15px Inter,Segoe UI,Arial,sans-serif;fill:#53657b}
+      .foot{font:600 14px Inter,Segoe UI,Arial,sans-serif;fill:#38536f}
+      .card{fill:#fff;stroke:#d8e2ee;stroke-width:1.5}
+      .line{stroke:#9aadc4;stroke-width:2;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect x="1" y="1" width="1438" height="388" rx="22" fill="url(#wash)" stroke="#d8e2ee"/>
+  <text x="48" y="58" class="title">A financial answer should come with a way back to the filing</text>
+
+  <path class="line" d="M326 202 H373"/>
+  <path class="line" d="M675 202 H722"/>
+  <path class="line" d="M1024 202 H1071"/>
+
+  <g transform="translate(48 104)">
+    <rect class="card" width="278" height="196" rx="16"/>
+    <rect x="0" y="0" width="6" height="196" rx="3" fill="#3b82a0"/>
+    <text x="24" y="36" class="step">01 · ASK</text>
+    <text x="24" y="76" class="head">Start with the question</text>
+    <text x="24" y="111" class="body">“Compare NVIDIA revenue</text>
+    <text x="24" y="134" class="body">across FY2023–FY2025.”</text>
+    <path d="M24 158 H254" stroke="#e7edf4"/>
+    <text x="24" y="181" class="foot">A question, not a conclusion</text>
+  </g>
+
+  <g transform="translate(397 104)">
+    <rect class="card" width="278" height="196" rx="16"/>
+    <rect x="0" y="0" width="6" height="196" rx="3" fill="#6374b8"/>
+    <text x="24" y="36" class="step">02 · DISAMBIGUATE</text>
+    <text x="24" y="76" class="head">Keep two clocks apart</text>
+    <text x="24" y="111" class="body">Fiscal period ≠ filing date</text>
+    <text x="24" y="134" class="body">≠ disclosure version</text>
+    <path d="M24 158 H254" stroke="#e7edf4"/>
+    <text x="24" y="181" class="foot">Choose comparable observations</text>
+  </g>
+
+  <g transform="translate(746 104)">
+    <rect class="card" width="278" height="196" rx="16"/>
+    <rect x="0" y="0" width="6" height="196" rx="3" fill="#c17b35"/>
+    <text x="24" y="36" class="step">03 · TRACE</text>
+    <text x="24" y="76" class="head">Find the source, not just a node</text>
+    <text x="24" y="111" class="body">Filing · page · evidence ID</text>
+    <text x="24" y="134" class="body">· metric · unit · period</text>
+    <path d="M24 158 H254" stroke="#e7edf4"/>
+    <text x="24" y="181" class="foot">Evidence stays attached to the fact</text>
+  </g>
+
+  <g transform="translate(1095 104)">
+    <rect class="card" width="297" height="196" rx="16"/>
+    <rect x="0" y="0" width="6" height="196" rx="3" fill="#3f8b70"/>
+    <text x="24" y="36" class="step">04 · ANSWER WITH LIMITS</text>
+    <text x="24" y="76" class="head">Say what the filing supports</text>
+    <text x="24" y="111" class="body">Return a cited comparison;</text>
+    <text x="24" y="134" class="body">do not invent a causal story.</text>
+    <path d="M24 158 H273" stroke="#e7edf4"/>
+    <text x="24" y="181" class="foot">A traceable answer can abstain</text>
+  </g>
+
+  <text x="48" y="352" class="body">The graphic explains the evidence contract; it is not a screenshot or a claim that the live services are currently available.</text>
+</svg>
