@@ -1,13 +1,56 @@
-# Strategic-GraphRAG v3.1
+# Strategic-GraphRAG
 
-Evidence-grounded GraphRAG for NVIDIA's fiscal 2023, 2024, and 2025 10-K
-filings. The project turns SEC PDFs into a strict Neo4j evidence graph,
-combines graph traversal with filing-scoped vector retrieval, and returns
-structured answers whose citations can be joined back to verbatim PDF text.
+An evidence-first financial retrieval research project for NVIDIA fiscal
+2023–2025 SEC 10-K filings. It links financial observations to their filing,
+fact period, disclosure version, source page, and supporting evidence. It is a
+research and engineering prototype—not an investment adviser, causal
+identification system, or production service.
 
-![Strategic-GraphRAG dashboard](docs/demo-dashboard-v3.png)
+## Latest candidate update · 2026-09-30
 
-## Verified scope
+> **Release boundary:** GitHub's default branch is `stable`. The latest
+> source-matched experiment is on [PR #1](https://github.com/luoge850-lang/Strategic-GraphRAG/pull/1)
+> and has not been merged into `stable`. Candidate results below are not
+> measurements of the stable runtime and must not be combined with its
+> historical inventory.
+
+The isolated candidate `build_7feb21b48e594a7a` contains **395 parsed pages,
+843 vector chunks, 198 accepted triples, and 362 expanded fact edges**. Those
+are distinct quantities. Package-integrity checks and deterministic
+engineering acceptance each passed 8/8; this does not measure answer accuracy.
+The six retrieval methods completed 156/156 calls on the same development
+replay. Natural-language answer generation was disabled.
+
+| 检索方法 | 已标注直接支持页命中@10 | MRR | 查询延迟 p50 / p95 (ms) |
+|---|---:|---:|---:|
+| 关键词检索（BM25） | 11/23 | 0.2348 | 3.370 / 4.695 |
+| 语义向量检索 | 1/23 | 0.0294 | 140.770 / 152.827 |
+| 关键词与语义融合检索（倒数排名融合） | 5/23 | 0.0878 | 145.078 / 157.411 |
+| 融合检索＋知识图谱扩展 | 1/23 | 0.0294 | 143.373 / 150.465 |
+| 融合检索＋知识图谱扩展＋时间约束 | 13/23 | 0.1687 | 146.024 / 158.471 |
+| 融合检索＋时间约束（无图扩展诊断对照） | 16/23 | 0.2493 | 144.026 / 152.922 |
+
+[![Source-matched development retrieval quality and latency](https://raw.githubusercontent.com/luoge850-lang/Strategic-GraphRAG/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png)](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png)
+
+These are development diagnostics from 23 question forms across 17 semantic
+families with **non-exhaustive AI/PDF support-page judgments**—not full-corpus
+Recall@k, independent test accuracy, or human Gold. The point estimates do not
+show a retrieval gain from graph expansion. nDCG, answer/citation accuracy,
+human review, and a live browser citation flow were not measured or passed.
+At audit time the UI could load, but the graph showed 0 nodes and the local API
+was unreachable; no current live-demo screenshot is presented as successful.
+
+Details and source records remain attached to the unmerged candidate branch:
+[repair and delivery report](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/docs/financial_qa_candidate_repair_delivery_2026-09-29.md),
+[raw retrieval records](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_raw_20260930_build_7feb21b48e594a7a.jsonl),
+[recomputed summary](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.json),
+and [quality/latency chart](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png).
+
+## Stable-branch baseline snapshot
+
+The inventory and audit figures in this section describe the `stable`
+runtime snapshot. They are intentionally separate from the isolated
+experiment candidate summarized above.
 
 | Filing | Pages | Strict EvidenceClaims | Evidence pages | Vector chunks |
 |---|---:|---:|---:|---:|
@@ -28,13 +71,16 @@ collections. A complete local recovery archive was created before deletion but
 is intentionally not committed because it contains embeddings and extracted
 filing text.
 
-## Architecture
+## Latest candidate architecture
+
+The diagram below reflects the newer candidate design proposed in PR #1; it
+does not mean its Neo4j or browser path passed live-service validation.
 
 <p align="center">
-  <img src="docs/diagrams/architecture.svg" alt="Strategic-GraphRAG evidence-first architecture" width="100%" />
+  <img src="docs/diagrams/architecture.svg" alt="Candidate architecture for Strategic-GraphRAG evidence-first retrieval" width="100%" />
 </p>
 
-> The SVG is the primary portfolio view. The editable source is available at
+> The SVG is the current candidate-design overview. The editable source is available at
 > [`docs/diagrams/architecture.mmd`](docs/diagrams/architecture.mmd).
 
 Key implementation decisions:
@@ -65,7 +111,7 @@ Key implementation decisions:
 - An incremental planner compares PDF SHA-256 values before rebuilding. The
   current plan reports all three PDFs unchanged and `requires_rebuild=[]`.
 
-## Demonstrated query
+## Historical stable-branch query example
 
 `Compare revenue in 2023, 2024, and 2025`
 
@@ -79,10 +125,10 @@ The response was grounding-verified and used one stable EvidenceClaim ID per
 filing. It does not infer the causes of revenue growth from those accounting
 facts alone.
 
-## Evaluation status
+## Stable-snapshot engineering evaluation (historical)
 
-The current release reports engineering and provenance checks separately from
-semantic quality:
+The recorded stable-snapshot release reports engineering and provenance
+checks separately from semantic quality:
 
 | Evaluation track | Current status |
 |---|---|
@@ -140,13 +186,13 @@ cd frontend
 npm run build
 ```
 
-The current release passed 20 focused Python contracts, Python compilation,
+The stable-branch release record reports 20 focused Python contracts, Python compilation,
 frontend TypeScript/Vite production build, Neo4j/Chroma post-clean checks, stable
 ID consistency, strict path validation, API health, and browser rendering. The
 largest JavaScript chunk is about 422 kB after splitting React, Motion,
 vis-data, and vis-network.
 
-In the latest local check, the all-filing statistics endpoint took 4.07 s cold
+In a historical local check, the all-filing statistics endpoint took 4.07 s cold
 and 5-19 ms cached; the visualization subgraph took 1.44 s cold and 25-32 ms
 cached. A retrieval-only cross-filing smoke test returned three strict revenue
 paths for 2023-2025 in Graph, Hybrid, and Hybrid+Temporal modes. Single-run
@@ -154,7 +200,7 @@ latencies were 10.12 s, 3.91 s, and 2.41 s respectively; Vector retrieval took
 35.87 ms. Aura cold starts and cache effects make these development
 observations, not benchmark guarantees.
 
-## Research status and honest limitations
+## Research status and honest limitations for the stable snapshot
 
 This is a strong engineering candidate, not yet a completed research result:
 
