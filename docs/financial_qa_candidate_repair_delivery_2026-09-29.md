@@ -2,54 +2,66 @@
 
 ## 结论摘要
 
-本轮得到的是**可复现的本地实验候选版**，不是已通过真实 Neo4j/Chroma 服务验收的稳定版。最新源码匹配构建 `build_1aa1530fdd382d17` 的包身份、图、向量、工程验收、执行配置、清单和不可变文件哈希均通过；7 个自然语言场景加 1 个显式参数场景共 8/8 被工程验收接受。六种检索方法在同一开发标签集上完成 156/156 次检索。质量标签仍是 AI/PDF 开发诊断，答案生成关闭；这些数值不等于独立测试准确率。
+本轮得到的是**可复现的本地实验候选版**，不是已通过真实 Neo4j/Chroma 服务验收的稳定版。最新源码匹配构建 `build_7feb21b48e594a7a` 的包身份、图、向量、工程验收、执行配置、清单和不可变文件哈希均通过；7 个自然语言场景加 1 个显式参数场景共 8/8 被工程验收接受。六种检索方法在同一开发标签集上完成 156/156 次检索。质量标签仍是 AI/PDF 开发诊断，答案生成关闭；这些数值不等于独立测试准确率。
 
 | 交付项 | 本轮实际结果 | 解释边界 |
 |---|---:|---|
 | 安全清理 | 实际删除 0 个文件、释放 0 字节；盘点到 9 个 Python 缓存目录，共 242 个文件、3,647,315 字节（3.48 MiB） | 精确目标与路径已验证，但删除命令被运行环境策略拒绝；缓存仍原位保留。没有换其他方式绕过 |
 | 归档旧环境 | 保留 `archive/legacy-venv-2026-09-02`：73,884 个文件、2,126,490,538 字节，Python 3.14.3 | 现有锁定安装验证基于 Python 3.12.14，不能证明旧环境可精确重建；删除会丢失独有复现环境 |
-| 当前候选构建 | `build_1aa1530fdd382d17`；395 页、843 向量块、198 accepted triples、362 expanded fact edges | 三种计数分别保留，不把 accepted triples 与 fact edges 混算；本机隔离包未上传 |
+| 当前候选构建 | `build_7feb21b48e594a7a`；395 页、843 向量块、198 accepted triples、362 expanded fact edges | 三种计数分别保留，不把 accepted triples 与 fact edges 混算；本机隔离包未上传 |
 | 候选完整性/验收 | 完整性 8/8；工程问答验收 8/8；向量和图构建身份一致 | 验收是候选合同回归，不是人工答案准确率或真实 Neo4j 验收 |
-| Python 回归 | `pytest -q`：226 passed、7 subtests passed、2 条 FastAPI 生命周期弃用警告；计算合同模块 51 passed | 自动化回归，不代表问答准确率 |
+| Python 回归 | `pytest -q`：227 passed、7 subtests passed、2 条 FastAPI 生命周期弃用警告；计算合同模块 51 passed | 自动化回归，不代表问答准确率 |
 | 检索矩阵 | 六种完整中文方法名称；156/156 检索调用成功；26 个问题形式、20 个语义家族，23 个问题形式/17 个家族有已标注直接支持页 | 同一开发集的源码身份复测，不是冻结独立测试集；标签非穷尽 |
 | 60 条表格候选 | AI/PDF 目视诊断：数值、符号、单位尺度、来源页各 60/60；财年列 58/60；语义别名 45/60；完整事实联合“无明显问题”45/60 | 全部仍未完成人工主审、第二人复核和裁决；不是准确率或召回率 |
 | 实际服务与浏览器 | **未通过/未运行**：前端页面可打开，但显示本地 API 不可达；检查时 Neo4j 7474/7687 与 API 8000 均无监听 | 候选内 FastAPI `TestClient` 合同 200 不等于真实 HTTP 服务或浏览器成功；未点击并验证 PDF 引用页 |
 | 当前活动存储 | 活动 Chroma 集合只读盘点为 1,686 项，非空 `build_id` 为 0；Neo4j 无可用本地监听 | 没有写活动库、影子导入或切换；1,686 项与隔离候选 843 块不可混用 |
-| GitHub | 交付分支 `codex/financial-evidence-qa-delivery-2026-09-29`；现有 PR #1 目标为 `codex/v3-three-filing-evidence-graphrag`，保持 OPEN 且不合并 | 最终提交 SHA 与该 SHA 对应的 CI 状态以 PR #1 的远端实测为准；不更新 `stable` |
+| GitHub | 交付分支 `codex/financial-evidence-qa-delivery-2026-09-29`；现有 PR #1 目标为 `codex/v3-three-filing-evidence-graphrag`，保持 OPEN 且不合并 | 本报告随交付提交更新；最终 SHA 与其 CI 在远端核验后补入 PR 记录；不更新 `stable` |
 | 多模型调度证据 | 有 Sol 与 Astra 子任务的任务 ID、请求覆盖模型/强度、公开任务输出和采纳决策 | 平台没有暴露实际模型身份或实际推理强度；这两项均记录 `NOT_VERIFIED`，不以请求覆盖冒充实际执行元数据 |
 
 因此，本轮选择：**可复现的实验候选版（范围受限）**。不选择“已通过真实服务验收的工程稳定候选版”。
 
 ## 构建来源与复现边界
 
-- 构建 ID：`build_1aa1530fdd382d17`。
-- 内容源指纹：`a151d24bef8f10f7b01465803fbf4b404dc84b33e545b7bccae5766718490d1a`。
-- 构建记录中的 Git HEAD：`fb9f65a9c61fe07b7c1179a3295c2aa3018d8e4d`。当时工作区有未提交代码修改；因此该字段是构建时的基线 HEAD，不应单独作为源码快照。完整源码状态由内容指纹绑定；交付分支提交后再对照该指纹复核。
+- 构建 ID：`build_7feb21b48e594a7a`。
+- 换行规范化后的内容源指纹：`ab2693cf127abd39a28c6d70f576ae996778302ee225e11dec8e574b389606d2`。
+- 构建记录中的 Git HEAD：`52da4485034ef82d4fc2fc320b4c6a0c0a817072`。构建时仅 `build_identity.py` 与指纹回归测试尚未提交；源码身份只纳入文本换行规范化后的源码/依赖内容。新的 clean-checkout 验证应在该修复提交上传后，将此指纹与 Git 检出复算结果比较。
 - 三份输入 PDF 的 SHA-256：
   - 2023：`89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8`
   - 2024：`536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b`
   - 2025：`b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e`
 - 构建使用本地规则/表格抽取与 `chroma_onnx` 的 `all-MiniLM-L6-v2` 嵌入。构建日志记录 LLM 调用 0、网络调用 0；检索矩阵生成关闭，LLM 调用 0、网络调用 0。没有伪装模型生成结果、token 或费用。
-- 本地不可变包位于 `reports/isolated_staging/build_1aa1530fdd382d17`，受忽略规则保护，未上传。公开复现需要按 [`data/README.md`](../data/README.md) 获取许可允许使用的 PDF，并先核对上述哈希；GitHub checkout 本身不含 PDF 与 Chroma 包。
+- 本地不可变包位于 `reports/isolated_staging/build_7feb21b48e594a7a`，受忽略规则保护，未上传。公开复现需要按 [`data/README.md`](../data/README.md) 获取许可允许使用的 PDF，并先核对上述哈希；GitHub checkout 本身不含 PDF 与 Chroma 包。
 - 该候选还包含确定性计算状态的前端展示；TypeScript/Vite 生产构建通过。浏览器实时 API 不可达，因此没有宣称面板已在真实查询页面端到端展示成功。
 
 复现本轮检索复测（使用现有、与哈希相符的 PDF；输出路径必须是新的空路径）：
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\run_isolated_staging.py
+& {
+  # Isolate this no-LLM candidate build from any machine-level provider setting.
+  $env:LLM_PROVIDER = "local"
+  $env:LLM_MODEL = "Qwen2.5-3B-Instruct"
+  $env:LLM_RESPONSE_CACHE_MODE = "off"
+  .\.venv\Scripts\python.exe scripts\run_isolated_staging.py
+}
 .\.venv\Scripts\python.exe scripts\run_financial_retrieval_matrix.py `
-  --build-dir reports\isolated_staging\build_1aa1530fdd382d17 `
+  --build-dir reports\isolated_staging\build_7feb21b48e594a7a `
   --dataset experiments\financial-evidence-qa-2026-09-28\financial_qa_dev_source_review_20260924_v3.jsonl `
-  --output experiments\financial-evidence-qa-2026-09-29-calculation-contract\financial_retrieval_raw_20260929_build_1aa1530fdd382d17.jsonl
+  --output experiments\financial-evidence-qa-2026-09-29-calculation-contract\financial_retrieval_raw_20260930_build_7feb21b48e594a7a.jsonl
 .\.venv\Scripts\python.exe scripts\summarize_financial_candidate_run.py `
-  --raw experiments\financial-evidence-qa-2026-09-29-calculation-contract\financial_retrieval_raw_20260929_build_1aa1530fdd382d17.jsonl `
+  --raw experiments\financial-evidence-qa-2026-09-29-calculation-contract\financial_retrieval_raw_20260930_build_7feb21b48e594a7a.jsonl `
   --table-audit experiments\financial-evidence-qa-2026-09-28\table_quality_ai_visual_diagnostic_2026-09-24_v2.jsonl `
   --dataset experiments\financial-evidence-qa-2026-09-28\financial_qa_dev_source_review_20260924_v3.jsonl `
-  --output experiments\financial-evidence-qa-2026-09-29-calculation-contract\financial_retrieval_summary_20260929_build_1aa1530fdd382d17.json `
-  --chart experiments\financial-evidence-qa-2026-09-29-calculation-contract\financial_retrieval_summary_20260929_build_1aa1530fdd382d17.png
+  --output experiments\financial-evidence-qa-2026-09-29-calculation-contract\financial_retrieval_summary_20260930_build_7feb21b48e594a7a.json `
+  --chart experiments\financial-evidence-qa-2026-09-29-calculation-contract\financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png
 ```
 
-每次复跑都使用新的原始记录、摘要和图表路径；脚本拒绝覆盖已有产物。当前 `build_1aa1530fdd382d17` 是在增加前端计算状态显示后重新构建并复跑的版本，后端检索/计算源码与前一个候选相同。为把矩阵明确绑定到最新完整源码指纹，复跑没有调参、改标签或改协议，但它仍是重复使用开发集的额外执行，须视为协议偏差；前一候选的原始记录也保留，不合并延迟或指标。冻结 v4 协议、标签和历史主报告未改写。
+每次复跑都使用新的原始记录、摘要和图表路径；脚本拒绝覆盖已有产物。当前 `build_7feb21b48e594a7a` 为核实 Windows Git 换行转换问题修复后的候选。它使用相同源码逻辑、PDF、协议和标签，无调参或改标签；为验证新的跨检出稳定指纹而第三次执行同一开发集，超出 v4 单次主运行安排，必须披露为协议偏差。旧候选与原始记录全部保留，运行间延迟/分数不合并。冻结 v4 协议、标签和历史主报告未改写。
+
+### 干净检出发现及修复
+
+2026-09-30 从交付分支做 Windows 干净检出时，Git 默认 `core.autocrlf` 将 JSONL 工作树改为 CRLF，汇总脚本因此因 raw-manifest SHA 不匹配而安全拒绝运行；同一检出计算出的源码指纹也与候选包不同。根因为源码指纹把文本换行字节当作语义、而新实验目录没有字节精确保留属性。修复为：构建源码/依赖指纹统一先把 CRLF 与孤立 CR 规范成 LF；对有 SHA 约束的 2026-09-29 实验包在 `.gitattributes` 设 `-text`，原始记录保持逐字节一致；新增 LF/CRLF 指纹回归测试。清洁检出依赖安装与当前源码测试的最终复核结果以追加提交后的同分支新检出为准，初始的 hash mismatch 失败不能从记录中删去。
+
+本地候选重建的一次启动日志曾显示机器默认的外部 provider 已初始化。隔离 pipeline 显式配置 `use_llm=False`，所以 LLM 抽取分支不会调用；我在候选抽取前中断该次启动，并在 `LLM_PROVIDER=local`、响应缓存关闭的进程范围内续跑。三份文件逐项记录均为 `llm_calls=0`、`network_calls=0`。因此初始化日志不被误报成模型调用，未向外部模型发送年报。
 
 ## 计算合同：失败、根因、修复与同条件验证
 
@@ -61,7 +73,7 @@
 | 两个公司的观测被配成一组计算 | 没有强制单一公司作用域 | 多公司时要求明确公司过滤 | `AMBIGUOUS`，不混算公司 |
 | 负数/非有限输入或大数溢出可能输出不可编码结果 | 最终 JSON 数值未做有限性检查 | 对输入及最终结果检查有限浮点数，越界不能 PASS | 负值单位转换保留符号；零分母、非有限值、溢出不能 PASS |
 
-同一回归模块现有 51 条测试覆盖币种/尺度冲突、缺失年份、期间粒度、重述披露冲突、重复可比性、负数、零分母、百分比、混合单位、非有限值和作用域。全库结果为 226 passed、7 subtests、2 条既存弃用警告。
+同一回归模块现有 51 条测试覆盖币种/尺度冲突、缺失年份、期间粒度、重述披露冲突、重复可比性、负数、零分母、百分比、混合单位、非有限值和作用域。全库结果为 227 passed、7 subtests、2 条既存弃用警告；新增指纹换行测试用于覆盖 LF/CRLF 检出一致性，不属于答案准确度。
 
 ### 实际 PDF 派生的跨年营收对照
 
@@ -69,7 +81,7 @@
 
 这里的 `PASS` 仅表示按该同披露表格结构完成了数值选择/计算；它不是全面审计会计政策、期间调整或重述历史，也不支持收入变化的因果解释。该推断不能自动外推到别的指标、表格或构建。Q01–Q07 的部分公开响应保留 `answer_status=NOT_REQUESTED`；兼容字段 `outcome=PARTIALLY_ANSWERED` 不能被读作已完成人工核验的自然语言答案。
 
-失败的中间构建 `build_f4113e38d62735ff` 保留：7/8 工程场景通过，三年营收因比较状态未确认而拒绝；修复为严格的同披露同 claim/页/表/行条件后，`build_38321fdf7366bf38` 通过 8/8。其后仅前端计算状态视图变化，当前 `build_1aa1530fdd382d17` 重新绑定源码并仍通过 8/8。两个成功候选包及日志均未删除或改写。
+失败的中间构建 `build_f4113e38d62735ff` 保留：7/8 工程场景通过，三年营收因比较状态未确认而拒绝；修复为严格的同披露同 claim/页/表/行条件后，`build_38321fdf7366bf38` 通过 8/8。前端计算状态视图版本为 `build_1aa1530fdd382d17`；换行稳定指纹修复版本 `build_7feb21b48e594a7a` 也通过 8/8。所有成功候选包和部分中断包均保留。
 
 ## 检索矩阵：开发诊断，不是独立答案质量
 
@@ -77,18 +89,18 @@
 
 | 完整中文方法名称 | 显式正页命中请求 | 家族等权直接支持页命中率（描述性 95% CI） | 家族等权 MRR@10（描述性 95% CI） | p50 / p95（毫秒） |
 |---|---:|---:|---:|---:|
-| 关键词检索（BM25） | 11/23 | 0.4118（0.2059–0.6176） | 0.2348（0.0868–0.4147） | 4.173 / 5.207 |
-| 语义向量检索 | 1/23 | 0.0588（0–0.1765） | 0.0294（0–0.0882） | 168.917 / 190.702 |
-| 关键词与语义融合检索（倒数排名融合） | 5/23 | 0.1765（0.0294–0.3529） | 0.0878（0.0065–0.2198） | 176.717 / 212.029 |
-| 融合检索＋知识图谱扩展 | 1/23 | 0.0588（0–0.1765） | 0.0294（0–0.0882） | 174.589 / 204.081 |
-| 融合检索＋知识图谱扩展＋时间约束 | 13/23 | 0.4706（0.2647–0.7059） | 0.1687（0.0567–0.3179） | 173.997 / 217.990 |
-| 融合检索＋时间约束（无图扩展诊断对照） | 16/23 | 0.6176（0.3824–0.8235） | 0.2493（0.1304–0.3941） | 174.055 / 231.107 |
+| 关键词检索（BM25） | 11/23 | 0.4118（0.2059–0.6176） | 0.2348（0.0868–0.4147） | 3.370 / 4.695 |
+| 语义向量检索 | 1/23 | 0.0588（0–0.1765） | 0.0294（0–0.0882） | 140.770 / 152.827 |
+| 关键词与语义融合检索（倒数排名融合） | 5/23 | 0.1765（0.0294–0.3529） | 0.0878（0.0065–0.2198） | 145.078 / 157.411 |
+| 融合检索＋知识图谱扩展 | 1/23 | 0.0588（0–0.1765） | 0.0294（0–0.0882） | 143.373 / 150.465 |
+| 融合检索＋知识图谱扩展＋时间约束 | 13/23 | 0.4706（0.2647–0.7059） | 0.1687（0.0567–0.3179） | 146.024 / 158.471 |
+| 融合检索＋时间约束（无图扩展诊断对照） | 16/23 | 0.6176（0.3824–0.8235） | 0.2493（0.1304–0.3941） | 144.026 / 152.922 |
 
 这些分子/分母是被标记的直接支持页命中请求，不是完整语料 `Recall@k`。标签池不穷尽，所以 nDCG 未计算。95% 区间按 17 个语义家族做 2,000 次描述性 bootstrap，不能升级成论文独立置信结论。配对家族差值：知识图谱扩展相对倒数排名融合为 `-0.1176`（区间 `-0.3235–0.0882`）；图扩展＋时间相对不扩图时间对照为 `-0.1471`（区间 `-0.4118–0.1471`）。区间均跨 0，不能证明优越或等效；点估计倾向不扩图的对应对照。
 
-![源码匹配候选的检索质量与延迟诊断](../experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260929_build_1aa1530fdd382d17.png)
+![源码匹配候选的检索质量与延迟诊断](../experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png)
 
-资源记录：Windows 11，16 个逻辑 CPU，系统内存 16,961,822,720 字节；Python 3.12.14；本地 `all-MiniLM-L6-v2` ONNX 查询嵌入；查询预热 0.322 秒（不计入单请求延迟）；无结果缓存；无 LLM 生成；单并发；156 请求共 24.322 秒，含初始化/串行查询的吞吐 6.414 请求/秒；进程峰值 RSS 315,203,584 字节（约 300.7 MiB）。冷启动 p50/p95 未测；并发 2、4 未测；无模型 token、网络费用或模型调用。
+资源记录：Windows 11，16 个逻辑 CPU，系统内存 16,961,822,720 字节；Python 3.12.14；本地 `all-MiniLM-L6-v2` ONNX 查询嵌入；查询预热 0.212 秒（不计入单请求延迟）；无结果缓存；无生成；单并发；156 请求共 19.472 秒，含初始化/串行查询的吞吐 8.012 请求/秒；进程峰值 RSS 315,101,184 字节（约 300.6 MiB）。该次运行紧随构建与此前矩阵执行，OS 文件缓存未受控，因此不将其与之前的时延视为性能提升，亦不合并统计。冷启动 p50/p95 未测；并发 2、4 未测；没有 LLM 调用或网络调用，token 和模型费用不适用。
 
 ## PDF 表格候选与审核等级
 

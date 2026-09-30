@@ -1,14 +1,16 @@
 # 2026-09-29 calculation-contract repair and development replay
 
-This bundle preserves two source-matched local candidate runs. The latest is
-`build_1aa1530fdd382d17`; the earlier candidate `build_38321fdf7366bf38` is
-retained below as a separate run. Both are **development experiments**, not a
-held-out test, not human Gold, and not proof of a stable live service. The
-latest replay binds the frontend calculation-status view to the package
-identity; retrieval code, protocol and labels were unchanged, and no tuning was
-performed. Reusing the development labels is an additional execution beyond the
-frozen v4 protocol's primary run, disclosed as a protocol deviation; results
-from the runs are not pooled.
+This bundle preserves three source-matched local candidate runs. The latest is
+`build_7feb21b48e594a7a`; `build_1aa1530fdd382d17` and
+`build_38321fdf7366bf38` remain separate historical runs. All are
+**development experiments**, not a held-out test, not human Gold, and not
+proof of a stable live service. The latest run binds the retrieval matrix to a
+newline-stable source fingerprint after a clean Windows checkout exposed
+line-ending conversion in both raw-file hashes and source identity. No
+retrieval method, protocol, label or threshold changed and no tuning was
+performed. Reusing the development labels for this third run exceeds the
+frozen v4 protocol's primary-run budget; it is disclosed as a protocol
+deviation, and scores/timings are not pooled.
 
 ## Artifacts
 
@@ -19,6 +21,10 @@ from the runs are not pooled.
 - [`financial_retrieval_raw_20260929_build_1aa1530fdd382d17.jsonl`](financial_retrieval_raw_20260929_build_1aa1530fdd382d17.jsonl): latest 156-record matrix, bound to the current source fingerprint.
 - [`financial_retrieval_raw_20260929_build_1aa1530fdd382d17.manifest.json`](financial_retrieval_raw_20260929_build_1aa1530fdd382d17.manifest.json): latest build identity, hashes, runtime, resources and per-method timing.
 - [`financial_retrieval_summary_20260929_build_1aa1530fdd382d17.json`](financial_retrieval_summary_20260929_build_1aa1530fdd382d17.json) and [chart](financial_retrieval_summary_20260929_build_1aa1530fdd382d17.png): summary recalculated from the latest raw records, plus the generated chart.
+- [`financial_retrieval_raw_20260930_build_7feb21b48e594a7a.jsonl`](financial_retrieval_raw_20260930_build_7feb21b48e594a7a.jsonl): 156-record replay bound to newline-canonical source fingerprint `ab2693cf127abd39a28c6d70f576ae996778302ee225e11dec8e574b389606d2`.
+- [`financial_retrieval_raw_20260930_build_7feb21b48e594a7a.manifest.json`](financial_retrieval_raw_20260930_build_7feb21b48e594a7a.manifest.json): latest exact build identity, input hashes, runtime conditions, and measured timing/resource record.
+- [`financial_retrieval_summary_20260930_build_7feb21b48e594a7a.json`](financial_retrieval_summary_20260930_build_7feb21b48e594a7a.json) and [chart](financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png): latest metrics recomputed from that raw run.
+- [`calculation_contract_after_20260930.json`](calculation_contract_after_20260930.json): calculation regression outcome on the newline-stable candidate; independent test accuracy remains unmeasured.
 - [`baseline_calculation_contract_20260929.json`](baseline_calculation_contract_20260929.json) and [`calculation_contract_after_20260929.json`](calculation_contract_after_20260929.json): concrete before/after calculation failures and regression evidence.
 - [`scoring_sensitivity_20260929.json`](scoring_sensitivity_20260929.json): strict grade-3 sensitivity for the historical v4 run; it does not edit or replace the frozen primary scores.
 - [`multi_model_dispatch_record_20260929.json`](multi_model_dispatch_record_20260929.json): only public dispatch requests, outputs, adopted decisions, and verifiable limits; actual backend model/effort remain `NOT_VERIFIED`.
@@ -46,6 +52,12 @@ Follow the build and replay commands in the
 Obtain local PDFs as described in [`data/README.md`](../../data/README.md) and
 verify their hashes first. Do not upload PDFs, live database files, Chroma
 runtime copies, or the ignored immutable candidate package in this bundle.
+
+The source fingerprint normalizes CRLF/CR to LF for text files. The dated
+artifact directory is marked `-text` in `.gitattributes` because its sidecars
+bind byte-exact SHA-256 values to the JSONL/JSON records. On Windows, keep that
+attribute enabled; do not run checkout with filters that rewrite the experiment
+bytes.
 
 Historical v4 results belong to `build_f74bb1dfbf96b8a2` and remain in the
 [2026-09-28 bundle](../financial-evidence-qa-2026-09-28/README.md); neither

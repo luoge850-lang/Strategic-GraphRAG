@@ -31,7 +31,7 @@ The current development acceptance boundary is:
 
 | Gate | Status | Meaning |
 |---|---|---|
-| Reproducible experiment candidate | `LIMITED PASS` | Latest source-matched candidate `build_1aa1530fdd382d17` passed package verification and 8/8 engineering acceptance scenarios. Its six-method development replay completed 156/156 retrieval calls. Labels remain AI/PDF development diagnostics, not human Gold or an independent test; answer quality was not measured. |
+| Reproducible experiment candidate | `LIMITED PASS` | Latest source-matched candidate `build_7feb21b48e594a7a` passed package verification and 8/8 engineering acceptance scenarios. Its six-method development replay completed 156/156 retrieval calls. Labels remain AI/PDF development diagnostics, not human Gold or an independent test; answer quality was not measured. |
 | Engineering stable | `BLOCKED` | The current browser page reports that the local API is unreachable; during this audit Neo4j ports 7474/7687 and API port 8000 had no listener. The active Chroma collection has 1,686 records with no nonempty `build_id`, versus 843 chunks in the isolated candidate. No shadow import or cutover occurred. The API contract test uses FastAPI `TestClient`, not a live service; browser query and PDF click-through did not pass. Recovery, timeout, rollback, security and load acceptance remain incomplete. |
 | Production candidate | `NOT_RUN` | Security, monitoring, backup/rollback, SLO, cost, and production failure/load tests are not accepted. |
 
@@ -54,12 +54,12 @@ and [2026-09-29 experiment artifacts](experiments/financial-evidence-qa-2026-09-
 The `published_pointer.json` still points to `build_0be5c1b2939c6583`, whose
 artifact hash verification fails; it has deliberately not been changed. The
 latest **unpublished source-matched** experiment candidate is
-`build_1aa1530fdd382d17` (source fingerprint
-`a151d24bef8f10f7b01465803fbf4b404dc84b33e545b7bccae5766718490d1a`). It
+`build_7feb21b48e594a7a` (newline-canonical source fingerprint
+`ab2693cf127abd39a28c6d70f576ae996778302ee225e11dec8e574b389606d2`). It
 contains 395 parsed PDF pages, 843 vector chunks, 198 accepted triples, and
 362 expanded fact edges. Its isolated package identity, graph, vector,
 acceptance, execution configuration, ledger, and immutable hashes verify. The
-current local Python suite reports 226 passed, 2 deprecation warnings, and 7
+current local Python suite reports 227 passed, 2 deprecation warnings, and 7
 subtests passed; the frontend TypeScript/Vite production build also succeeded.
 The six-method development replay completed 156/156 requests on this exact
 candidate source identity.
@@ -69,9 +69,12 @@ The historical v4 run on `build_f74bb1dfbf96b8a2` contained 20 semantic
 families and 26 question forms. Six retrieval methods shared one candidate
 package and a maximum final evidence budget of ten physical pages; that run
 completed 156/156 scheduled calls in 27.033 seconds serially, including setup.
-The latest 2026-09-29 source-matched replay took 24.322 seconds serially,
-including setup, and reached 6.414 requests/second; its raw records and timing
-are in the linked repair report. Only 23 question forms from 17 families have
+The latest source-matched replay took 19.472 seconds serially, including setup,
+and reached 8.012 requests/second. This extra execution verified the
+newline-stable source identity after clean-checkout hash validation exposed Git
+line-ending conversion. It is not pooled with earlier runs or treated as a
+speed improvement because filesystem-cache state was not controlled. Only 23
+question forms from 17 families have
 AI/PDF-checked direct-support pages (30 judged page instances); judgments are
 non-exhaustive. Neither run claims full-corpus Recall or nDCG. Numeric-answer,
 full-fact, citation, locator, and abstention quality were not scored because
@@ -183,11 +186,11 @@ for the observed output and the current PDF click-through limitation.
 ## Retrieval results and evidence limits
 
 The latest source-matched development replay uses candidate
-`build_1aa1530fdd382d17`, the same already-seen AI/PDF labels, and the six
+`build_7feb21b48e594a7a`, the same already-seen AI/PDF labels, and the six
 implemented methods. It completed 156/156 retrieval calls. This replay binds
-the added frontend calculation-status display to the exact package identity;
-retrieval code and protocol were unchanged, and no tuning was performed. The
-prior source-matched run remains separately recorded. Quality is measured
+the newline-stable source identity after the clean-checkout hash mismatch was
+repaired; retrieval code, protocol and labels were unchanged, and no tuning was performed. The
+prior source-matched runs remain separately recorded. Quality is measured
 only against explicitly judged direct-support pages for 23 query forms from 17
 semantic families; page judgments are non-exhaustive and were used during
 development. This is not a held-out test, full-corpus Recall@k, or answer
@@ -196,14 +199,14 @@ irrelevant.
 
 | 完整中文方法名称 | 已标注直接支持页命中请求 | 家族等权 MRR@10 | 查询延迟 p50 / p95（毫秒） |
 |---|---:|---:|---:|
-| 关键词检索（BM25） | 11/23 | 0.2348 | 4.173 / 5.207 |
-| 语义向量检索 | 1/23 | 0.0294 | 168.917 / 190.702 |
-| 关键词与语义融合检索（倒数排名融合） | 5/23 | 0.0878 | 176.717 / 212.029 |
-| 融合检索＋知识图谱扩展 | 1/23 | 0.0294 | 174.589 / 204.081 |
-| 融合检索＋知识图谱扩展＋时间约束 | 13/23 | 0.1687 | 173.997 / 217.990 |
-| 融合检索＋时间约束（无图扩展诊断对照） | 16/23 | 0.2493 | 174.055 / 231.107 |
+| 关键词检索（BM25） | 11/23 | 0.2348 | 3.370 / 4.695 |
+| 语义向量检索 | 1/23 | 0.0294 | 140.770 / 152.827 |
+| 关键词与语义融合检索（倒数排名融合） | 5/23 | 0.0878 | 145.078 / 157.411 |
+| 融合检索＋知识图谱扩展 | 1/23 | 0.0294 | 143.373 / 150.465 |
+| 融合检索＋知识图谱扩展＋时间约束 | 13/23 | 0.1687 | 146.024 / 158.471 |
+| 融合检索＋时间约束（无图扩展诊断对照） | 16/23 | 0.2493 | 144.026 / 152.922 |
 
-![Source-matched development retrieval quality and latency](experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260929_build_1aa1530fdd382d17.png)
+![Source-matched development retrieval quality and latency](experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png)
 
 On these development diagnostics, graph expansion did not beat its paired
 control: family-level page-hit@10 difference was `-0.1176` versus keyword and

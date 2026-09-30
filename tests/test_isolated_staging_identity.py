@@ -1,4 +1,5 @@
 import os
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -8,9 +9,26 @@ from scripts.run_isolated_staging import (
     identity_for,
     normalize_no_llm_candidate_metadata,
 )
+from strategic_graphrag.build_identity import _fingerprint_files
 
 
 class IsolatedStagingIdentityTests(unittest.TestCase):
+    def test_source_fingerprint_normalizes_checkout_newlines(self):
+        with tempfile.TemporaryDirectory() as lf_dir, tempfile.TemporaryDirectory() as crlf_dir:
+            lf_root = Path(lf_dir)
+            crlf_root = Path(crlf_dir)
+            lf_file = lf_root / "src" / "sample.py"
+            crlf_file = crlf_root / "src" / "sample.py"
+            lf_file.parent.mkdir()
+            crlf_file.parent.mkdir()
+            lf_file.write_bytes(b"first line\nsecond line\n")
+            crlf_file.write_bytes(b"first line\r\nsecond line\r\n")
+
+            self.assertEqual(
+                _fingerprint_files([lf_file], root=lf_root),
+                _fingerprint_files([crlf_file], root=crlf_root),
+            )
+
     def test_identity_describes_the_executed_local_pipeline_not_machine_defaults(self):
         with patch.dict(os.environ, {
             "LLM_PROVIDER": "deepseek",
