@@ -22,57 +22,70 @@ package below; inventory counts are not parser or answer-accuracy evidence.
 
 ## Status at a glance
 
-The GitHub default branch is `stable`. This checkout is the development branch
-`codex/v3-three-filing-evidence-graphrag`; its metrics must not be mixed with
-the stable release. The current development acceptance boundary is:
+The GitHub default branch is `stable`. This checkout is the delivery branch
+`codex/financial-evidence-qa-delivery-2026-09-29`, proposed to the development
+branch `codex/v3-three-filing-evidence-graphrag` by PR #1. `stable` has not been
+changed; development metrics must not be mixed with the stable release. Track
+the change in [PR #1](https://github.com/luoge850-lang/Strategic-GraphRAG/pull/1).
+The current development acceptance boundary is:
 
 | Gate | Status | Meaning |
 |---|---|---|
-| Reproducible experiment candidate | `LIMITED PASS` | Candidate `build_f74bb1dfbf96b8a2` ran the frozen v4 offline retrieval matrix: 156/156 scheduled retrieval calls succeeded across six methods. Labels are AI/PDF development diagnostics, not human Gold or an independent test; answer quality was not run. |
-| Engineering stable | `BLOCKED` | The restarted live service became ready, but active Neo4j/Chroma data are not bound to the candidate build. A build-scoped observation dry run found 0 eligible claims/observations; no shadow import or cutover occurred. Four in-scope browser queries returned incomplete evidence rather than completed calculations/comparisons, and PDF click-through is blocked by the local browser (`ERR_BLOCKED_BY_CLIENT`). Recovery, timeout, rollback, security and load acceptance remain incomplete. |
+| Reproducible experiment candidate | `LIMITED PASS` | Latest source-matched candidate `build_1aa1530fdd382d17` passed package verification and 8/8 engineering acceptance scenarios. Its six-method development replay completed 156/156 retrieval calls. Labels remain AI/PDF development diagnostics, not human Gold or an independent test; answer quality was not measured. |
+| Engineering stable | `BLOCKED` | The current browser page reports that the local API is unreachable; during this audit Neo4j ports 7474/7687 and API port 8000 had no listener. The active Chroma collection has 1,686 records with no nonempty `build_id`, versus 843 chunks in the isolated candidate. No shadow import or cutover occurred. The API contract test uses FastAPI `TestClient`, not a live service; browser query and PDF click-through did not pass. Recovery, timeout, rollback, security and load acceptance remain incomplete. |
 | Production candidate | `NOT_RUN` | Security, monitoring, backup/rollback, SLO, cost, and production failure/load tests are not accepted. |
 
 See the [historical acceptance ledger](docs/acceptance_ledger_2026-09-21.md), the
 [public claim ledger](docs/claim_ledger.md), and the
 [version strategy](docs/version_strategy_2026-09-22.md). The working-tree
 decisions are recorded in the [delivery cleanup manifest](docs/delivery_cleanup_manifest.md).
-The latest frozen protocol, raw records, recomputable summary, chart, live
+The prior frozen v4 protocol, raw records, recomputable summary, chart, live
 service observations, and limitations are in the
 [2026-09-28 candidate report](docs/financial_qa_candidate_release_2026-09-28.md)
 and its [selective public experiment bundle](experiments/financial-evidence-qa-2026-09-28/README.md).
+The current repair, source-matched build, post-repair development replay,
+calculation regression results, cache inventory/deletion blocker, review tiers, and service
+blockers are recorded in the
+[2026-09-29 repair delivery report](docs/financial_qa_candidate_repair_delivery_2026-09-29.md)
+and [2026-09-29 experiment artifacts](experiments/financial-evidence-qa-2026-09-29-calculation-contract/).
 
 ### Current isolated delivery
 
 The `published_pointer.json` still points to `build_0be5c1b2939c6583`, whose
 artifact hash verification fails; it has deliberately not been changed. The
-latest **unpublished** experiment candidate is
-`build_f74bb1dfbf96b8a2` (source fingerprint, protocol, dependency lock, and
-PDF hashes are recorded in the handoff report). It contains 395 PDF pages,
-843 chunks, 198 accepted triples, and 362 expanded fact edges. Package
-identity/hash verification and same-build resume passed. The current offline
-suite reports 203 passed, 2 warnings, and 7 subtests passed; the v4 six-method
-retrieval matrix completed 156/156 requests. This does not establish
-independent QA accuracy or a stable release.
+latest **unpublished source-matched** experiment candidate is
+`build_1aa1530fdd382d17` (source fingerprint
+`a151d24bef8f10f7b01465803fbf4b404dc84b33e545b7bccae5766718490d1a`). It
+contains 395 parsed PDF pages, 843 vector chunks, 198 accepted triples, and
+362 expanded fact edges. Its isolated package identity, graph, vector,
+acceptance, execution configuration, ledger, and immutable hashes verify. The
+current local Python suite reports 226 passed, 2 deprecation warnings, and 7
+subtests passed; the frontend TypeScript/Vite production build also succeeded.
+The six-method development replay completed 156/156 requests on this exact
+candidate source identity.
+This does not establish independent QA accuracy or a stable release.
 
-The v4 experiment contains 20 semantic families and 26 question forms. Six
-retrieval methods share one candidate package and a maximum final evidence
-budget of ten physical pages. It completed 156/156 scheduled retrieval calls
-in 27.033 seconds serially, including setup. Only 23 question forms from 17
-families have AI/PDF-checked direct-support pages (30 judged page instances);
-the page judgments are non-exhaustive. Full-corpus Recall and nDCG are not
-claimed. Numeric-answer, full-fact, citation, locator, and abstention quality
-were not scored because answer generation was disabled. Details and the exact
-recompute command are in the linked candidate report and bundle.
+The historical v4 run on `build_f74bb1dfbf96b8a2` contained 20 semantic
+families and 26 question forms. Six retrieval methods shared one candidate
+package and a maximum final evidence budget of ten physical pages; that run
+completed 156/156 scheduled calls in 27.033 seconds serially, including setup.
+The latest 2026-09-29 source-matched replay took 24.322 seconds serially,
+including setup, and reached 6.414 requests/second; its raw records and timing
+are in the linked repair report. Only 23 question forms from 17 families have
+AI/PDF-checked direct-support pages (30 judged page instances); judgments are
+non-exhaustive. Neither run claims full-corpus Recall or nDCG. Numeric-answer,
+full-fact, citation, locator, and abstention quality were not scored because
+answer generation was disabled.
 
-The source-reviewed development diagnostic shows direct-support hit@10 of
+The source-matched development replay shows direct-support hit@10 of
 11/23 for 关键词检索（BM25）, 1/23 for 语义向量检索, 5/23 for 关键词与语义融合检索（倒数排名融合）,
 1/23 for 融合检索＋知识图谱扩展, 13/23 for 融合检索＋知识图谱扩展＋时间约束, and
 16/23 for 融合检索＋时间约束（无图扩展诊断对照）. These are not independent
 accuracy scores; graph expansion did not improve the paired development hit
 diagnostics, and the intervals are wide and include zero.
 
-After the user started Neo4j, the live service returned a single-year FY2025
-revenue evidence path. The cross-disclosure comparison returned only one
+In the historical 2026-09-28 live trial after Neo4j was started, the service
+returned a single-year FY2025 revenue evidence path. The cross-disclosure comparison returned only one
 filing; growth and unit-conversion questions returned evidence but no computed
 answer. An out-of-corpus FY2026 question abstained. The API serves the cited
 PDF with HTTP 200, but the in-app browser refused to render the local PDF
@@ -81,13 +94,11 @@ end-to-end citation acceptance. The active Chroma collection has 1,686 items
 and null `build_id`, while the isolated candidate has 843 chunks; no live
 store was modified and the release pointer was not changed.
 
-On 2026-09-29, a fresh shallow checkout of the delivery branch installed the
-Python lock into a new isolated Python 3.12.14 environment; the full suite
-passed (203 passed, 2 deprecation warnings, 7 subtests), and recomputing the
-summary from checked-in raw records produced JSON identical to the published
-summary. The local `py -3.12` launcher had no registered runtime, so the new
-environment was created using the already-installed Python 3.12 interpreter;
-the project dependencies themselves came only from the lock file.
+The earlier pre-repair delivery snapshot passed 203 tests in a clean Python
+3.12.14 environment; that historical result belongs to its exact earlier
+source state. The current calculation-contract working tree passes 226 tests,
+2 deprecation warnings, and 7 subtests. The exact command and scope are in the
+[current repair report](docs/financial_qa_candidate_repair_delivery_2026-09-29.md).
 
 The first clean frontend install exposed four npm-audit findings (2 moderate,
 2 high) in development-tool dependencies. A non-forced lockfile-only update
@@ -171,33 +182,43 @@ for the observed output and the current PDF click-through limitation.
 
 ## Retrieval results and evidence limits
 
-The latest v4 AI/PDF source-review development diagnostic is in
-[`experiments/financial-evidence-qa-2026-09-28/`](experiments/financial-evidence-qa-2026-09-28/).
-It reports hit rate only against explicitly judged direct-support pages, not
-full-corpus recall. Its label pool is incomplete and was used during
-development; do not treat it as a held-out test or answer-accuracy result.
+The latest source-matched development replay uses candidate
+`build_1aa1530fdd382d17`, the same already-seen AI/PDF labels, and the six
+implemented methods. It completed 156/156 retrieval calls. This replay binds
+the added frontend calculation-status display to the exact package identity;
+retrieval code and protocol were unchanged, and no tuning was performed. The
+prior source-matched run remains separately recorded. Quality is measured
+only against explicitly judged direct-support pages for 23 query forms from 17
+semantic families; page judgments are non-exhaustive and were used during
+development. This is not a held-out test, full-corpus Recall@k, or answer
+accuracy. nDCG was not computed because unjudged pages cannot be treated as
+irrelevant.
 
-| 完整中文方法名称 | 已标注直接支持页命中@10 | 命中请求分母 | 请求延迟 p50 / p95（毫秒） |
+| 完整中文方法名称 | 已标注直接支持页命中请求 | 家族等权 MRR@10 | 查询延迟 p50 / p95（毫秒） |
 |---|---:|---:|---:|
-| 关键词检索（BM25） | 11/30 页 | 11/23 | 4.297 / 5.472 |
-| 语义向量检索 | 1/30 页 | 1/23 | 190.141 / 228.711 |
-| 关键词与语义融合检索（倒数排名融合） | 5/30 页 | 5/23 | 193.703 / 226.350 |
-| 融合检索＋知识图谱扩展 | 1/30 页 | 1/23 | 193.156 / 226.452 |
-| 融合检索＋知识图谱扩展＋时间约束 | 14/30 页 | 13/23 | 194.319 / 225.599 |
-| 融合检索＋时间约束（无图扩展诊断对照） | 18/30 页 | 16/23 | 190.959 / 233.387 |
+| 关键词检索（BM25） | 11/23 | 0.2348 | 4.173 / 5.207 |
+| 语义向量检索 | 1/23 | 0.0294 | 168.917 / 190.702 |
+| 关键词与语义融合检索（倒数排名融合） | 5/23 | 0.0878 | 176.717 / 212.029 |
+| 融合检索＋知识图谱扩展 | 1/23 | 0.0294 | 174.589 / 204.081 |
+| 融合检索＋知识图谱扩展＋时间约束 | 13/23 | 0.1687 | 173.997 / 217.990 |
+| 融合检索＋时间约束（无图扩展诊断对照） | 16/23 | 0.2493 | 174.055 / 231.107 |
 
-![v4 development retrieval and resource diagnostics](experiments/financial-evidence-qa-2026-09-28/financial_qa_summary_20260928-dev20-final-v4.png)
+![Source-matched development retrieval quality and latency](experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260929_build_1aa1530fdd382d17.png)
 
-A 2026-09-29 run through the unified validation script reproduced the same
-per-method direct-support hit counts (156/156 requests succeeded), while
-p95 latency varied across runs. The supplemental raw run is kept separately
-under `repeat_20260929/`; it is not an independent test and its latency is not
-pooled with the primary run. See the [release report](docs/financial_qa_candidate_release_2026-09-28.md)
-for both timing tables and the protocol deviation disclosure.
+On these development diagnostics, graph expansion did not beat its paired
+control: family-level page-hit@10 difference was `-0.1176` versus keyword and
+semantic fusion, and `-0.1471` versus temporal filtering without graph
+expansion; both descriptive family-bootstrap intervals include zero. The
+point estimates favor the controls, but do not prove superiority, equivalence,
+or non-inferiority. The full methods, intervals, runtime conditions, table
+audit tiers, raw JSONL, recomputation command and historical build separation
+are in the [2026-09-29 repair report](docs/financial_qa_candidate_repair_delivery_2026-09-29.md)
+and [experiment bundle](experiments/financial-evidence-qa-2026-09-29-calculation-contract/).
 
-The 30-page denominator is the explicitly judged direct-support page pool; it
-is not exhaustive and is not full-corpus Recall@10. nDCG was not computed.
-The values above are development diagnostics, not human-reviewed accuracy.
+The preceding frozen v4 run on `build_f74bb1dfbf96b8a2` is preserved in the
+[2026-09-28 report](docs/financial_qa_candidate_release_2026-09-28.md) and
+[historical experiment bundle](experiments/financial-evidence-qa-2026-09-28/).
+Its timings are not pooled with the source-matched replay above.
 
 ### Historical graph-derived Silver regression
 
@@ -237,6 +258,20 @@ Then run tests and static checks:
 .\.venv\Scripts\python.exe -m compileall -q strategic_graphrag scripts tests
 git diff --check
 ```
+
+### Reproduce the 2026-09-29 local experiment candidate
+
+The raw PDFs and immutable Chroma build are not in Git. Obtain the three
+filings under the paths listed in [`data/README.md`](data/README.md), verify
+their SHA-256 values against the
+[repair report](docs/financial_qa_candidate_repair_delivery_2026-09-29.md),
+then run the isolated build without `--publish`. The build verifies its own
+identity and hashes. Use a new output suffix when replaying the matrix because
+the checked-in raw run is immutable and the runner refuses to overwrite it.
+The exact build, six-method retrieval, and recomputation commands are kept in
+the [reproducibility commands and boundaries](docs/financial_qa_candidate_repair_delivery_2026-09-29.md).
+The recorded run used an isolated JSON graph adapter and a build-scoped local
+vector snapshot; it does not certify the active Neo4j/Chroma deployment.
 
 The current local environment is expected to be Python 3.12 with versions in
 [`requirements-lock-2026-09-19.txt`](requirements-lock-2026-09-19.txt). The lock

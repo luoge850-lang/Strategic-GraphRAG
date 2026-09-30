@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 import re
 from dataclasses import asdict
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal, DecimalException
 from typing import Any, Iterable
 
 from ..schema.financial_observation import FinancialObservation, split_unit
@@ -22,6 +22,129 @@ _SCALE = {
     "billion": Decimal("1000000000"),
 }
 _CURRENCY_RE = re.compile(r"(?<!\d)(20\d{2})(?!\d)")
+_ANNUAL_PERIOD_RE = re.compile(r"^(?:(?:FY|FISCAL\s+YEAR)\s*)?(20\d{2})$", re.IGNORECASE)
+_QUARTER_FIRST_RE = re.compile(r"^Q([1-4])\s*(?:FY\s*)?(20\d{2})$", re.IGNORECASE)
+_QUARTER_LAST_RE = re.compile(r"^(?:FY\s*)?(20\d{2})\s*Q([1-4])$", re.IGNORECASE)
+
+
+def _normalized_scale(value: Any) -> str | None:
+    scale = str(value or "").strip().casefold()
+    aliases = {
+        "unit": "units", "thousand": "thousands",
+        "million": "millions", "billion": "billions",
+    }
+    scale = aliases.get(scale, scale)
+    return scale or None
+
+
+def _unit_metadata_conflict(observation: FinancialObservation) -> str | None:
+    parsed_currency, parsed_scale = split_unit(observation.unit)
+    explicit_currency = str(observation.currency or "").strip().upper() or None
+    explicit_scale = _normalized_scale(observation.scale)
+    unit = str(observation.unit or "").strip().casefold()
+    if parsed_currency and explicit_currency and parsed_currency != explicit_currency:
+        return "currency_field_conflicts_with_unit"
+    if parsed_scale and explicit_scale and _normalized_scale(parsed_scale) != explicit_scale:
+        return "scale_field_conflicts_with_unit"
+    if unit in {"percent", "%", "percentage", "percentage points"}:
+        if explicit_currency or (explicit_scale and explicit_scale != "percent"):
+            return "percentage_unit_conflicts_with_currency_or_scale"
+    return None
+
+
+def _period_descriptor(value: Any) -> tuple[str, int] | None:
+    text = re.sub(r"\s+", " ", str(value or "").strip()).upper()
+    quarter = _QUARTER_FIRST_RE.fullmatch(text)
+    if quarter:
+        return f"Q{quarter.group(1)}", int(quarter.group(2))
+    quarter = _QUARTER_LAST_RE.fullmatch(text)
+    if quarter:
+        return f"Q{quarter.group(2)}", int(quarter.group(1))
+    annual = _ANNUAL_PERIOD_RE.fullmatch(text)
+    if annual:
+        return "FY", int(annual.group(1))
+    return None
+
+
+def _period_contract_error(observation: FinancialObservation) -> str | None:
+    descriptor = _period_descriptor(observation.fiscal_period)
+    if descriptor is None:
+        return "unsupported_or_unresolved_observation_period"
+    if descriptor[1] != observation.fiscal_year:
+        return "fiscal_period_year_conflicts_with_fiscal_year"
+    return None
+
+
+def _line_provenance_signature(observation: FinancialObservation) -> tuple[str, ...]:
+    return (
+        observation.company_id.strip().upper().replace(" ", "_"),
+        observation.metric_id.strip().upper().replace(" ", "_"),
+        observation.claim_id.strip(),
+        observation.source_filing.strip().casefold(),
+        str(observation.page),
+        observation.table_name.strip(),
+        observation.row_label.strip().casefold(),
+        observation.unit.strip().casefold(),
+        str(observation.currency or "").strip().upper(),
+        _normalized_scale(observation.scale) or "",
+        str(observation.build_id or "").strip(),
+    )
+
+
+def _comparability_assessment(
+    items: list[FinancialObservation],
+) -> tuple[dict[str, Any] | None, str | None]:
+    statuses = {str(item.comparability_status or "").strip().upper() for item in items}
+    if "NOT_COMPARABLE" in statuses:
+        return None, "observations_explicitly_not_comparable"
+    if len(statuses) != 1:
+        return None, "observation_comparability_conflict"
+    if statuses == {"COMPARABLE"}:
+        return {"status": "COMPARABLE", "basis": "explicit_observation_status"}, None
+    if statuses != {"UNASSESSED"}:
+        return None, "observation_comparability_not_confirmed"
+
+    signatures = {_line_provenance_signature(item) for item in items}
+    if len(signatures) != 1:
+        return None, "observation_comparability_not_confirmed"
+    sample = items[0]
+    source_fields_present = bool(
+        sample.company_id
+        and sample.metric_id
+        and sample.claim_id
+        and sample.source_filing
+        and sample.page > 0
+        and sample.table_name
+        and sample.table_name != "UNKNOWN_TABLE"
+        and sample.row_label
+        and sample.unit
+        and sample.build_id
+    )
+    if not source_fields_present:
+        return None, "observation_comparability_not_confirmed"
+    return {
+        "status": "CONDITIONALLY_COMPARABLE",
+        "basis": "same_disclosure_claim_page_table_row_and_unit",
+        "disclosure_version": sample.source_filing,
+        "evidence_id": sample.claim_id,
+        "page": sample.page,
+        "table_name": sample.table_name,
+        "row_label": sample.row_label,
+    }, None
+
+
+def _comparison_reason(assessment: dict[str, Any]) -> str:
+    if assessment.get("status") == "CONDITIONALLY_COMPARABLE":
+        return "same_disclosure_row_conditionally_comparable"
+    return "same_metric_comparable_years"
+
+
+def _public_float(value: Any) -> float | None:
+    try:
+        result = float(value)
+    except (OverflowError, TypeError, ValueError):
+        return None
+    return result if math.isfinite(result) else None
 
 
 def _result(status: str, operation: str, reason: str, **extra: Any) -> dict[str, Any]:
@@ -58,7 +181,7 @@ def _year(value: Any) -> int | None:
 def _unit(observation: FinancialObservation) -> tuple[str | None, str | None, str]:
     parsed_currency, parsed_scale = split_unit(observation.unit)
     currency = str(observation.currency or parsed_currency or "").strip().upper() or None
-    scale = str(observation.scale or parsed_scale or "").strip().lower() or None
+    scale = _normalized_scale(observation.scale or parsed_scale)
     normalized_unit = str(observation.unit or "").strip()
     if normalized_unit.casefold() in {"percent", "%", "percentage", "percentage points"}:
         scale = "percent"
@@ -71,7 +194,7 @@ def _basis_value(
     currency, scale, unit = _unit(observation)
     try:
         value = Decimal(str(observation.value))
-    except (InvalidOperation, TypeError, ValueError):
+    except (DecimalException, TypeError, ValueError):
         return None
     if not value.is_finite():
         return None
@@ -84,15 +207,17 @@ def _basis_value(
     return None
 
 
-def _valid_observations(items: Iterable[Any]) -> tuple[list[FinancialObservation], int]:
+def _valid_observations(
+    items: Iterable[Any],
+) -> tuple[list[FinancialObservation], int, list[tuple[FinancialObservation, str]]]:
     valid: list[FinancialObservation] = []
     invalid = 0
+    contract_errors: list[tuple[FinancialObservation, str]] = []
     for item in items:
         if not isinstance(item, FinancialObservation):
             invalid += 1
             continue
         try:
-            basis = _basis_value(item)
             metadata_ok = bool(
                 item.company_id
                 and item.metric_id
@@ -104,6 +229,12 @@ def _valid_observations(items: Iterable[Any]) -> tuple[list[FinancialObservation
                 and item.fiscal_period
                 and item.unit
             )
+            if metadata_ok:
+                contract_error = _unit_metadata_conflict(item) or _period_contract_error(item)
+                if contract_error:
+                    contract_errors.append((item, contract_error))
+                    continue
+            basis = _basis_value(item)
         except (TypeError, ValueError):
             basis = None
             metadata_ok = False
@@ -111,7 +242,7 @@ def _valid_observations(items: Iterable[Any]) -> tuple[list[FinancialObservation
             invalid += 1
             continue
         valid.append(item)
-    return valid, invalid
+    return valid, invalid, contract_errors
 
 
 def _requested_years(plan: dict[str, Any], operation: str) -> tuple[list[int], bool]:
@@ -173,6 +304,8 @@ def _version_filter(plan: dict[str, Any], items: list[FinancialObservation]) -> 
 def _choose_year(
     year: int,
     items: list[FinancialObservation],
+    *,
+    require_comparability: bool = False,
 ) -> tuple[FinancialObservation | None, str | None]:
     candidates = [item for item in items if item.fiscal_year == year]
     if not candidates:
@@ -188,7 +321,20 @@ def _choose_year(
         return None, None
     bases = {basis for _, basis, _ in normalized}
     values = {value for _, _, value in normalized}
-    if len(bases) != 1 or len(values) != 1:
+    periods = {_period_descriptor(item.fiscal_period) for item, _, _ in normalized}
+    companies = {item.company_id.strip().upper().replace(" ", "_") for item, _, _ in normalized}
+    if len(companies) != 1:
+        return None, "company_scope_required_for_multiple_companies"
+    comparability = {
+        str(item.comparability_status or "").strip().upper()
+        for item, _, _ in normalized
+    }
+    if require_comparability and len(comparability) != 1:
+        return None, "observation_comparability_conflict"
+    if require_comparability and comparability == {"UNASSESSED"}:
+        if len({_line_provenance_signature(item) for item, _, _ in normalized}) != 1:
+            return None, "observation_comparability_provenance_conflict"
+    if len(bases) != 1 or len(values) != 1 or len(periods) != 1:
         return None, "conflicting_fact_values"
     normalized.sort(key=lambda row: (row[0].source_filing, row[0].claim_id, row[0].id))
     return normalized[0][0], None
@@ -252,14 +398,63 @@ def calculate_public(
     if ambiguities or not metric:
         return _result("AMBIGUOUS", operation_name, "query_plan_has_unresolved_fields")
 
+    requested_years, year_ambiguous = _requested_years(plan, operation)
+    if year_ambiguous:
+        return _result("AMBIGUOUS", operation_name, "query_plan_year_scope_is_inconsistent")
+    requested_period = plan.get("fact_period") or plan.get("fiscal_period")
+    period_constraint = _period_descriptor(requested_period)
+    if requested_period and period_constraint is None:
+        return _result(
+            "AMBIGUOUS", operation_name, "query_plan_period_is_unresolved",
+            requested_fact_period=requested_period,
+        )
+
     raw_observations: list[Any] = []
     for path in paths or []:
         raw_observations.extend(getattr(path, "financial_observations", []) or [])
-    observations, invalid_count = _valid_observations(raw_observations)
+    observations, invalid_count, contract_errors = _valid_observations(raw_observations)
     company = str(plan.get("company") or "").strip().upper().replace(" ", "_")
+    expected_build_id = str(plan.get("build_id") or "").strip()
+    metric_matches = lambda item: item.metric_id.strip().upper().replace(" ", "_") == metric
+    relevant_errors = [
+        (item, reason) for item, reason in contract_errors
+        if metric_matches(item)
+        and (not company or item.company_id.strip().upper().replace(" ", "_") == company)
+        and (not expected_build_id or item.build_id == expected_build_id)
+    ]
+    scoped_error_items, scope_error = _version_filter(
+        plan, [item for item, _ in relevant_errors]
+    )
+    if scope_error:
+        return _result("AMBIGUOUS", operation_name, scope_error)
+    scoped_error_ids = {id(item) for item in scoped_error_items}
+    relevant_errors = [
+        (item, reason) for item, reason in relevant_errors
+        if id(item) in scoped_error_ids
+    ]
+    requested_year_set = set(requested_years)
+    relevant_errors = [
+        (item, reason) for item, reason in relevant_errors
+        if not requested_year_set
+        or not ({_year(item.fiscal_period), item.fiscal_year} - {None}).isdisjoint(requested_year_set)
+        or not _year(item.fiscal_period) or item.fiscal_year <= 0
+    ]
+    if period_constraint is not None:
+        relevant_errors = [
+            (item, reason) for item, reason in relevant_errors
+            if _period_descriptor(item.fiscal_period) is None
+            or _period_descriptor(item.fiscal_period)[0] == period_constraint[0]
+        ]
+    if relevant_errors:
+        first_error = relevant_errors[0][1]
+        return _result(
+            "INVALID_INPUT", operation_name, first_error,
+            invalid_observations=len(relevant_errors),
+            observations=[_record(item) for item, _ in relevant_errors],
+        )
     observations = [
         item for item in observations
-        if item.metric_id.strip().upper().replace(" ", "_") == metric
+        if metric_matches(item)
         and (not company or item.company_id.strip().upper().replace(" ", "_") == company)
     ]
     observations, scope_error = _version_filter(plan, observations)
@@ -271,7 +466,6 @@ def calculate_public(
             "no_complete_typed_observation_for_requested_company_metric_and_disclosure",
             invalid_observations=invalid_count,
         )
-    expected_build_id = str(plan.get("build_id") or "").strip()
     if not expected_build_id:
         return _result(
             "INSUFFICIENT_EVIDENCE", operation_name,
@@ -287,10 +481,21 @@ def calculate_public(
             observations=[_record(item) for item in observations],
         )
 
-    requested_years, year_ambiguous = _requested_years(plan, operation)
+    if period_constraint is not None:
+        observations = [
+            item for item in observations
+            if _period_descriptor(item.fiscal_period)
+            and _period_descriptor(item.fiscal_period)[0] == period_constraint[0]
+        ]
+        if not observations:
+            return _result(
+                "INSUFFICIENT_EVIDENCE", operation_name,
+                "requested_fact_period_granularity_missing",
+                requested_fact_period=requested_period,
+                invalid_observations=invalid_count,
+            )
+
     years_available = sorted({item.fiscal_year for item in observations})
-    if year_ambiguous:
-        return _result("AMBIGUOUS", operation_name, "query_plan_year_scope_is_inconsistent")
     if not requested_years:
         if operation in {"CROSS_YEAR", "ABSOLUTE_CHANGE", "PERCENT_CHANGE"}:
             return _result(
@@ -302,9 +507,26 @@ def calculate_public(
             return _result("AMBIGUOUS", operation_name, "fact_year_not_resolved_and_multiple_years_available")
         requested_years = years_available
 
+    if operation in {"CROSS_YEAR", "ABSOLUTE_CHANGE", "PERCENT_CHANGE"} and period_constraint is None:
+        return _result(
+            "AMBIGUOUS", operation_name, "comparison_period_granularity_required",
+            observations=[_record(item) for item in observations],
+            requested_years=requested_years,
+        )
+    if operation in {"FACT", "UNIT_CONVERSION"} and period_constraint is None and requested_years:
+        return _result(
+            "AMBIGUOUS", operation_name, "fact_period_granularity_required",
+            observations=[_record(item) for item in observations],
+            requested_years=requested_years,
+        )
+
     selected: dict[int, FinancialObservation] = {}
     for year in requested_years:
-        item, conflict = _choose_year(year, observations)
+        item, conflict = _choose_year(
+            year,
+            observations,
+            require_comparability=operation in {"CROSS_YEAR", "ABSOLUTE_CHANGE", "PERCENT_CHANGE"},
+        )
         if conflict:
             return _result(
                 "AMBIGUOUS", operation_name, conflict,
@@ -325,22 +547,58 @@ def calculate_public(
         )
 
     selected_items = [selected[year] for year in requested_years]
+    selected_companies = {
+        item.company_id.strip().upper().replace(" ", "_") for item in selected_items
+    }
+    if not company and len(selected_companies) != 1:
+        return _result(
+            "AMBIGUOUS", operation_name, "company_scope_required_for_multiple_companies",
+            available_companies=sorted(selected_companies),
+            observations=[_record(item) for item in selected_items],
+        )
     detailed_records = [
         _record(item) for item in observations
         if item.fiscal_year in requested_years
     ]
+    if operation in {"CROSS_YEAR", "ABSOLUTE_CHANGE", "PERCENT_CHANGE"}:
+        period_families = {
+            _period_descriptor(item.fiscal_period)[0] for item in selected_items
+        }
+        if len(period_families) != 1:
+            return _result(
+                "AMBIGUOUS", operation_name, "comparison_period_granularity_mismatch",
+                observations=detailed_records,
+            )
+        comparability_assessment, comparability_error = _comparability_assessment(selected_items)
+        if comparability_error:
+            status = (
+                "AMBIGUOUS"
+                if comparability_error in {
+                    "observations_explicitly_not_comparable",
+                    "observation_comparability_conflict",
+                    "observation_comparability_provenance_conflict",
+                }
+                else "INSUFFICIENT_EVIDENCE"
+            )
+            return _result(
+                status, operation_name, comparability_error,
+                observations=detailed_records,
+            )
     if operation == "FACT":
         if len(selected_items) != 1:
             return _result("AMBIGUOUS", operation_name, "single_fact_year_required")
         item = selected_items[0]
+        numeric = _public_float(item.value)
+        if numeric is None:
+            return _result("INVALID_INPUT", operation_name, "non_finite_public_result")
         return {
             "schema": "deterministic-calculation/v1",
             "status": "PASS",
             "operation": operation_name,
             "observations": detailed_records,
-            "value": float(item.value),
+            "value": numeric,
             "unit": item.unit,
-            "display": f"{float(item.value):,.3f} {item.unit}",
+            "display": f"{numeric:,.3f} {item.unit}",
             "reason_code": "typed_fact_observation",
         }
 
@@ -361,11 +619,16 @@ def calculate_public(
                 "OPERATION_UNSUPPORTED", operation_name, "currency_exchange_rate_not_in_protocol",
                 observations=detailed_records,
             )
-        base_value = Decimal(str(item.value)) * _SCALE[source_scale]
-        value = base_value / _SCALE[target_scale]
+        try:
+            base_value = Decimal(str(item.value)) * _SCALE[source_scale]
+            value = base_value / _SCALE[target_scale]
+        except DecimalException:
+            return _result("INVALID_INPUT", operation_name, "non_finite_conversion_result")
         if not value.is_finite():
             return _result("INVALID_INPUT", operation_name, "non_finite_conversion_result")
-        result_value = float(value)
+        result_value = _public_float(value)
+        if result_value is None:
+            return _result("INVALID_INPUT", operation_name, "non_finite_public_result")
         unit = f"{target_currency} {target_scale}"
         return {
             "schema": "deterministic-calculation/v1",
@@ -389,23 +652,28 @@ def calculate_public(
                 "mixed_or_unrecognized_measurement_units",
                 observations=detailed_records,
             )
+        public_values = [_public_float(item.value) for item in selected_items]
+        if any(value is None for value in public_values):
+            return _result("INVALID_INPUT", operation_name, "non_finite_public_result")
         series = [
             {
                 "fiscal_year": item.fiscal_year,
-                "value": float(item.value),
+                "fiscal_period": item.fiscal_period,
+                "value": public_value,
                 "unit": item.unit,
             }
-            for item in selected_items
+            for item, public_value in zip(selected_items, public_values)
         ]
         return {
             "schema": "deterministic-calculation/v1",
             "status": "PASS",
             "operation": operation_name,
             "observations": detailed_records,
+            "comparability_assessment": comparability_assessment,
             "value": series,
             "unit": "per-observation",
             "display": "; ".join(
-                f"FY{item['fiscal_year']}: {item['value']:,.3f} {item['unit']}"
+                f"{item['fiscal_period']}: {item['value']:,.3f} {item['unit']}"
                 for item in series
             ),
             "reason_code": "complete_typed_multi_year_series",
@@ -421,27 +689,36 @@ def calculate_public(
             observations=detailed_records,
         )
     first_base, second_base, basis = compatible
-    change = second_base - first_base
+    try:
+        change = second_base - first_base
+    except DecimalException:
+        return _result("INVALID_INPUT", operation_name, "non_finite_difference_result")
     if operation == "ABSOLUTE_CHANGE":
         scale = _unit(second)[1]
         currency = basis[1] if basis[0] == "currency" else None
         if basis[0] == "currency" and scale not in _SCALE:
             return _result("OPERATION_UNSUPPORTED", operation_name, "unsupported_output_scale")
-        value = change / _SCALE[scale] if currency and scale else change
+        try:
+            value = change / _SCALE[scale] if currency and scale else change
+        except DecimalException:
+            return _result("INVALID_INPUT", operation_name, "non_finite_difference_result")
         if not value.is_finite():
             return _result("INVALID_INPUT", operation_name, "non_finite_difference_result")
         unit = second.unit
-        numeric = float(value)
+        numeric = _public_float(value)
+        if numeric is None:
+            return _result("INVALID_INPUT", operation_name, "non_finite_public_result")
         label = "percentage points" if basis[0] == "percent" else unit
         return {
             "schema": "deterministic-calculation/v1",
             "status": "PASS",
             "operation": operation_name,
             "observations": detailed_records,
+            "comparability_assessment": comparability_assessment,
             "value": numeric,
             "unit": label,
             "display": f"FY{second.fiscal_year} - FY{first.fiscal_year} = {numeric:,.3f} {label}",
-            "reason_code": "same_metric_comparable_years",
+            "reason_code": _comparison_reason(comparability_assessment),
         }
 
     if operation == "PERCENT_CHANGE":
@@ -453,19 +730,25 @@ def calculate_public(
             )
         if first_base == 0:
             return _result("INVALID_INPUT", operation_name, "zero_baseline_for_percent_change", observations=detailed_records)
-        percent = change / abs(first_base) * Decimal("100")
+        try:
+            percent = change / abs(first_base) * Decimal("100")
+        except DecimalException:
+            return _result("INVALID_INPUT", operation_name, "non_finite_percent_change_result")
         if not percent.is_finite():
             return _result("INVALID_INPUT", operation_name, "non_finite_percent_change_result")
-        numeric = float(percent)
+        numeric = _public_float(percent)
+        if numeric is None:
+            return _result("INVALID_INPUT", operation_name, "non_finite_public_result")
         return {
             "schema": "deterministic-calculation/v1",
             "status": "PASS",
             "operation": operation_name,
             "observations": detailed_records,
+            "comparability_assessment": comparability_assessment,
             "value": numeric,
             "unit": "percent",
             "display": f"FY{first.fiscal_year} to FY{second.fiscal_year}: {numeric:,.3f}% change",
-            "reason_code": "same_metric_comparable_years",
+            "reason_code": _comparison_reason(comparability_assessment),
         }
 
     return _result("OPERATION_UNSUPPORTED", operation_name, "operation_not_supported")

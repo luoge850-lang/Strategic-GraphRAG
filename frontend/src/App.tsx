@@ -1007,6 +1007,48 @@ export default function App() {
                 transition={{ duration: 0.5, ease: [0.2, 0.7, 0.3, 1] }}
                 style={{ display: "flex", flexDirection: "column", gap: 20 }}
               >
+                {result.calculation && (
+                  <section
+                    aria-label="Deterministic calculation status"
+                    className="card-mono reveal-card"
+                    style={{
+                      border: `1.5px solid ${result.calculation.status === "PASS" ? "var(--L3)" : "#b87936"}`,
+                      background: "var(--paper)",
+                      padding: 16,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                        Deterministic calculation · {result.calculation.status}
+                      </span>
+                      {result.calculation.operation && (
+                        <span className="nav-mono">{result.calculation.operation.replace(/_/g, " ")}</span>
+                      )}
+                    </div>
+                    {result.calculation.status === "PASS" ? (
+                      <>
+                        <div style={{ marginTop: 8, fontSize: 13, lineHeight: 1.6 }}>
+                          {result.calculation.display || "Calculation completed; no formatted value was supplied."}
+                        </div>
+                        {result.calculation.comparability_assessment && (
+                          <div style={{ marginTop: 6, fontSize: 10, color: "var(--muted)" }}>
+                            Comparability: {result.calculation.comparability_assessment.status || "UNSPECIFIED"}
+                            {result.calculation.comparability_assessment.basis
+                              ? ` · ${result.calculation.comparability_assessment.basis.replace(/_/g, " ")}`
+                              : ""}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div role="status" style={{ marginTop: 8, fontSize: 12, lineHeight: 1.6 }}>
+                        No numeric result returned. {result.calculation.reason_code
+                          ? result.calculation.reason_code.replace(/_/g, " ")
+                          : "The calculation did not complete successfully."}
+                      </div>
+                    )}
+                  </section>
+                )}
+
                 {/* ══════════════════════════════════════════════
                     PRIMARY: Synthesis Report — the official answer
                     ══════════════════════════════════════════════ */}

@@ -206,7 +206,7 @@ def test_percentage_change_with_zero_baseline_is_invalid_not_pass():
             calculation="PERCENT_CHANGE",
             fiscal_year_start=2023,
             fiscal_year_end=2024,
-            fact_period=None,
+            fact_period="FY2023",
         ),
     )
     assert result["status"] == "INVALID_INPUT"
@@ -222,7 +222,7 @@ def test_mixed_currency_comparison_is_not_silently_normalized():
         plan(
             task_type="COMPARISON",
             calculation=None,
-            fact_period=None,
+            fact_period="FY2023",
             comparison="POINT_TO_POINT",
             fiscal_year_start=2023,
             fiscal_year_end=2024,
@@ -237,7 +237,7 @@ def test_requested_missing_year_is_insufficient_evidence():
         [path(observation(100, fact_year=2023))],
         plan(
             task_type="COMPARISON",
-            fact_period=None,
+            fact_period="FY2023",
             comparison="POINT_TO_POINT",
             fiscal_year_start=2023,
             fiscal_year_end=2024,
@@ -252,6 +252,329 @@ def test_non_finite_observations_cannot_produce_a_pass():
     result = calculate([path(bad)], plan())
     assert result["status"] == "INSUFFICIENT_EVIDENCE"
     assert result["value"] is None
+
+
+def test_explicit_currency_cannot_override_currency_in_unit():
+    contradictory = replace(observation(1234.5), currency="EUR")
+    result = calculate(
+        [path(contradictory)],
+        plan(
+            calculation="UNIT_CONVERSION",
+            calculation_target_currency="EUR",
+            calculation_target_scale="billions",
+        ),
+    )
+    assert result["status"] == "INVALID_INPUT"
+    assert result["value"] is None
+    assert result["reason_code"] == "currency_field_conflicts_with_unit"
+
+
+def test_explicit_scale_cannot_override_scale_in_unit():
+    contradictory = replace(observation(1234.5), scale="billions")
+    result = calculate(
+        [path(contradictory)],
+        plan(
+            calculation="UNIT_CONVERSION",
+            calculation_target_currency="USD",
+            calculation_target_scale="billions",
+        ),
+    )
+    assert result["status"] == "INVALID_INPUT"
+    assert result["value"] is None
+    assert result["reason_code"] == "scale_field_conflicts_with_unit"
+
+
+def test_annual_fact_query_does_not_accept_quarterly_observation():
+    quarterly = replace(
+        observation(100),
+        fiscal_period="Q1 FY2024",
+        valid_from="FY2024",
+        valid_to="FY2024",
+    )
+    result = calculate([path(quarterly)], plan(fact_period="FY2024"))
+    assert result["status"] == "INSUFFICIENT_EVIDENCE"
+    assert result["value"] is None
+    assert result["reason_code"] == "requested_fact_period_granularity_missing"
+
+
+def test_explicit_quarterly_fact_query_accepts_only_matching_quarter():
+    quarterly = replace(
+        observation(100),
+        fiscal_period="Q1 FY2024",
+        valid_from="FY2024",
+        valid_to="FY2024",
+    )
+    result = calculate([path(quarterly)], plan(fact_period="Q1 FY2024"))
+    assert result["status"] == "PASS"
+    assert result["value"] == 100
+    assert result["observations"][0]["fiscal_period"] == "Q1 FY2024"
+
+
+def test_percent_change_rejects_explicitly_non_comparable_observations():
+    earlier = replace(
+        observation(100, fact_year=2023), comparability_status="NOT_COMPARABLE"
+    )
+    later = replace(
+        observation(120, fact_year=2024), comparability_status="NOT_COMPARABLE"
+    )
+    result = calculate(
+        [path(earlier, later)],
+        plan(
+            task_type="CALCULATION",
+            calculation="PERCENT_CHANGE",
+            fact_period="FY2023",
+            fiscal_year_start=2023,
+            fiscal_year_end=2024,
+        ),
+    )
+    assert result["status"] == "AMBIGUOUS"
+    assert result["value"] is None
+    assert result["reason_code"] == "observations_explicitly_not_comparable"
+
+
+def test_unassessed_same_disclosure_row_has_explicit_conditional_basis():
+    earlier = replace(
+        observation(100, fact_year=2023),
+        claim_id="shared_disclosure_row",
+        comparability_status="UNASSESSED",
+    )
+    later = replace(
+        observation(120, fact_year=2024),
+        claim_id="shared_disclosure_row",
+        comparability_status="UNASSESSED",
+    )
+    result = calculate(
+        [path(earlier, later)],
+        plan(
+            task_type="CALCULATION",
+            calculation="PERCENT_CHANGE",
+            fact_period="FY2023",
+            fiscal_year_start=2023,
+            fiscal_year_end=2024,
+        ),
+    )
+    assert result["status"] == "PASS"
+    assert result["value"] == 20
+    assert result["reason_code"] == "same_disclosure_row_conditionally_comparable"
+    assert result["comparability_assessment"] == {
+        "status": "CONDITIONALLY_COMPARABLE",
+        "basis": "same_disclosure_claim_page_table_row_and_unit",
+        "disclosure_version": "2025-10-K.pdf",
+        "evidence_id": "shared_disclosure_row",
+        "page": 50,
+        "table_name": "CONSOLIDATED_STATEMENTS_OF_INCOME",
+        "row_label": "Revenue",
+    }
+
+
+def test_unassessed_values_from_different_claim_rows_are_not_comparable():
+    earlier = replace(
+        observation(100, fact_year=2023), comparability_status="UNASSESSED"
+    )
+    later = replace(
+        observation(120, fact_year=2024), comparability_status="UNASSESSED"
+    )
+    result = calculate(
+        [path(earlier, later)],
+        plan(
+            task_type="CALCULATION",
+            calculation="PERCENT_CHANGE",
+            fact_period="FY2023",
+            fiscal_year_start=2023,
+            fiscal_year_end=2024,
+        ),
+    )
+    assert result["status"] == "INSUFFICIENT_EVIDENCE"
+    assert result["reason_code"] == "observation_comparability_not_confirmed"
+
+
+def test_percent_change_requires_single_company_when_plan_omits_company():
+    earlier = observation(100, fact_year=2023, company="Company_A")
+    later = observation(120, fact_year=2024, company="Company_B")
+    result = calculate(
+        [path(earlier, later)],
+        plan(
+            task_type="CALCULATION",
+            calculation="PERCENT_CHANGE",
+            company=None,
+            fact_period="FY2023",
+            fiscal_year_start=2023,
+            fiscal_year_end=2024,
+        ),
+    )
+    assert result["status"] == "AMBIGUOUS"
+    assert result["value"] is None
+    assert result["reason_code"] == "company_scope_required_for_multiple_companies"
+
+
+def test_period_year_must_match_typed_fiscal_year():
+    mislabeled = replace(
+        observation(100), fiscal_period="FY2023", fiscal_year=2024
+    )
+    result = calculate([path(mislabeled)], plan(fact_period="FY2024"))
+    assert result["status"] == "INVALID_INPUT"
+    assert result["reason_code"] == "fiscal_period_year_conflicts_with_fiscal_year"
+
+
+def test_half_year_label_is_not_silently_interpreted_as_annual():
+    partial_period = replace(observation(100), fiscal_period="H1 FY2024")
+    result = calculate([path(partial_period)], plan(fact_period="FY2024"))
+    assert result["status"] == "INVALID_INPUT"
+    assert result["reason_code"] == "unsupported_or_unresolved_observation_period"
+
+
+def test_query_plan_with_unresolved_period_is_ambiguous():
+    result = calculate(
+        [path(observation(100))],
+        plan(fact_period="Q1"),
+    )
+    assert result["status"] == "AMBIGUOUS"
+    assert result["reason_code"] == "query_plan_period_is_unresolved"
+
+
+def test_conflicting_duplicate_comparability_cannot_depend_on_sort_order():
+    comparable = replace(
+        observation(100, fact_year=2023, evidence_id="a_comparable"),
+        comparability_status="COMPARABLE",
+    )
+    not_comparable = replace(
+        observation(100, fact_year=2023, evidence_id="z_not_comparable"),
+        comparability_status="NOT_COMPARABLE",
+    )
+    later = observation(120, fact_year=2024)
+    result = calculate(
+        [path(comparable, not_comparable, later)],
+        plan(
+            task_type="CALCULATION",
+            calculation="PERCENT_CHANGE",
+            fact_period="FY2023",
+            fiscal_year_start=2023,
+            fiscal_year_end=2024,
+        ),
+    )
+    assert result["status"] == "AMBIGUOUS"
+    assert result["reason_code"] == "observation_comparability_conflict"
+
+
+def test_cross_year_series_rejects_mixed_annual_and_quarter_periods():
+    annual = observation(100, fact_year=2023)
+    quarter = replace(
+        observation(120, fact_year=2024),
+        fiscal_period="Q1 FY2024",
+        valid_from="FY2024",
+        valid_to="FY2024",
+    )
+    result = calculate(
+        [path(annual, quarter)],
+        plan(
+            task_type="COMPARISON",
+            calculation="CROSS_YEAR",
+            fact_period="FY2023",
+            fiscal_year_start=2023,
+            fiscal_year_end=2024,
+        ),
+    )
+    assert result["status"] == "INSUFFICIENT_EVIDENCE"
+    assert result["reason_code"] == "requested_fact_years_missing"
+
+
+def test_cross_year_series_rejects_not_comparable_values():
+    earlier = replace(observation(100, fact_year=2023), comparability_status="NOT_COMPARABLE")
+    later = replace(observation(120, fact_year=2024), comparability_status="NOT_COMPARABLE")
+    result = calculate(
+        [path(earlier, later)],
+        plan(
+            task_type="COMPARISON",
+            calculation="CROSS_YEAR",
+            fact_period="FY2023",
+            fiscal_year_start=2023,
+            fiscal_year_end=2024,
+        ),
+    )
+    assert result["status"] == "AMBIGUOUS"
+    assert result["reason_code"] == "observations_explicitly_not_comparable"
+
+
+def test_calculation_plan_rejects_mixed_duplicate_comparability_metadata():
+    comparable = observation(100, fact_year=2023, evidence_id="a_comparable")
+    not_comparable = replace(
+        observation(100, fact_year=2023, evidence_id="z_not_comparable"),
+        comparability_status="NOT_COMPARABLE",
+    )
+    later = observation(120, fact_year=2024)
+    result = calculate(
+        [path(comparable, not_comparable, later)],
+        plan(
+            task_type="COMPARISON",
+            calculation="CROSS_YEAR",
+            fact_period="FY2023",
+            fiscal_year_start=2023,
+            fiscal_year_end=2024,
+        ),
+    )
+    assert result["status"] == "AMBIGUOUS"
+    assert result["reason_code"] == "observation_comparability_conflict"
+
+
+def test_overflow_after_conversion_to_json_number_is_invalid():
+    huge = observation(1e308, unit="USD millions")
+    result = calculate(
+        [path(huge)],
+        plan(
+            calculation="UNIT_CONVERSION",
+            calculation_target_currency="USD",
+            calculation_target_scale="units",
+        ),
+    )
+    assert result["status"] == "INVALID_INPUT"
+    assert result["value"] is None
+    assert result["reason_code"] == "non_finite_public_result"
+
+
+def test_absolute_change_overflow_after_float_conversion_is_invalid():
+    result = calculate(
+        [
+            path(observation(1e308, fact_year=2023, unit="shares")),
+            path(observation(-1e308, fact_year=2024, unit="shares")),
+        ],
+        plan(
+            task_type="CALCULATION",
+            calculation="ABSOLUTE_CHANGE",
+            fact_period="FY2023",
+            fiscal_year_start=2023,
+            fiscal_year_end=2024,
+        ),
+    )
+    assert result["status"] == "INVALID_INPUT"
+    assert result["reason_code"] == "non_finite_public_result"
+
+
+def test_percent_change_overflow_after_float_conversion_is_invalid():
+    result = calculate(
+        [
+            path(observation(1e-300, fact_year=2023)),
+            path(observation(1e308, fact_year=2024)),
+        ],
+        plan(
+            task_type="CALCULATION",
+            calculation="PERCENT_CHANGE",
+            fact_period="FY2023",
+            fiscal_year_start=2023,
+            fiscal_year_end=2024,
+        ),
+    )
+    assert result["status"] == "INVALID_INPUT"
+    assert result["reason_code"] == "non_finite_public_result"
+
+
+def test_out_of_scope_conflicting_unit_does_not_poison_requested_period():
+    valid = observation(100, fact_year=2024)
+    out_of_scope = replace(
+        observation(50, fact_year=2022), currency="EUR"
+    )
+    result = calculate([path(valid, out_of_scope)], plan(fact_period="FY2024"))
+    assert result["status"] == "PASS"
+    assert result["value"] == 100
 
 
 def test_legacy_parallel_value_arrays_are_not_treated_as_typed_observations():
@@ -289,6 +612,49 @@ def test_parser_serializes_conversion_target_in_structured_plan():
     assert parsed["calculation_target_scale"] == "billions"
     assert parsed["target_metric"] == "REVENUE"
     assert parsed["fact_period"] == "FY2024"
+
+
+def test_parser_preserves_quarter_in_fact_period():
+    parsed = parse_query("What was NVIDIA revenue in Q1 FY2024?").to_dict()
+    assert parsed["fact_period"] == "Q1 FY2024"
+
+
+def test_bare_quarter_year_wording_cannot_fall_back_to_annual_fact():
+    parsed = parse_query("What was NVIDIA revenue in Q1 2024?").to_dict()
+    assert parsed["fact_period"] == "Q1 FY2024"
+    result = calculate(
+        [path(observation(100, fact_year=2024))],
+        parsed | {"build_id": "build_test"},
+    )
+    assert result["status"] == "INSUFFICIENT_EVIDENCE"
+    assert result["value"] is None
+
+
+def test_parser_preserves_quarter_family_for_a_multi_year_comparison():
+    parsed = parse_query(
+        "Compare NVIDIA revenue in Q1 FY2023 and Q1 FY2024"
+    ).to_dict()
+    assert parsed["fact_period"] == "Q1 FY2023"
+    assert parsed["fiscal_years"] == [2023, 2024]
+    result = calculate(
+        [
+            path(replace(observation(100, fact_year=2023), fiscal_period="Q1 FY2023")),
+            path(replace(observation(120, fact_year=2024), fiscal_period="Q1 FY2024")),
+        ],
+        parsed | {"build_id": "build_test"},
+    )
+    assert result["status"] == "PASS"
+    assert [item["fiscal_period"] for item in result["value"]] == [
+        "Q1 FY2023", "Q1 FY2024"
+    ]
+
+
+def test_parser_marks_annual_granularity_for_multiyear_fy_comparison():
+    parsed = parse_query(
+        "Compare NVIDIA revenue across FY2023 and FY2024"
+    ).to_dict()
+    assert parsed["fact_period"] == "FY2023"
+    assert parsed["fiscal_years"] == [2023, 2024]
 
 
 def test_parser_separates_fact_year_from_10k_disclosure_year_without_fy_abbreviation():
@@ -377,7 +743,7 @@ def test_percentage_change_uses_two_typed_comparable_years():
         plan(
             task_type="CALCULATION",
             calculation="PERCENT_CHANGE",
-            fact_period=None,
+            fact_period="FY2023",
             fiscal_year_start=2023,
             fiscal_year_end=2024,
         ),
@@ -396,7 +762,7 @@ def test_absolute_change_normalizes_mixed_scales_without_losing_currency():
         plan(
             task_type="CALCULATION",
             calculation="ABSOLUTE_CHANGE",
-            fact_period=None,
+            fact_period="FY2023",
             fiscal_year_start=2023,
             fiscal_year_end=2024,
         ),

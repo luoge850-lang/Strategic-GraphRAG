@@ -1,0 +1,68 @@
+{
+  "run_id": "calc-contract-retest-20260929-final",
+  "captured_at_utc": "2026-09-29",
+  "base_commit": "fb9f65a9c61fe07b7c1179a3295c2aa3018d8e4d",
+  "source_state": "working tree after calculation, period-plan, and frontend calculation-status repairs; current source-matched candidate build recorded below",
+  "capture_method": "Direct regression calls through GraphRAGEngine._public_calculation plus parser-to-calculator tests.",
+  "not_an_accuracy_claim": true,
+  "cases": [
+    {
+      "case": "currency_conflict",
+      "before": {"status": "PASS", "value": 1.2345, "unit": "EUR billions"},
+      "after": {"status": "INVALID_INPUT", "value": null, "reason_code": "currency_field_conflicts_with_unit"}
+    },
+    {
+      "case": "scale_conflict",
+      "before": {"status": "PASS", "value": 1234.5, "unit": "USD billions"},
+      "after": {"status": "INVALID_INPUT", "value": null, "reason_code": "scale_field_conflicts_with_unit"}
+    },
+    {
+      "case": "annual_query_using_quarter_observation",
+      "before": {"status": "PASS", "value": 100},
+      "after": {"status": "INSUFFICIENT_EVIDENCE", "value": null, "reason_code": "requested_fact_period_granularity_missing"}
+    },
+    {
+      "case": "growth_from_non_comparable_values",
+      "before": {"status": "PASS", "value": 20.0, "unit": "percent"},
+      "after": {"status": "AMBIGUOUS", "value": null, "reason_code": "observations_explicitly_not_comparable"}
+    },
+    {
+      "case": "growth_pairing_across_companies",
+      "before": {"status": "PASS", "value": 20.0, "unit": "percent", "companies_used": ["Company_A", "Company_B"]},
+      "after": {"status": "AMBIGUOUS", "value": null, "reason_code": "company_scope_required_for_multiple_companies"}
+    }
+  ],
+  "additional_boundary_checks": {
+    "conflicting_values_and_disclosure_versions": "AMBIGUOUS; explicit disclosure scope selects only that filing",
+    "quarter_year_mismatch": "INVALID_INPUT",
+    "unknown_or_partial_period_label": "INVALID_INPUT or AMBIGUOUS; never silently annualized",
+    "duplicate_comparability_metadata": "AMBIGUOUS independent of evidence sort order",
+    "cross_year_mixed_period_or_not_comparable": "INSUFFICIENT_EVIDENCE or AMBIGUOUS",
+    "currency_scale_exchange_without_rate": "OPERATION_UNSUPPORTED",
+    "zero_baseline_percent_change": "INVALID_INPUT",
+    "negative_value_conversion": "PASS with sign preserved",
+    "non_finite_input_and_final_float_overflow": "cannot produce PASS",
+    "out_of_scope_bad_observation": "does not poison a correctly scoped valid fact"
+  },
+  "source_matched_pdf_case": {
+    "build_id": "build_1aa1530fdd382d17",
+    "source_filing": "2025-10-K.pdf",
+    "physical_page": 80,
+    "table_title": "Revenue by End Market",
+    "row": "Total revenue / REVENUE",
+    "values_usd_millions": {"FY2023": 26974, "FY2024": 60922, "FY2025": 130497},
+    "observations_share": ["company", "metric", "claim_id", "filing", "page", "table", "row", "unit", "currency", "scale", "build_id"],
+    "calculation_status": "PASS",
+    "comparability_assessment": "CONDITIONALLY_COMPARABLE",
+    "basis": "same_disclosure_claim_page_table_row_and_unit",
+    "meaning": "Arithmetic on values presented in the same disclosed table; not a full accounting-policy comparability or causal assessment.",
+    "source_review": "An independent task reviewer checked this table and the consolidated-statement values on page 52 against the source PDF."
+  },
+  "verification": {
+    "focused_test_module": "51 passed",
+    "full_test_suite": "226 passed, 2 deprecation warnings, 7 subtests passed",
+    "frontend_production_build": "npm run build succeeded (TypeScript and Vite)",
+    "live_browser_calculation_status": "NOT_VERIFIED; local API/Neo4j unavailable during browser check",
+    "independent_test_accuracy": "NOT_MEASURED"
+  }
+}

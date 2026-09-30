@@ -197,6 +197,52 @@ ANALYSIS_PATTERNS = {
 }
 
 
+def _explicit_fiscal_period(question: str) -> str | None:
+    """Preserve explicit subannual scope instead of collapsing it to its year."""
+    text = str(question or "")
+    patterns = (
+        (r"\bQ([1-4])\s*(?:FY|fiscal(?:\s+year)?)\s*[-:]?\s*(20\d{2})\b", "quarter_first"),
+        (r"\bQ([1-4])\s*(20\d{2})\b", "quarter_first_bare"),
+        (r"\b(?:FY|fiscal(?:\s+year)?)\s*[-:]?\s*(20\d{2})\s*Q([1-4])\b", "quarter_last"),
+        (r"\b(20\d{2})\s*Q([1-4])\b", "year_quarter"),
+    )
+    for pattern, order in patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if not match:
+            continue
+        if order in {"quarter_first", "quarter_first_bare"}:
+            quarter, year = match.group(1), match.group(2)
+        elif order == "quarter_last":
+            year, quarter = match.group(1), match.group(2)
+        else:
+            year, quarter = match.group(1), match.group(2)
+        return f"Q{quarter} FY{year}"
+
+    half = re.search(
+        r"\bH([1-2])\s*(?:FY|fiscal(?:\s+year)?)\s*[-:]?\s*(20\d{2})\b|"
+        r"\b(?:FY|fiscal(?:\s+year)?)\s*[-:]?\s*(20\d{2})\s*H([1-2])\b",
+        text,
+        re.IGNORECASE,
+    )
+    if half:
+        if half.group(1):
+            return f"H{half.group(1)} FY{half.group(2)}"
+        return f"H{half.group(4)} FY{half.group(3)}"
+    annual = re.search(
+        r"\b(?:FY|fiscal(?:\s+year)?|financial\s+year)\s*[-:]?\s*(20\d{2})\b",
+        text,
+        re.IGNORECASE,
+    )
+    if annual:
+        return f"FY{annual.group(1)}"
+    return None
+
+
+def _year_from_period_label(period: str) -> int | None:
+    match = re.search(r"\b(20\d{2})\b", str(period or ""))
+    return int(match.group(1)) if match else None
+
+
 def parse_query(question: str) -> StructuredQuery:
     """
     Parse a natural language financial question into a StructuredQuery.
@@ -206,6 +252,7 @@ def parse_query(question: str) -> StructuredQuery:
     """
     q = StructuredQuery(raw_question=question)
     q_lower = question.lower()
+    explicit_period = _explicit_fiscal_period(question)
 
     # Keep disclosure period and fact period separate.  For example, a 2025
     # 10-K can disclose FY2024, and treating the two as the same year leaks
@@ -244,7 +291,11 @@ def parse_query(question: str) -> StructuredQuery:
             document_year = fact_year = None
     if as_of_match and document_year and fact_year:
         q.disclosure_as_of = f"FY{document_year}"
-        q.fact_period = f"FY{fact_year}"
+        q.fact_period = (
+            explicit_period
+            if explicit_period and _year_from_period_label(explicit_period) == int(fact_year)
+            else f"FY{fact_year}"
+        )
         q.document_scope = f"{document_year}-10-K.pdf"
 
     if re.search(r"\b(compare|versus|vs\.?|between)\b", q_lower):
@@ -335,6 +386,8 @@ def parse_query(question: str) -> StructuredQuery:
             q.temporal_required = True
             q.require_multi_year = True
 
+    if q.fact_period is None and explicit_period:
+        q.fact_period = explicit_period
     if q.fact_period is None and q.fiscal_year_start is not None and q.fiscal_year_start == q.fiscal_year_end:
         q.fact_period = f"FY{q.fiscal_year_start}"
     if q.document_scope is None and len(set(year_match)) == 1 and re.search(r"\b(10-k|filing|report)\b", q_lower):

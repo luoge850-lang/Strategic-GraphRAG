@@ -1,0 +1,32 @@
+{
+  "schema": "financial-retrieval-label-sensitivity/v1",
+  "analysis_of": "historical frozen v4 development run build_f74bb1dfbf96b8a2; this sensitivity does not relabel or replace the frozen results",
+  "raw_jsonl_sha256": "728e21444e92878b3d02c6f7b9668ef0a35d7bd7f35784285b6763b724104285",
+  "label_dataset_sha256": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af",
+  "scoring_scope": {
+    "question_forms": 23,
+    "semantic_families": 17,
+    "explicitly_judged_page_instances": 30,
+    "grade_3_pages": 27,
+    "grade_2_pages": 3,
+    "human_primary_review": "NOT_RUN",
+    "human_secondary_review": "NOT_RUN",
+    "adjudication": "NOT_RUN",
+    "interpretation": "AI/PDF source diagnostic only; grade-2 pages include partial or contextual support and do not establish complete answer evidence."
+  },
+  "methods": [
+    {"method_name_zh": "关键词检索（BM25）", "positive_grade_hit_requests": "11/23", "grade_3_only_hit_requests": "10/23", "family_weighted_hit_estimate": 0.4118, "family_weighted_hit_ci_95": [0.2059, 0.6176], "family_weighted_mrr_at_10": 0.2348},
+    {"method_name_zh": "语义向量检索", "positive_grade_hit_requests": "1/23", "grade_3_only_hit_requests": "1/23", "family_weighted_hit_estimate": 0.0588, "family_weighted_hit_ci_95": [0.0, 0.1765], "family_weighted_mrr_at_10": 0.0294},
+    {"method_name_zh": "关键词与语义融合检索（倒数排名融合）", "positive_grade_hit_requests": "5/23", "grade_3_only_hit_requests": "5/23", "family_weighted_hit_estimate": 0.1765, "family_weighted_hit_ci_95": [0.0294, 0.3529], "family_weighted_mrr_at_10": 0.0878},
+    {"method_name_zh": "融合检索＋知识图谱扩展", "positive_grade_hit_requests": "1/23", "grade_3_only_hit_requests": "1/23", "family_weighted_hit_estimate": 0.0588, "family_weighted_hit_ci_95": [0.0, 0.1765], "family_weighted_mrr_at_10": 0.0294},
+    {"method_name_zh": "融合检索＋知识图谱扩展＋时间约束", "positive_grade_hit_requests": "13/23", "grade_3_only_hit_requests": "12/23", "family_weighted_hit_estimate": 0.4706, "family_weighted_hit_ci_95": [0.2647, 0.7059], "family_weighted_mrr_at_10": 0.1687},
+    {"method_name_zh": "融合检索＋时间约束（无图扩展诊断对照）", "positive_grade_hit_requests": "16/23", "grade_3_only_hit_requests": "14/23", "family_weighted_hit_estimate": 0.6176, "family_weighted_hit_ci_95": [0.3824, 0.8235], "family_weighted_mrr_at_10": 0.2493}
+  ],
+  "metric_definitions": {
+    "request_hit": "At least one explicitly labeled positive page appears in the top ten retrieved physical pages for that question form.",
+    "family_weighted_hit": "Average within-family request hit fraction, then equal-weight average over 17 families; interval is descriptive family bootstrap from the frozen summary.",
+    "mrr": "Family-weighted reciprocal rank of the first explicitly labeled positive page, not an exhaustive relevance pool.",
+    "prohibited_interpretation": "Not full-corpus Recall@k, not a guaranteed mathematical lower bound, not answer accuracy, and not evidence that unjudged pages are irrelevant."
+  },
+  "sensitivity_interpretation": "Strict grade-3-only request hits are a separately reported scoring-definition sensitivity; the frozen original page grades and primary run remain unchanged."
+}

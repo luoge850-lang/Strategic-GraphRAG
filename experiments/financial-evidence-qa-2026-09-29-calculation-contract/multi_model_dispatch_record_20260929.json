@@ -1,0 +1,72 @@
+{
+  "schema": "codex-public-dispatch-evidence/v1",
+  "record_scope": "Visible task dispatch requests, public task outputs, adopted decisions, and validation only. No hidden reasoning is recorded.",
+  "primary_executor": {
+    "requested_workflow": {"model": "GPT-6 Luna", "reasoning_effort": "XHigh"},
+    "actual_model": "NOT_VERIFIED",
+    "actual_reasoning_effort": "NOT_VERIFIED",
+    "reason": "The accessible task metadata does not expose the parent executor's actual model identity or reasoning effort."
+  },
+  "delegated_tasks": [
+    {
+      "task_id": "01a0ec6d-6f70-72f3-9fa0-cc02ea21c65d",
+      "nickname": "Banach",
+      "requested_model_override": "gpt-6-sol",
+      "requested_reasoning_effort": "high",
+      "initial_dispatch_started_at_utc": "2026-09-29T09:09:33Z",
+      "completion_status": "COMPLETED",
+      "completion_timestamp": "NOT_EXPOSED",
+      "follow_up_submission_ids": [
+        "01a0ec8a-60e6-7272-91f7-9a900afe96",
+        "01a0ec95-f2c7-7201-aff4-edc38d2dd9ab"
+      ],
+      "actual_model": "NOT_VERIFIED",
+      "actual_reasoning_effort": "NOT_VERIFIED",
+      "public_output_summary": "Reviewed calculation contract. Found period/year, duplicate comparability, cross-year bypass, finite-output overflow, and out-of-scope error propagation defects; later identified bare 'Q1 2024' annualization. Final read-only check reported none remaining and 49 focused tests passing.",
+      "adopted_changes": [
+        "Strict fiscal-period parsing, query-plan period preservation, and period/year consistency validation.",
+        "Comparability conflict checks before duplicate selection and for cross-year series.",
+        "Final public float finiteness checks and temporal scoping of malformed observations."
+      ],
+      "validation": "49 focused calculation-contract tests passed; full repository suite 224 passed, 2 warnings, 7 subtests passed. This is regression verification, not independent accuracy testing."
+    },
+    {
+      "task_id": "01a0ec6d-7184-7292-9207-57e191d5a862",
+      "nickname": "Aquinas",
+      "requested_model_override": "gpt-6-astra",
+      "requested_reasoning_effort": "high",
+      "initial_dispatch_started_at_utc": "2026-09-29T09:09:33Z",
+      "completion_status": "COMPLETED",
+      "completion_timestamp": "NOT_EXPOSED",
+      "actual_model": "NOT_VERIFIED",
+      "actual_reasoning_effort": "NOT_VERIFIED",
+      "public_output_summary": "Audited release claims and v4 evidence. Recommended sensitivity reporting for three grade-2 contextual/partial pages, correction of contradictory 'Recall lower bound' terminology, explicit family-weighted estimands, cautious degenerate intervals, and clear distinction between no graph expansion and graph-free retrieval. Confirmed source PDFs are hash-matched; warned against equating old-build integrity with a new source build.",
+      "adopted_changes": [
+        "Prepared a versioned score-sensitivity artifact without altering frozen labels or primary results.",
+        "Prepared a dated interpretation erratum that preserves the frozen protocol bytes.",
+        "Kept all methods under complete Chinese names and separated candidate build status from service acceptance."
+      ],
+      "validation": "Sensitivity recomputed from the published 156-row raw JSONL and expanded v3 labels; primary counts and family-weighted MRR match the checked-in summary."
+    },
+    {
+      "task_id": "01a0ecab-6c0d-7aa0-a4c6-127decaed244",
+      "agent_id": "01a0ec6d-7184-7292-9207-57e191d5a862",
+      "nickname": "Aquinas",
+      "requested_model_override": "gpt-6-astra",
+      "requested_reasoning_effort": "high",
+      "dispatch_started_at_utc": "2026-09-29T10:17:32Z",
+      "completion_status": "COMPLETED",
+      "completion_timestamp": "NOT_EXPOSED",
+      "actual_model": "NOT_VERIFIED",
+      "actual_reasoning_effort": "NOT_VERIFIED",
+      "public_output_summary": "Independently inspected the 2025 NVIDIA 10-K source table and candidate observations for revenue in fiscal 2023-2025. Confirmed same claim, table, row, page, unit, currency, scale, company, metric, and build; values are 26,974, 60,922, and 130,497 USD millions. The same three values also appear in the consolidated statements. Clarified that PASS means arithmetic completed under a source-structural conditional comparability assessment, not a full accounting-policy audit or causal explanation.",
+      "adopted_changes": [
+        "Retained the narrowly scoped CONDITIONALLY_COMPARABLE rule for same-disclosure, same-claim, same-page, same-table, same-row, same-unit observations.",
+        "Reported the conditional basis and limitation; did not treat the result as independent accounting comparability review.",
+        "Verified the actual PDF-derived candidate Q04 result against the original filing in build_38321fdf7366bf38."
+      ],
+      "validation": "Source-matched candidate Q04 passed the engineering acceptance check with all three values, source page 80, and CONDITIONALLY_COMPARABLE basis; full test suite 226 passed, 2 deprecation warnings, 7 subtests passed."
+    }
+  ],
+  "important_limit": "A requested model override and completed subtask are not proof of actual backend model or reasoning intensity; those fields remain NOT_VERIFIED unless the platform exposes them."
+}

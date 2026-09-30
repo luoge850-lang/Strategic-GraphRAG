@@ -1,0 +1,52 @@
+{
+  "schema": "financial-qa-delivery-hash-manifest/v1",
+  "captured_date": "2026-09-29",
+  "hash_algorithm": "SHA-256",
+  "previous_candidate": {
+    "build_id": "build_38321fdf7366bf38",
+    "source_tree_sha256": "3666bca937cb3b591ea9eaaa7420bae5a425c63bacb9a96d52a482b2349fc9d",
+    "build_git_head_at_creation": "fb9f65a9c61fe07b7c1179a3295c2aa3018d8e4d",
+    "build_git_head_note": "Working tree contained uncommitted source edits; source_tree_sha256 binds file contents. Candidate package remains local-only under ignored reports/isolated_staging.",
+    "source_pdfs": {
+      "2023-10-K.pdf": {"sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8", "bytes": 1578179},
+      "2024-10-K.pdf": {"sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b", "bytes": 1074533},
+      "2025-10-K.pdf": {"sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e", "bytes": 1274715}
+    }
+  },
+  "candidate": {
+    "build_id": "build_1aa1530fdd382d17",
+    "source_tree_sha256": "a151d24bef8f10f7b01465803fbf4b404dc84b33e545b7bccae5766718490d1a",
+    "build_git_head_at_creation": "fb9f65a9c61fe07b7c1179a3295c2aa3018d8e4d",
+    "build_git_head_note": "Working tree contained uncommitted source edits; the source fingerprint binds backend, frontend, scripts, tests, and dependency files. Candidate package remains local-only under ignored reports/isolated_staging.",
+    "package_verification": "PASS; 8 checks",
+    "engineering_acceptance": "PASS; 8 of 8 scenarios",
+    "frontend_production_build": "PASS; npm run build",
+    "source_pdfs": {
+      "2023-10-K.pdf": {"sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8", "bytes": 1578179},
+      "2024-10-K.pdf": {"sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b", "bytes": 1074533},
+      "2025-10-K.pdf": {"sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e", "bytes": 1274715}
+    }
+  },
+  "protocol_and_inputs": {
+    "development_dataset": {"path": "experiments/financial-evidence-qa-2026-09-28/financial_qa_dev_source_review_20260924_v3.jsonl", "sha256": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af", "bytes": 56835},
+    "frozen_protocol": {"path": "experiments/financial-evidence-qa-2026-09-28/protocol_v4.md", "sha256": "d2a5baca4e49dcdf95444ea63e84050cbc44e2d14f0283183402e6080d28a4ee", "bytes": 6389},
+    "table_ai_pdf_diagnostic": {"path": "experiments/financial-evidence-qa-2026-09-28/table_quality_ai_visual_diagnostic_2026-09-24_v2.jsonl", "sha256": "9a9f9d709b10729066a2285ebad64f0c5c5dfc008ca5b1187ddf657ce3855536", "bytes": 81064},
+    "dependency_lock": {"path": "requirements-lock-2026-09-19.txt", "sha256": "994e613c8846b9d1c165121d4b539489be147a097ab96ce0a8795f213afe58f8", "bytes": 2708},
+    "retrieval_runner_sha256": "367e7c3d1e0caed9bff2698f948aae03eafdc320c104b0a62935686a87011084",
+    "summary_script_sha256": "ba5a9ef0ee387ad0a3fc78351c46c6db78e1f5db84ffbb9a6ab05507d62c86ce"
+  },
+  "outputs": {
+    "financial_retrieval_raw_20260929_build_38321fdf7366bf38.jsonl": {"sha256": "ad18a0d4d0843d13a4ca2b3536d13e722b47cf950e32ad36b9fc2baef6c9b2d0", "bytes": 2144819, "records": 156},
+    "financial_retrieval_raw_20260929_build_38321fdf7366bf38.manifest.json": {"sha256": "9b112a0ed8d4cd7b2ac55df34693c09157bd98a4bb80eaeba65dbb642b845a5a", "bytes": 5756},
+    "financial_retrieval_summary_20260929_build_38321fdf7366bf38.json": {"sha256": "0419afcf95293739d6f64a8986141f8d5c147bdb1ec78cb7bdf05981d8898ac0", "bytes": 193053},
+    "financial_retrieval_summary_20260929_build_38321fdf7366bf38.png": {"sha256": "6ff5170253130d7584373acaffad00cc1a9b7551373cffa27654fe347728693b", "bytes": 295897},
+    "financial_retrieval_raw_20260929_build_1aa1530fdd382d17.jsonl": {"sha256": "569293380e30524760283a929f9fd27fa711348176edabf42a64327c470a06d6", "bytes": 2144809, "records": 156},
+    "financial_retrieval_raw_20260929_build_1aa1530fdd382d17.manifest.json": {"sha256": "0990776fb4f29b22b0f2c6ca65474c7cbf983bd0ea26fbf3abbcbb59b5844347", "bytes": 5757},
+    "financial_retrieval_summary_20260929_build_1aa1530fdd382d17.json": {"sha256": "59eecbfb0da55346df4b9b26014a028b83f8652b68ff91dbf75f0de9711de6a8", "bytes": 193052},
+    "financial_retrieval_summary_20260929_build_1aa1530fdd382d17.png": {"sha256": "6f1dcbf7331c9296216bf9174da6a4ee1a9e5debed01885378e550aa79a20549", "bytes": 295223},
+    "baseline_calculation_contract_20260929.json": {"sha256": "23d708232c25ed796c78aa5c25f012ca3e57e5657a603949ca750630a12c73b2", "bytes": 2646},
+    "calculation_contract_after_20260929.json": {"sha256": "948ae5cd7b8da112307a7da7b88336c1872a59612ad30c41b60da86eea5c1abf", "bytes": 3809},
+    "scoring_sensitivity_20260929.json": {"sha256": "438aadc50e1fb3402f264d8679b6db618cba1385f3a4267cdcf28236c1c8eedb", "bytes": 3301},
+    "multi_model_dispatch_record_20260929.json": {"sha256": "2cdf8e3d323089656977f4ea35c35f01bcfb123159a8a24d0d230104d3cf3616", "bytes": 5286}
+  }
+}
