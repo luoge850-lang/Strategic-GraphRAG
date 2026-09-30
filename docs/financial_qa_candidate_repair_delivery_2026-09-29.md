@@ -15,7 +15,7 @@
 | 60 条表格候选 | AI/PDF 目视诊断：数值、符号、单位尺度、来源页各 60/60；财年列 58/60；语义别名 45/60；完整事实联合“无明显问题”45/60 | 全部仍未完成人工主审、第二人复核和裁决；不是准确率或召回率 |
 | 实际服务与浏览器 | **未通过/未运行**：前端页面可打开，但显示本地 API 不可达；检查时 Neo4j 7474/7687 与 API 8000 均无监听 | 候选内 FastAPI `TestClient` 合同 200 不等于真实 HTTP 服务或浏览器成功；未点击并验证 PDF 引用页 |
 | 当前活动存储 | 活动 Chroma 集合只读盘点为 1,686 项，非空 `build_id` 为 0；Neo4j 无可用本地监听 | 没有写活动库、影子导入或切换；1,686 项与隔离候选 843 块不可混用 |
-| GitHub | 交付分支 `codex/financial-evidence-qa-delivery-2026-09-29`；现有 PR #1 目标为 `codex/v3-three-filing-evidence-graphrag`，保持 OPEN 且不合并 | 本报告随交付提交更新；最终 SHA 与其 CI 在远端核验后补入 PR 记录；不更新 `stable` |
+| GitHub | 交付分支 `codex/financial-evidence-qa-delivery-2026-09-29`；PR #1 目标为 `codex/v3-three-filing-evidence-graphrag`，保持 OPEN 且不合并 | PR #1 保留远端提交与 CI 状态；不更新或合并 `stable` |
 | 多模型调度证据 | 有 Sol 与 Astra 子任务的任务 ID、请求覆盖模型/强度、公开任务输出和采纳决策 | 平台没有暴露实际模型身份或实际推理强度；这两项均记录 `NOT_VERIFIED`，不以请求覆盖冒充实际执行元数据 |
 
 因此，本轮选择：**可复现的实验候选版（范围受限）**。不选择“已通过真实服务验收的工程稳定候选版”。
@@ -59,7 +59,7 @@
 
 ### 干净检出发现及修复
 
-2026-09-30 从交付分支做 Windows 干净检出时，Git 默认 `core.autocrlf` 将 JSONL 工作树改为 CRLF，汇总脚本因此因 raw-manifest SHA 不匹配而安全拒绝运行；同一检出计算出的源码指纹也与候选包不同。根因为源码指纹把文本换行字节当作语义、而新实验目录没有字节精确保留属性。修复为：构建源码/依赖指纹统一先把 CRLF 与孤立 CR 规范成 LF；对有 SHA 约束的 2026-09-29 实验包在 `.gitattributes` 设 `-text`，原始记录保持逐字节一致；新增 LF/CRLF 指纹回归测试。清洁检出依赖安装与当前源码测试的最终复核结果以追加提交后的同分支新检出为准，初始的 hash mismatch 失败不能从记录中删去。
+2026-09-30 从交付分支做 Windows 干净检出时，Git 默认 `core.autocrlf` 将 JSONL 工作树改为 CRLF，汇总脚本因此因 raw-manifest SHA 不匹配而安全拒绝运行；同一检出计算出的源码指纹也与候选包不同。根因为源码指纹把文本换行字节当作语义、而新实验目录没有字节精确保留属性。修复为：构建源码/依赖指纹统一先把 CRLF 与孤立 CR 规范成 LF；对有 SHA 约束的 2026-09-29 实验包在 `.gitattributes` 设 `-text`，原始记录保持逐字节一致；新增 LF/CRLF 指纹回归测试。修复提交 `12dbe760456b9e6af1bfc12cfe2739f134c59495` 的干净检出验证通过：锁定 Python 依赖安装成功、全量测试 `227 passed, 2 warnings, 7 subtests`；源码指纹复算与候选一致，raw JSONL SHA 与 sidecar 一致，汇总器生成 JSON 与已发布汇总逐字节相同（SHA-256 `18eca63814b7d5ecdb0e6c862b7c8078842d0166abd3dcb998fd87135094c77d`）。初始 hash mismatch 失败保留在本次记录，不从历史中删除。PDF 未提交，因此干净检出没有重跑 PDF 构建或新的检索矩阵。
 
 本地候选重建的一次启动日志曾显示机器默认的外部 provider 已初始化。隔离 pipeline 显式配置 `use_llm=False`，所以 LLM 抽取分支不会调用；我在候选抽取前中断该次启动，并在 `LLM_PROVIDER=local`、响应缓存关闭的进程范围内续跑。三份文件逐项记录均为 `llm_calls=0`、`network_calls=0`。因此初始化日志不被误报成模型调用，未向外部模型发送年报。
 

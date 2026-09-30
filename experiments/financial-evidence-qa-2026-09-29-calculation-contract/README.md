@@ -18,9 +18,9 @@ deviation, and scores/timings are not pooled.
 - [`financial_retrieval_raw_20260929_build_38321fdf7366bf38.manifest.json`](financial_retrieval_raw_20260929_build_38321fdf7366bf38.manifest.json): run conditions, build/source identity, protocol/data/lock hashes, request timing, peak RSS, and source-PDF hashes.
 - [`financial_retrieval_summary_20260929_build_38321fdf7366bf38.json`](financial_retrieval_summary_20260929_build_38321fdf7366bf38.json): metrics regenerated from the raw records and linked label files, with unrun answer metrics explicit.
 - [`financial_retrieval_summary_20260929_build_38321fdf7366bf38.png`](financial_retrieval_summary_20260929_build_38321fdf7366bf38.png): chart generated from the same summary data.
-- [`financial_retrieval_raw_20260929_build_1aa1530fdd382d17.jsonl`](financial_retrieval_raw_20260929_build_1aa1530fdd382d17.jsonl): latest 156-record matrix, bound to the current source fingerprint.
-- [`financial_retrieval_raw_20260929_build_1aa1530fdd382d17.manifest.json`](financial_retrieval_raw_20260929_build_1aa1530fdd382d17.manifest.json): latest build identity, hashes, runtime, resources and per-method timing.
-- [`financial_retrieval_summary_20260929_build_1aa1530fdd382d17.json`](financial_retrieval_summary_20260929_build_1aa1530fdd382d17.json) and [chart](financial_retrieval_summary_20260929_build_1aa1530fdd382d17.png): summary recalculated from the latest raw records, plus the generated chart.
+- [`financial_retrieval_raw_20260929_build_1aa1530fdd382d17.jsonl`](financial_retrieval_raw_20260929_build_1aa1530fdd382d17.jsonl): second source-matched 156-record replay, retained separately.
+- [`financial_retrieval_raw_20260929_build_1aa1530fdd382d17.manifest.json`](financial_retrieval_raw_20260929_build_1aa1530fdd382d17.manifest.json): that build's identity, hashes, runtime, resources and per-method timing.
+- [`financial_retrieval_summary_20260929_build_1aa1530fdd382d17.json`](financial_retrieval_summary_20260929_build_1aa1530fdd382d17.json) and [chart](financial_retrieval_summary_20260929_build_1aa1530fdd382d17.png): summary and chart for the second replay, not the latest run.
 - [`financial_retrieval_raw_20260930_build_7feb21b48e594a7a.jsonl`](financial_retrieval_raw_20260930_build_7feb21b48e594a7a.jsonl): 156-record replay bound to newline-canonical source fingerprint `ab2693cf127abd39a28c6d70f576ae996778302ee225e11dec8e574b389606d2`.
 - [`financial_retrieval_raw_20260930_build_7feb21b48e594a7a.manifest.json`](financial_retrieval_raw_20260930_build_7feb21b48e594a7a.manifest.json): latest exact build identity, input hashes, runtime conditions, and measured timing/resource record.
 - [`financial_retrieval_summary_20260930_build_7feb21b48e594a7a.json`](financial_retrieval_summary_20260930_build_7feb21b48e594a7a.json) and [chart](financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png): latest metrics recomputed from that raw run.
@@ -57,7 +57,9 @@ The source fingerprint normalizes CRLF/CR to LF for text files. The dated
 artifact directory is marked `-text` in `.gitattributes` because its sidecars
 bind byte-exact SHA-256 values to the JSONL/JSON records. On Windows, keep that
 attribute enabled; do not run checkout with filters that rewrite the experiment
-bytes.
+bytes. A clean Windows checkout at delivery commit `12dbe760456b9e6af1bfc12cfe2739f134c59495`
+confirmed the source fingerprint and raw-record hash, passed all 227 tests, and
+recomputed a byte-identical summary JSON from the committed raw records.
 
 Historical v4 results belong to `build_f74bb1dfbf96b8a2` and remain in the
 [2026-09-28 bundle](../financial-evidence-qa-2026-09-28/README.md); neither

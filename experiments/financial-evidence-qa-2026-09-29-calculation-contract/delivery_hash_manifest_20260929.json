@@ -2,6 +2,16 @@
   "schema": "financial-qa-delivery-hash-manifest/v1",
   "captured_date": "2026-09-29",
   "hash_algorithm": "SHA-256",
+  "clean_checkout_validation": {
+    "commit": "12dbe760456b9e6af1bfc12cfe2739f134c59495",
+    "os_checkout": "Windows; core.autocrlf enabled",
+    "dependency_install": "PASS from requirements-lock-2026-09-19.txt in a fresh temporary environment",
+    "source_fingerprint": "PASS; ab2693cf127abd39a28c6d70f576ae996778302ee225e11dec8e574b389606d2",
+    "raw_jsonl_sidecar_hash": "PASS; byte-exact",
+    "full_test_suite": "PASS; 227 passed, 2 warnings, 7 subtests",
+    "summary_recompute": "PASS; byte-identical JSON",
+    "pdf_candidate_rebuild": "NOT_RUN; licensed PDFs and ignored build package are not in the public checkout"
+  },
   "previous_candidate": {
     "build_id": "build_38321fdf7366bf38",
     "source_tree_sha256": "3666bca937cb3b591ea9eaaa7420bae5a425c63bacb9a96d52a482b2349fc9d",

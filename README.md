@@ -99,8 +99,11 @@ store was modified and the release pointer was not changed.
 
 The earlier pre-repair delivery snapshot passed 203 tests in a clean Python
 3.12.14 environment; that historical result belongs to its exact earlier
-source state. The current calculation-contract working tree passes 226 tests,
-2 deprecation warnings, and 7 subtests. The exact command and scope are in the
+source state. The current candidate passes 227 tests, 2 deprecation warnings,
+and 7 subtests both locally and in a fresh Windows checkout of delivery commit
+`12dbe760456b9e6af1bfc12cfe2739f134c59495`. That checkout also reproduced the
+newline-canonical source fingerprint, raw-record SHA, and byte-identical
+summary JSON. The exact command and scope are in the
 [current repair report](docs/financial_qa_candidate_repair_delivery_2026-09-29.md).
 
 The first clean frontend install exposed four npm-audit findings (2 moderate,
