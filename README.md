@@ -1,256 +1,152 @@
-# Strategic-GraphRAG
-
-An evidence-first financial retrieval research project for NVIDIA fiscal
-2023–2025 SEC 10-K filings. It links financial observations to their filing,
-fact period, disclosure version, source page, and supporting evidence. It is a
-research and engineering prototype—not an investment adviser, causal
-identification system, or production service.
-
-## Latest candidate update · 2026-09-30
-
-> **Release boundary:** GitHub's default branch is `stable`. The latest
-> source-matched experiment is on [PR #1](https://github.com/luoge850-lang/Strategic-GraphRAG/pull/1)
-> and has not been merged into `stable`. Candidate results below are not
-> measurements of the stable runtime and must not be combined with its
-> historical inventory.
-
-The isolated candidate `build_7feb21b48e594a7a` contains **395 parsed pages,
-843 vector chunks, 198 accepted triples, and 362 expanded fact edges**. Those
-are distinct quantities. Package-integrity checks and deterministic
-engineering acceptance each passed 8/8; this does not measure answer accuracy.
-The six retrieval methods completed 156/156 calls on the same development
-replay. Natural-language answer generation was disabled.
-
-| 检索方法 | 已标注直接支持页命中@10 | MRR | 查询延迟 p50 / p95 (ms) |
-|---|---:|---:|---:|
-| 关键词检索（BM25） | 11/23 | 0.2348 | 3.370 / 4.695 |
-| 语义向量检索 | 1/23 | 0.0294 | 140.770 / 152.827 |
-| 关键词与语义融合检索（倒数排名融合） | 5/23 | 0.0878 | 145.078 / 157.411 |
-| 融合检索＋知识图谱扩展 | 1/23 | 0.0294 | 143.373 / 150.465 |
-| 融合检索＋知识图谱扩展＋时间约束 | 13/23 | 0.1687 | 146.024 / 158.471 |
-| 融合检索＋时间约束（无图扩展诊断对照） | 16/23 | 0.2493 | 144.026 / 152.922 |
-
-[![Source-matched development retrieval quality and latency](https://raw.githubusercontent.com/luoge850-lang/Strategic-GraphRAG/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png)](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png)
-
-These are development diagnostics from 23 question forms across 17 semantic
-families with **non-exhaustive AI/PDF support-page judgments**—not full-corpus
-Recall@k, independent test accuracy, or human Gold. The point estimates do not
-show a retrieval gain from graph expansion. nDCG, answer/citation accuracy,
-human review, and a live browser citation flow were not measured or passed.
-At audit time the UI could load, but the graph showed 0 nodes and the local API
-was unreachable; no current live-demo screenshot is presented as successful.
-
-Details and source records remain attached to the unmerged candidate branch:
-[repair and delivery report](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/docs/financial_qa_candidate_repair_delivery_2026-09-29.md),
-[raw retrieval records](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_raw_20260930_build_7feb21b48e594a7a.jsonl),
-[recomputed summary](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.json),
-and [quality/latency chart](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png).
-
-## Stable-branch baseline snapshot
-
-The inventory and audit figures in this section describe the `stable`
-runtime snapshot. They are intentionally separate from the isolated
-experiment candidate summarized above.
-
-| Filing | Pages | Strict EvidenceClaims | Evidence pages | Vector chunks |
-|---|---:|---:|---:|---:|
-| 2023 10-K | 169 | 126 | 44 | 678 |
-| 2024 10-K | 96 | 129 | 41 | 425 |
-| 2025 10-K | 130 | 128 | 43 | 583 |
-| **Total** | **395** | **383** | **128 filing-page pairs** | **1,686** |
-
-The active graph has 383 strict business edges, each linked to a `VERBATIM`
-EvidenceClaim with filing, page, section, chunk, source entity, target entity,
-and relation metadata. All 383 claims use content-derived `claim_v2_*` IDs.
-The post-migration audit found 49 valid same-filing two-hop paths and zero
-invalid strict paths.
-
-Legacy storage is now physically isolated: the post-clean check found zero
-out-of-scope business edges, zero old evidence nodes, and zero old Chroma
-collections. A complete local recovery archive was created before deletion but
-is intentionally not committed because it contains embeddings and extracted
-filing text.
-
-## Latest candidate architecture
-
-The diagram below reflects the newer candidate design proposed in PR #1; it
-does not mean its Neo4j or browser path passed live-service validation.
-
 <p align="center">
-  <img src="docs/diagrams/architecture.svg" alt="Candidate architecture for Strategic-GraphRAG evidence-first retrieval" width="100%" />
+  <img src="docs/diagrams/readme-evidence-journey.svg" alt="From a financial question to source-page evidence" width="100%" />
 </p>
 
-> The SVG is the current candidate-design overview. The editable source is available at
-> [`docs/diagrams/architecture.mmd`](docs/diagrams/architecture.mmd).
+<h1 align="center">Strategic-GraphRAG</h1>
 
-Key implementation decisions:
+<p align="center"><strong>Financial answers you can trace back to the filing.</strong><br />A research prototype for evidence-grounded questions about NVIDIA’s FY2023–FY2025 SEC filings.</p>
 
-- Exact metric-only questions route to `REPORTS_METRIC` facts. Causal questions
-  that mention a metric remain Hybrid so vector evidence pages can expand graph
-  anchors before path search.
-- Every synthesized citation is checked against the returned path evidence.
-- Financial-table claims are normalized into 237 period-specific
-  `FinancialObservation` nodes linked to company, metric, filing, fiscal year,
-  and the exact supporting `EvidenceClaim`. Percentage-of-revenue denominator
-  rows are excluded from amount retrieval; genuine percentage rows are mapped
-  to margin/ratio metrics.
-- All 383 strict claims are represented as `TemporalFact` versions using
-  separate valid-time and recorded-time fields. The current
-  `bitemporal_fact_v2` migration marks 124 versions `ACTIVE_CURRENT` and 259
-  `SUPERSEDED_DISCLOSURE`; supersession means a later disclosure version exists,
-  not that the earlier real-world assertion became false.
-- The 99 `TemporalChange` nodes now link fact versions and supporting claims:
-  58 continued, 6 recurred, 19 metric increases, 3 metric decreases, and 13
-  non-comparable metric changes. The model never infers resolution from silence.
-- `QueryRouter` exposes four reproducible modes: `vector`, `graph`, `hybrid`,
-  and `hybrid_temporal`. Hybrid modes use vector-to-graph anchor expansion and
-  PPR; Hybrid+Temporal additionally scores bitemporal fact matches.
-- Identical successful API requests can use a bounded TTL cache. Responses
-  expose `cache.hit`, selected retrieval mode, and per-stage latency so cached
-  and uncached performance are not mixed.
-- An incremental planner compares PDF SHA-256 values before rebuilding. The
-  current plan reports all three PDFs unchanged and `requires_rebuild=[]`.
+> **Scope boundary:** the cross-year example and retrieval experiment below come from an isolated three-filing candidate. The checked-in `.env.example` still selects only the 2025 filing by default; a fresh clone does not recreate the candidate corpus or its database/vector stores.
 
-## Historical stable-branch query example
+<p align="center">
+  <a href="https://github.com/luoge850-lang/Strategic-GraphRAG/actions/workflows/ci.yml?query=branch%3Astable"><img src="https://github.com/luoge850-lang/Strategic-GraphRAG/actions/workflows/ci.yml/badge.svg?branch=stable" alt="CI on stable" /></a>
+  <a href="https://github.com/luoge850-lang/Strategic-GraphRAG/pull/1"><img src="https://img.shields.io/badge/research-candidate%20under%20review-d6a84f" alt="Research candidate under review" /></a>
+</p>
 
-`Compare revenue in 2023, 2024, and 2025`
+> This is an experimental research and engineering project—not financial advice, an investment tool, a causal-identification system, or a production-ready service.
 
-The current engine retrieves three `REPORTS_METRIC` claims and reports:
+## Why this project exists
 
-- FY2023: $26,974 million (`p.86`)
-- FY2024: $60,922 million (`p.79`)
-- FY2025: $130,497 million (`p.80`)
+A reported value has more than one date attached to it. **The fiscal period** says when the business result occurred; **the filing version** says when and where it was disclosed. A later filing may repeat earlier years, and a graph that forgets this distinction can make two numbers look comparable when they are not.
 
-The response was grounding-verified and used one stable EvidenceClaim ID per
-filing. It does not infer the causes of revenue growth from those accounting
-facts alone.
+Strategic-GraphRAG keeps the question, typed financial observation, filing version, source page, and evidence identifier connected. The goal is not to make every answer sound confident. The goal is to make a supported answer inspectable—and to make ambiguity or missing evidence visible.
 
-## Stable-snapshot engineering evaluation (historical)
+<p align="center">
+  <img src="docs/diagrams/architecture.svg" alt="Candidate architecture: PDF evidence, staged graph and vector indexes, query planning, citation validation, and answer" width="100%" />
+</p>
 
-The recorded stable-snapshot release reports engineering and provenance
-checks separately from semantic quality:
+The diagram describes the candidate design, including its staging boundary. It does **not** imply that the real Neo4j, Chroma, or browser path has passed end-to-end validation.
 
-| Evaluation track | Current status |
+## One question, one evidence trail
+
+Consider: **“Compare NVIDIA revenue for FY2023, FY2024, and FY2025 using the same disclosure.”** In the isolated candidate run, all three observations came from the *Total revenue* row in NVIDIA’s 2025 Form 10-K, physical PDF page 80:
+
+| Fiscal period | Revenue | Disclosure and location |
+|---|---:|---|
+| FY2023 | USD 26,974 million | 2025 Form 10-K · PDF p. 80 |
+| FY2024 | USD 60,922 million | 2025 Form 10-K · PDF p. 80 |
+| FY2025 | USD 130,497 million | 2025 Form 10-K · PDF p. 80 |
+
+The deterministic calculation marked this narrow comparison `CONDITIONALLY_COMPARABLE`. That means the values were selected from the same disclosed row and unit; it is not a full audit of accounting-policy changes, a claim about why revenue changed, or proof of causality. See the [candidate repair and delivery record](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/docs/financial_qa_candidate_repair_delivery_2026-09-29.md) for the source checks and failure history. The original filing PDFs are not redistributed in this repository.
+
+## What the latest experiment actually says
+
+The source-matched candidate replay is useful mainly because it challenges the assumption that graph expansion must help. On this small development slice, **fusion without graph expansion beat fusion with graph expansion on the annotated-page hit measure**: 5/23 versus 1/23. Adding a time constraint changed the result, but the no-graph time-filtered diagnostic was still higher: 16/23 versus 13/23 for graph-plus-time. These are descriptive development results, not independent test accuracy or proof that one method is universally better.
+
+The speed trade-off is also visible: keyword retrieval had a 3.370 ms median query time, while methods that performed local semantic embedding were around 140–146 ms in this run. That is retrieval-stage timing under the recorded single-concurrency setup—not end-to-end user latency. The paired semantic-family intervals crossed zero; this run does not establish a statistically reliable winner.
+
+<details>
+<summary>Open the complete retrieval comparison and measurement limits</summary>
+
+The six methods used the same isolated 843-chunk candidate, 26 question forms, 20 semantic families, and a 10-page output budget. The run made 156/156 retrieval calls. Direct-support labels were available for 23 question forms across 17 families; 30 relevant page judgments were explicit. The label pool was not exhaustive, so these counts are **annotated-support-page hits**, not full-corpus Recall@10. nDCG was not calculated because unjudged pages must not be treated as irrelevant.
+
+| 检索方法 | 已标注支持页命中请求 | 家族等权命中率 | 家族等权 MRR@10 | 查询延迟 p50 / p95（毫秒） |
+|---|---:|---:|---:|---:|
+| 关键词检索（BM25） | 11/23 | 0.4118 | 0.2348 | 3.370 / 4.695 |
+| 语义向量检索 | 1/23 | 0.0588 | 0.0294 | 140.770 / 152.827 |
+| 关键词与语义融合检索（倒数排名融合） | 5/23 | 0.1765 | 0.0878 | 145.078 / 157.411 |
+| 融合检索＋知识图谱扩展 | 1/23 | 0.0588 | 0.0294 | 143.373 / 150.465 |
+| 融合检索＋知识图谱扩展＋时间约束 | 13/23 | 0.4706 | 0.1687 | 146.024 / 158.471 |
+| 融合检索＋时间约束（无图扩展诊断对照） | 16/23 | 0.6176 | 0.2493 | 144.026 / 152.922 |
+
+The family-level 95% bootstrap intervals are descriptive only (17 families, 2,000 resamples) and are not a substitute for a sufficiently powered independent test. Answer generation was disabled. Human Gold labels, answer/citation accuracy, nDCG, cold-start timing and concurrency 2/4 were not measured in this retrieval replay. The separate local browser inspection below is not candidate-store acceptance.
+
+**Reproduction inputs:** the [raw retrieval records](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_raw_20260930_build_7feb21b48e594a7a.jsonl), [recomputed summary](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.json), and [chart](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/experiments/financial-evidence-qa-2026-09-29-calculation-contract/financial_retrieval_summary_20260930_build_7feb21b48e594a7a.png) are pinned to candidate source commit `9270c3b`. The candidate PR is separate from `stable`; its results are not stable-runtime measurements.
+
+From the candidate branch, with the recorded inputs available and **new, unused output paths**, the summary and chart can be regenerated with:
+
+```powershell
+python scripts\summarize_financial_candidate_run.py `
+  --raw experiments\financial-evidence-qa-2026-09-29-calculation-contract\financial_retrieval_raw_20260930_build_7feb21b48e594a7a.jsonl `
+  --table-audit experiments\financial-evidence-qa-2026-09-28\table_quality_ai_visual_diagnostic_2026-09-24_v2.jsonl `
+  --dataset experiments\financial-evidence-qa-2026-09-28\financial_qa_dev_source_review_20260924_v3.jsonl `
+  --output experiments\financial-evidence-qa-2026-09-29-calculation-contract\summary_recomputed.json `
+  --chart experiments\financial-evidence-qa-2026-09-29-calculation-contract\summary_recomputed.png
+```
+
+</details>
+
+## Two snapshots, kept separate
+
+The numbers below describe different artifacts and should not be combined into one scorecard.
+
+| Historical `stable` runtime snapshot | Isolated research candidate in [PR #1](https://github.com/luoge850-lang/Strategic-GraphRAG/pull/1) |
 |---|---|
-| Evidence integrity | 383/383 declared-page verbatim matches; 383/383 required provenance records; zero exact duplicates |
-| Strict graph paths | 49 valid same-filing two-hop paths; zero invalid strict paths in the post-clean audit |
-| Retrieval modes | Vector, Graph, Hybrid, and Hybrid+Temporal implemented and smoke-tested |
-| Semantic extraction quality | `NOT_MEASURED`; a labeled precision/recall/F1 study is still required |
-| Answer quality | Human Golden QA, faithfulness, relevance, and abstention accuracy remain open |
+| 383 strict evidence claims; 1,686 vector chunks; 49 valid same-filing two-hop paths in the recorded post-clean audit. These are inventory/provenance checks, not answer accuracy. | Build `build_7feb21b48e594a7a`; 395 parsed pages; 843 vector chunks; 198 accepted triples, expanded into 362 fact edges. These counts describe distinct layers. |
+| Historical stable query and system snapshot. | Package integrity and deterministic engineering acceptance each passed 8/8; retrieval completed 156/156 calls. None of these is an independent answer-quality score. |
 
-The numbers above should be read as release-scope engineering evidence, not as
-a claim of universal semantic accuracy or counterfactual causal inference.
+The candidate calculation contract now rejects conflicting observations, unsupported operations, missing periods, currency/scale mismatches, zero denominators, and non-finite results rather than silently returning a plausible-looking value. The full [repair record](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/9270c3bff269e67e0eea80788be7139379390ea7/docs/financial_qa_candidate_repair_delivery_2026-09-29.md) includes before/after cases and regression evidence.
 
-## Run locally
+## Run the local application
 
-Python 3.11 or 3.12 is recommended. Python 3.14 can emit compatibility warnings
-from some LangChain/Pydantic dependencies.
+This starts the application code; it does **not** download the licensed filing PDFs, restore a Neo4j database, or populate a Chroma collection. A new checkout needs compatible data and indexes before real financial queries can pass readiness. See [`data/README.md`](data/README.md) for corpus acquisition notes and verify the documented file hashes before use.
+
+The checked-in `.env.example` currently selects one active 2025 filing and a default external model provider. Review it before running; set your own Neo4j, collection, model-provider, and authentication values in a local `.env`, and never commit secrets. A local LLM provider can avoid sending query text to an external provider, but it still needs to be installed and configured separately.
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 pip install -r requirements-hybrid.txt
 Copy-Item .env.example .env
-uvicorn strategic_graphrag.api.server:app --host 127.0.0.1 --port 8000
+python -m uvicorn strategic_graphrag.api.server:app --host 127.0.0.1 --port 8000
 ```
 
-Build the frontend:
+In a second terminal, run the frontend development server:
 
 ```powershell
 cd frontend
-npm install
-npm run build
+npm ci
+npm run dev -- --host 127.0.0.1
 ```
 
-FastAPI serves `frontend/dist` at `http://127.0.0.1:8000/`. Configure Neo4j,
-DeepSeek, the active vector collection, CORS, optional API authentication, rate
-limits, cache TTL, and Cross-Encoder behavior in `.env`; never commit `.env`.
+Open `http://127.0.0.1:5173/`. Check process liveness at `http://127.0.0.1:8000/health/live` and configured dependency readiness at `http://127.0.0.1:8000/health/ready`. A live process or HTTP 200 from the liveness endpoint does not mean Neo4j, vectors, or the query path are ready.
 
-## Reproducibility and checks
+## What is—and is not—validated
 
-```powershell
-python -m pytest -q
-python scripts/check_runtime.py
-python -m compileall -q strategic_graphrag scripts tests
-python scripts/plan_incremental_update.py `
-  --manifest reports/2026-08-14_corpus_manifest.json `
-  --output reports/incremental_plan.json
-python scripts/audit_strict_chains.py --output reports/strict_chains.json
-python scripts/migrate_financial_observations.py --apply
-python scripts/build_temporal_change_model.py --apply
-python scripts/run_retrieval_baselines.py `
-  --question "How did NVIDIA revenue change between 2023 and 2025?" `
-  --cross-filing `
-  --output reports/retrieval_baselines_smoke.json
-cd frontend
-npm run build
-```
+**Recorded engineering evidence:** build identity and immutable package checks for the candidate; deterministic calculation regressions; source-page and provenance checks; and the fixed development retrieval replay described above.
 
-The stable-branch release record reports 20 focused Python contracts, Python compilation,
-frontend TypeScript/Vite production build, Neo4j/Chroma post-clean checks, stable
-ID consistency, strict path validation, API health, and browser rendering. The
-largest JavaScript chunk is about 422 kB after splitting React, Motion,
-vis-data, and vis-network.
+**Actual local demo:** five real HTTP queries executed, but only **1/5 scenario assertions passed**. The browser displayed the FY2025 revenue evidence and clicking its citation opened the original PDF at physical page 80. The numeric calculation correctly refused unbound legacy observations; it did not produce a validated answer. Readiness returned HTTP 503 after a dependency-probe timeout.
 
-In a historical local check, the all-filing statistics endpoint took 4.07 s cold
-and 5-19 ms cached; the visualization subgraph took 1.44 s cold and 25-32 ms
-cached. A retrieval-only cross-filing smoke test returned three strict revenue
-paths for 2023-2025 in Graph, Hybrid, and Hybrid+Temporal modes. Single-run
-latencies were 10.12 s, 3.91 s, and 2.41 s respectively; Vector retrieval took
-35.87 ms. Aura cold starts and cache effects make these development
-observations, not benchmark guarantees.
+**Still open:** independent human-reviewed answer quality; exhaustive relevance labels and full-corpus recall; dedicated real Neo4j/Chroma candidate import and build isolation; complete numeric browser acceptance; restart, recovery and rollback against those services; and authenticated HTTPS deployment. No server or domain has been provisioned.
 
-## Research status and honest limitations for the stable snapshot
+<details>
+<summary>See the actual browser captures and public-demo release gates</summary>
 
-This is a strong engineering candidate, not yet a completed research result:
+The query capture shows source evidence **and** `INSUFFICIENT_EVIDENCE`, not a successful financial answer. The second image is the PDF opened by clicking the real citation. Both belong to the legacy-store run, separate from the isolated candidate experiment.
 
-- Automated provenance checks passed for all 383 claims: 100% declared-page
-  verbatim match, 100% required provenance completeness, one linked business
-  edge per claim, and zero exact duplicates. Semantic extraction precision and
-  recall remain `NOT_MEASURED`; a deterministic 60-claim stratified annotation
-  sample is prepared but intentionally unlabeled.
-- The existing 38-item auto-generated QA file is stale after the evidence-ID
-  migration and is not a valid Golden QA benchmark. Per project scope, no new
-  manual Golden QA was created in this release.
-- A real DeepSeek Flash Hybrid query and the corresponding browser flow were
-  tested across all three filings. This is a smoke test, not a Golden QA score.
-- Filing disclosures support attributed relationships; they do not prove
-  counterfactual causality, effect size, probability, or investment outcomes.
-- `bitemporal_fact_v2` separates valid and recorded time and supports explicit
-  invalidation/supersession links. Migrated records use a labeled migration
-  timestamp because the historical database-write time is unknown. Narrative
-  intensified/mitigated/resolved labels and an independently labeled temporal
-  benchmark remain open.
-- The four retrieval modes are implemented and smoke-tested, but they are not
-  yet accuracy baselines: a labeled QA/evidence set is still required for
-  Recall@K, Precision@K, faithfulness, answer relevance, and significance tests.
-- API authentication is configurable but disabled in the local demo. It must be
-  enabled with restricted CORS before public deployment.
-- DeepSeek Flash is an external processor. Production use needs documented data
-  governance, consent, retention, and provider-failure behavior.
+![Real query: evidence returned, numeric answer refused](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/d0758c3aab9be05a9e8581395dac450f62e69f42/experiments/public-demo-delivery-2026-09-30/browser-revenue-legacy.jpg)
+![Actual citation click: original filing physical page 80](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/d0758c3aab9be05a9e8581395dac450f62e69f42/experiments/public-demo-delivery-2026-09-30/browser-pdf-page80.jpg)
 
-See [the P0/P1 acceptance audit](reports/2026-08-14_p0_p1_acceptance.md) and the
-[machine-readable corpus manifest](reports/2026-08-14_corpus_manifest.json).
-The current frozen baseline is documented in the
-[v3.1 release notes](reports/2026-08-17_v3.1_release_notes.md) and
-[v3.1 freeze manifest](reports/2026-08-17_v3.1_freeze_manifest.json).
+[Raw responses, counts and recomputation](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/d0758c3aab9be05a9e8581395dac450f62e69f42/experiments/public-demo-delivery-2026-09-30/README.md) · [Protected public-demo deployment recipe](https://github.com/luoge850-lang/Strategic-GraphRAG/blob/d0758c3aab9be05a9e8581395dac450f62e69f42/deployment/README.md)
 
-## Next research milestones
+</details>
 
-1. Label the prepared stratified relation-extraction set and report entity/relation
-   precision, recall, F1, and error categories.
-2. Build a 30-50 question human Golden QA set with stable evidence IDs and
-   unanswerable cases; report retrieval Recall@K, Precision@K, faithfulness,
-   answer relevance, abstention accuracy, and latency distributions.
-3. Extend observed numeric changes with independently labeled narrative states
-   such as new, intensified, mitigated, and resolved; evaluate them separately.
-4. Evaluate the four implemented retrieval baselines, then add reranker and
-   evidence-guard ablations only after the main-model benchmark is stable.
-5. Containerize and deploy behind authentication, restricted CORS, observability,
-   request timeouts, and cost controls.
+This prototype reports relationships stated in filings. Co-occurrence, a graph path, or an increase over time is not evidence that one event caused another. Do not use its outputs as investment advice.
 
-## License and data
+## Where research should go next
 
-Code is intended for academic and portfolio use. SEC filings, model APIs, and
-third-party libraries retain their own licenses and terms. PDFs, vector stores,
-credentials, and large local audit archives are excluded from Git.
+1. **Establish answer truth independently.** Review the 60 table candidates against source PDFs, record each field and joint-fact decision, then have a second reviewer resolve disagreements. Split new questions by semantic family before tuning and freeze a test set.
+2. **Test when graph expansion earns its cost.** The current point estimates favor the no-graph diagnostic on this slice. Run a predeclared, family-paired test on relationship and conditional-risk questions; record relevant evidence added, irrelevant evidence added, and correct evidence displaced. Keep a negative result if expansion does not help.
+3. **Validate the real deployment path.** Rebuild into a new build-scoped Neo4j/Chroma namespace, verify counts, source hashes, and version isolation, then complete API, browser citation, restart, failure, and rollback checks before calling the system stable.
+
+## Reproducibility and data
+
+- CI compiles Python and runs focused contract tests; the frontend is built with the checked-in `frontend/package-lock.json`.
+- The Python requirements currently use version ranges rather than a fully hash-pinned environment lock. A fresh install is therefore not guaranteed to reproduce the original machine byte-for-byte.
+- PDFs, database files, embeddings, local environment files, and recovery archives are not committed. Obtain source filings only under their applicable terms and verify SHA-256 values from the candidate report before rebuilding.
+- The candidate report records the exact inputs, dataset/protocol caveats, hardware and timing conditions, failed runs, and commands. The history contains both successful and failed evidence; do not replace it with only the latest favorable run.
+
+## License and use
+
+Code is intended for academic and portfolio use. SEC filings, model APIs, and third-party packages remain subject to their own terms. Do not upload credentials, local database copies, full caches, or private filing archives.
