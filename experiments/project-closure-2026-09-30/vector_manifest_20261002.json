@@ -1,0 +1,19 @@
+{
+  "schema": "staging-vector-index/v1",
+  "build_id": "build_c3b1d950e8acce78",
+  "path": "vector_index",
+  "collection": "isolated_build_c3b1d950e8acce78",
+  "embedding_backend": "chroma_onnx",
+  "configured_embedding_backend": "chroma_onnx",
+  "runtime_embedding_backend": "chroma_onnx",
+  "backend_consistent": true,
+  "storage_role": "immutable_snapshot",
+  "build_storage_role": "temporary_writable_chroma_then_closed_snapshot",
+  "runtime_copy_policy": "query_uses_disposable_copy",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "chunk_size": 2400,
+  "chunk_overlap": 300,
+  "chunks_expected": 843,
+  "chunks_indexed": 843,
+  "status": "PASS"
+}

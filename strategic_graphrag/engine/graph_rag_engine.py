@@ -616,6 +616,7 @@ class CausalPathFinder:
         MATCH (observation:FinancialObservation)-[:SUPPORTED_BY_CLAIM]->(claim)
         WHERE toUpper(coalesce(observation.metric_id, '')) = $metric_id
           AND observation.recorded_to IS NULL
+          AND (r.observation_id IS NULL OR r.observation_id = observation.id)
           AND ($year_start IS NULL OR observation.fiscal_year >= $year_start)
           AND ($year_end IS NULL OR observation.fiscal_year <= $year_end)
           AND ($source_filing IS NULL OR observation.source_filing = $source_filing)

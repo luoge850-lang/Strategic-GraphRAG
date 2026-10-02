@@ -25,7 +25,33 @@ Strategic-GraphRAG keeps the question, typed financial observation, filing versi
   <img src="docs/diagrams/architecture.svg" alt="Candidate architecture: PDF evidence, staged graph and vector indexes, query planning, citation validation, and answer" width="100%" />
 </p>
 
-The diagram describes the candidate design, including its staging boundary. It does **not** imply that the real Neo4j, Chroma, or browser path has passed end-to-end validation.
+The diagram describes the candidate design, including its staging boundary. The local real-store checks below validate a narrow deterministic path; they do not imply public deployment, general answer accuracy, or a complete browser acceptance pass.
+
+## From a plausible number to a defensible answer
+
+The October 2 trial caught two answers that looked successful but were wrong. A question about research expense returned **total operating expense**; a question about receivables returned a **cash-flow movement instead of the closing balance**. Both had a `PASS` status. That is exactly the kind of failure this project is designed to expose, not hide behind an HTTP 200.
+
+The repaired candidate separates these measurement meanings, preserves statement context, and runs against a dedicated **real Neo4j database** with a build-bound Chroma runtime copy. On the same development questions, the eight explicit numerical references improved from **6/8 to 8/8**. All 26 forms across 20 development families executed, but the eight numerical scores are not a claim that all 26 semantic answers are correct—and are not independent human Gold accuracy.
+
+<p align="center">
+  <img src="experiments/project-closure-2026-09-30/trial-quality-latency.svg" alt="Eight explicit development numerical references before and after repair, alongside bounded local HTTP measurements" width="100%" />
+</p>
+
+Five fixed real-HTTP scenarios passed: a single-year fact, an older fact in a later disclosure, growth, unit conversion, and refusal outside the corpus. Bounded trials at concurrency 1/2/4 each passed 10/10 requests, with p50 of **20.961 / 18.341 / 23.355 ms**. These are short, warm-database, generation-disabled trials—not production latency guarantees. The earlier rate-limited failures remain in the raw records.
+
+Current experimental build: `build_c3b1d950e8acce78`. Its 395 pages and 843 vector chunks produce **187 accepted triples, 324 expanded fact edges, and 233 typed observations**. The smaller graph is not a regression score: component measurements no longer masquerade as totals. Package integrity passed before import and after querying; no production pointer or old remote store was changed. Full LLM readiness remains degraded, so this is a **locally exercised experimental candidate**, not an online production service.
+
+Read the [source-checked repair story, timings and research assessment](experiments/project-closure-2026-09-30/README.md), inspect the [raw-backed summary](experiments/project-closure-2026-09-30/summary_20261002_final.json), or recompute it without a database:
+
+```powershell
+python deployment/summarize_candidate_trial.py `
+  --trial experiments/project-closure-2026-09-30/trial-20261002-bounded-benchmark `
+  --development-trial experiments/project-closure-2026-09-30/trial-20261002-repair1 `
+  --before experiments/project-closure-2026-09-30/trial-20261002-development `
+  --output summary-recomputed.json --chart chart-recomputed.svg
+```
+
+Use new output filenames. This recomputes observed results; it does not fill missing human judgments or claim that graph expansion beats the simpler time-aware baseline.
 
 ## One question, one evidence trail
 
@@ -76,7 +102,7 @@ python scripts\summarize_financial_candidate_run.py `
 
 </details>
 
-## Two snapshots, kept separate
+## Historical snapshots, kept separate from the October 2 trial
 
 The numbers below describe different artifacts and should not be combined into one scorecard.
 

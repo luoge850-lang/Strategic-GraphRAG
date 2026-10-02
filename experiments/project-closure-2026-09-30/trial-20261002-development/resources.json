@@ -1,0 +1,237 @@
+{
+  "build_id": "build_c69e08565d907662",
+  "platform": "Windows-11-10.0.26100-SP0",
+  "cpu": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+  "logical_cpu_count": 16,
+  "system_memory_bytes": 16961822720,
+  "http_process_tree_sampled_peak_rss_bytes": 164446208,
+  "memory_sampling_ms": 20,
+  "startup_including_preflight_ms": 11472.308500000054,
+  "queries": 40,
+  "concurrency": [
+    1,
+    2,
+    4
+  ],
+  "repeat_per_case_per_concurrency": 2,
+  "llm_generation_enabled": false,
+  "llm_generation_calls": 0,
+  "embedding_inference": "local ONNX; embedding cache pre-existing, not a model cold-load benchmark",
+  "scope": "loopback deterministic graph queries; peak excludes Neo4j and OS cache",
+  "cold_summary": {
+    "schema": "live-http-acceptance/v1",
+    "recorded_at": "2026-10-02T10:57:56.363252+00:00",
+    "target_scope": "loopback",
+    "hardware": {
+      "os": "Windows",
+      "python": "3.12.14",
+      "logical_cpus": 16
+    },
+    "setup": {
+      "concurrency": 1,
+      "queries": 5,
+      "repetitions": 1,
+      "result_cache": false,
+      "generation_requested": false,
+      "cold_start": "NOT_MEASURED",
+      "filesystem_cache": "UNCONTROLLED"
+    },
+    "requests": {
+      "success": 5,
+      "total": 5
+    },
+    "scenario_acceptance": {
+      "passed": 5,
+      "total": 5
+    },
+    "latency_ms": {
+      "p50": 19.004,
+      "max": 59.897,
+      "p95": null,
+      "p95_status": "SMOKE_SAMPLE_TOO_SMALL_FOR_BENCHMARK"
+    },
+    "readiness": {
+      "http_status": 503,
+      "elapsed_ms": 152.913,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "status": "degraded",
+        "checked_at": 1790938676.038116,
+        "dependencies": {
+          "neo4j": {
+            "ready": true
+          },
+          "vector": {
+            "ready": false,
+            "status": "warming"
+          },
+          "llm": {
+            "ready": false,
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash"
+          }
+        },
+        "active_filing": null,
+        "auth_enabled": false
+      }
+    },
+    "pdf_http_checks": [
+      {
+        "http_status": 200,
+        "elapsed_ms": 25.881,
+        "error_type": null,
+        "content_type": "application/pdf",
+        "source_filing": "2025-10-K.pdf",
+        "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+        "bytes": 1274715,
+        "page_checks": [
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          },
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          },
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          },
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          },
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          },
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          }
+        ],
+        "page_count": 130
+      }
+    ],
+    "browser_pdf_click": "NOT_VERIFIED_BY_HTTP_RUNNER",
+    "independent_quality": "NOT_MEASURED",
+    "raw_sha256": "a54bac69fbc73bca106fb66c3693f48ee45340d42f397eb2ac50a4d28207669d"
+  },
+  "warm_summary": {
+    "schema": "live-http-acceptance/v1",
+    "recorded_at": "2026-10-02T10:57:56.472895+00:00",
+    "target_scope": "loopback",
+    "hardware": {
+      "os": "Windows",
+      "python": "3.12.14",
+      "logical_cpus": 16
+    },
+    "setup": {
+      "concurrency": 1,
+      "queries": 5,
+      "repetitions": 1,
+      "result_cache": false,
+      "generation_requested": false,
+      "cold_start": "NOT_MEASURED",
+      "filesystem_cache": "UNCONTROLLED"
+    },
+    "requests": {
+      "success": 5,
+      "total": 5
+    },
+    "scenario_acceptance": {
+      "passed": 5,
+      "total": 5
+    },
+    "latency_ms": {
+      "p50": 13.122,
+      "max": 27.255,
+      "p95": null,
+      "p95_status": "SMOKE_SAMPLE_TOO_SMALL_FOR_BENCHMARK"
+    },
+    "readiness": {
+      "http_status": 503,
+      "elapsed_ms": 4.767,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "status": "degraded",
+        "checked_at": 1790938676.376124,
+        "dependencies": {
+          "neo4j": {
+            "ready": true
+          },
+          "vector": {
+            "ready": true,
+            "collection": "isolated_build_c69e08565d907662",
+            "count": 843,
+            "embedding_backend": "chroma_onnx",
+            "embedding_model": "all-MiniLM-L6-v2",
+            "build_id": "build_c69e08565d907662"
+          },
+          "llm": {
+            "ready": false,
+            "provider": "deepseek",
+            "model": "deepseek-v4-flash"
+          }
+        },
+        "active_filing": null,
+        "auth_enabled": false
+      }
+    },
+    "pdf_http_checks": [
+      {
+        "http_status": 200,
+        "elapsed_ms": 5.439,
+        "error_type": null,
+        "content_type": "application/pdf",
+        "source_filing": "2025-10-K.pdf",
+        "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+        "bytes": 1274715,
+        "page_checks": [
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          },
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          },
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          },
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          },
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          },
+          {
+            "physical_page": 80,
+            "page_exists": true,
+            "revenue_source_tokens_visible": true
+          }
+        ],
+        "page_count": 130
+      }
+    ],
+    "browser_pdf_click": "NOT_VERIFIED_BY_HTTP_RUNNER",
+    "independent_quality": "NOT_MEASURED",
+    "raw_sha256": "accd297629b0ebdb51620f8f30ea1dfe2c24236a5860abcb2bb78a9df30dfcbf"
+  }
+}

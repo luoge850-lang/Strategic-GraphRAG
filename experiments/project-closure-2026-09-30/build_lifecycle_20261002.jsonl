@@ -1,0 +1,13 @@
+{"timestamp": "2026-10-02T11:02:46.951332+00:00", "event": "start_or_resume", "status": "PASS", "build_id": "build_c3b1d950e8acce78", "resume": false}
+{"timestamp": "2026-10-02T11:02:46.952355+00:00", "event": "identity", "status": "STARTED", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:02:46.968910+00:00", "event": "identity", "status": "PASS", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:02:46.970295+00:00", "event": "documents", "status": "STARTED", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:03:37.865201+00:00", "event": "documents", "status": "PASS", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:03:37.866203+00:00", "event": "candidates", "status": "STARTED", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:04:45.549042+00:00", "event": "candidates", "status": "PASS", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:04:45.550045+00:00", "event": "accepted", "status": "STARTED", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:04:45.599723+00:00", "event": "accepted", "status": "PASS", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:04:45.599723+00:00", "event": "indexes", "status": "STARTED", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:05:01.826748+00:00", "event": "indexes", "status": "PASS", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:05:01.827767+00:00", "event": "validated", "status": "STARTED", "build_id": "build_c3b1d950e8acce78"}
+{"timestamp": "2026-10-02T11:05:02.347737+00:00", "event": "validated", "status": "PASS", "build_id": "build_c3b1d950e8acce78"}

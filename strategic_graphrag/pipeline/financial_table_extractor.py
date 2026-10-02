@@ -16,6 +16,7 @@ TABLE_METRICS: Sequence[Tuple[str, str]] = (
     ("cash and cash equivalents", "CASH_AND_CASH_EQUIVALENTS"),
     ("marketable securities", "MARKETABLE_SECURITIES"),
     ("accounts receivable", "ACCOUNTS_RECEIVABLE"),
+    ("accounts receivable net", "ACCOUNTS_RECEIVABLE"),
     ("inventories", "INVENTORIES"),
     ("total current assets", "TOTAL_CURRENT_ASSETS"),
     ("total assets", "TOTAL_ASSETS"),
@@ -445,6 +446,21 @@ def extract_financial_table_triples(
             if not metric or not _numeric_values(row_text):
                 continue
             metric_alias, metric_id = metric
+            # A working-capital cash-flow adjustment is not the closing balance.
+            # Component disclosures likewise must not become total expenses.
+            statement_type = "FINANCIAL_TABLE"
+            if re.search(r"consolidated statements of cash flows", page_text, re.IGNORECASE):
+                statement_type = "CASH_FLOW_STATEMENT"
+                if metric_id in {"ACCOUNTS_RECEIVABLE", "INVENTORIES"}:
+                    metric_id = "CASH_FLOW_CHANGE_" + metric_id
+            elif re.search(r"(?im)^note\s+\d+\s*[-:]\s*stock[- ]based compensation", page_text):
+                statement_type = "STOCK_BASED_COMPENSATION_NOTE"
+                if metric_id in {"R_AND_D_EXPENSE", "SG_AND_A_EXPENSE", "COST_OF_REVENUE"}:
+                    metric_id = "STOCK_BASED_" + metric_id
+            elif re.search(r"consolidated balance sheets", page_text, re.IGNORECASE):
+                statement_type = "BALANCE_SHEET"
+            elif re.search(r"consolidated statements of income", page_text, re.IGNORECASE):
+                statement_type = "INCOME_STATEMENT"
             # MD&A contains a percentage-of-revenue table whose row labels
             # reuse income-statement names.  In that context "Gross profit
             # 75.0" is a margin percentage, not USD gross profit.
@@ -547,7 +563,7 @@ def extract_financial_table_triples(
                 "row_id": metric_id,
                 "column_id": str(periods[0]) if periods else str(filing_year),
                 "source_span": row_evidence,
-                "statement_type": "FINANCIAL_TABLE",
+                "statement_type": statement_type,
                 "comparability_status": "UNASSESSED",
             })
     return triples

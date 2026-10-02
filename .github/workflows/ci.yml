@@ -30,7 +30,7 @@ jobs:
       - name: Check deployment gates and smoke scoring
         run: |
           python -m compileall -q deployment
-          python -m pytest -q deployment/test_preflight.py deployment/test_live_acceptance.py
+          python -m pytest -q deployment/test_preflight.py deployment/test_live_acceptance.py deployment/test_candidate_import.py
           python deployment/recompute_live.py --raw experiments/public-demo-delivery-2026-09-30/live-http-legacy-v2/requests.jsonl --expected-sha256 63f36fa6ee28515597137a664f7df9465509303458b140415e149b0ddd753ed9
 
   frontend:

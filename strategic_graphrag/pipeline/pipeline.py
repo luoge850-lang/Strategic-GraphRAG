@@ -426,7 +426,8 @@ class KnowledgeGraphPipeline:
         logger.info(f"{'='*60}")
 
         # Extract year from filename
-        year_match = re.search(r"(20\d{2})", pdf_path)
+        # Parent directories may contain experiment dates, not filing years.
+        year_match = re.search(r"(20\d{2})", Path(pdf_path).name)
         year = self.config.year_override or (int(year_match.group(1)) if year_match else 2024)
 
         # Build the standard document layer once.  The downstream extraction

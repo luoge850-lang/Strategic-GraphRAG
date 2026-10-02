@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from strategic_graphrag.build_identity import make_build_identity, sha256_file
-from strategic_graphrag.document_layer import DocumentLayerReader
+from strategic_graphrag.document_layer import DocumentLayerReader, ValidatedSnapshotReader
 from strategic_graphrag.evidence_bundle import from_graph_paths
 from strategic_graphrag.engine.graph_rag_engine import GraphRAGEngine, PathScorer
 from strategic_graphrag.engine.query_understanding import parse_query
@@ -229,6 +229,7 @@ def phase_documents(package: Path, pdfs: List[Path], build_id: str) -> None:
             "filename": pdf.name,
             "pdf_sha256": document.pdf_sha256,
             "snapshot": package_rel(output, package),
+            "snapshot_sha256": file_hash(output),
             "total_pages": document.total_pages,
             "coverage": coverage,
             "status": "PASS" if coverage["conservation_holds"] and coverage["failed"] == 0 else "FAIL",
@@ -277,6 +278,11 @@ def phase_candidates(package: Path, pdfs: List[Path], build_id: str) -> None:
         build_id=build_id,
     )
     pipeline = KnowledgeGraphPipeline(config)
+    document_summary = json_read(package / "document_layer_summary.json")
+    pipeline.document_reader = ValidatedSnapshotReader({
+        item["filename"]: {"path": package / item["snapshot"], "snapshot_sha256": item["snapshot_sha256"]}
+        for item in document_summary["files"]
+    }, pipeline.document_reader)
     results = pipeline.process_batch(pdf_paths=[str(path) for path in pdfs])
     normalize_no_llm_candidate_metadata(results)
     if len(results) != len(pdfs) or any(item.get("status") != "completed" for item in results):
@@ -379,6 +385,10 @@ def phase_accepted(package: Path, build_id: str) -> None:
                     "scale": triple.get("scale"),
                     "report_period": triple.get("report_period") or f"FY{filing_year}",
                     "source_row_id": triple.get("source_row_id"),
+                    "statement_type": triple.get("statement_type"),
+                    "table_name": triple.get("table_name"),
+                    "row_label": triple.get("row_label"),
+                    "comparability_status": triple.get("comparability_status"),
                 }
                 edges.append(edge)
             accepted.append({
