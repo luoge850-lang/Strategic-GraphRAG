@@ -1,0 +1,350 @@
+[
+  {
+    "item_id": "V01",
+    "family_id": "V01",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_ASSETS",
+    "fact_period": "FY2022",
+    "source_filing": "2023-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 44187,
+    "answer_value": 44187,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2023-10-K.pdf",
+        "page": 56,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total assets"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What total assets did NVIDIA report for fiscal year 2022 in its 2023 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V02",
+    "family_id": "V02",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "INVENTORIES",
+    "fact_period": "FY2022",
+    "source_filing": "2023-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 2605,
+    "answer_value": 2605,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2023-10-K.pdf",
+        "page": 56,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "inventories"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What inventories balance did NVIDIA report for fiscal year 2022 in its 2023 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V03",
+    "family_id": "V03",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "ACCOUNTS_PAYABLE",
+    "fact_period": "FY2022",
+    "source_filing": "2023-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 1783,
+    "answer_value": 1783,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2023-10-K.pdf",
+        "page": 56,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "accounts payable"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What accounts payable balance did NVIDIA report for fiscal year 2022 in its 2023 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V04",
+    "family_id": "V04",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "OPERATING_COST",
+    "fact_period": "FY2022",
+    "source_filing": "2023-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 7434,
+    "answer_value": 7434,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2023-10-K.pdf",
+        "page": 43,
+        "statement": "MD_AND_A"
+      }
+    ],
+    "row_anchors": [
+      "total operating expenses"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What total operating expenses did NVIDIA report for fiscal year 2022 in its 2023 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V05",
+    "family_id": "V05",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "SALES_GENERAL_ADMIN_EXPENSE",
+    "fact_period": "FY2022",
+    "source_filing": "2023-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 2166,
+    "answer_value": 2166,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2023-10-K.pdf",
+        "page": 43,
+        "statement": "MD_AND_A"
+      }
+    ],
+    "row_anchors": [
+      "sales, general and administrative"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What sales, general and administrative expenses did NVIDIA report for fiscal year 2022 in its 2023 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V06",
+    "family_id": "V06",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "R_AND_D_EXPENSE",
+    "fact_period": "FY2024",
+    "source_filing": "2024-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 8675,
+    "answer_value": 8675,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2024-10-K.pdf",
+        "page": 50,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "research and development"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What research and development expense did NVIDIA report for fiscal year 2024 in its 2024 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V07",
+    "family_id": "V07",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "NET_INCOME",
+    "fact_period": "FY2024",
+    "source_filing": "2024-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 29760,
+    "answer_value": 29760,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2024-10-K.pdf",
+        "page": 50,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "net income"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What net income did NVIDIA report for fiscal year 2024 in its 2024 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V08",
+    "family_id": "V08",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_ASSETS",
+    "fact_period": "FY2024",
+    "source_filing": "2024-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 65728,
+    "answer_value": 65728,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2024-10-K.pdf",
+        "page": 52,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total assets"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What total assets did NVIDIA report for fiscal year 2024 in its 2024 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V09",
+    "family_id": "V09",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "ACCOUNTS_RECEIVABLE",
+    "fact_period": "FY2024",
+    "source_filing": "2024-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 9999,
+    "answer_value": 9999,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2024-10-K.pdf",
+        "page": 52,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "accounts receivable"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What accounts receivable balance did NVIDIA report for fiscal year 2024 in its 2024 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V10",
+    "family_id": "V10",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "REVENUE",
+    "fact_period": "FY2023",
+    "source_filing": "2024-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 26974,
+    "answer_value": 26974,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2024-10-K.pdf",
+        "page": 50,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "revenue"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What total revenue did NVIDIA report for fiscal year 2023 in its 2024 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V11",
+    "family_id": "V11",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "CASH_FLOW_ACCOUNTS_RECEIVABLE",
+    "fact_period": "FY2022",
+    "source_filing": "2023-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": -2215,
+    "answer_value": -2215,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2023-10-K.pdf",
+        "page": 58,
+        "statement": "CASH_FLOW_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "accounts receivable"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What cash-flow adjustment for accounts receivable did NVIDIA report for fiscal year 2022 in its 2023 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  },
+  {
+    "item_id": "V12",
+    "family_id": "V12",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "DATA_CENTER_REVENUE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 115186,
+    "answer_value": 115186,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 80,
+        "statement": "FINANCIAL_NOTES"
+      }
+    ],
+    "row_anchors": [
+      "data center"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "question": "What Data Center revenue did NVIDIA report for fiscal year 2025 in its 2025 10-K?",
+    "partition": "frozen_outside_development_no_tuning"
+  }
+]

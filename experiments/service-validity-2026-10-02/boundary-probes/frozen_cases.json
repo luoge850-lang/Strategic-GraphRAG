@@ -1,0 +1,66 @@
+[
+  {
+    "item_id": "P01",
+    "question": "What percentage of revenue were research and development expenses for NVIDIA fiscal year 2022 in its 2023 10-K?",
+    "label": {
+      "item_id": "P01",
+      "company": "NVIDIA_CORPORATION",
+      "metric": "R_AND_D_RATIO",
+      "fact_period": "FY2022",
+      "source_filing": "2023-10-K.pdf",
+      "currency": null,
+      "source_scale": null,
+      "source_value": 19.6,
+      "answer_value": 19.6,
+      "answer_unit": "percent",
+      "tolerance": "0.05",
+      "tolerance_basis": "half of 0.1 printed percentage point",
+      "direct_locations": [
+        {
+          "file": "2023-10-K.pdf",
+          "page": 43,
+          "statement": "MD_AND_A"
+        }
+      ],
+      "row_anchors": [
+        "research and development"
+      ],
+      "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW"
+    }
+  },
+  {
+    "item_id": "P02",
+    "question": "What percentage of revenue were sales, general and administrative expenses for NVIDIA fiscal year 2023 in its 2023 10-K?",
+    "label": {
+      "item_id": "P02",
+      "company": "NVIDIA_CORPORATION",
+      "metric": "SG_AND_A_RATIO",
+      "fact_period": "FY2023",
+      "source_filing": "2023-10-K.pdf",
+      "currency": null,
+      "source_scale": null,
+      "source_value": 9.1,
+      "answer_value": 9.1,
+      "answer_unit": "percent",
+      "tolerance": "0.05",
+      "tolerance_basis": "half of 0.1 printed percentage point",
+      "direct_locations": [
+        {
+          "file": "2023-10-K.pdf",
+          "page": 43,
+          "statement": "MD_AND_A"
+        }
+      ],
+      "row_anchors": [
+        "sales, general and administrative"
+      ],
+      "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW"
+    }
+  },
+  {
+    "item_id": "Q01",
+    "question": "What was NVIDIA revenue in fiscal 2024 Q4 as reported in its 2024 10-K?",
+    "label": null,
+    "rubric": "No independently checked quarterly source reference established. UNSCORED, never count a matching annual number as quarterly correctness."
+  }
+]

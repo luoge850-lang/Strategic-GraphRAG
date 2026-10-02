@@ -1,0 +1,30 @@
+{
+  "schema": "service-validity/v1",
+  "build_id": "build_c3b1d950e8acce78",
+  "modes": [
+    "natural_language",
+    "user_scope",
+    "reference_scope_diagnostic"
+  ],
+  "user_scope": {
+    "source_filing": "2025-10-K.pdf",
+    "provenance": "predeclared benchmark file-selector input, not actual human selection; independent of references"
+  },
+  "natural_language": "question only; transport flags graph/max_paths=10/synthesize=false/use_cache=false; no scope fields",
+  "reference_scope_diagnostic": "candidate_filing from historical development data, or source label for new validation; upper bound only",
+  "route": "graph",
+  "generation": false,
+  "cache": false,
+  "evidence_budget": 10,
+  "stop_condition": "one frozen run per mode; no application repair or tuning on new validation results",
+  "semantic_rules": {
+    "comparison": "all required periods and operations must match source labels; absent complete labels remains UNSCORED",
+    "relation": "direct citation must express requested relationship; semantic adjudication required, not automatic PASS",
+    "conditional_risk": "preserve modal possibility and condition; cannot convert to realized causal claim; adjudication required",
+    "unanswerable": "refusal plus no asserted answer; corpus absence requires independently bounded source review",
+    "ambiguity": "explicit ambiguity/refusal instead of arbitrary observation selection; adjudication required"
+  },
+  "outside_coverage": "12 adjacent monetary facts; balance vs movement, total vs components and disclosure covered; percentage and quarterly references not established in this set",
+  "research_hypothesis": null,
+  "stability_claim": false
+}

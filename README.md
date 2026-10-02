@@ -27,11 +27,46 @@ Strategic-GraphRAG keeps the question, typed financial observation, filing versi
 
 The diagram describes the candidate design, including its staging boundary. The local real-store checks below validate a narrow deterministic path; they do not imply public deployment, general answer accuracy, or a complete browser acceptance pass.
 
-## From a plausible number to a defensible answer
+## Current candidate: a correct number is only the beginning
+
+The latest validation asks a harder question: **does the answer preserve the whole financial fact—not just its value?** On October 2, the same build was queried without injecting reference files, with a fixed user file-selection fixture, and with a separately labelled reference-scope diagnostic. All **114 requests** reached the real HTTP service. Their scores stay separate.
+
+For `build_c3b1d950e8acce78`, natural-language development answers matched **8/8 numerical references**, but only **1/8 complete-fact contracts**. Seven observations carried the broad `FINANCIAL_STATEMENTS` category instead of a specific statement context. Twelve source-authored adjacent facts matched **9/12 numbers and 2/12 complete facts**. These are AI/PDF diagnoses—not independent human Gold accuracy. The application was not tuned on the new failures.
+
+<p align="center">
+  <img src="experiments/service-validity-2026-10-02/condition-comparison.svg" alt="Separate input conditions: numerical matching, complete facts and graph-only HTTP latency" width="100%" />
+</p>
+
+| Input condition · current build · AI/PDF tier | Development: number / complete fact | Adjacent facts: number / complete fact | HTTP requests |
+|---|---:|---:|---:|
+| Natural language, no reference scope | 8/8 · 1/8 | 9/12 · 2/12 | 38/38 |
+| Fixed user-scope fixture: 2025 filing | 2/8 · 0/8 | 0/12 · 0/12 | 38/38 |
+| Correct reference scope, diagnostic only | 8/8 · 1/8 | 9/12 · 2/12 | 38/38 |
+
+Development comprises 26 forms / 20 families; the eight fact-scored forms represent seven families. Adjacent facts comprise 12 forms / 11 metric groups and share some earlier metric families. The fixed file-selector input is a benchmark fixture, not a claim that a person selected the right file for every question. Its 2025 scope conflicts with several questions asking for earlier filings. Do not merge these rows into one accuracy figure.
+
+New failures matter as much as successes: a cash-flow receivables question still received a closing balance; a Data Center question received total company revenue; a fourth-quarter question received an annual value with `PASS`. Two supplemental disclosed-percentage questions returned unsupported-operation states. Those nine additional boundary requests remain separate from the 114-request scorecard.
+
+The browser now displays a real **130.497 USD billions** calculation with the candidate's cited source row. Clicking the citation opened the original PDF URL, but correct physical-page navigation was **not verified**: the viewer displayed another page and a reload failed. HTTP restart passed the five fixed scenarios before and after restart; wrong-build and unavailable-dependency preflights rejected, and recovery passed. Cross-build rollback and full LLM readiness are not established.
+
+[Complete validation story](experiments/service-validity-2026-10-02/README.md) · [Natural-language raw run](experiments/service-validity-2026-10-02/run-three-modes-v2/natural_language.jsonl) · [Recomputed field scores](experiments/service-validity-2026-10-02/summary-release.json) · [Actual current-build browser capture](experiments/service-validity-2026-10-02/browser-calculation-full.png)
+
+Recompute the latest scores from a clean checkout using only Python's standard library:
+
+```powershell
+python deployment/test_complete_fact_scoring.py
+python deployment/summarize_service_validity.py --root experiments/service-validity-2026-10-02 --output recomputed-validity.json
+python deployment/verify_validity_artifacts.py --root experiments/service-validity-2026-10-02 --recomputed recomputed-validity.json
+python deployment/plot_service_validity.py --summary recomputed-validity.json --output recomputed-validity.svg
+```
+
+Use unused output paths. This is a **bounded, reproducible experimental validation**, not an engineering-stable release or a deployed public website.
+
+## Historical repair: from a plausible number to a defensible answer
 
 The October 2 trial caught two answers that looked successful but were wrong. A question about research expense returned **total operating expense**; a question about receivables returned a **cash-flow movement instead of the closing balance**. Both had a `PASS` status. That is exactly the kind of failure this project is designed to expose, not hide behind an HTTP 200.
 
-The repaired candidate separates these measurement meanings, preserves statement context, and runs against a dedicated **real Neo4j database** with a build-bound Chroma runtime copy. On the same development questions, the eight explicit numerical references improved from **6/8 to 8/8**. All 26 forms across 20 development families executed, but the eight numerical scores are not a claim that all 26 semantic answers are correct—and are not independent human Gold accuracy.
+The repaired candidate separates these measurement meanings and runs against a dedicated **real Neo4j database** with a build-bound Chroma runtime copy. On the same development questions, the eight explicit numerical references improved from **6/8 to 8/8**. All 26 forms across 20 development families executed, but the eight numerical scores are not a claim that all 26 semantic answers are correct—and are not independent human Gold accuracy. The later complete-fact audit above found that specific statement context is still inadequately represented.
 
 <p align="center">
   <img src="experiments/project-closure-2026-09-30/trial-quality-latency.svg" alt="Eight explicit development numerical references before and after repair, alongside bounded local HTTP measurements" width="100%" />
@@ -142,9 +177,9 @@ Open `http://127.0.0.1:5173/`. Check process liveness at `http://127.0.0.1:8000/
 
 **Recorded engineering evidence:** build identity and immutable package checks for the candidate; deterministic calculation regressions; source-page and provenance checks; and the fixed development retrieval replay described above.
 
-**Actual local demo:** five real HTTP queries executed, but only **1/5 scenario assertions passed**. The browser displayed the FY2025 revenue evidence and clicking its citation opened the original PDF at physical page 80. The numeric calculation correctly refused unbound legacy observations; it did not produce a validated answer. Readiness returned HTTP 503 after a dependency-probe timeout.
+**Historical September 30 legacy-store demo:** five real HTTP queries executed, but only **1/5 scenario assertions passed**. The browser displayed the FY2025 revenue evidence and clicking its citation opened the original PDF at physical page 80. The numeric calculation correctly refused unbound legacy observations; it did not produce a validated answer. Readiness returned HTTP 503 after a dependency-probe timeout. This is not the latest c3b candidate's browser result.
 
-**Still open:** independent human-reviewed answer quality; exhaustive relevance labels and full-corpus recall; dedicated real Neo4j/Chroma candidate import and build isolation; complete numeric browser acceptance; restart, recovery and rollback against those services; and authenticated HTTPS deployment. No server or domain has been provisioned.
+**Current limits after October 2 validation:** independent human-reviewed answer quality; exhaustive relevance labels and full-corpus recall; specific statement-context fidelity and temporal/measurement boundary safety; verified PDF physical-page navigation; cross-build rollback; full LLM readiness; and authenticated HTTPS deployment. Dedicated candidate import, isolated runtime identity and HTTP restart/recovery have now been exercised, as recorded above. No server or domain has been provisioned.
 
 <details>
 <summary>See the actual browser captures and public-demo release gates</summary>
@@ -164,7 +199,7 @@ This prototype reports relationships stated in filings. Co-occurrence, a graph p
 
 1. **Establish answer truth independently.** Review the 60 table candidates against source PDFs, record each field and joint-fact decision, then have a second reviewer resolve disagreements. Split new questions by semantic family before tuning and freeze a test set.
 2. **Test when graph expansion earns its cost.** The current point estimates favor the no-graph diagnostic on this slice. Run a predeclared, family-paired test on relationship and conditional-risk questions; record relevant evidence added, irrelevant evidence added, and correct evidence displaced. Keep a negative result if expansion does not help.
-3. **Validate the real deployment path.** Rebuild into a new build-scoped Neo4j/Chroma namespace, verify counts, source hashes, and version isolation, then complete API, browser citation, restart, failure, and rollback checks before calling the system stable.
+3. **Close the remaining release gates.** Preserve the verified build-scoped Neo4j/Chroma import and HTTP restart evidence; establish correct PDF navigation and a compatible cross-build rollback target before calling the system stable. Fix newly diagnosed period and measurement boundaries only in a new candidate with new validation families.
 
 ## Reproducibility and data
 

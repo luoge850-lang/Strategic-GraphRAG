@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430">
+<rect width="1100" height="430" fill="#f5f3ec"/><g fill="#243027" font-family="Arial,sans-serif">
+<text x="35" y="38" font-size="24">A matching number is not a complete fact</text>
+<text x="35" y="65" font-size="13">build_c3b1d950e8acce78 · AI/PDF diagnosis · graph-only · generation off</text>
+<text x="35" y="105" font-size="16">Natural language</text>
+<rect x="35" y="117" width="160" height="18" fill="#dddfd4"/>
+<rect x="35" y="117" width="160.0" height="18" fill="#688777"/>
+<text x="35" y="154" font-size="13">Number: 8/8</text>
+<rect x="290" y="117" width="160" height="18" fill="#dddfd4"/>
+<rect x="290" y="117" width="20.0" height="18" fill="#ae765a"/>
+<text x="290" y="154" font-size="13">Joint fact: 1/8</text>
+<text x="570" y="118" font-size="14">Adjacent facts: number 9/12; joint 2/12</text>
+<text x="570" y="144" font-size="13">26-form HTTP p50/p95: 46.56/379.69 ms</text>
+<text x="35" y="195" font-size="16">Fixed user-scope fixture: 2025</text>
+<rect x="35" y="207" width="160" height="18" fill="#dddfd4"/>
+<rect x="35" y="207" width="40.0" height="18" fill="#688777"/>
+<text x="35" y="244" font-size="13">Number: 2/8</text>
+<rect x="290" y="207" width="160" height="18" fill="#dddfd4"/>
+<rect x="290" y="207" width="0.0" height="18" fill="#ae765a"/>
+<text x="290" y="244" font-size="13">Joint fact: 0/8</text>
+<text x="570" y="208" font-size="14">Adjacent facts: number 0/12; joint 0/12</text>
+<text x="570" y="234" font-size="13">26-form HTTP p50/p95: 24.82/276.86 ms</text>
+<text x="35" y="285" font-size="16">Reference scope: diagnostic only</text>
+<rect x="35" y="297" width="160" height="18" fill="#dddfd4"/>
+<rect x="35" y="297" width="160.0" height="18" fill="#688777"/>
+<text x="35" y="334" font-size="13">Number: 8/8</text>
+<rect x="290" y="297" width="160" height="18" fill="#dddfd4"/>
+<rect x="290" y="297" width="20.0" height="18" fill="#ae765a"/>
+<text x="290" y="334" font-size="13">Joint fact: 1/8</text>
+<text x="570" y="298" font-size="14">Adjacent facts: number 9/12; joint 2/12</text>
+<text x="570" y="324" font-size="13">26-form HTTP p50/p95: 26.46/42.44 ms</text>
+<text x="35" y="389" font-size="12">Development: 26 forms / 20 families; fact labels: 8 forms / 7 families. Adjacent: 12 forms / 11 metric groups.</text>
+<text x="35" y="410" font-size="12">Different file scope can conflict with question text. This is not independent Gold accuracy or production capacity.</text></g></svg>

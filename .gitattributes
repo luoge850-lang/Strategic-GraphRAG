@@ -8,3 +8,4 @@
 /strategic_graphrag/engine/query_understanding.py -text whitespace=cr-at-eol
 /requirements-lock-2026-09-19.txt -text whitespace=cr-at-eol
 experiments/project-closure-2026-09-30/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+experiments/service-validity-2026-10-02/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
