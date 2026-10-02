@@ -55,7 +55,7 @@ def main():
         'Graph-only sequential runs; no direct speed comparison with embedding-inclusive historical retrieval.']
     inputs=[root/name for name in ['development_fact_labels.json','validation_fact_labels.json','protocol.json','frozen_inputs_sha256.json']]
     inputs += list((root/'run-three-modes-v2').glob('*.json*'))
-    result['raw_hashes']={str(x.relative_to(root)):hashlib.sha256(x.read_bytes()).hexdigest() for x in sorted(inputs)}
+    result['raw_hashes']={x.relative_to(root).as_posix():hashlib.sha256(x.read_bytes()).hexdigest() for x in sorted(inputs)}
     with a.output.open('x',encoding='utf-8') as f:json.dump(result,f,ensure_ascii=False,indent=2)
     print(json.dumps({m:{part:dict(number=s['fact_fields']['number'],joint=s['fact_fields']['joint'],http=s['http'],direct=s['pages']['direct_page_hit']) for part,s in parts.items()} for m,parts in result['modes'].items()}))
 

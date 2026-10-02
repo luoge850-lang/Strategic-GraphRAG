@@ -2,6 +2,14 @@
 import argparse,hashlib,json,re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+def portable_summary(summary):
+    # Preserve all values and byte digests. Only filesystem separator spelling is
+    # platform-specific in the retained Windows summary; never omit comparisons.
+    result=dict(summary)
+    hashes=summary.get('raw_hashes',{})
+    result['raw_hashes']={name.replace('\\','/'):digest for name,digest in hashes.items()}
+    if len(result['raw_hashes'])!=len(hashes):raise ValueError('path canonicalization collision')
+    return result
 def main():
     p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True)
     p.add_argument('--create-manifest',action='store_true');p.add_argument('--recomputed',type=Path);a=p.parse_args()
@@ -14,7 +22,7 @@ def main():
     if bad:raise RuntimeError('public artifact hash mismatch: '+str(bad))
     if a.recomputed:
         actual=json.loads(a.recomputed.read_text());expected=json.loads((root/'summary-release.json').read_text())
-        if actual!=expected:raise RuntimeError('summary differs from retained raw recomputation')
+        if portable_summary(actual)!=portable_summary(expected):raise RuntimeError('summary differs from retained raw recomputation')
     missing=[]
     for doc in [ROOT/'README.md',root/'README.md']:
         for link in re.findall(r'\]\(([^)]+)\)',doc.read_text(encoding='utf-8')):
