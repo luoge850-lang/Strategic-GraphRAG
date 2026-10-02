@@ -55,7 +55,9 @@ python deployment/summarize_candidate_trial.py `
   --output summary-recomputed.json --chart chart-recomputed.svg
 ```
 
-输出路径必须尚不存在。评分从保存的响应和明示参考重算；保留全请求与 HTTP 成功子集分母。数据/协议文件哈希见 `public_hashes.json`。`summary_20261002.json` 保留限流诊断；正式展示使用 `summary_20261002_final.json`。
+输出路径必须尚不存在。评分从保存的响应和明示参考重算；保留全请求与 HTTP 成功子集分母。数据/协议文件哈希见 `public_hashes_v2.json`：数据逐字节，Python 协议源码统一 LF 后哈希。旧 `public_hashes.json` 保留初始上传快照，三个 Python 文件的原始字节哈希会随 Git 换行转换变化，不能据此宣称源码改变。`summary_20261002.json` 保留限流诊断；正式展示使用 `summary_20261002_final.json`。
+
+另一份干净检出已使用仅标准库的评分入口成功重算 8/8 数值诊断及三档并发结果，不依赖本机 PDF、数据库、LLM 或未跟踪源文件。这证明公开原始记录可重算，不代表完整应用可无数据安装即用。
 
 ## 项目的实用性与科研价值
 
