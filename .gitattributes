@@ -9,3 +9,7 @@
 /requirements-lock-2026-09-19.txt -text whitespace=cr-at-eol
 experiments/project-closure-2026-09-30/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
 experiments/service-validity-2026-10-02/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+experiments/answer-correctness-2026-10-03/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+/deployment/complete_fact_scoring.py -text whitespace=cr-at-eol
+/deployment/answer_closure_scoring.py -text whitespace=cr-at-eol
+/deployment/run_answer_closure.py -text whitespace=cr-at-eol

@@ -642,7 +642,9 @@ class KnowledgeGraphPipeline:
                     table_triples = verified_table_triples
                     for triple in table_triples:
                         triple["_source"] = "table"
-                        triple["statement_type"] = section_id
+                        triple["source_section"] = section_id
+                        if triple.get("statement_type") in {None,"FINANCIAL_TABLE","UNKNOWN"}:
+                            triple["statement_type"] = "MD_AND_A" if section_id == "MD_AND_A" else "FINANCIAL_NOTES"
                     page_triples.extend(table_triples)
                 else:
                     raw_table_candidates = []

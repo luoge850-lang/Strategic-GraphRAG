@@ -1,0 +1,16 @@
+{
+  "schema": "real-candidate-import/v1",
+  "status": "PASS",
+  "build_id": "build_ff4e5bcf11c71930",
+  "counts": {
+    "claims": 226,
+    "observations": 323,
+    "fact_edges": 414
+  },
+  "elapsed_ms": 5014.394,
+  "source_package_before": "PASS",
+  "source_package_after": "PASS",
+  "remote_store_mutations": 0,
+  "scope": "real loopback Neo4j, atomic empty-store import",
+  "semantic_quality": "import identity is not independent PDF-based fact accuracy"
+}

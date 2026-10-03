@@ -16,7 +16,7 @@ def equal_number(actual, expected, tolerance):
     except (InvalidOperation, TypeError, ValueError):
         return False
 
-def score_fact(response, label):
+def _score_single_observation(response, label, *, layered=False):
     calc = response.get('calculation') or {}
     observations = calc.get('observations') or []
     citations = response.get('citations') or []
@@ -63,7 +63,37 @@ def score_fact(response, label):
     results['label_tier'] = label['label_tier']
     results['support_scope'] = 'source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold'
     results['location_scope'] = 'known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score'
+    if not layered:
+        return results
+    for key in ('business_scope','measurement_nature','value_kind','period_granularity'):
+        if key in label:results[key]=obs.get(key)==label[key]
+    core_keys=('number','unit','company','metric','period','disclosure','status_success')
+    results['core_semantic']=all(results[k] for k in core_keys) and all(results.get(k,True) for k in ('business_scope','measurement_nature','value_kind','period_granularity'))
+    results['numeric_and_unit']=results['number'] and results['unit']
+    results['metadata_complete']=results['statement']
+    required=[results[k] for k in (*core_keys,'citation_support','physical_page','statement')]
+    required += [results[k] for k in ('business_scope','measurement_nature','value_kind','period_granularity') if k in results]
+    results['joint']=False if any(v is False for v in required) else None if any(v is None for v in required) else True
     return results
+
+def score_fact(response,label, *, layered=False):
+    observations=(response.get('calculation') or {}).get('observations') or []
+    if len(observations)<=1 or not layered:return _score_single_observation(response,label,layered=layered)
+    import copy
+    keys=('company_id','metric_id','value','currency','scale','fact_period','source_filing',
+          'business_scope','measurement_nature','value_kind','period_granularity')
+    identities={tuple(str(o.get(k)) for k in keys) for o in observations}
+    rows=[]
+    for observation in observations:
+        one=copy.deepcopy(response);one['calculation']['observations']=[observation]
+        rows.append(_score_single_observation(one,label,layered=True))
+    out=dict(rows[0]);out['observation_count']=len(observations)
+    out['observation_conflict']=len(identities)!=1
+    for key in (*FIELDS,'core_semantic','numeric_and_unit','metadata_complete','joint'):
+        values=[r[key] for r in rows]
+        out[key]=False if any(v is False for v in values) else None if any(v is None for v in values) else True
+    if out['observation_conflict']:out['core_semantic']=out['joint']=False
+    return out
 
 def citation_page_score(response, grades):
     cited = {f"{c.get('source_filing')}#{c.get('page')}" for c in response.get('citations', [])}

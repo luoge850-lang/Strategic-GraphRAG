@@ -1,0 +1,32 @@
+{
+  "http_status": 503,
+  "elapsed_ms": 4280.996,
+  "error_type": "HTTPError",
+  "content_type": "application/json",
+  "response": {
+    "execution_status": "DEPENDENCY_ERROR",
+    "answer_status": "NOT_REQUESTED",
+    "grounding_status": "NOT_EXECUTED",
+    "outcome": "DEPENDENCY_ERROR",
+    "status_provenance": {
+      "contract_version": "response-contract/v2",
+      "source": "explicit_fields",
+      "legacy_compatibility": false,
+      "uncertain": false,
+      "notes": [
+        "http_status_precedence"
+      ]
+    },
+    "error": {
+      "code": "DEPENDENCY_ERROR",
+      "dependency": "neo4j",
+      "retryable": true,
+      "outcome": "DEPENDENCY_ERROR",
+      "message": "The request could not be completed.",
+      "request_id": "434ca27074e34ffba7537933474a3cc2",
+      "execution_status": "DEPENDENCY_ERROR",
+      "answer_status": "NOT_REQUESTED",
+      "grounding_status": "NOT_EXECUTED"
+    }
+  }
+}

@@ -8,7 +8,7 @@ from dataclasses import asdict
 from decimal import Decimal, DecimalException
 from typing import Any, Iterable
 
-from ..schema.financial_observation import FinancialObservation, split_unit
+from ..schema.financial_observation import FinancialObservation, split_unit, measurement_identity
 
 
 _SCALE = {
@@ -163,6 +163,8 @@ def _result(status: str, operation: str, reason: str, **extra: Any) -> dict[str,
 
 def _record(observation: FinancialObservation) -> dict[str, Any]:
     record = asdict(observation)
+    if observation.measurement_nature == "UNSPECIFIED":
+        record.update(measurement_identity(observation.metric_id, observation.fiscal_period, observation.unit))
     record["fact_period"] = observation.fiscal_period
     record["disclosure_version"] = observation.source_filing
     record["evidence_id"] = observation.claim_id
@@ -231,6 +233,10 @@ def _valid_observations(
             )
             if metadata_ok:
                 contract_error = _unit_metadata_conflict(item) or _period_contract_error(item)
+                if not contract_error and item.measurement_nature != "UNSPECIFIED":
+                    derived = measurement_identity(item.metric_id, item.fiscal_period, item.unit)
+                    if any(getattr(item, key) != value for key, value in derived.items()):
+                        contract_error = "observation_measurement_identity_conflict"
                 if contract_error:
                     contract_errors.append((item, contract_error))
                     continue
@@ -456,6 +462,11 @@ def calculate_public(
         item for item in observations
         if metric_matches(item)
         and (not company or item.company_id.strip().upper().replace(" ", "_") == company)
+        and all(not plan.get(key) or (
+                    measurement_identity(item.metric_id, item.fiscal_period, item.unit)[key]
+                    if item.measurement_nature == "UNSPECIFIED" else getattr(item,key,None)
+                ) == plan[key]
+                for key in ('business_scope','measurement_nature','value_kind','period_granularity'))
     ]
     observations, scope_error = _version_filter(plan, observations)
     if scope_error:

@@ -32,6 +32,7 @@ jobs:
           python -m compileall -q deployment
           python -m pytest -q deployment/test_preflight.py deployment/test_live_acceptance.py deployment/test_candidate_import.py
           python deployment/test_complete_fact_scoring.py
+          python -m deployment.verify_answer_closure_artifacts
           python deployment/test_validity_portability.py
           python deployment/summarize_service_validity.py --root experiments/service-validity-2026-10-02 --output /tmp/service-summary.json
           python deployment/verify_validity_artifacts.py --root experiments/service-validity-2026-10-02 --recomputed /tmp/service-summary.json

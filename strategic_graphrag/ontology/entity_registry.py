@@ -100,6 +100,14 @@ CANONICAL_MAP: Dict[str, Tuple[str, str]] = {
     "debt_to_equity_ratio": ("DEBT_TO_EQUITY", "FinancialMetric"),
     "current_ratio": ("CURRENT_RATIO", "FinancialMetric"),
     # Quantitative filing-table metrics.  These remain distinct from causal
+    "accounts_payable": ("ACCOUNTS_PAYABLE", "FinancialMetric"),
+    "data_center_revenue": ("DATA_CENTER_REVENUE", "FinancialMetric"),
+    "gaming_revenue": ("GAMING_REVENUE", "FinancialMetric"),
+    "automotive_revenue": ("AUTOMOTIVE_REVENUE", "FinancialMetric"),
+    "professional_visualization_revenue": ("PROFESSIONAL_VISUALIZATION_REVENUE", "FinancialMetric"),
+    "cash_flow_change_accounts_receivable": ("CASH_FLOW_CHANGE_ACCOUNTS_RECEIVABLE", "FinancialMetric"),
+    "cash_flow_change_accounts_payable": ("CASH_FLOW_CHANGE_ACCOUNTS_PAYABLE", "FinancialMetric"),
+    "cash_flow_change_inventories": ("CASH_FLOW_CHANGE_INVENTORIES", "FinancialMetric"),
     # risk metrics so table extraction can preserve exact disclosed values.
     "cash_and_cash_equivalents": ("CASH_AND_CASH_EQUIVALENTS", "FinancialMetric"),
     "marketable_securities": ("MARKETABLE_SECURITIES", "FinancialMetric"),

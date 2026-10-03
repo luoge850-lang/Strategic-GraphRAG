@@ -43,4 +43,33 @@ class FalsePassGuards(unittest.TestCase):
         r['calculation']['observations'][0]['metric']='OPERATING_COST'
         self.assertFalse(score_fact(r,label)['metric'])
 
+    def test_layered_identity_guards(self):
+        dimensions=dict(business_scope='CONSOLIDATED',measurement_nature='PERIOD_RESULT',
+                        value_kind='AMOUNT',period_granularity='ANNUAL')
+        self.label.update(dimensions)
+        obs=self.response['calculation']['observations'][0]
+        obs.update(dimensions)
+        for key,value in [('business_scope','DATA_CENTER'),('measurement_nature','PERIOD_MOVEMENT'),
+                          ('period_granularity','QUARTERLY'),('metric','ACCOUNTS_PAYABLE')]:
+            r=copy.deepcopy(self.response);r['calculation']['observations'][0][key]=value
+            score=score_fact(r,self.label,layered=True)
+            self.assertTrue(score['numeric_and_unit'])
+            self.assertFalse(score['core_semantic'])
+            self.assertFalse(score['joint'])
+
+    def test_multisource_not_arbitrary_selection(self):
+        r=copy.deepcopy(self.response)
+        r['calculation']['observations'].append(copy.deepcopy(r['calculation']['observations'][0]))
+        self.assertTrue(score_fact(r,self.label,layered=True)['joint'])
+        r['calculation']['observations'][1]['fact_period']='FY2024'
+        self.assertTrue(score_fact(r,self.label,layered=True)['observation_conflict'])
+        self.assertFalse(score_fact(r,self.label,layered=True)['joint'])
+
+    def test_metadata_does_not_replace_semantic_quality(self):
+        r=copy.deepcopy(self.response)
+        r['calculation']['observations'][0]['statement_type']='FINANCIAL_STATEMENTS'
+        score=score_fact(r,self.label,layered=True)
+        self.assertTrue(score['core_semantic']);self.assertFalse(score['metadata_complete'])
+        self.assertFalse(score['joint'])
+
 if __name__=='__main__':unittest.main()

@@ -802,6 +802,11 @@ class TripleExtractor:
             evidence_supported, _support_reason = self._evidence_supports_relation(
                 s_raw, t_raw, rel, evidence
             )
+            if rel == "REPORTS_METRIC" and t.get("_source") == "table":
+                typed_support = self._typed_table_measurement_support(t, text)
+                if typed_support is not None:
+                    evidence_supported = typed_support
+                    _support_reason = "TYPED_TABLE_CONTEXT" if typed_support else "ENTITY_NOT_PRESENT_IN_EVIDENCE"
             if not evidence_supported and (sn != s_raw or tn != t_raw):
                 evidence_supported, _support_reason = self._evidence_supports_relation(
                     sn, tn, rel, evidence
@@ -832,6 +837,39 @@ class TripleExtractor:
             filtered.append(t)
 
         return filtered
+
+    @staticmethod
+    def _typed_table_measurement_support(triple: Dict, page_text: str) -> Optional[bool]:
+        """Ground qualified metric IDs in source row AND source context.
+
+        IDs need not occur literally in a filing. Do not make their base-label
+        aliases globally interchangeable: movement, ratios and market revenue
+        require distinct verified table contexts.
+        """
+        metric=str(triple.get("target") or "").upper()
+        evidence=str(triple.get("evidence_sentence") or "")
+        context=str(triple.get("table_context") or "")
+        page=str(page_text or "")
+        cash={"CASH_FLOW_CHANGE_ACCOUNTS_RECEIVABLE":"accounts receivable",
+              "CASH_FLOW_CHANGE_ACCOUNTS_PAYABLE":"accounts payable",
+              "CASH_FLOW_CHANGE_INVENTORIES":"inventories"}
+        ratios={"R_AND_D_RATIO":"research and development", "SG_AND_A_RATIO":"sales general and administrative",
+                "OPERATING_EXPENSE_RATIO":"operating expenses", "COST_OF_REVENUE_RATIO":"cost of revenue",
+                "OPERATING_MARGIN":"operating income", "NET_MARGIN":"net income", "GROSS_MARGIN":"gross profit"}
+        scopes={"DATA_CENTER_REVENUE":"data center", "GAMING_REVENUE":"gaming",
+                "AUTOMOTIVE_REVENUE":"automotive", "PROFESSIONAL_VISUALIZATION_REVENUE":"professional visualization"}
+        alias=cash.get(metric) or ratios.get(metric) or scopes.get(metric)
+        if alias is None:return None
+        norm=re.sub(r"[^a-z0-9%]+"," ",evidence.lower())
+        anchor=alias in norm or (metric=='GROSS_MARGIN' and 'gross margin' in norm)
+        if not anchor:return False
+        if metric in cash:
+            return triple.get('statement_type')=='CASH_FLOW_STATEMENT' and bool(re.search(
+                r'changes in operating assets and liabilities',page,re.I))
+        if metric in ratios:
+            return triple.get('metric_unit')=='percent' and bool(re.search(
+                r'%\s+of\s+(?:net\s+)?revenue|percentage of\s+revenue|gross margin',context+'\n'+evidence,re.I))
+        return bool(re.search(r'revenue by (?:end market|reportable segment)|revenue by specialized markets',page,re.I))
 
     # ── Helper: Evidence Sentence Finder ──
 

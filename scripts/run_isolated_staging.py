@@ -386,6 +386,7 @@ def phase_accepted(package: Path, build_id: str) -> None:
                     "report_period": triple.get("report_period") or f"FY{filing_year}",
                     "source_row_id": triple.get("source_row_id"),
                     "statement_type": triple.get("statement_type"),
+                    "source_section": triple.get("source_section"),
                     "table_name": triple.get("table_name"),
                     "row_label": triple.get("row_label"),
                     "comparability_status": triple.get("comparability_status"),

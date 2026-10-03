@@ -1,0 +1,140 @@
+{
+  "pdfs": {
+    "2023-10-K.pdf": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+    "2024-10-K.pdf": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+    "2025-10-K.pdf": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e"
+  },
+  "catalogue": [
+    [
+      "COST_OF_REVENUE",
+      "cost of revenue",
+      32639,
+      16621,
+      52,
+      "INCOME_STATEMENT"
+    ],
+    [
+      "GROSS_PROFIT",
+      "gross profit",
+      97858,
+      44301,
+      52,
+      "INCOME_STATEMENT"
+    ],
+    [
+      "NET_INCOME",
+      "net income",
+      72880,
+      29760,
+      52,
+      "INCOME_STATEMENT"
+    ],
+    [
+      "PRETAX_INCOME",
+      "income before income tax",
+      84026,
+      33818,
+      52,
+      "INCOME_STATEMENT"
+    ],
+    [
+      "INCOME_TAX_EXPENSE",
+      "income tax expense",
+      11146,
+      4058,
+      52,
+      "INCOME_STATEMENT"
+    ],
+    [
+      "TOTAL_CURRENT_LIABILITIES",
+      "total current liabilities",
+      18047,
+      10631,
+      54,
+      "BALANCE_SHEET"
+    ],
+    [
+      "TOTAL_CURRENT_ASSETS",
+      "total current assets",
+      80126,
+      44345,
+      54,
+      "BALANCE_SHEET"
+    ],
+    [
+      "TOTAL_ASSETS",
+      "total assets",
+      111601,
+      65728,
+      54,
+      "BALANCE_SHEET"
+    ],
+    [
+      "TOTAL_LIABILITIES",
+      "total liabilities",
+      32274,
+      22750,
+      54,
+      "BALANCE_SHEET"
+    ],
+    [
+      "TOTAL_SHAREHOLDERS_EQUITY",
+      "total shareholders' equity",
+      79327,
+      42978,
+      54,
+      "BALANCE_SHEET"
+    ],
+    [
+      "CASH_AND_CASH_EQUIVALENTS",
+      "cash and cash equivalents",
+      8589,
+      7280,
+      54,
+      "BALANCE_SHEET"
+    ],
+    [
+      "MARKETABLE_SECURITIES",
+      "marketable securities",
+      34621,
+      18704,
+      54,
+      "BALANCE_SHEET"
+    ],
+    [
+      "INVENTORIES",
+      "inventories",
+      10080,
+      5282,
+      54,
+      "BALANCE_SHEET"
+    ],
+    [
+      "GAMING_REVENUE",
+      "Gaming",
+      11350,
+      10447,
+      80,
+      "FINANCIAL_NOTES"
+    ],
+    [
+      "AUTOMOTIVE_REVENUE",
+      "Automotive",
+      1694,
+      1091,
+      80,
+      "FINANCIAL_NOTES"
+    ],
+    [
+      "PROFESSIONAL_VISUALIZATION_REVENUE",
+      "Professional Visualization",
+      1878,
+      1553,
+      80,
+      "FINANCIAL_NOTES"
+    ]
+  ],
+  "source_method": "PDF physical-page text read before HTTP; catalogue independently transcribed; no prediction/graph export",
+  "families": "metric + operation + measurement identity, not paraphrase count",
+  "independence_limit": "Adjacent metrics overlap previous development. Frozen unexposed forms are engineering holdout, not entirely unseen metric families or human Gold."
+}

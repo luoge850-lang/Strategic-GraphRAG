@@ -27,7 +27,30 @@ Strategic-GraphRAG keeps the question, typed financial observation, filing versi
 
 The diagram describes the candidate design, including its staging boundary. The local real-store checks below validate a narrow deterministic path; they do not imply public deployment, general answer accuracy, or a complete browser acceptance pass.
 
-## Current candidate: a correct number is only the beginning
+## Current candidate · answer correctness closure, October 3
+
+**Restricted research prototype — the reliable-answer gate was not met.** The latest candidate preserves financial scope and period identity more carefully, but a new frozen diagnostic still exposes answers to the wrong question. Those failures remain visible: a successful HTTP request is not a correct answer.
+
+For `build_ff4e5bcf11c71930`, the question-only run produced **25/33 core-semantic and numerical-plus-unit matches (75.8%)**, **5/33 false refusals**, and **4 wrong `PASS` responses**. Citation support was **21/24 judged**, with nine unjudged answerable cases; necessary-field joint correctness was **21/33**. Forty questions executed over real HTTP. Labels are AI/PDF diagnostics, not human Gold; operation-plus-metric families share metrics with development.
+
+Two development repair rounds were completed, then validation was run without further tuning. Cash-flow movements and Data Center scope now survive the known regression cases; quarterly requests safely refuse instead of returning annual totals. However, pretax-income wording still selects net income, `divided by` can fall back to a single fact, and percentage observations are lost by a nullable-field adapter defect. The frozen 90% semantic and zero severe-error gates were not relaxed.
+
+<p align="center">
+  <img src="experiments/answer-correctness-2026-10-03/browser/data-center.jpg" alt="Actual latest-candidate Data Center revenue display; a diagnostic, not general accuracy" width="100%" />
+</p>
+
+Five correct calculation displays were observed in the browser, and two citation flows visibly reached the correct physical PDF pages. Five complete end-to-end workflows are **not** established; the refusal UI still displays broad annual evidence badges. Isolated HTTP restart, dependency failure/recovery and cross-build source/database/vector/configuration rollback were recorded. These checks do not establish public deployment or production availability.
+
+[Full scorecard, failure cases and reproduction](experiments/answer-correctness-2026-10-03/README.md) · [Question-only raw responses](experiments/answer-correctness-2026-10-03/validation-run-v1/question_only.jsonl) · [Separate conditions and metric slices](experiments/answer-correctness-2026-10-03/validation-summary-v1.json)
+
+```powershell
+python -m deployment.verify_answer_closure_artifacts
+python -m deployment.summarize_answer_closure --run experiments/answer-correctness-2026-10-03/validation-run-v1 --output recomputed-answer-closure.json
+```
+
+Offline recomputation requires only Python; rebuilding and running the service additionally require original hash-matched PDFs, isolated Neo4j and vector data. Use an unused output filename. Historical results below retain their original build identities and must not be combined with the latest scores.
+
+## Historical candidate · October 2: a correct number is only the beginning
 
 The latest validation asks a harder question: **does the answer preserve the whole financial fact—not just its value?** On October 2, the same build was queried without injecting reference files, with a fixed user file-selection fixture, and with a separately labelled reference-scope diagnostic. All **114 requests** reached the real HTTP service. Their scores stay separate.
 

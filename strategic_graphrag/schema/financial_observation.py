@@ -29,6 +29,17 @@ _PERCENT_METRIC_MAP = {
     "SG_AND_A_EXPENSE": "SG_AND_A_RATIO",
 }
 
+def measurement_identity(metric: str, period: str, unit: str) -> Dict[str, str]:
+    metric=metric.upper()
+    scopes=('DATA_CENTER','GAMING','AUTOMOTIVE','PROFESSIONAL_VISUALIZATION','COMPUTE_NETWORKING','GRAPHICS')
+    scope=next((x for x in scopes if metric==x+'_REVENUE'),'CONSOLIDATED')
+    balances={'ACCOUNTS_RECEIVABLE','ACCOUNTS_PAYABLE','INVENTORIES','TOTAL_ASSETS','TOTAL_CURRENT_ASSETS',
+              'TOTAL_LIABILITIES','TOTAL_CURRENT_LIABILITIES','MARKETABLE_SECURITIES','CASH_AND_CASH_EQUIVALENTS','TOTAL_SHAREHOLDERS_EQUITY'}
+    ratio=unit.lower() in {'percent','percentage points','%'} or metric.endswith('_RATIO') or metric.endswith('_MARGIN')
+    nature='PERIOD_MOVEMENT' if metric.startswith('CASH_FLOW_CHANGE_') else 'BALANCE' if metric in balances else 'DISCLOSED_RATIO' if ratio else 'PERIOD_RESULT'
+    return dict(business_scope=scope,measurement_nature=nature,value_kind='RATIO' if ratio else 'AMOUNT',
+                period_granularity='QUARTERLY' if re.match(r'Q[1-4]',period,re.I) else 'ANNUAL')
+
 
 @dataclass(frozen=True)
 class FinancialObservation:
@@ -54,6 +65,11 @@ class FinancialObservation:
     valid_to: str
     comparability_status: str
     build_id: Optional[str] = None
+    business_scope: str = "CONSOLIDATED"
+    measurement_nature: str = "UNSPECIFIED"
+    value_kind: str = "AMOUNT"
+    period_granularity: str = "ANNUAL"
+    source_section: str = "UNKNOWN"
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -84,6 +100,8 @@ def parse_numeric_value(value: Any) -> Optional[float]:
 def split_unit(unit: str) -> tuple[Optional[str], Optional[str]]:
     normalized = str(unit or "").strip()
     lower = normalized.casefold()
+    if lower in {"percent", "%", "percentage", "percentage points"}:
+        return None, "percent"
     currency = next(
         (code for code in ("USD", "EUR", "GBP", "JPY", "CNY", "CAD", "AUD")
          if lower.startswith(code.casefold())),
@@ -179,11 +197,11 @@ def build_financial_observations(
             [claim_id, metric_id, period, raw_value, unit, source_filing, str(page)]
         )
         observation_id = "FO_" + hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24].upper()
-        measurement_identity = "|".join(
+        measurement_signature = "|".join(
             [company_id, metric_id, period, raw_value, unit]
         )
         measurement_key = "FM_" + hashlib.sha256(
-            measurement_identity.encode("utf-8")
+            measurement_signature.encode("utf-8")
         ).hexdigest()[:20].upper()
         observations.append(
             FinancialObservation(
@@ -209,6 +227,8 @@ def build_financial_observations(
                 valid_to=valid_to,
                 comparability_status=comparability,
                 build_id=build_id,
+                source_section=str(triple.get('source_section') or section),
+                **measurement_identity(metric_id,period,unit),
             ).to_dict()
         )
     return observations

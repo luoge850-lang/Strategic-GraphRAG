@@ -1,0 +1,16 @@
+{
+  "build_id": "build_ff4e5bcf11c71930",
+  "review_level": "agent-observed real browser diagnostic, not human acceptance",
+  "settings": "all verified files, UI auto routing, generation unchecked; separate from fixed graph-mode evaluation",
+  "flows": [
+    {"case": "fact period and disclosure version", "observed_result": "FY2024 revenue disclosed in 2025: 60922 USD millions", "screenshot": "disclosure-version.jpg", "citation_clicked": true, "physical_page_observed": "2025 PDF page 80"},
+    {"case": "business segment", "observed_result": "FY2025 Data Center revenue: 115186 USD millions", "screenshot": "data-center.jpg", "citation_clicked": false, "physical_page_observed": null},
+    {"case": "cash-flow movement, not closing balance", "observed_result": "FY2022 receivables adjustment disclosed in 2023: -2215 USD millions", "screenshot": "receivables-movement.jpg", "citation_clicked": true, "physical_page_observed": "2023 PDF page 58", "limitation": "UI mechanism-only badge does not describe the typed financial calculation accurately"},
+    {"case": "unit conversion", "observed_result": "FY2025 revenue: 130.497 USD billions", "screenshot": null, "citation_clicked": false, "physical_page_observed": null, "limitation": "visible DOM verified; additional screenshot did not persist"},
+    {"case": "cross-year calculation", "observed_result": "FY2023 to FY2025 revenue growth: 383.788 percent", "screenshot": "cross-year-growth.jpg", "citation_clicked": false, "physical_page_observed": null},
+    {"case": "quarterly boundary", "observed_result": "INSUFFICIENT_EVIDENCE, no numeric answer", "screenshot": "quarter-refusal-visible.jpg", "citation_clicked": false, "physical_page_observed": null, "limitation": "annual 2025 evidence and grounding badges still displayed for a 2024 quarterly question; not a successful end-to-end refusal UI"}
+  ],
+  "physical_page_screenshots": ["pdf-target80-observed.jpg", "pdf-target58-observed.jpg"],
+  "acceptance": "five correct calculation displays observed; only two citation-click physical-page flows completed; five complete user workflows NOT established",
+  "continuation_check": "On continuation, localhost:5173 refused connection. Historical screenshots are not evidence of current availability. No browser safety barrier bypassed."
+}

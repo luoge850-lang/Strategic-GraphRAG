@@ -117,6 +117,7 @@ class StagingGraphIndex:
                     "metric_unit": edge.get("metric_unit") or edge.get("unit") or "",
                     "evidence_sentence": edge.get("evidence") or "",
                     "statement_type": edge.get("statement_type") or "UNKNOWN",
+                    "source_section": edge.get("source_section") or edge.get("section") or "UNKNOWN",
                     "table_name": edge.get("table_instance_id") or edge.get("table_name") or "UNKNOWN_TABLE",
                     "row_label": edge.get("row_label") or edge.get("source_row_id") or edge.get("target") or "UNKNOWN_ROW",
                     "comparability_status": edge.get("comparability_status") or "UNASSESSED",

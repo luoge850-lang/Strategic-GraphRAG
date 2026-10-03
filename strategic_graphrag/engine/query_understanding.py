@@ -11,6 +11,7 @@ Reference: Microsoft GraphRAG (Edge et al., 2024), Neuro-Symbolic AI patterns
 import re
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, field
+from ..schema.financial_observation import measurement_identity
 
 
 @dataclass
@@ -35,6 +36,10 @@ class StructuredQuery:
     calculation_target_scale: Optional[str] = None
     evidence_budget: int = 10
     ambiguity: List[str] = field(default_factory=list)
+    business_scope: str = "CONSOLIDATED"
+    measurement_nature: str = "AMOUNT"
+    period_granularity: str = "ANNUAL"
+    value_kind: str = "AMOUNT"
 
     # Target entities to anchor the graph search
     source_entities: List[str] = field(default_factory=list)  # e.g., ["US_EXPORT_CONTROL"]
@@ -85,6 +90,10 @@ class StructuredQuery:
         """Return a JSON-safe, versioned QueryPlan for audit traces."""
         return {
             "schema": "query-plan/v1",
+            "business_scope": self.business_scope,
+            "measurement_nature": self.measurement_nature,
+            "period_granularity": self.period_granularity,
+            "value_kind": self.value_kind,
             "raw_question": self.raw_question,
             "task_type": self.task_type,
             "company": self.company,
@@ -150,6 +159,9 @@ FINANCIAL_METRICS_MAP = {
     "cash_and_cash_equivalents": "CASH_AND_CASH_EQUIVALENTS",
     "accounts receivable": "ACCOUNTS_RECEIVABLE",
     "accounts_receivable": "ACCOUNTS_RECEIVABLE",
+    "accounts payable": "ACCOUNTS_PAYABLE",
+    "accounts_payable": "ACCOUNTS_PAYABLE",
+    "cost of revenue": "COST_OF_REVENUE",
     "marketable securities": "MARKETABLE_SECURITIES",
     "marketable_securities": "MARKETABLE_SECURITIES",
     "inventories": "INVENTORIES",
@@ -222,6 +234,10 @@ def _explicit_fiscal_period(question: str) -> str | None:
             year, quarter = match.group(1), match.group(2)
         return f"Q{quarter} FY{year}"
 
+    ordinal = re.search(r"\b(first|second|third|fourth) quarter(?: of)?(?: the)?\s+(?:FY|fiscal(?: year)?)\s*(20\d{2})", text, re.I)
+    if ordinal:
+        return f"Q{['first','second','third','fourth'].index(ordinal.group(1).lower())+1} FY{ordinal.group(2)}"
+
     half = re.search(
         r"\bH([1-2])\s*(?:FY|fiscal(?:\s+year)?)\s*[-:]?\s*(20\d{2})\b|"
         r"\b(?:FY|fiscal(?:\s+year)?)\s*[-:]?\s*(20\d{2})\s*H([1-2])\b",
@@ -243,7 +259,7 @@ def _explicit_fiscal_period(question: str) -> str | None:
 
 
 def _year_from_period_label(period: str) -> int | None:
-    match = re.search(r"\b(20\d{2})\b", str(period or ""))
+    match = re.search(r"(?<!\d)(20\d{2})(?!\d)", str(period or ""))
     return int(match.group(1)) if match else None
 
 
@@ -360,6 +376,43 @@ def parse_query(question: str) -> StructuredQuery:
         q.analysis_type = "FACT"
 
     # Step 3: Extract temporal constraints
+    if explicit_period and explicit_period.startswith('Q'):
+        q.period_granularity = "QUARTERLY"
+    elif re.search(r"\b(quarter|q[1-4]|half.year|monthly|month)\b",q_lower):
+        q.ambiguity.append("subannual_scope_not_reliably_resolved")
+    scopes = {'data center':'DATA_CENTER', 'data centre':'DATA_CENTER', 'gaming':'GAMING',
+              'automotive':'AUTOMOTIVE','professional visualization':'PROFESSIONAL_VISUALIZATION',
+              'compute & networking':'COMPUTE_NETWORKING','graphics segment':'GRAPHICS'}
+    matched_scopes = {value for name,value in scopes.items() if name in q_lower}
+    if len(matched_scopes)>1:
+        q.ambiguity.append("multiple_business_scopes_require_explicit_comparison")
+    elif matched_scopes:
+        q.business_scope=next(iter(matched_scopes))
+        if q.target_metric=='REVENUE':
+            q.target_metric=q.target_entity=q.business_scope+'_REVENUE'
+        else:q.ambiguity.append("unsupported_business_scope_for_metric")
+    elif re.search(r"\b(segment|division|business unit|regional|geographic)\b",q_lower):
+        q.ambiguity.append("business_scope_not_resolved")
+    flow_change = bool(re.search(r"cash[- ]?flow|cash flows|working capital|operating assets",q_lower)) and bool(re.search(r"adjustment|change|movement",q_lower))
+    if flow_change and q.target_metric in {'ACCOUNTS_RECEIVABLE','INVENTORIES','ACCOUNTS_PAYABLE'}:
+        q.target_metric=q.target_entity='CASH_FLOW_CHANGE_'+q.target_metric
+        q.measurement_nature='PERIOD_MOVEMENT'
+        q.calculation=None
+    elif re.search(r"\b(balance|at year.end|at fiscal year.end)\b",q_lower):
+        q.measurement_nature='BALANCE'
+    percentages={'R_AND_D_EXPENSE':'R_AND_D_RATIO','SG_AND_A_EXPENSE':'SG_AND_A_RATIO',
+                 'OPERATING_COST':'OPERATING_EXPENSE_RATIO','COST_OF_REVENUE':'COST_OF_REVENUE_RATIO',
+                 'GROSS_PROFIT':'GROSS_MARGIN','NET_INCOME':'NET_MARGIN','OPERATING_INCOME':'OPERATING_MARGIN'}
+    if q.calculation=='RATIO' and not re.search(r"\b(calculate|compute|divide|divided)\b",q_lower):
+        if q.target_metric in percentages:
+            q.target_metric=q.target_entity=percentages[q.target_metric]
+            q.measurement_nature='DISCLOSED_RATIO'
+            q.calculation=None
+    if re.search(r"percentage[- ]point|percentage points",q_lower):
+        q.calculation='PERCENTAGE_POINT_CHANGE'
+    if re.search(r"\b(adjustment|movement)\b",q_lower) and q.measurement_nature!='PERIOD_MOVEMENT':
+        q.ambiguity.append("movement_qualifier_not_resolved")
+
     year_matches = list(re.finditer(r"(20\d{2})", question))
     year_match = [match.group(1) for match in year_matches]
     fact_years = list(year_match)
@@ -452,6 +505,9 @@ def parse_query(question: str) -> StructuredQuery:
     # Step 6: Exclude downgrade-only relations from causal search
     q.exclude_relations = ["DISCLOSES", "MENTIONS", "POSSIBLE_RELATION"]
 
+    identity=measurement_identity(q.target_metric,q.fact_period or '', 'percent' if q.measurement_nature=='DISCLOSED_RATIO' else '')
+    q.measurement_nature=identity['measurement_nature']
+    q.value_kind=identity['value_kind']
     return q
 
 

@@ -1,0 +1,1799 @@
+{
+  "status": "PASS",
+  "records": [
+    {
+      "profile": "new-before",
+      "status": "PASS",
+      "source_commit": "88298582f83ac6437758f6a166e44d630ae8e376",
+      "source_tree_sha256": "f0694cf94608d880f2c5d4ea666b46aad6621cc0f7605e47cb0a2bbed0c90a37",
+      "build_id": "build_ff4e5bcf11c71930",
+      "vector_collection": "isolated_build_ff4e5bcf11c71930",
+      "database_uri": "bolt://127.0.0.1:17691",
+      "database_scope": "new isolated candidate database",
+      "configuration_identity_sha256": "1ee0a6da04cabc092d982553d765affd370ee9d4444e96918b51a7ed4e65c7d3",
+      "request_result": {
+        "http_status": 200,
+        "elapsed_ms": 277.028,
+        "error_type": null,
+        "content_type": "application/json",
+        "response": {
+          "query": "What revenue for fiscal 2024 was disclosed in the 2025 filing?",
+          "intent": "FINANCIAL_IMPACT",
+          "intent_display": "Financial Impact Quantification",
+          "answer": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.\n\nCalculation\n60,922.000 USD millions",
+          "calculation": {
+            "schema": "deterministic-calculation/v1",
+            "status": "PASS",
+            "operation": "fact",
+            "observations": [
+              {
+                "id": "FO_1674DB884256FBBEBF6469DE",
+                "measurement_key": "FM_E8372F7196781346199C",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "REVENUE",
+                "claim_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "source_filing": "2025-10-K.pdf",
+                "page": 80,
+                "fiscal_period": "FY2024",
+                "fiscal_year": 2024,
+                "value": 60922.0,
+                "raw_value": "60922",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "FINANCIAL_NOTES",
+                "table_name": "b67bd67a64488a54:2025-10-K.pdf:80:table_a431d56a2d4a",
+                "row_label": "total revenue",
+                "column_label": "FY2024",
+                "valid_from": "FY2024",
+                "valid_to": "FY2024",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_ff4e5bcf11c71930",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "fact_period": "FY2024",
+                "disclosure_version": "2025-10-K.pdf",
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "source": "2025-10-K.pdf#page=80"
+              }
+            ],
+            "value": 60922.0,
+            "unit": "USD millions",
+            "display": "60,922.000 USD millions",
+            "reason_code": "typed_fact_observation"
+          },
+          "citations": [
+            {
+              "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+              "source_filing": "2025-10-K.pdf",
+              "page": 80,
+              "original_locator": "/evaluation/table-quality/source/2025-10-K.pdf#page=80"
+            }
+          ],
+          "execution_status": "SUCCEEDED",
+          "answer_status": "NOT_REQUESTED",
+          "grounding_status": "VERIFIED",
+          "outcome": "PARTIALLY_ANSWERED",
+          "status_provenance": {},
+          "structured_report": {
+            "format": "evidence_claim_v1",
+            "status": "RETRIEVAL_ONLY",
+            "executive_summary": "Graph evidence trace for intent FINANCIAL_IMPACT.",
+            "claims": [
+              {
+                "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "evidence_claim_ids": [
+                  "claim_v2_5754bc5fe845e1af9976af76"
+                ],
+                "pages": [
+                  80
+                ],
+                "fiscal_years": [
+                  2024
+                ],
+                "support_level": "VERIFIED_TRACE",
+                "citation_audit": {
+                  "submitted_pages": [
+                    80
+                  ],
+                  "submitted_fiscal_years": [
+                    2024
+                  ],
+                  "submitted_source_filings": [],
+                  "canonical_pages": [
+                    80
+                  ],
+                  "canonical_fiscal_years": [
+                    2024
+                  ],
+                  "canonical_source_filings": [
+                    "2025-10-k"
+                  ],
+                  "normalization_issues": []
+                },
+                "source_filings": [
+                  "2025-10-k"
+                ]
+              }
+            ],
+            "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+            "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+            "narrative": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.",
+            "execution_status": "SUCCEEDED",
+            "answer_status": "NOT_REQUESTED",
+            "grounding_status": "VERIFIED",
+            "outcome": "PARTIALLY_ANSWERED"
+          },
+          "paths": [
+            {
+              "path_id": "path_000",
+              "fingerprint": "64b67d488ba0743f",
+              "semantic_fingerprint": "7a55a92e3a6051b4",
+              "nodes": [
+                "NVIDIA CORPORATION",
+                "REVENUE"
+              ],
+              "node_labels": [
+                "Company",
+                "FinancialMetric"
+              ],
+              "relationships": [
+                "REPORTS_METRIC"
+              ],
+              "causal_strengths": [
+                "DISCLOSED_ONLY"
+              ],
+              "evidence": [
+                "Total revenue $ 130,497 $ 60,922 $ 26,974"
+              ],
+              "pages": [
+                80
+              ],
+              "years": [
+                2024
+              ],
+              "evidence_ids": [
+                "claim_v2_5754bc5fe845e1af9976af76"
+              ],
+              "evidence_build_ids": [
+                "build_ff4e5bcf11c71930"
+              ],
+              "metric_values": [
+                60922.0
+              ],
+              "metric_units": [
+                "USD millions"
+              ],
+              "financial_observations": [
+                {
+                  "id": "FO_1674DB884256FBBEBF6469DE",
+                  "measurement_key": "FM_E8372F7196781346199C",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "claim_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "source_filing": "2025-10-K.pdf",
+                  "page": 80,
+                  "fiscal_period": "FY2024",
+                  "fiscal_year": 2024,
+                  "value": 60922.0,
+                  "raw_value": "60922",
+                  "unit": "USD millions",
+                  "currency": "USD",
+                  "scale": "millions",
+                  "statement_type": "FINANCIAL_NOTES",
+                  "table_name": "b67bd67a64488a54:2025-10-K.pdf:80:table_a431d56a2d4a",
+                  "row_label": "total revenue",
+                  "column_label": "FY2024",
+                  "valid_from": "FY2024",
+                  "valid_to": "FY2024",
+                  "comparability_status": "UNASSESSED",
+                  "build_id": "build_ff4e5bcf11c71930",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "value_kind": "AMOUNT",
+                  "period_granularity": "ANNUAL",
+                  "source_section": "FINANCIAL_STATEMENTS"
+                }
+              ],
+              "filings": [
+                "2025-10-K.pdf"
+              ],
+              "causal_forms": [
+                "FINANCIAL_RELATION"
+              ],
+              "total_hops": 1,
+              "score": 0.6028,
+              "score_breakdown": {
+                "causal_strength": 0.3,
+                "completeness": 0.5,
+                "temporal_coherence": 0.5,
+                "evidence_quality": 0.6025,
+                "hop_efficiency": 0.8333,
+                "directness": 0.8333,
+                "query_term_overlap": 0.3333,
+                "query_concept_coverage": 1.0,
+                "relation_alignment": 1.0,
+                "relation_evidence_support": 1.0,
+                "endpoint_alignment": 0.0,
+                "tangent_penalty": 0.0
+              },
+              "duplicate_count": 4,
+              "evidence_variants": [
+                [
+                  {
+                    "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "page": 80,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                    "filing": "2025-10-K.pdf"
+                  },
+                  {
+                    "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "page": 79,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_797d4eafb08fe69336e3f6d7",
+                    "filing": "2025-10-K.pdf"
+                  },
+                  {
+                    "evidence": "Revenue $ 130,497 $ 60,922 $ 26,974",
+                    "page": 52,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_2a950d7f9562c107d1ad0320",
+                    "filing": "2025-10-K.pdf"
+                  },
+                  {
+                    "evidence": "Revenue $ 130,497 $ 60,922 Up 114%",
+                    "page": 38,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_05dacf3f65d6f55eb5210c91",
+                    "filing": "2025-10-K.pdf"
+                  }
+                ]
+              ],
+              "evidence_role": "ANSWER_CRITICAL",
+              "graph_structure": "DIRECT_GRAPH_EDGE",
+              "evidence_semantic_scope": "ATOMIC_RELATION"
+            }
+          ],
+          "evidence_sentences": [
+            "Total revenue $ 130,497 $ 60,922 $ 26,974"
+          ],
+          "metadata": {
+            "total_candidates": 1,
+            "raw_candidates": 4,
+            "deduplicated_candidates": 1,
+            "top_paths": 1,
+            "anchors_used": [
+              "REVENUE"
+            ],
+            "llm_anchor_strategy": "disabled_retrieval_only",
+            "llm_anchor_enabled": false,
+            "avg_score": 0.6028,
+            "temporal": {
+              "status": "NOT_REQUESTED",
+              "requested": false,
+              "require_multi_year": false,
+              "requested_years": [],
+              "covered_years": [
+                2024
+              ],
+              "missing_requested_years": [],
+              "minimum_distinct_years": 0
+            },
+            "grounding": {
+              "status": "VERIFIED",
+              "cited_evidence_ids": [
+                "claim_v2_5754bc5fe845e1af9976af76"
+              ],
+              "cited_pages": [
+                80
+              ],
+              "cited_years": [
+                2024
+              ],
+              "unknown_evidence_ids": [],
+              "unknown_pages": [],
+              "unknown_years": [],
+              "claim_citation_mismatches": [],
+              "claim_support_failures": [],
+              "available_evidence_ids": [
+                "claim_v2_5754bc5fe845e1af9976af76"
+              ],
+              "available_pages": [
+                80
+              ],
+              "available_years": [
+                2024
+              ],
+              "available_source_filings": [
+                "2025-10-k"
+              ]
+            },
+            "response_audit": {
+              "raw_model_output": {
+                "format": "evidence_claim_v1",
+                "status": "RETRIEVAL_ONLY",
+                "executive_summary": "Graph evidence trace for intent FINANCIAL_IMPACT.",
+                "claims": [
+                  {
+                    "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "evidence_claim_ids": [
+                      "claim_v2_5754bc5fe845e1af9976af76"
+                    ],
+                    "pages": [
+                      80
+                    ],
+                    "fiscal_years": [
+                      2024
+                    ],
+                    "support_level": "VERIFIED_TRACE"
+                  }
+                ],
+                "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+                "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+                "narrative": "Retrieval-only mode: external LLM synthesis was disabled."
+              },
+              "normalized_structured_report": {
+                "format": "evidence_claim_v1",
+                "status": "RETRIEVAL_ONLY",
+                "executive_summary": "Graph evidence trace for intent FINANCIAL_IMPACT.",
+                "claims": [
+                  {
+                    "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "evidence_claim_ids": [
+                      "claim_v2_5754bc5fe845e1af9976af76"
+                    ],
+                    "pages": [
+                      80
+                    ],
+                    "fiscal_years": [
+                      2024
+                    ],
+                    "support_level": "VERIFIED_TRACE",
+                    "citation_audit": {
+                      "submitted_pages": [
+                        80
+                      ],
+                      "submitted_fiscal_years": [
+                        2024
+                      ],
+                      "submitted_source_filings": [],
+                      "canonical_pages": [
+                        80
+                      ],
+                      "canonical_fiscal_years": [
+                        2024
+                      ],
+                      "canonical_source_filings": [
+                        "2025-10-k"
+                      ],
+                      "normalization_issues": []
+                    },
+                    "source_filings": [
+                      "2025-10-k"
+                    ]
+                  }
+                ],
+                "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+                "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+                "narrative": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records."
+              },
+              "final_display_answer": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.\n\nCalculation\n60,922.000 USD millions"
+            },
+            "negative_evidence_audit": {
+              "performed": false,
+              "status": "SKIPPED",
+              "not_applicable": true,
+              "reason": "RETRIEVAL_ONLY_SYNTHESIS_DISABLED",
+              "scope": "2025-10-K.pdf",
+              "chunks_scanned": 0,
+              "query_concepts": [],
+              "matches": [],
+              "safe_absence_statement": "The full indexed-corpus audit was skipped in retrieval-only mode; no filing-wide absence conclusion is permitted."
+            },
+            "answer_evidence_status": "ANSWER_CRITICAL_AVAILABLE",
+            "llm": {
+              "configured_provider": "deepseek",
+              "configured_model": "deepseek-v4-flash",
+              "success_provider": null,
+              "success_model": null,
+              "fallback_configured": false
+            },
+            "source_filing": "2025-10-K.pdf",
+            "retrieval": {
+              "mode": "GRAPH_ONLY",
+              "vector_status": "NOT_REQUESTED",
+              "vector_hits": 0,
+              "matched_paths": 0,
+              "fusion": "none",
+              "collection": null
+            },
+            "vector_retrieval": {
+              "status": "NOT_REQUESTED",
+              "hits": [],
+              "collection": null,
+              "source_filing": "2025-10-K.pdf"
+            },
+            "vector_fusion": {
+              "mode": "GRAPH_ONLY",
+              "vector_status": "NOT_REQUESTED",
+              "vector_hits": 0,
+              "matched_paths": 0,
+              "fusion": "none",
+              "collection": null
+            },
+            "temporal_fusion": {
+              "enabled": false,
+              "matched_claims": 0,
+              "matched_paths": 0,
+              "model_version": "bitemporal_fact_v2"
+            },
+            "router": {
+              "mode": "graph",
+              "confidence": 1.0,
+              "reason": "explicit_api_selection",
+              "use_vector": false,
+              "use_graph": true,
+              "use_temporal": false,
+              "use_ppr": false
+            },
+            "ppr": {
+              "enabled": false,
+              "ranked_entities": []
+            },
+            "query_plan": {
+              "schema": "query-plan/v1",
+              "business_scope": "CONSOLIDATED",
+              "measurement_nature": "PERIOD_RESULT",
+              "period_granularity": "ANNUAL",
+              "value_kind": "AMOUNT",
+              "raw_question": "What revenue for fiscal 2024 was disclosed in the 2025 filing?",
+              "task_type": "FACT",
+              "company": null,
+              "target_metric": "REVENUE",
+              "fact_period": "FY2024",
+              "disclosure_as_of": "FY2025",
+              "document_scope": "2025-10-K.pdf",
+              "comparison": null,
+              "calculation": null,
+              "calculation_target_currency": null,
+              "calculation_target_scale": null,
+              "evidence_budget": 10,
+              "ambiguity": [],
+              "analysis_type": "FACT",
+              "causal_direction": "",
+              "fiscal_year_start": 2024,
+              "fiscal_year_end": 2024,
+              "fiscal_years": [
+                2024
+              ],
+              "temporal_required": false,
+              "require_multi_year": false,
+              "max_hops": 4,
+              "relation_types": [
+                "REPORTS_METRIC"
+              ],
+              "exclude_relations": [
+                "DISCLOSES",
+                "MENTIONS",
+                "POSSIBLE_RELATION"
+              ],
+              "require_explicit_causal": true,
+              "build_id": "build_ff4e5bcf11c71930"
+            },
+            "calculation": {
+              "schema": "deterministic-calculation/v1",
+              "status": "PASS",
+              "operation": "fact",
+              "observations": [
+                {
+                  "id": "FO_1674DB884256FBBEBF6469DE",
+                  "measurement_key": "FM_E8372F7196781346199C",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "claim_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "source_filing": "2025-10-K.pdf",
+                  "page": 80,
+                  "fiscal_period": "FY2024",
+                  "fiscal_year": 2024,
+                  "value": 60922.0,
+                  "raw_value": "60922",
+                  "unit": "USD millions",
+                  "currency": "USD",
+                  "scale": "millions",
+                  "statement_type": "FINANCIAL_NOTES",
+                  "table_name": "b67bd67a64488a54:2025-10-K.pdf:80:table_a431d56a2d4a",
+                  "row_label": "total revenue",
+                  "column_label": "FY2024",
+                  "valid_from": "FY2024",
+                  "valid_to": "FY2024",
+                  "comparability_status": "UNASSESSED",
+                  "build_id": "build_ff4e5bcf11c71930",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "value_kind": "AMOUNT",
+                  "period_granularity": "ANNUAL",
+                  "source_section": "FINANCIAL_STATEMENTS",
+                  "fact_period": "FY2024",
+                  "disclosure_version": "2025-10-K.pdf",
+                  "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "source": "2025-10-K.pdf#page=80"
+                }
+              ],
+              "value": 60922.0,
+              "unit": "USD millions",
+              "display": "60,922.000 USD millions",
+              "reason_code": "typed_fact_observation"
+            },
+            "citations": [
+              {
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "source_filing": "2025-10-K.pdf",
+                "page": 80,
+                "original_locator": "/evaluation/table-quality/source/2025-10-K.pdf#page=80"
+              }
+            ],
+            "build_id": "build_ff4e5bcf11c71930",
+            "evidence_bundle": {
+              "schema": "evidence-bundle/v1",
+              "status": "OK",
+              "retrieval_mode": "graph",
+              "build_id": "build_ff4e5bcf11c71930",
+              "items": [
+                {
+                  "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "text": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                  "document_id": "2025-10-K",
+                  "source_filing": "2025-10-K.pdf",
+                  "physical_page": 80,
+                  "location": {
+                    "path_id": "path_000",
+                    "hop": 0
+                  },
+                  "fact_period": "FY2024",
+                  "score": 0.6028,
+                  "source_method": "graph",
+                  "build_id": "build_ff4e5bcf11c71930"
+                }
+              ]
+            },
+            "baseline": "graph",
+            "retrieval_mode_requested": "graph",
+            "retrieval_mode_selected": "graph",
+            "latency_ms": {
+              "vector_retrieval_ms": 0.0,
+              "query_understanding_ms": 0.41,
+              "anchor_resolution_ms": 5.28,
+              "ppr_ms": 0.0,
+              "graph_path_search_ms": 10.55,
+              "scoring_rerank_ms": 1.55,
+              "llm_synthesis_ms": 0.07,
+              "total_ms": 30.36
+            },
+            "execution_status": "SUCCEEDED",
+            "answer_status": "NOT_REQUESTED",
+            "grounding_status": "VERIFIED",
+            "outcome": "PARTIALLY_ANSWERED",
+            "status_provenance": {
+              "contract_version": "response-contract/v2",
+              "source": "explicit_fields",
+              "legacy_compatibility": false,
+              "uncertain": false,
+              "notes": [
+                "api_engine_result"
+              ]
+            },
+            "cache": {
+              "hit": false,
+              "ttl_seconds": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "old-rollback",
+      "status": "PASS",
+      "source_commit": "88298582f83ac6437758f6a166e44d630ae8e376",
+      "source_tree_sha256": "1bd675377637941c937015c2e12e7fe0432b983667b4b1a7b489799fa96cf8ab",
+      "build_id": "build_c3b1d950e8acce78",
+      "vector_collection": "isolated_build_c3b1d950e8acce78",
+      "database_uri": "bolt://127.0.0.1:17692",
+      "database_scope": "copied old database",
+      "configuration_identity_sha256": "fc7d6586fa9f0a069ac1428810b525759dd96dad592b45ff8d6c6e72a5d328c5",
+      "request_result": {
+        "http_status": 200,
+        "elapsed_ms": 990.51,
+        "error_type": null,
+        "content_type": "application/json",
+        "response": {
+          "query": "What revenue for fiscal 2024 was disclosed in the 2025 filing?",
+          "intent": "FINANCIAL_IMPACT",
+          "intent_display": "Financial Impact Quantification",
+          "answer": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.\n\nCalculation\n60,922.000 USD millions",
+          "calculation": {
+            "schema": "deterministic-calculation/v1",
+            "status": "PASS",
+            "operation": "fact",
+            "observations": [
+              {
+                "id": "FO_1674DB884256FBBEBF6469DE",
+                "measurement_key": "FM_E8372F7196781346199C",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "REVENUE",
+                "claim_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "source_filing": "2025-10-K.pdf",
+                "page": 80,
+                "fiscal_period": "FY2024",
+                "fiscal_year": 2024,
+                "value": 60922.0,
+                "raw_value": "60922",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "FINANCIAL_STATEMENTS",
+                "table_name": "b67bd67a64488a54:2025-10-K.pdf:80:table_a431d56a2d4a",
+                "row_label": "total revenue",
+                "column_label": "FY2024",
+                "valid_from": "FY2024",
+                "valid_to": "FY2024",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_c3b1d950e8acce78",
+                "fact_period": "FY2024",
+                "disclosure_version": "2025-10-K.pdf",
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "source": "2025-10-K.pdf#page=80"
+              }
+            ],
+            "value": 60922.0,
+            "unit": "USD millions",
+            "display": "60,922.000 USD millions",
+            "reason_code": "typed_fact_observation"
+          },
+          "citations": [
+            {
+              "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+              "source_filing": "2025-10-K.pdf",
+              "page": 80,
+              "original_locator": "/evaluation/table-quality/source/2025-10-K.pdf#page=80"
+            }
+          ],
+          "execution_status": "SUCCEEDED",
+          "answer_status": "NOT_REQUESTED",
+          "grounding_status": "VERIFIED",
+          "outcome": "PARTIALLY_ANSWERED",
+          "status_provenance": {},
+          "structured_report": {
+            "format": "evidence_claim_v1",
+            "status": "RETRIEVAL_ONLY",
+            "executive_summary": "Graph evidence trace for intent FINANCIAL_IMPACT.",
+            "claims": [
+              {
+                "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "evidence_claim_ids": [
+                  "claim_v2_5754bc5fe845e1af9976af76"
+                ],
+                "pages": [
+                  80
+                ],
+                "fiscal_years": [
+                  2024
+                ],
+                "support_level": "VERIFIED_TRACE",
+                "citation_audit": {
+                  "submitted_pages": [
+                    80
+                  ],
+                  "submitted_fiscal_years": [
+                    2024
+                  ],
+                  "submitted_source_filings": [],
+                  "canonical_pages": [
+                    80
+                  ],
+                  "canonical_fiscal_years": [
+                    2024
+                  ],
+                  "canonical_source_filings": [
+                    "2025-10-k"
+                  ],
+                  "normalization_issues": []
+                },
+                "source_filings": [
+                  "2025-10-k"
+                ]
+              }
+            ],
+            "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+            "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+            "narrative": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.",
+            "execution_status": "SUCCEEDED",
+            "answer_status": "NOT_REQUESTED",
+            "grounding_status": "VERIFIED",
+            "outcome": "PARTIALLY_ANSWERED"
+          },
+          "paths": [
+            {
+              "path_id": "path_000",
+              "fingerprint": "64b67d488ba0743f",
+              "semantic_fingerprint": "7a55a92e3a6051b4",
+              "nodes": [
+                "NVIDIA CORPORATION",
+                "REVENUE"
+              ],
+              "node_labels": [
+                "Company",
+                "FinancialMetric"
+              ],
+              "relationships": [
+                "REPORTS_METRIC"
+              ],
+              "causal_strengths": [
+                "DISCLOSED_ONLY"
+              ],
+              "evidence": [
+                "Total revenue $ 130,497 $ 60,922 $ 26,974"
+              ],
+              "pages": [
+                80
+              ],
+              "years": [
+                2024
+              ],
+              "evidence_ids": [
+                "claim_v2_5754bc5fe845e1af9976af76"
+              ],
+              "evidence_build_ids": [
+                "build_c3b1d950e8acce78"
+              ],
+              "metric_values": [
+                60922.0
+              ],
+              "metric_units": [
+                "USD millions"
+              ],
+              "financial_observations": [
+                {
+                  "id": "FO_1674DB884256FBBEBF6469DE",
+                  "measurement_key": "FM_E8372F7196781346199C",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "claim_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "source_filing": "2025-10-K.pdf",
+                  "page": 80,
+                  "fiscal_period": "FY2024",
+                  "fiscal_year": 2024,
+                  "value": 60922.0,
+                  "raw_value": "60922",
+                  "unit": "USD millions",
+                  "currency": "USD",
+                  "scale": "millions",
+                  "statement_type": "FINANCIAL_STATEMENTS",
+                  "table_name": "b67bd67a64488a54:2025-10-K.pdf:80:table_a431d56a2d4a",
+                  "row_label": "total revenue",
+                  "column_label": "FY2024",
+                  "valid_from": "FY2024",
+                  "valid_to": "FY2024",
+                  "comparability_status": "UNASSESSED",
+                  "build_id": "build_c3b1d950e8acce78"
+                }
+              ],
+              "filings": [
+                "2025-10-K.pdf"
+              ],
+              "causal_forms": [
+                "FINANCIAL_RELATION"
+              ],
+              "total_hops": 1,
+              "score": 0.6028,
+              "score_breakdown": {
+                "causal_strength": 0.3,
+                "completeness": 0.5,
+                "temporal_coherence": 0.5,
+                "evidence_quality": 0.6025,
+                "hop_efficiency": 0.8333,
+                "directness": 0.8333,
+                "query_term_overlap": 0.3333,
+                "query_concept_coverage": 1.0,
+                "relation_alignment": 1.0,
+                "relation_evidence_support": 1.0,
+                "endpoint_alignment": 0.0,
+                "tangent_penalty": 0.0
+              },
+              "duplicate_count": 4,
+              "evidence_variants": [
+                [
+                  {
+                    "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "page": 80,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                    "filing": "2025-10-K.pdf"
+                  },
+                  {
+                    "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "page": 79,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_797d4eafb08fe69336e3f6d7",
+                    "filing": "2025-10-K.pdf"
+                  },
+                  {
+                    "evidence": "Revenue $ 130,497 $ 60,922 $ 26,974",
+                    "page": 52,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_2a950d7f9562c107d1ad0320",
+                    "filing": "2025-10-K.pdf"
+                  },
+                  {
+                    "evidence": "Revenue $ 130,497 $ 60,922 Up 114%",
+                    "page": 38,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_05dacf3f65d6f55eb5210c91",
+                    "filing": "2025-10-K.pdf"
+                  }
+                ]
+              ],
+              "evidence_role": "ANSWER_CRITICAL",
+              "graph_structure": "DIRECT_GRAPH_EDGE",
+              "evidence_semantic_scope": "ATOMIC_RELATION"
+            }
+          ],
+          "evidence_sentences": [
+            "Total revenue $ 130,497 $ 60,922 $ 26,974"
+          ],
+          "metadata": {
+            "total_candidates": 1,
+            "raw_candidates": 4,
+            "deduplicated_candidates": 1,
+            "top_paths": 1,
+            "anchors_used": [
+              "REVENUE"
+            ],
+            "llm_anchor_strategy": "disabled_retrieval_only",
+            "llm_anchor_enabled": false,
+            "avg_score": 0.6028,
+            "temporal": {
+              "status": "NOT_REQUESTED",
+              "requested": false,
+              "require_multi_year": false,
+              "requested_years": [],
+              "covered_years": [
+                2024
+              ],
+              "missing_requested_years": [],
+              "minimum_distinct_years": 0
+            },
+            "grounding": {
+              "status": "VERIFIED",
+              "cited_evidence_ids": [
+                "claim_v2_5754bc5fe845e1af9976af76"
+              ],
+              "cited_pages": [
+                80
+              ],
+              "cited_years": [
+                2024
+              ],
+              "unknown_evidence_ids": [],
+              "unknown_pages": [],
+              "unknown_years": [],
+              "claim_citation_mismatches": [],
+              "claim_support_failures": [],
+              "available_evidence_ids": [
+                "claim_v2_5754bc5fe845e1af9976af76"
+              ],
+              "available_pages": [
+                80
+              ],
+              "available_years": [
+                2024
+              ],
+              "available_source_filings": [
+                "2025-10-k"
+              ]
+            },
+            "response_audit": {
+              "raw_model_output": {
+                "format": "evidence_claim_v1",
+                "status": "RETRIEVAL_ONLY",
+                "executive_summary": "Graph evidence trace for intent FINANCIAL_IMPACT.",
+                "claims": [
+                  {
+                    "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "evidence_claim_ids": [
+                      "claim_v2_5754bc5fe845e1af9976af76"
+                    ],
+                    "pages": [
+                      80
+                    ],
+                    "fiscal_years": [
+                      2024
+                    ],
+                    "support_level": "VERIFIED_TRACE"
+                  }
+                ],
+                "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+                "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+                "narrative": "Retrieval-only mode: external LLM synthesis was disabled."
+              },
+              "normalized_structured_report": {
+                "format": "evidence_claim_v1",
+                "status": "RETRIEVAL_ONLY",
+                "executive_summary": "Graph evidence trace for intent FINANCIAL_IMPACT.",
+                "claims": [
+                  {
+                    "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "evidence_claim_ids": [
+                      "claim_v2_5754bc5fe845e1af9976af76"
+                    ],
+                    "pages": [
+                      80
+                    ],
+                    "fiscal_years": [
+                      2024
+                    ],
+                    "support_level": "VERIFIED_TRACE",
+                    "citation_audit": {
+                      "submitted_pages": [
+                        80
+                      ],
+                      "submitted_fiscal_years": [
+                        2024
+                      ],
+                      "submitted_source_filings": [],
+                      "canonical_pages": [
+                        80
+                      ],
+                      "canonical_fiscal_years": [
+                        2024
+                      ],
+                      "canonical_source_filings": [
+                        "2025-10-k"
+                      ],
+                      "normalization_issues": []
+                    },
+                    "source_filings": [
+                      "2025-10-k"
+                    ]
+                  }
+                ],
+                "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+                "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+                "narrative": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records."
+              },
+              "final_display_answer": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.\n\nCalculation\n60,922.000 USD millions"
+            },
+            "negative_evidence_audit": {
+              "performed": false,
+              "status": "SKIPPED",
+              "not_applicable": true,
+              "reason": "RETRIEVAL_ONLY_SYNTHESIS_DISABLED",
+              "scope": "2025-10-K.pdf",
+              "chunks_scanned": 0,
+              "query_concepts": [],
+              "matches": [],
+              "safe_absence_statement": "The full indexed-corpus audit was skipped in retrieval-only mode; no filing-wide absence conclusion is permitted."
+            },
+            "answer_evidence_status": "ANSWER_CRITICAL_AVAILABLE",
+            "llm": {
+              "configured_provider": "deepseek",
+              "configured_model": "deepseek-v4-flash",
+              "success_provider": null,
+              "success_model": null,
+              "fallback_configured": false
+            },
+            "source_filing": "2025-10-K.pdf",
+            "retrieval": {
+              "mode": "GRAPH_ONLY",
+              "vector_status": "NOT_REQUESTED",
+              "vector_hits": 0,
+              "matched_paths": 0,
+              "fusion": "none",
+              "collection": null
+            },
+            "vector_retrieval": {
+              "status": "NOT_REQUESTED",
+              "hits": [],
+              "collection": null,
+              "source_filing": "2025-10-K.pdf"
+            },
+            "vector_fusion": {
+              "mode": "GRAPH_ONLY",
+              "vector_status": "NOT_REQUESTED",
+              "vector_hits": 0,
+              "matched_paths": 0,
+              "fusion": "none",
+              "collection": null
+            },
+            "temporal_fusion": {
+              "enabled": false,
+              "matched_claims": 0,
+              "matched_paths": 0,
+              "model_version": "bitemporal_fact_v2"
+            },
+            "router": {
+              "mode": "graph",
+              "confidence": 1.0,
+              "reason": "explicit_api_selection",
+              "use_vector": false,
+              "use_graph": true,
+              "use_temporal": false,
+              "use_ppr": false
+            },
+            "ppr": {
+              "enabled": false,
+              "ranked_entities": []
+            },
+            "query_plan": {
+              "schema": "query-plan/v1",
+              "raw_question": "What revenue for fiscal 2024 was disclosed in the 2025 filing?",
+              "task_type": "FACT",
+              "company": null,
+              "target_metric": "REVENUE",
+              "fact_period": "FY2024",
+              "disclosure_as_of": "FY2025",
+              "document_scope": "2025-10-K.pdf",
+              "comparison": null,
+              "calculation": null,
+              "calculation_target_currency": null,
+              "calculation_target_scale": null,
+              "evidence_budget": 10,
+              "ambiguity": [],
+              "analysis_type": "FACT",
+              "causal_direction": "",
+              "fiscal_year_start": 2024,
+              "fiscal_year_end": 2024,
+              "fiscal_years": [
+                2024
+              ],
+              "temporal_required": false,
+              "require_multi_year": false,
+              "max_hops": 4,
+              "relation_types": [
+                "REPORTS_METRIC"
+              ],
+              "exclude_relations": [
+                "DISCLOSES",
+                "MENTIONS",
+                "POSSIBLE_RELATION"
+              ],
+              "require_explicit_causal": true,
+              "build_id": "build_c3b1d950e8acce78"
+            },
+            "calculation": {
+              "schema": "deterministic-calculation/v1",
+              "status": "PASS",
+              "operation": "fact",
+              "observations": [
+                {
+                  "id": "FO_1674DB884256FBBEBF6469DE",
+                  "measurement_key": "FM_E8372F7196781346199C",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "claim_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "source_filing": "2025-10-K.pdf",
+                  "page": 80,
+                  "fiscal_period": "FY2024",
+                  "fiscal_year": 2024,
+                  "value": 60922.0,
+                  "raw_value": "60922",
+                  "unit": "USD millions",
+                  "currency": "USD",
+                  "scale": "millions",
+                  "statement_type": "FINANCIAL_STATEMENTS",
+                  "table_name": "b67bd67a64488a54:2025-10-K.pdf:80:table_a431d56a2d4a",
+                  "row_label": "total revenue",
+                  "column_label": "FY2024",
+                  "valid_from": "FY2024",
+                  "valid_to": "FY2024",
+                  "comparability_status": "UNASSESSED",
+                  "build_id": "build_c3b1d950e8acce78",
+                  "fact_period": "FY2024",
+                  "disclosure_version": "2025-10-K.pdf",
+                  "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "source": "2025-10-K.pdf#page=80"
+                }
+              ],
+              "value": 60922.0,
+              "unit": "USD millions",
+              "display": "60,922.000 USD millions",
+              "reason_code": "typed_fact_observation"
+            },
+            "citations": [
+              {
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "source_filing": "2025-10-K.pdf",
+                "page": 80,
+                "original_locator": "/evaluation/table-quality/source/2025-10-K.pdf#page=80"
+              }
+            ],
+            "build_id": "build_c3b1d950e8acce78",
+            "evidence_bundle": {
+              "schema": "evidence-bundle/v1",
+              "status": "OK",
+              "retrieval_mode": "graph",
+              "build_id": "build_c3b1d950e8acce78",
+              "items": [
+                {
+                  "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "text": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                  "document_id": "2025-10-K",
+                  "source_filing": "2025-10-K.pdf",
+                  "physical_page": 80,
+                  "location": {
+                    "path_id": "path_000",
+                    "hop": 0
+                  },
+                  "fact_period": "FY2024",
+                  "score": 0.6028,
+                  "source_method": "graph",
+                  "build_id": "build_c3b1d950e8acce78"
+                }
+              ]
+            },
+            "baseline": "graph",
+            "retrieval_mode_requested": "graph",
+            "retrieval_mode_selected": "graph",
+            "latency_ms": {
+              "vector_retrieval_ms": 0.0,
+              "query_understanding_ms": 0.62,
+              "anchor_resolution_ms": 198.37,
+              "ppr_ms": 0.0,
+              "graph_path_search_ms": 546.68,
+              "scoring_rerank_ms": 2.48,
+              "llm_synthesis_ms": 0.11,
+              "total_ms": 783.84
+            },
+            "execution_status": "SUCCEEDED",
+            "answer_status": "NOT_REQUESTED",
+            "grounding_status": "VERIFIED",
+            "outcome": "PARTIALLY_ANSWERED",
+            "status_provenance": {
+              "contract_version": "response-contract/v2",
+              "source": "explicit_fields",
+              "legacy_compatibility": false,
+              "uncertain": false,
+              "notes": [
+                "api_engine_result"
+              ]
+            },
+            "cache": {
+              "hit": false,
+              "ttl_seconds": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "profile": "new-restored",
+      "status": "PASS",
+      "source_commit": "88298582f83ac6437758f6a166e44d630ae8e376",
+      "source_tree_sha256": "f0694cf94608d880f2c5d4ea666b46aad6621cc0f7605e47cb0a2bbed0c90a37",
+      "build_id": "build_ff4e5bcf11c71930",
+      "vector_collection": "isolated_build_ff4e5bcf11c71930",
+      "database_uri": "bolt://127.0.0.1:17691",
+      "database_scope": "new isolated candidate database",
+      "configuration_identity_sha256": "1ee0a6da04cabc092d982553d765affd370ee9d4444e96918b51a7ed4e65c7d3",
+      "request_result": {
+        "http_status": 200,
+        "elapsed_ms": 201.398,
+        "error_type": null,
+        "content_type": "application/json",
+        "response": {
+          "query": "What revenue for fiscal 2024 was disclosed in the 2025 filing?",
+          "intent": "FINANCIAL_IMPACT",
+          "intent_display": "Financial Impact Quantification",
+          "answer": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.\n\nCalculation\n60,922.000 USD millions",
+          "calculation": {
+            "schema": "deterministic-calculation/v1",
+            "status": "PASS",
+            "operation": "fact",
+            "observations": [
+              {
+                "id": "FO_1674DB884256FBBEBF6469DE",
+                "measurement_key": "FM_E8372F7196781346199C",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "REVENUE",
+                "claim_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "source_filing": "2025-10-K.pdf",
+                "page": 80,
+                "fiscal_period": "FY2024",
+                "fiscal_year": 2024,
+                "value": 60922.0,
+                "raw_value": "60922",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "FINANCIAL_NOTES",
+                "table_name": "b67bd67a64488a54:2025-10-K.pdf:80:table_a431d56a2d4a",
+                "row_label": "total revenue",
+                "column_label": "FY2024",
+                "valid_from": "FY2024",
+                "valid_to": "FY2024",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_ff4e5bcf11c71930",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "fact_period": "FY2024",
+                "disclosure_version": "2025-10-K.pdf",
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "source": "2025-10-K.pdf#page=80"
+              }
+            ],
+            "value": 60922.0,
+            "unit": "USD millions",
+            "display": "60,922.000 USD millions",
+            "reason_code": "typed_fact_observation"
+          },
+          "citations": [
+            {
+              "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+              "source_filing": "2025-10-K.pdf",
+              "page": 80,
+              "original_locator": "/evaluation/table-quality/source/2025-10-K.pdf#page=80"
+            }
+          ],
+          "execution_status": "SUCCEEDED",
+          "answer_status": "NOT_REQUESTED",
+          "grounding_status": "VERIFIED",
+          "outcome": "PARTIALLY_ANSWERED",
+          "status_provenance": {},
+          "structured_report": {
+            "format": "evidence_claim_v1",
+            "status": "RETRIEVAL_ONLY",
+            "executive_summary": "Graph evidence trace for intent FINANCIAL_IMPACT.",
+            "claims": [
+              {
+                "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "evidence_claim_ids": [
+                  "claim_v2_5754bc5fe845e1af9976af76"
+                ],
+                "pages": [
+                  80
+                ],
+                "fiscal_years": [
+                  2024
+                ],
+                "support_level": "VERIFIED_TRACE",
+                "citation_audit": {
+                  "submitted_pages": [
+                    80
+                  ],
+                  "submitted_fiscal_years": [
+                    2024
+                  ],
+                  "submitted_source_filings": [],
+                  "canonical_pages": [
+                    80
+                  ],
+                  "canonical_fiscal_years": [
+                    2024
+                  ],
+                  "canonical_source_filings": [
+                    "2025-10-k"
+                  ],
+                  "normalization_issues": []
+                },
+                "source_filings": [
+                  "2025-10-k"
+                ]
+              }
+            ],
+            "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+            "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+            "narrative": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.",
+            "execution_status": "SUCCEEDED",
+            "answer_status": "NOT_REQUESTED",
+            "grounding_status": "VERIFIED",
+            "outcome": "PARTIALLY_ANSWERED"
+          },
+          "paths": [
+            {
+              "path_id": "path_000",
+              "fingerprint": "64b67d488ba0743f",
+              "semantic_fingerprint": "7a55a92e3a6051b4",
+              "nodes": [
+                "NVIDIA CORPORATION",
+                "REVENUE"
+              ],
+              "node_labels": [
+                "Company",
+                "FinancialMetric"
+              ],
+              "relationships": [
+                "REPORTS_METRIC"
+              ],
+              "causal_strengths": [
+                "DISCLOSED_ONLY"
+              ],
+              "evidence": [
+                "Total revenue $ 130,497 $ 60,922 $ 26,974"
+              ],
+              "pages": [
+                80
+              ],
+              "years": [
+                2024
+              ],
+              "evidence_ids": [
+                "claim_v2_5754bc5fe845e1af9976af76"
+              ],
+              "evidence_build_ids": [
+                "build_ff4e5bcf11c71930"
+              ],
+              "metric_values": [
+                60922.0
+              ],
+              "metric_units": [
+                "USD millions"
+              ],
+              "financial_observations": [
+                {
+                  "id": "FO_1674DB884256FBBEBF6469DE",
+                  "measurement_key": "FM_E8372F7196781346199C",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "claim_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "source_filing": "2025-10-K.pdf",
+                  "page": 80,
+                  "fiscal_period": "FY2024",
+                  "fiscal_year": 2024,
+                  "value": 60922.0,
+                  "raw_value": "60922",
+                  "unit": "USD millions",
+                  "currency": "USD",
+                  "scale": "millions",
+                  "statement_type": "FINANCIAL_NOTES",
+                  "table_name": "b67bd67a64488a54:2025-10-K.pdf:80:table_a431d56a2d4a",
+                  "row_label": "total revenue",
+                  "column_label": "FY2024",
+                  "valid_from": "FY2024",
+                  "valid_to": "FY2024",
+                  "comparability_status": "UNASSESSED",
+                  "build_id": "build_ff4e5bcf11c71930",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "value_kind": "AMOUNT",
+                  "period_granularity": "ANNUAL",
+                  "source_section": "FINANCIAL_STATEMENTS"
+                }
+              ],
+              "filings": [
+                "2025-10-K.pdf"
+              ],
+              "causal_forms": [
+                "FINANCIAL_RELATION"
+              ],
+              "total_hops": 1,
+              "score": 0.6028,
+              "score_breakdown": {
+                "causal_strength": 0.3,
+                "completeness": 0.5,
+                "temporal_coherence": 0.5,
+                "evidence_quality": 0.6025,
+                "hop_efficiency": 0.8333,
+                "directness": 0.8333,
+                "query_term_overlap": 0.3333,
+                "query_concept_coverage": 1.0,
+                "relation_alignment": 1.0,
+                "relation_evidence_support": 1.0,
+                "endpoint_alignment": 0.0,
+                "tangent_penalty": 0.0
+              },
+              "duplicate_count": 4,
+              "evidence_variants": [
+                [
+                  {
+                    "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "page": 80,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                    "filing": "2025-10-K.pdf"
+                  },
+                  {
+                    "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "page": 79,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_797d4eafb08fe69336e3f6d7",
+                    "filing": "2025-10-K.pdf"
+                  },
+                  {
+                    "evidence": "Revenue $ 130,497 $ 60,922 $ 26,974",
+                    "page": 52,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_2a950d7f9562c107d1ad0320",
+                    "filing": "2025-10-K.pdf"
+                  },
+                  {
+                    "evidence": "Revenue $ 130,497 $ 60,922 Up 114%",
+                    "page": 38,
+                    "year": 2024,
+                    "evidence_id": "claim_v2_05dacf3f65d6f55eb5210c91",
+                    "filing": "2025-10-K.pdf"
+                  }
+                ]
+              ],
+              "evidence_role": "ANSWER_CRITICAL",
+              "graph_structure": "DIRECT_GRAPH_EDGE",
+              "evidence_semantic_scope": "ATOMIC_RELATION"
+            }
+          ],
+          "evidence_sentences": [
+            "Total revenue $ 130,497 $ 60,922 $ 26,974"
+          ],
+          "metadata": {
+            "total_candidates": 1,
+            "raw_candidates": 4,
+            "deduplicated_candidates": 1,
+            "top_paths": 1,
+            "anchors_used": [
+              "REVENUE"
+            ],
+            "llm_anchor_strategy": "disabled_retrieval_only",
+            "llm_anchor_enabled": false,
+            "avg_score": 0.6028,
+            "temporal": {
+              "status": "NOT_REQUESTED",
+              "requested": false,
+              "require_multi_year": false,
+              "requested_years": [],
+              "covered_years": [
+                2024
+              ],
+              "missing_requested_years": [],
+              "minimum_distinct_years": 0
+            },
+            "grounding": {
+              "status": "VERIFIED",
+              "cited_evidence_ids": [
+                "claim_v2_5754bc5fe845e1af9976af76"
+              ],
+              "cited_pages": [
+                80
+              ],
+              "cited_years": [
+                2024
+              ],
+              "unknown_evidence_ids": [],
+              "unknown_pages": [],
+              "unknown_years": [],
+              "claim_citation_mismatches": [],
+              "claim_support_failures": [],
+              "available_evidence_ids": [
+                "claim_v2_5754bc5fe845e1af9976af76"
+              ],
+              "available_pages": [
+                80
+              ],
+              "available_years": [
+                2024
+              ],
+              "available_source_filings": [
+                "2025-10-k"
+              ]
+            },
+            "response_audit": {
+              "raw_model_output": {
+                "format": "evidence_claim_v1",
+                "status": "RETRIEVAL_ONLY",
+                "executive_summary": "Graph evidence trace for intent FINANCIAL_IMPACT.",
+                "claims": [
+                  {
+                    "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "evidence_claim_ids": [
+                      "claim_v2_5754bc5fe845e1af9976af76"
+                    ],
+                    "pages": [
+                      80
+                    ],
+                    "fiscal_years": [
+                      2024
+                    ],
+                    "support_level": "VERIFIED_TRACE"
+                  }
+                ],
+                "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+                "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+                "narrative": "Retrieval-only mode: external LLM synthesis was disabled."
+              },
+              "normalized_structured_report": {
+                "format": "evidence_claim_v1",
+                "status": "RETRIEVAL_ONLY",
+                "executive_summary": "Graph evidence trace for intent FINANCIAL_IMPACT.",
+                "claims": [
+                  {
+                    "statement": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                    "evidence_claim_ids": [
+                      "claim_v2_5754bc5fe845e1af9976af76"
+                    ],
+                    "pages": [
+                      80
+                    ],
+                    "fiscal_years": [
+                      2024
+                    ],
+                    "support_level": "VERIFIED_TRACE",
+                    "citation_audit": {
+                      "submitted_pages": [
+                        80
+                      ],
+                      "submitted_fiscal_years": [
+                        2024
+                      ],
+                      "submitted_source_filings": [],
+                      "canonical_pages": [
+                        80
+                      ],
+                      "canonical_fiscal_years": [
+                        2024
+                      ],
+                      "canonical_source_filings": [
+                        "2025-10-k"
+                      ],
+                      "normalization_issues": []
+                    },
+                    "source_filings": [
+                      "2025-10-k"
+                    ]
+                  }
+                ],
+                "evidence_quality": "No free-form synthesis was trusted; claims are verbatim evidence excerpts.",
+                "limitations": "Interpretation is limited to the retrieved EvidenceClaim records.",
+                "narrative": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records."
+              },
+              "final_display_answer": "Executive Summary\nGraph evidence trace for intent FINANCIAL_IMPACT.\n\nTotal revenue $ 130,497 $ 60,922 $ 26,974\n[EvidenceClaim: claim_v2_5754bc5fe845e1af9976af76; p.80]\n\nEvidence Quality\nNo free-form synthesis was trusted; claims are verbatim evidence excerpts.\n\nLimitations\nInterpretation is limited to the retrieved EvidenceClaim records.\n\nCalculation\n60,922.000 USD millions"
+            },
+            "negative_evidence_audit": {
+              "performed": false,
+              "status": "SKIPPED",
+              "not_applicable": true,
+              "reason": "RETRIEVAL_ONLY_SYNTHESIS_DISABLED",
+              "scope": "2025-10-K.pdf",
+              "chunks_scanned": 0,
+              "query_concepts": [],
+              "matches": [],
+              "safe_absence_statement": "The full indexed-corpus audit was skipped in retrieval-only mode; no filing-wide absence conclusion is permitted."
+            },
+            "answer_evidence_status": "ANSWER_CRITICAL_AVAILABLE",
+            "llm": {
+              "configured_provider": "deepseek",
+              "configured_model": "deepseek-v4-flash",
+              "success_provider": null,
+              "success_model": null,
+              "fallback_configured": false
+            },
+            "source_filing": "2025-10-K.pdf",
+            "retrieval": {
+              "mode": "GRAPH_ONLY",
+              "vector_status": "NOT_REQUESTED",
+              "vector_hits": 0,
+              "matched_paths": 0,
+              "fusion": "none",
+              "collection": null
+            },
+            "vector_retrieval": {
+              "status": "NOT_REQUESTED",
+              "hits": [],
+              "collection": null,
+              "source_filing": "2025-10-K.pdf"
+            },
+            "vector_fusion": {
+              "mode": "GRAPH_ONLY",
+              "vector_status": "NOT_REQUESTED",
+              "vector_hits": 0,
+              "matched_paths": 0,
+              "fusion": "none",
+              "collection": null
+            },
+            "temporal_fusion": {
+              "enabled": false,
+              "matched_claims": 0,
+              "matched_paths": 0,
+              "model_version": "bitemporal_fact_v2"
+            },
+            "router": {
+              "mode": "graph",
+              "confidence": 1.0,
+              "reason": "explicit_api_selection",
+              "use_vector": false,
+              "use_graph": true,
+              "use_temporal": false,
+              "use_ppr": false
+            },
+            "ppr": {
+              "enabled": false,
+              "ranked_entities": []
+            },
+            "query_plan": {
+              "schema": "query-plan/v1",
+              "business_scope": "CONSOLIDATED",
+              "measurement_nature": "PERIOD_RESULT",
+              "period_granularity": "ANNUAL",
+              "value_kind": "AMOUNT",
+              "raw_question": "What revenue for fiscal 2024 was disclosed in the 2025 filing?",
+              "task_type": "FACT",
+              "company": null,
+              "target_metric": "REVENUE",
+              "fact_period": "FY2024",
+              "disclosure_as_of": "FY2025",
+              "document_scope": "2025-10-K.pdf",
+              "comparison": null,
+              "calculation": null,
+              "calculation_target_currency": null,
+              "calculation_target_scale": null,
+              "evidence_budget": 10,
+              "ambiguity": [],
+              "analysis_type": "FACT",
+              "causal_direction": "",
+              "fiscal_year_start": 2024,
+              "fiscal_year_end": 2024,
+              "fiscal_years": [
+                2024
+              ],
+              "temporal_required": false,
+              "require_multi_year": false,
+              "max_hops": 4,
+              "relation_types": [
+                "REPORTS_METRIC"
+              ],
+              "exclude_relations": [
+                "DISCLOSES",
+                "MENTIONS",
+                "POSSIBLE_RELATION"
+              ],
+              "require_explicit_causal": true,
+              "build_id": "build_ff4e5bcf11c71930"
+            },
+            "calculation": {
+              "schema": "deterministic-calculation/v1",
+              "status": "PASS",
+              "operation": "fact",
+              "observations": [
+                {
+                  "id": "FO_1674DB884256FBBEBF6469DE",
+                  "measurement_key": "FM_E8372F7196781346199C",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "claim_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "source_filing": "2025-10-K.pdf",
+                  "page": 80,
+                  "fiscal_period": "FY2024",
+                  "fiscal_year": 2024,
+                  "value": 60922.0,
+                  "raw_value": "60922",
+                  "unit": "USD millions",
+                  "currency": "USD",
+                  "scale": "millions",
+                  "statement_type": "FINANCIAL_NOTES",
+                  "table_name": "b67bd67a64488a54:2025-10-K.pdf:80:table_a431d56a2d4a",
+                  "row_label": "total revenue",
+                  "column_label": "FY2024",
+                  "valid_from": "FY2024",
+                  "valid_to": "FY2024",
+                  "comparability_status": "UNASSESSED",
+                  "build_id": "build_ff4e5bcf11c71930",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "value_kind": "AMOUNT",
+                  "period_granularity": "ANNUAL",
+                  "source_section": "FINANCIAL_STATEMENTS",
+                  "fact_period": "FY2024",
+                  "disclosure_version": "2025-10-K.pdf",
+                  "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "source": "2025-10-K.pdf#page=80"
+                }
+              ],
+              "value": 60922.0,
+              "unit": "USD millions",
+              "display": "60,922.000 USD millions",
+              "reason_code": "typed_fact_observation"
+            },
+            "citations": [
+              {
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "source_filing": "2025-10-K.pdf",
+                "page": 80,
+                "original_locator": "/evaluation/table-quality/source/2025-10-K.pdf#page=80"
+              }
+            ],
+            "build_id": "build_ff4e5bcf11c71930",
+            "evidence_bundle": {
+              "schema": "evidence-bundle/v1",
+              "status": "OK",
+              "retrieval_mode": "graph",
+              "build_id": "build_ff4e5bcf11c71930",
+              "items": [
+                {
+                  "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                  "text": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                  "document_id": "2025-10-K",
+                  "source_filing": "2025-10-K.pdf",
+                  "physical_page": 80,
+                  "location": {
+                    "path_id": "path_000",
+                    "hop": 0
+                  },
+                  "fact_period": "FY2024",
+                  "score": 0.6028,
+                  "source_method": "graph",
+                  "build_id": "build_ff4e5bcf11c71930"
+                }
+              ]
+            },
+            "baseline": "graph",
+            "retrieval_mode_requested": "graph",
+            "retrieval_mode_selected": "graph",
+            "latency_ms": {
+              "vector_retrieval_ms": 0.0,
+              "query_understanding_ms": 0.38,
+              "anchor_resolution_ms": 5.3,
+              "ppr_ms": 0.0,
+              "graph_path_search_ms": 9.17,
+              "scoring_rerank_ms": 1.48,
+              "llm_synthesis_ms": 0.07,
+              "total_ms": 26.47
+            },
+            "execution_status": "SUCCEEDED",
+            "answer_status": "NOT_REQUESTED",
+            "grounding_status": "VERIFIED",
+            "outcome": "PARTIALLY_ANSWERED",
+            "status_provenance": {
+              "contract_version": "response-contract/v2",
+              "source": "explicit_fields",
+              "legacy_compatibility": false,
+              "uncertain": false,
+              "notes": [
+                "api_engine_result"
+              ]
+            },
+            "cache": {
+              "hit": false,
+              "ttl_seconds": 0
+            }
+          }
+        }
+      }
+    }
+  ],
+  "old_original_config_unchanged": true,
+  "old_candidate_after": {
+    "schema": "isolated-package-verification/v2",
+    "build_id": "build_c3b1d950e8acce78",
+    "status": "PASS",
+    "checks": {
+      "identity": true,
+      "graph": true,
+      "vector": true,
+      "acceptance": true,
+      "backend": true,
+      "execution_config": true,
+      "ledger": true,
+      "hashes": true
+    }
+  },
+  "new_candidate_after": {
+    "schema": "isolated-package-verification/v2",
+    "build_id": "build_ff4e5bcf11c71930",
+    "status": "PASS",
+    "checks": {
+      "identity": true,
+      "graph": true,
+      "vector": true,
+      "acceptance": true,
+      "backend": true,
+      "execution_config": true,
+      "ledger": true,
+      "hashes": true
+    }
+  },
+  "production_pointer_mutations": 0,
+  "original_database_mutations": 0,
+  "scope": "three isolated source+store+vector+configuration profiles, restored new profile; not live production failover"
+}
