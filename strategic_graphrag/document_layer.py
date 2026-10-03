@@ -169,6 +169,57 @@ class Document:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(self.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
 
+    @classmethod
+    def from_dict(cls, payload: Dict[str, Any]) -> "Document":
+        """Restore typed snapshots; reject nonconserving or reordered pages."""
+        if payload.get("schema") != DOCUMENT_LAYER_SCHEMA:
+            raise ValueError("unsupported document snapshot schema")
+        pages = []
+        for raw in payload["pages"]:
+            page = dict(raw)
+            page["text_blocks"] = [TextBlock(**item) for item in page.get("text_blocks", [])]
+            page["footnotes"] = [Footnote(**item) for item in page.get("footnotes", [])]
+            tables = []
+            for item in page.get("tables", []):
+                table = dict(item)
+                table["cells"] = tuple(Cell(**{**cell,
+                    "header_path": tuple(cell.get("header_path", [])),
+                    "footnote_ids": tuple(cell.get("footnote_ids", []))}) for cell in table["cells"])
+                for key in ("header_rows", "footnote_ids"):
+                    table[key] = tuple(table.get(key, []))
+                table["raw_matrix"] = tuple(tuple(row) for row in table.get("raw_matrix", []))
+                tables.append(Table(**table))
+            page["tables"] = tables
+            pages.append(Page(**page))
+        value = {key: item for key, item in payload.items() if key not in ("schema", "coverage", "pages")}
+        document = cls(**value, pages=pages)
+        document.assert_coverage()
+        if [page.physical_page_number for page in pages] != list(range(1, document.total_pages + 1)):
+            raise ValueError("snapshot physical pages must be contiguous and ordered")
+        return document
+
+
+class ValidatedSnapshotReader:
+    """Reuse a previously parsed artifact only with exact input/artifact identity."""
+
+    def __init__(self, snapshots: Dict[str, Dict[str, Any]], reader: "DocumentLayerReader"):
+        self.snapshots = snapshots
+        self.parser_version = reader.parser_version
+        self.config_hash = reader.config_hash
+
+    def read(self, pdf_path: str | Path, *, build_id: Optional[str] = None) -> Document:
+        pdf = Path(pdf_path)
+        spec = self.snapshots[pdf.name]
+        snapshot = Path(spec["path"])
+        if sha256_file(snapshot) != spec["snapshot_sha256"]:
+            raise ValueError("document snapshot artifact hash mismatch")
+        document = Document.from_dict(json.loads(snapshot.read_text(encoding="utf-8")))
+        if (document.filename != pdf.name or document.pdf_sha256 != sha256_file(pdf)
+                or document.build_id != build_id or document.parser_version != self.parser_version
+                or document.config_hash != self.config_hash):
+            raise ValueError("document snapshot source, parser or build identity mismatch")
+        return document
+
 
 def _config_hash(config: Dict[str, Any]) -> str:
     encoded = json.dumps(config, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")

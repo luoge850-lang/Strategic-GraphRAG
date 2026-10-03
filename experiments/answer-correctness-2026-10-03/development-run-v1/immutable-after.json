@@ -1,0 +1,15 @@
+{
+  "schema": "isolated-package-verification/v2",
+  "build_id": "build_6c2df78148ecbecd",
+  "status": "PASS",
+  "checks": {
+    "identity": true,
+    "graph": true,
+    "vector": true,
+    "acceptance": true,
+    "backend": true,
+    "execution_config": true,
+    "ledger": true,
+    "hashes": true
+  }
+}

@@ -1,0 +1,5540 @@
+{
+  "real_nullable_observation_diagnostics": [
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2023",
+        "value_kind": "RATIO",
+        "valid_from": "FY2023",
+        "metric_id": "R_AND_D_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_157D647D2EBA5CC95E881FB1",
+        "page": 41,
+        "statement_type": "MD_AND_A",
+        "table_name": "89981bbfcd91e204:2023-10-K.pdf:41:table_5cf3c7e21f27",
+        "value": 27.2,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2023",
+        "source_filing": "2023-10-K.pdf",
+        "raw_value": "27.2",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2023",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2023,
+        "unit": "percent",
+        "row_label": "research and development",
+        "claim_id": "claim_v2_d67d0ee74bdc4d9c10da812c",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_59FEB02EAA674D20961D"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2022",
+        "value_kind": "RATIO",
+        "valid_from": "FY2022",
+        "metric_id": "R_AND_D_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_84F6EC5B8F22665640A50664",
+        "page": 41,
+        "statement_type": "MD_AND_A",
+        "table_name": "89981bbfcd91e204:2023-10-K.pdf:41:table_5cf3c7e21f27",
+        "value": 19.6,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2022",
+        "source_filing": "2023-10-K.pdf",
+        "raw_value": "19.6",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2022",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2022,
+        "unit": "percent",
+        "row_label": "research and development",
+        "claim_id": "claim_v2_d67d0ee74bdc4d9c10da812c",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_1DC5F09F3BDF5D87E967"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2023",
+        "value_kind": "RATIO",
+        "valid_from": "FY2023",
+        "metric_id": "SG_AND_A_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_AB1A870E7087D97FD2D5067F",
+        "page": 41,
+        "statement_type": "MD_AND_A",
+        "table_name": "89981bbfcd91e204:2023-10-K.pdf:41:table_5cf3c7e21f27",
+        "value": 9.1,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2023",
+        "source_filing": "2023-10-K.pdf",
+        "raw_value": "9.1",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2023",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2023,
+        "unit": "percent",
+        "row_label": "sales general and administrative",
+        "claim_id": "claim_v2_21ab60d880ac3ebd516e01e2",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_7DAE64BDE27BB71074A6"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2022",
+        "value_kind": "RATIO",
+        "valid_from": "FY2022",
+        "metric_id": "SG_AND_A_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_F51D2D0F574124EA9FF6010A",
+        "page": 41,
+        "statement_type": "MD_AND_A",
+        "table_name": "89981bbfcd91e204:2023-10-K.pdf:41:table_5cf3c7e21f27",
+        "value": 8.0,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2022",
+        "source_filing": "2023-10-K.pdf",
+        "raw_value": "8.0",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2022",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2022,
+        "unit": "percent",
+        "row_label": "sales general and administrative",
+        "claim_id": "claim_v2_21ab60d880ac3ebd516e01e2",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_95C992FED541B407D8D8"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2023",
+        "value_kind": "RATIO",
+        "valid_from": "FY2023",
+        "metric_id": "R_AND_D_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_7A79ACFA2EB17B7A908E70D2",
+        "page": 43,
+        "statement_type": "MD_AND_A",
+        "table_name": "89981bbfcd91e204:2023-10-K.pdf:43:table_8d9f0abc2402",
+        "value": 27.2,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2023",
+        "source_filing": "2023-10-K.pdf",
+        "raw_value": "27.2",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2023",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2023,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_534eb40f1da97c7313a02d1b",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_59FEB02EAA674D20961D"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2022",
+        "value_kind": "RATIO",
+        "valid_from": "FY2022",
+        "metric_id": "R_AND_D_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_9E618BDA1F9310280A01E840",
+        "page": 43,
+        "statement_type": "MD_AND_A",
+        "table_name": "89981bbfcd91e204:2023-10-K.pdf:43:table_8d9f0abc2402",
+        "value": 19.6,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2022",
+        "source_filing": "2023-10-K.pdf",
+        "raw_value": "19.6",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2022",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2022,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_534eb40f1da97c7313a02d1b",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_1DC5F09F3BDF5D87E967"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2023",
+        "value_kind": "RATIO",
+        "valid_from": "FY2023",
+        "metric_id": "SG_AND_A_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_1675481777C870076BD72CE8",
+        "page": 43,
+        "statement_type": "MD_AND_A",
+        "table_name": "89981bbfcd91e204:2023-10-K.pdf:43:table_8d9f0abc2402",
+        "value": 9.1,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2023",
+        "source_filing": "2023-10-K.pdf",
+        "raw_value": "9.1",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2023",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2023,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_29335981dac3d2fd7d223b95",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_7DAE64BDE27BB71074A6"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2022",
+        "value_kind": "RATIO",
+        "valid_from": "FY2022",
+        "metric_id": "SG_AND_A_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_ACBA7D06D2ED192E21AB5C0B",
+        "page": 43,
+        "statement_type": "MD_AND_A",
+        "table_name": "89981bbfcd91e204:2023-10-K.pdf:43:table_8d9f0abc2402",
+        "value": 8.0,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2022",
+        "source_filing": "2023-10-K.pdf",
+        "raw_value": "8.0",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2022",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2022,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_29335981dac3d2fd7d223b95",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_95C992FED541B407D8D8"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2024",
+        "value_kind": "RATIO",
+        "valid_from": "FY2024",
+        "metric_id": "R_AND_D_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_33385E4D8886F3B725118701",
+        "page": 40,
+        "statement_type": "MD_AND_A",
+        "table_name": "536f66d7f1c3413a:2024-10-K.pdf:40:table_8d9f0abc2402",
+        "value": 14.2,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2024",
+        "source_filing": "2024-10-K.pdf",
+        "raw_value": "14.2",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2024",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2024,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_fb339b022e7327d8397b3273",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_544A61FE6D2D70588B8A"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2023",
+        "value_kind": "RATIO",
+        "valid_from": "FY2023",
+        "metric_id": "R_AND_D_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_6D6820F0565AAD4B4E635ABC",
+        "page": 40,
+        "statement_type": "MD_AND_A",
+        "table_name": "536f66d7f1c3413a:2024-10-K.pdf:40:table_8d9f0abc2402",
+        "value": 27.2,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2023",
+        "source_filing": "2024-10-K.pdf",
+        "raw_value": "27.2",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2023",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2023,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_fb339b022e7327d8397b3273",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_59FEB02EAA674D20961D"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2024",
+        "value_kind": "RATIO",
+        "valid_from": "FY2024",
+        "metric_id": "SG_AND_A_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_35E074E9C33DF7944A75362D",
+        "page": 40,
+        "statement_type": "MD_AND_A",
+        "table_name": "536f66d7f1c3413a:2024-10-K.pdf:40:table_8d9f0abc2402",
+        "value": 4.4,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2024",
+        "source_filing": "2024-10-K.pdf",
+        "raw_value": "4.4",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2024",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2024,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_269c0d9497b5a8c8382b2238",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_029DAAB95678B22198D5"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2023",
+        "value_kind": "RATIO",
+        "valid_from": "FY2023",
+        "metric_id": "SG_AND_A_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_3E7968751083BE65AFA0CC2A",
+        "page": 40,
+        "statement_type": "MD_AND_A",
+        "table_name": "536f66d7f1c3413a:2024-10-K.pdf:40:table_8d9f0abc2402",
+        "value": 9.1,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2023",
+        "source_filing": "2024-10-K.pdf",
+        "raw_value": "9.1",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2023",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2023,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_269c0d9497b5a8c8382b2238",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_7DAE64BDE27BB71074A6"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2025",
+        "value_kind": "RATIO",
+        "valid_from": "FY2025",
+        "metric_id": "R_AND_D_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_D5CB2EF6D5936C48FD906371",
+        "page": 40,
+        "statement_type": "MD_AND_A",
+        "table_name": "b67bd67a64488a54:2025-10-K.pdf:40:table_5fc9138e59c1",
+        "value": 9.9,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "raw_value": "9.9",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2025",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2025,
+        "unit": "percent",
+        "row_label": "research and development",
+        "claim_id": "claim_v2_185e3d8f9e986413644fbe56",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_C2C4E0602489E3B541D9"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2024",
+        "value_kind": "RATIO",
+        "valid_from": "FY2024",
+        "metric_id": "R_AND_D_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_F952C905CBE1E39904A3A80E",
+        "page": 40,
+        "statement_type": "MD_AND_A",
+        "table_name": "b67bd67a64488a54:2025-10-K.pdf:40:table_5fc9138e59c1",
+        "value": 14.2,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "raw_value": "14.2",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2024",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2024,
+        "unit": "percent",
+        "row_label": "research and development",
+        "claim_id": "claim_v2_185e3d8f9e986413644fbe56",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_544A61FE6D2D70588B8A"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2025",
+        "value_kind": "RATIO",
+        "valid_from": "FY2025",
+        "metric_id": "SG_AND_A_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_38018A4CB98E1EA20A44959F",
+        "page": 40,
+        "statement_type": "MD_AND_A",
+        "table_name": "b67bd67a64488a54:2025-10-K.pdf:40:table_5fc9138e59c1",
+        "value": 2.7,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "raw_value": "2.7",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2025",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2025,
+        "unit": "percent",
+        "row_label": "sales general and administrative",
+        "claim_id": "claim_v2_210a933720276db359fe79d5",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_788FF06C5D5C8E6F7ABD"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2024",
+        "value_kind": "RATIO",
+        "valid_from": "FY2024",
+        "metric_id": "SG_AND_A_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_A6256E1CDCDEF5C020AC9EA6",
+        "page": 40,
+        "statement_type": "MD_AND_A",
+        "table_name": "b67bd67a64488a54:2025-10-K.pdf:40:table_5fc9138e59c1",
+        "value": 4.4,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "raw_value": "4.4",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2024",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2024,
+        "unit": "percent",
+        "row_label": "sales general and administrative",
+        "claim_id": "claim_v2_210a933720276db359fe79d5",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_029DAAB95678B22198D5"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2025",
+        "value_kind": "RATIO",
+        "valid_from": "FY2025",
+        "metric_id": "R_AND_D_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_054900DE88F147515ABD829C",
+        "page": 42,
+        "statement_type": "MD_AND_A",
+        "table_name": "b67bd67a64488a54:2025-10-K.pdf:42:table_8d9f0abc2402",
+        "value": 9.9,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "raw_value": "9.9",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2025",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2025,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_c47fceb4a002f11ef25fde9d",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_C2C4E0602489E3B541D9"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2024",
+        "value_kind": "RATIO",
+        "valid_from": "FY2024",
+        "metric_id": "R_AND_D_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_5A172D42049E0726FF952F10",
+        "page": 42,
+        "statement_type": "MD_AND_A",
+        "table_name": "b67bd67a64488a54:2025-10-K.pdf:42:table_8d9f0abc2402",
+        "value": 14.2,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "raw_value": "14.2",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2024",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2024,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_c47fceb4a002f11ef25fde9d",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_544A61FE6D2D70588B8A"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2025",
+        "value_kind": "RATIO",
+        "valid_from": "FY2025",
+        "metric_id": "SG_AND_A_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_9F756AF87A3A87075DF29BE6",
+        "page": 42,
+        "statement_type": "MD_AND_A",
+        "table_name": "b67bd67a64488a54:2025-10-K.pdf:42:table_8d9f0abc2402",
+        "value": 2.7,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "raw_value": "2.7",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2025",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2025,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_ab95bf3cba00f1d317c957c7",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_788FF06C5D5C8E6F7ABD"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    },
+    {
+      "observation": {
+        "scale": "percent",
+        "company_id": "NVIDIA_CORPORATION",
+        "business_scope": "CONSOLIDATED",
+        "column_label": "FY2024",
+        "value_kind": "RATIO",
+        "valid_from": "FY2024",
+        "metric_id": "SG_AND_A_RATIO",
+        "period_granularity": "ANNUAL",
+        "id": "FO_6C7B494253621D96E5D718BB",
+        "page": 42,
+        "statement_type": "MD_AND_A",
+        "table_name": "b67bd67a64488a54:2025-10-K.pdf:42:table_8d9f0abc2402",
+        "value": 4.4,
+        "comparability_status": "UNASSESSED",
+        "valid_to": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "raw_value": "4.4",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "fiscal_period": "FY2024",
+        "source_section": "MD_AND_A",
+        "fiscal_year": 2024,
+        "unit": "percent",
+        "row_label": "% of revenue",
+        "claim_id": "claim_v2_ab95bf3cba00f1d317c957c7",
+        "build_id": "build_ff4e5bcf11c71930",
+        "measurement_key": "FM_029DAAB95678B22198D5"
+      },
+      "construction_error": "FinancialObservation.__init__() missing 1 required positional argument: 'currency'"
+    }
+  ],
+  "failures": [
+    {
+      "run": "development-run-v1",
+      "item_id": "D-CF-AR",
+      "question": "What cash-flow adjustment for accounts receivable did NVIDIA report for fiscal 2022 in its 2023 10-K?",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "CASH_FLOW_CHANGE_ACCOUNTS_RECEIVABLE",
+        "fact_period": "FY2022",
+        "source_filing": "2023-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": -2215,
+        "answer_value": -2215,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2023-10-K.pdf",
+            "page": 58,
+            "statement": "CASH_FLOW_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "Accounts receivable"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_MOVEMENT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL",
+        "item_id": "D-CF-AR",
+        "family_id": "D-CF-AR",
+        "question": "What cash-flow adjustment for accounts receivable did NVIDIA report for fiscal 2022 in its 2023 10-K?",
+        "partition": "exposed_development",
+        "operation": "FACT"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_MOVEMENT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "What cash-flow adjustment for accounts receivable did NVIDIA report for fiscal 2022 in its 2023 10-K?",
+        "task_type": "FACT",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "CASH_FLOW_CHANGE_ACCOUNTS_RECEIVABLE",
+        "fact_period": "FY2022",
+        "disclosure_as_of": "FY2023",
+        "document_scope": "2023-10-K.pdf",
+        "comparison": null,
+        "calculation": null,
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2022,
+        "fiscal_year_end": 2022,
+        "fiscal_years": [
+          2022
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_6c2df78148ecbecd"
+      },
+      "actual_filter": null,
+      "paths": [],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "operation": "none",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "No path-bound numeric observations were available.",
+        "reason_code": "no_verified_graph_evidence"
+      },
+      "status": "ABSTAINED",
+      "score": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": false,
+        "measurement_nature": false,
+        "value_kind": false,
+        "period_granularity": false,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Qualified table metric rejected by old entity-presence filter",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "development-run-v1",
+      "item_id": "D-DC",
+      "question": "What was NVIDIA Data Center revenue in fiscal 2025 as disclosed in its 2025 10-K?",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "DATA_CENTER_REVENUE",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 115186,
+        "answer_value": 115186,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 80,
+            "statement": "FINANCIAL_NOTES"
+          }
+        ],
+        "row_anchors": [
+          "Data Center"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "DATA_CENTER",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL",
+        "item_id": "D-DC",
+        "family_id": "D-DC",
+        "question": "What was NVIDIA Data Center revenue in fiscal 2025 as disclosed in its 2025 10-K?",
+        "partition": "exposed_development",
+        "operation": "FACT"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "DATA_CENTER",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "What was NVIDIA Data Center revenue in fiscal 2025 as disclosed in its 2025 10-K?",
+        "task_type": "FACT",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "DATA_CENTER_REVENUE",
+        "fact_period": "FY2025",
+        "disclosure_as_of": "FY2025",
+        "document_scope": "2025-10-K.pdf",
+        "comparison": null,
+        "calculation": null,
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2025,
+        "fiscal_year_end": 2025,
+        "fiscal_years": [
+          2025
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_6c2df78148ecbecd"
+      },
+      "actual_filter": null,
+      "paths": [],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "operation": "none",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "No path-bound numeric observations were available.",
+        "reason_code": "no_verified_graph_evidence"
+      },
+      "status": "ABSTAINED",
+      "score": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": false,
+        "measurement_nature": false,
+        "value_kind": false,
+        "period_granularity": false,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Qualified table metric rejected by old entity-presence filter",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "development-run-v1",
+      "item_id": "D-RD-PERCENT",
+      "question": "What percentage of revenue were research and development expenses for NVIDIA fiscal 2022 in its 2023 10-K?",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "R_AND_D_RATIO",
+        "fact_period": "FY2022",
+        "source_filing": "2023-10-K.pdf",
+        "currency": null,
+        "source_scale": "percent",
+        "source_value": 19.6,
+        "answer_value": 19.6,
+        "answer_unit": "percent",
+        "tolerance": "0.05",
+        "tolerance_basis": "half of one printed tenth of a percentage point",
+        "direct_locations": [
+          {
+            "file": "2023-10-K.pdf",
+            "page": 43,
+            "statement": "MD_AND_A"
+          }
+        ],
+        "row_anchors": [
+          "Research and development"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "value_kind": "RATIO",
+        "period_granularity": "ANNUAL",
+        "item_id": "D-RD-PERCENT",
+        "family_id": "D-RD-PERCENT",
+        "question": "What percentage of revenue were research and development expenses for NVIDIA fiscal 2022 in its 2023 10-K?",
+        "partition": "exposed_development",
+        "operation": "FACT"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "period_granularity": "ANNUAL",
+        "value_kind": "RATIO",
+        "raw_question": "What percentage of revenue were research and development expenses for NVIDIA fiscal 2022 in its 2023 10-K?",
+        "task_type": "FACT",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "R_AND_D_RATIO",
+        "fact_period": "FY2022",
+        "disclosure_as_of": "FY2023",
+        "document_scope": "2023-10-K.pdf",
+        "comparison": null,
+        "calculation": null,
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2022,
+        "fiscal_year_end": 2022,
+        "fiscal_years": [
+          2022
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_6c2df78148ecbecd"
+      },
+      "actual_filter": null,
+      "paths": [],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "operation": "none",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "No path-bound numeric observations were available.",
+        "reason_code": "no_verified_graph_evidence"
+      },
+      "status": "ABSTAINED",
+      "score": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": false,
+        "measurement_nature": false,
+        "value_kind": false,
+        "period_granularity": false,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Neo4j omits null currency property; required nullable dataclass constructor argument missing; real adapter skips ratio observation",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "development-run-v1",
+      "item_id": "D-SGA-PERCENT",
+      "question": "What percentage of revenue were sales, general and administrative expenses for NVIDIA fiscal 2023 in its 2023 10-K?",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "SG_AND_A_RATIO",
+        "fact_period": "FY2023",
+        "source_filing": "2023-10-K.pdf",
+        "currency": null,
+        "source_scale": "percent",
+        "source_value": 9.1,
+        "answer_value": 9.1,
+        "answer_unit": "percent",
+        "tolerance": "0.05",
+        "tolerance_basis": "half of one printed tenth of a percentage point",
+        "direct_locations": [
+          {
+            "file": "2023-10-K.pdf",
+            "page": 43,
+            "statement": "MD_AND_A"
+          }
+        ],
+        "row_anchors": [
+          "Sales, general and administrative"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "value_kind": "RATIO",
+        "period_granularity": "ANNUAL",
+        "item_id": "D-SGA-PERCENT",
+        "family_id": "D-SGA-PERCENT",
+        "question": "What percentage of revenue were sales, general and administrative expenses for NVIDIA fiscal 2023 in its 2023 10-K?",
+        "partition": "exposed_development",
+        "operation": "FACT"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "period_granularity": "ANNUAL",
+        "value_kind": "RATIO",
+        "raw_question": "What percentage of revenue were sales, general and administrative expenses for NVIDIA fiscal 2023 in its 2023 10-K?",
+        "task_type": "FACT",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "SG_AND_A_RATIO",
+        "fact_period": "FY2023",
+        "disclosure_as_of": "FY2023",
+        "document_scope": "2023-10-K.pdf",
+        "comparison": null,
+        "calculation": null,
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2023,
+        "fiscal_year_end": 2023,
+        "fiscal_years": [
+          2023
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_6c2df78148ecbecd"
+      },
+      "actual_filter": null,
+      "paths": [],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "operation": "none",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "No path-bound numeric observations were available.",
+        "reason_code": "no_verified_graph_evidence"
+      },
+      "status": "ABSTAINED",
+      "score": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": false,
+        "measurement_nature": false,
+        "value_kind": false,
+        "period_granularity": false,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Neo4j omits null currency property; required nullable dataclass constructor argument missing; real adapter skips ratio observation",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "development-run-v2",
+      "item_id": "D-RD-PERCENT",
+      "question": "What percentage of revenue were research and development expenses for NVIDIA fiscal 2022 in its 2023 10-K?",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "R_AND_D_RATIO",
+        "fact_period": "FY2022",
+        "source_filing": "2023-10-K.pdf",
+        "currency": null,
+        "source_scale": "percent",
+        "source_value": 19.6,
+        "answer_value": 19.6,
+        "answer_unit": "percent",
+        "tolerance": "0.05",
+        "tolerance_basis": "half of one printed tenth of a percentage point",
+        "direct_locations": [
+          {
+            "file": "2023-10-K.pdf",
+            "page": 43,
+            "statement": "MD_AND_A"
+          }
+        ],
+        "row_anchors": [
+          "Research and development"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "value_kind": "RATIO",
+        "period_granularity": "ANNUAL",
+        "item_id": "D-RD-PERCENT",
+        "family_id": "D-RD-PERCENT",
+        "question": "What percentage of revenue were research and development expenses for NVIDIA fiscal 2022 in its 2023 10-K?",
+        "partition": "exposed_development",
+        "operation": "FACT"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "period_granularity": "ANNUAL",
+        "value_kind": "RATIO",
+        "raw_question": "What percentage of revenue were research and development expenses for NVIDIA fiscal 2022 in its 2023 10-K?",
+        "task_type": "FACT",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "R_AND_D_RATIO",
+        "fact_period": "FY2022",
+        "disclosure_as_of": "FY2023",
+        "document_scope": "2023-10-K.pdf",
+        "comparison": null,
+        "calculation": null,
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2022,
+        "fiscal_year_end": 2022,
+        "fiscal_years": [
+          2022
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": "2023-10-K.pdf",
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "17ddead5d8d10854",
+          "semantic_fingerprint": "cbdeaca630ed4379",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "R AND D RATIO"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Research and development expenses $ 7,339 $ 5,268 $ 2,071 39 %\n% of revenue 27.2 % 19.6 %"
+          ],
+          "pages": [
+            43
+          ],
+          "years": [
+            2022
+          ],
+          "evidence_ids": [
+            "claim_v2_534eb40f1da97c7313a02d1b"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "19.6"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2023-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.6354,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.7225,
+            "hop_efficiency": 0.8333,
+            "directness": 0.8929,
+            "query_term_overlap": 0.5714,
+            "query_concept_coverage": 1.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Research and development expenses $ 7,339 $ 5,268 $ 2,071 39 %\n% of revenue 27.2 % 19.6 %",
+                "page": 43,
+                "year": 2022,
+                "evidence_id": "claim_v2_534eb40f1da97c7313a02d1b",
+                "filing": "2023-10-K.pdf"
+              },
+              {
+                "evidence": "Research and development 27.2 19.6",
+                "page": 41,
+                "year": 2022,
+                "evidence_id": "claim_v2_d67d0ee74bdc4d9c10da812c",
+                "filing": "2023-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "ANSWER_CRITICAL",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "operation": "fact",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "No complete typed observation for requested company metric and disclosure.",
+        "reason_code": "no_complete_typed_observation_for_requested_company_metric_and_disclosure",
+        "invalid_observations": 0
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": false,
+        "physical_page": false,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": false,
+        "measurement_nature": false,
+        "value_kind": false,
+        "period_granularity": false,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Neo4j omits null currency property; required nullable dataclass constructor argument missing; real adapter skips ratio observation",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "development-run-v2",
+      "item_id": "D-SGA-PERCENT",
+      "question": "What percentage of revenue were sales, general and administrative expenses for NVIDIA fiscal 2023 in its 2023 10-K?",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "SG_AND_A_RATIO",
+        "fact_period": "FY2023",
+        "source_filing": "2023-10-K.pdf",
+        "currency": null,
+        "source_scale": "percent",
+        "source_value": 9.1,
+        "answer_value": 9.1,
+        "answer_unit": "percent",
+        "tolerance": "0.05",
+        "tolerance_basis": "half of one printed tenth of a percentage point",
+        "direct_locations": [
+          {
+            "file": "2023-10-K.pdf",
+            "page": 43,
+            "statement": "MD_AND_A"
+          }
+        ],
+        "row_anchors": [
+          "Sales, general and administrative"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "value_kind": "RATIO",
+        "period_granularity": "ANNUAL",
+        "item_id": "D-SGA-PERCENT",
+        "family_id": "D-SGA-PERCENT",
+        "question": "What percentage of revenue were sales, general and administrative expenses for NVIDIA fiscal 2023 in its 2023 10-K?",
+        "partition": "exposed_development",
+        "operation": "FACT"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "DISCLOSED_RATIO",
+        "period_granularity": "ANNUAL",
+        "value_kind": "RATIO",
+        "raw_question": "What percentage of revenue were sales, general and administrative expenses for NVIDIA fiscal 2023 in its 2023 10-K?",
+        "task_type": "FACT",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "SG_AND_A_RATIO",
+        "fact_period": "FY2023",
+        "disclosure_as_of": "FY2023",
+        "document_scope": "2023-10-K.pdf",
+        "comparison": null,
+        "calculation": null,
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2023,
+        "fiscal_year_end": 2023,
+        "fiscal_years": [
+          2023
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": "2023-10-K.pdf",
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "1e0e9401f6fb289c",
+          "semantic_fingerprint": "15013bb94afddb0c",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "SG AND A RATIO"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Sales, general and administrative expenses 2,440 2,166 274 13 %\n% of revenue 9.1 % 8.0 %"
+          ],
+          "pages": [
+            43
+          ],
+          "years": [
+            2023
+          ],
+          "evidence_ids": [
+            "claim_v2_29335981dac3d2fd7d223b95"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "9.1"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2023-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.6398,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.72,
+            "hop_efficiency": 0.8333,
+            "directness": 0.9062,
+            "query_term_overlap": 0.625,
+            "query_concept_coverage": 1.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Sales, general and administrative expenses 2,440 2,166 274 13 %\n% of revenue 9.1 % 8.0 %",
+                "page": 43,
+                "year": 2023,
+                "evidence_id": "claim_v2_29335981dac3d2fd7d223b95",
+                "filing": "2023-10-K.pdf"
+              },
+              {
+                "evidence": "Sales, general and administrative 9.1 8.0",
+                "page": 41,
+                "year": 2023,
+                "evidence_id": "claim_v2_21ab60d880ac3ebd516e01e2",
+                "filing": "2023-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "ANSWER_CRITICAL",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "operation": "fact",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "No complete typed observation for requested company metric and disclosure.",
+        "reason_code": "no_complete_typed_observation_for_requested_company_metric_and_disclosure",
+        "invalid_observations": 0
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": false,
+        "physical_page": false,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": false,
+        "measurement_nature": false,
+        "value_kind": false,
+        "period_granularity": false,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Neo4j omits null currency property; required nullable dataclass constructor argument missing; real adapter skips ratio observation",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "validation-run-v1",
+      "item_id": "H-FACT-PRETAX_INCOME",
+      "question": "What was NVIDIA income before income tax for fiscal 2025, as disclosed in the 2025 10-K?",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "PRETAX_INCOME",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 84026,
+        "answer_value": 84026,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "income before income tax"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL",
+        "item_id": "H-FACT-PRETAX_INCOME",
+        "family_id": "FACT:PRETAX_INCOME",
+        "question": "What was NVIDIA income before income tax for fiscal 2025, as disclosed in the 2025 10-K?",
+        "operation": "FACT",
+        "partition": "frozen_unexposed_forms_no_tuning"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "What was NVIDIA income before income tax for fiscal 2025, as disclosed in the 2025 10-K?",
+        "task_type": "FACT",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "NET_INCOME",
+        "fact_period": "FY2025",
+        "disclosure_as_of": "FY2025",
+        "document_scope": "2025-10-K.pdf",
+        "comparison": null,
+        "calculation": null,
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2025,
+        "fiscal_year_end": 2025,
+        "fiscal_years": [
+          2025
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": "2025-10-K.pdf",
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "f6ef236057e21799",
+          "semantic_fingerprint": "13b354f8a330b272",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "NET INCOME"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Net income $ 72,880 $ 29,760 Up 145%"
+          ],
+          "pages": [
+            38
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_12e3f127f05f5dd2518fd1bd"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            72880.0
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [
+            {
+              "id": "FO_70D83A284541E45B584C05AF",
+              "measurement_key": "FM_A570038A4AFDD237E573",
+              "company_id": "NVIDIA_CORPORATION",
+              "metric_id": "NET_INCOME",
+              "claim_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+              "source_filing": "2025-10-K.pdf",
+              "page": 38,
+              "fiscal_period": "FY2025",
+              "fiscal_year": 2025,
+              "value": 72880.0,
+              "raw_value": "72880",
+              "unit": "USD millions",
+              "currency": "USD",
+              "scale": "millions",
+              "statement_type": "MD_AND_A",
+              "table_name": "b67bd67a64488a54:2025-10-K.pdf:38:table_483f49a5beac",
+              "row_label": "net income",
+              "column_label": "FY2025",
+              "valid_from": "FY2025",
+              "valid_to": "FY2025",
+              "comparability_status": "UNASSESSED",
+              "build_id": "build_ff4e5bcf11c71930",
+              "business_scope": "CONSOLIDATED",
+              "measurement_nature": "PERIOD_RESULT",
+              "value_kind": "AMOUNT",
+              "period_granularity": "ANNUAL",
+              "source_section": "MD_AND_A"
+            }
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4499,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.59,
+            "hop_efficiency": 0.8333,
+            "directness": 0.4,
+            "query_term_overlap": 0.2,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 5,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 Up 145%",
+                "page": 38,
+                "year": 2025,
+                "evidence_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_1630d4f7997c7f05065e8ff9",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 56,
+                "year": 2025,
+                "evidence_id": "claim_v2_591d7688caa4552027cec7ce",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 53,
+                "year": 2025,
+                "evidence_id": "claim_v2_5ccadf989b39c45c8c807404",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 65,
+                "year": 2025,
+                "evidence_id": "claim_v2_f8e75dadca8b5b8a564b7388",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "PASS",
+        "operation": "fact",
+        "observations": [
+          {
+            "id": "FO_70D83A284541E45B584C05AF",
+            "measurement_key": "FM_A570038A4AFDD237E573",
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "NET_INCOME",
+            "claim_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+            "source_filing": "2025-10-K.pdf",
+            "page": 38,
+            "fiscal_period": "FY2025",
+            "fiscal_year": 2025,
+            "value": 72880.0,
+            "raw_value": "72880",
+            "unit": "USD millions",
+            "currency": "USD",
+            "scale": "millions",
+            "statement_type": "MD_AND_A",
+            "table_name": "b67bd67a64488a54:2025-10-K.pdf:38:table_483f49a5beac",
+            "row_label": "net income",
+            "column_label": "FY2025",
+            "valid_from": "FY2025",
+            "valid_to": "FY2025",
+            "comparability_status": "UNASSESSED",
+            "build_id": "build_ff4e5bcf11c71930",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "value_kind": "AMOUNT",
+            "period_granularity": "ANNUAL",
+            "source_section": "MD_AND_A",
+            "fact_period": "FY2025",
+            "disclosure_version": "2025-10-K.pdf",
+            "evidence_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+            "source": "2025-10-K.pdf#page=38"
+          }
+        ],
+        "value": 72880.0,
+        "unit": "USD millions",
+        "display": "72,880.000 USD millions",
+        "reason_code": "typed_fact_observation"
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "number": false,
+        "unit": true,
+        "company": true,
+        "metric": false,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": true,
+        "measurement_nature": true,
+        "value_kind": true,
+        "period_granularity": true,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "PASS",
+        "false_refusal": false,
+        "safe_refusal": null,
+        "wrong_pass": true
+      },
+      "root_cause": "income before income tax not planned as PRETAX_INCOME; generic income resolves NET_INCOME",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "validation-run-v1",
+      "item_id": "H-FACT-INCOME_TAX_EXPENSE",
+      "question": "What was NVIDIA income tax expense for fiscal 2025, as disclosed in the 2025 10-K?",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "INCOME_TAX_EXPENSE",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 11146,
+        "answer_value": 11146,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "income tax expense"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL",
+        "item_id": "H-FACT-INCOME_TAX_EXPENSE",
+        "family_id": "FACT:INCOME_TAX_EXPENSE",
+        "question": "What was NVIDIA income tax expense for fiscal 2025, as disclosed in the 2025 10-K?",
+        "operation": "FACT",
+        "partition": "frozen_unexposed_forms_no_tuning"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "What was NVIDIA income tax expense for fiscal 2025, as disclosed in the 2025 10-K?",
+        "task_type": "FACT",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "INCOME_TAX_EXPENSE",
+        "fact_period": "FY2025",
+        "disclosure_as_of": "FY2025",
+        "document_scope": "2025-10-K.pdf",
+        "comparison": null,
+        "calculation": null,
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2025,
+        "fiscal_year_end": 2025,
+        "fiscal_years": [
+          2025
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": "2025-10-K.pdf",
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "95bdf1dd5009031a",
+          "semantic_fingerprint": "4690b480dc508859",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "INCOME TAX EXPENSE"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Income tax expense 8.6 6.6"
+          ],
+          "pages": [
+            40
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_bd2d184d27e2454095e6a517"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "8.6"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4825,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.565,
+            "hop_efficiency": 0.8333,
+            "directness": 0.5,
+            "query_term_overlap": 0.6,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Income tax expense 8.6 6.6",
+                "page": 40,
+                "year": 2025,
+                "evidence_id": "claim_v2_bd2d184d27e2454095e6a517",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "operation": "fact",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "No complete typed observation for requested company metric and disclosure.",
+        "reason_code": "no_complete_typed_observation_for_requested_company_metric_and_disclosure",
+        "invalid_observations": 0
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": false,
+        "measurement_nature": false,
+        "value_kind": false,
+        "period_granularity": false,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Evidence or metric planning incomplete; see exact raw trace, not inferred pass",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "validation-run-v1",
+      "item_id": "H-FACT-TOTAL_SHAREHOLDERS_EQUITY",
+      "question": "What was NVIDIA total shareholders' equity for fiscal 2025, as disclosed in the 2025 10-K?",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "TOTAL_SHAREHOLDERS_EQUITY",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 79327,
+        "answer_value": 79327,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "statement": "BALANCE_SHEET"
+          }
+        ],
+        "row_anchors": [
+          "total shareholders' equity"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL",
+        "item_id": "H-FACT-TOTAL_SHAREHOLDERS_EQUITY",
+        "family_id": "FACT:TOTAL_SHAREHOLDERS_EQUITY",
+        "question": "What was NVIDIA total shareholders' equity for fiscal 2025, as disclosed in the 2025 10-K?",
+        "operation": "FACT",
+        "partition": "frozen_unexposed_forms_no_tuning"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "What was NVIDIA total shareholders' equity for fiscal 2025, as disclosed in the 2025 10-K?",
+        "task_type": "FACT",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "",
+        "fact_period": "FY2025",
+        "disclosure_as_of": "FY2025",
+        "document_scope": "2025-10-K.pdf",
+        "comparison": null,
+        "calculation": null,
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [
+          "metric_not_resolved"
+        ],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2025,
+        "fiscal_year_end": 2025,
+        "fiscal_years": [
+          2025
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": "2025-10-K.pdf",
+      "paths": [
+        {
+          "path_id": "path_002",
+          "fingerprint": "104b27dbdb987843",
+          "semantic_fingerprint": "71ca777674806908",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "OPERATING EXPENSE RATIO"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total operating expenses $ 16,405 $ 11,329 $ 5,076 45 %\n% of net revenue 12.6 % 18.6 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_c6c0d5c81decd8ae33394ba0"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "12.6"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4621,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.715,
+            "hop_efficiency": 0.8333,
+            "directness": 0.4,
+            "query_term_overlap": 0.2,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total operating expenses $ 16,405 $ 11,329 $ 5,076 45 %\n% of net revenue 12.6 % 18.6 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_c6c0d5c81decd8ae33394ba0",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Total operating expenses 12.6 18.6",
+                "page": 40,
+                "year": 2025,
+                "evidence_id": "claim_v2_5263f07f1e129cb7f7f62986",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_006",
+          "fingerprint": "82b99fa40155f235",
+          "semantic_fingerprint": "343a66922fbbb552",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "OPERATING COST"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total operating expenses $ 16,405 $ 11,329 $ 5,076 45 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_6a4ef744f5852f87f0bc3f4d"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "16405"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4546,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6375,
+            "hop_efficiency": 0.8333,
+            "directness": 0.4,
+            "query_term_overlap": 0.2,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 3,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total operating expenses $ 16,405 $ 11,329 $ 5,076 45 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_6a4ef744f5852f87f0bc3f4d",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Total operating expenses 16,405 11,329 11,132",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_05bb1e2292ffc13e72de8877",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Operating expenses $ 16,405 $ 11,329 Up 45%",
+                "page": 38,
+                "year": 2025,
+                "evidence_id": "claim_v2_73135373089e8a65e0bbba8c",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_010",
+          "fingerprint": "b597a5df131e3137",
+          "semantic_fingerprint": "fb8db0817d73e61b",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 130,497 $ 60,922 $ 26,974"
+          ],
+          "pages": [
+            80
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_5754bc5fe845e1af9976af76"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "130497"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4512,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6025,
+            "hop_efficiency": 0.8333,
+            "directness": 0.4,
+            "query_term_overlap": 0.2,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 4,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 80,
+                "year": 2025,
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 79,
+                "year": 2025,
+                "evidence_id": "claim_v2_797d4eafb08fe69336e3f6d7",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_2a950d7f9562c107d1ad0320",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 130,497 $ 60,922 Up 114%",
+                "page": 38,
+                "year": 2025,
+                "evidence_id": "claim_v2_05dacf3f65d6f55eb5210c91",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_013",
+          "fingerprint": "c7267c8c8efc2dd3",
+          "semantic_fingerprint": "2a8fe40489de3d29",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "TOTAL CURRENT LIABILITIES"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total current liabilities 18,047 10,631"
+          ],
+          "pages": [
+            54
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_b07fc80e9084be30c81734da"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "18047"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4507,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.5975,
+            "hop_efficiency": 0.8333,
+            "directness": 0.4,
+            "query_term_overlap": 0.2,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total current liabilities 18,047 10,631",
+                "page": 54,
+                "year": 2025,
+                "evidence_id": "claim_v2_b07fc80e9084be30c81734da",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_020",
+          "fingerprint": "6a4f42a40e6c8a18",
+          "semantic_fingerprint": "9dfa11014dcf590d",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "TOTAL CURRENT ASSETS"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total current assets 80,126 44,345"
+          ],
+          "pages": [
+            54
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_85b98c401cbbdb6c8d974351"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "80126"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4495,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.585,
+            "hop_efficiency": 0.8333,
+            "directness": 0.4,
+            "query_term_overlap": 0.2,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total current assets 80,126 44,345",
+                "page": 54,
+                "year": 2025,
+                "evidence_id": "claim_v2_85b98c401cbbdb6c8d974351",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_024",
+          "fingerprint": "f0178aa3c881ac28",
+          "semantic_fingerprint": "0ed7524c9ccc58c8",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "TOTAL ASSETS"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total assets $ 111,601 $ 65,728"
+          ],
+          "pages": [
+            54
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_fb1a5379e3b092ee97b81d10"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "111601"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4487,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.5775,
+            "hop_efficiency": 0.8333,
+            "directness": 0.4,
+            "query_term_overlap": 0.2,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total assets $ 111,601 $ 65,728",
+                "page": 54,
+                "year": 2025,
+                "evidence_id": "claim_v2_fb1a5379e3b092ee97b81d10",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_025",
+          "fingerprint": "8710345a7f00647e",
+          "semantic_fingerprint": "5c90de747948a691",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "TOTAL LIABILITIES"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total liabilities 32,274 22,750"
+          ],
+          "pages": [
+            54
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_7ef04e791be7c6f00deab465"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "32274"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4487,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.5775,
+            "hop_efficiency": 0.8333,
+            "directness": 0.4,
+            "query_term_overlap": 0.2,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total liabilities 32,274 22,750",
+                "page": 54,
+                "year": 2025,
+                "evidence_id": "claim_v2_7ef04e791be7c6f00deab465",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_000",
+          "fingerprint": "d2a811407cc65e92",
+          "semantic_fingerprint": "8c87f6fbef882895",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "R AND D RATIO"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Research and development expenses $ 12,914 $ 8,675 $ 4,239 49 %\n% of net revenue 9.9 % 14.2 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_c47fceb4a002f11ef25fde9d"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "9.9"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4463,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.7325,
+            "hop_efficiency": 0.8333,
+            "directness": 0.35,
+            "query_term_overlap": 0.0,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Research and development expenses $ 12,914 $ 8,675 $ 4,239 49 %\n% of net revenue 9.9 % 14.2 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_c47fceb4a002f11ef25fde9d",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Research and development 9.9 14.2",
+                "page": 40,
+                "year": 2025,
+                "evidence_id": "claim_v2_185e3d8f9e986413644fbe56",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_001",
+          "fingerprint": "838fd42801b562bf",
+          "semantic_fingerprint": "5d6990307068807d",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "SG AND A RATIO"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Sales, general and administrative expenses 3,491 2,654 837 32 %\n% of net revenue 2.7 % 4.4 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_ab95bf3cba00f1d317c957c7"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "2.7"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4461,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.73,
+            "hop_efficiency": 0.8333,
+            "directness": 0.35,
+            "query_term_overlap": 0.0,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Sales, general and administrative expenses 3,491 2,654 837 32 %\n% of net revenue 2.7 % 4.4 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_ab95bf3cba00f1d317c957c7",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Sales, general and administrative 2.7 4.4",
+                "page": 40,
+                "year": 2025,
+                "evidence_id": "claim_v2_210a933720276db359fe79d5",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_003",
+          "fingerprint": "4d2b1aa6e36db1e8",
+          "semantic_fingerprint": "bf2580a96b992540",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "R AND D EXPENSE"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Research and development expenses $ 12,914 $ 8,675 $ 4,239 49 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_244f25f538ee36b903c991d3"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "12914"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.439,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6575,
+            "hop_efficiency": 0.8333,
+            "directness": 0.35,
+            "query_term_overlap": 0.0,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Research and development expenses $ 12,914 $ 8,675 $ 4,239 49 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_244f25f538ee36b903c991d3",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Research and development 12,914 8,675 7,339",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_21e13f4329c42b87100d1de5",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "AMBIGUOUS",
+        "operation": "fact",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "Query plan has unresolved fields.",
+        "reason_code": "query_plan_has_unresolved_fields"
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": false,
+        "physical_page": false,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": false,
+        "measurement_nature": false,
+        "value_kind": false,
+        "period_granularity": false,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "AMBIGUOUS",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Evidence or metric planning incomplete; see exact raw trace, not inferred pass",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "validation-run-v1",
+      "item_id": "H-CONVERT-PRETAX_INCOME",
+      "question": "Convert NVIDIA income before income tax for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "PRETAX_INCOME",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 84026,
+        "answer_value": 84.026,
+        "answer_unit": "USD billions",
+        "tolerance": "0.0005",
+        "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "income before income tax"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL",
+        "item_id": "H-CONVERT-PRETAX_INCOME",
+        "family_id": "UNIT_CONVERSION:PRETAX_INCOME",
+        "question": "Convert NVIDIA income before income tax for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+        "operation": "UNIT_CONVERSION",
+        "partition": "frozen_unexposed_forms_no_tuning"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "Convert NVIDIA income before income tax for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+        "task_type": "CALCULATION",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "NET_INCOME",
+        "fact_period": "FY2025",
+        "disclosure_as_of": "FY2025",
+        "document_scope": "2025-10-K.pdf",
+        "comparison": "DELTA_OVER_TIME",
+        "calculation": "UNIT_CONVERSION",
+        "calculation_target_currency": "USD",
+        "calculation_target_scale": "billions",
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2025,
+        "fiscal_year_end": 2025,
+        "fiscal_years": [
+          2025
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": "2025-10-K.pdf",
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "f6ef236057e21799",
+          "semantic_fingerprint": "13b354f8a330b272",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "NET INCOME"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Net income $ 72,880 $ 29,760 Up 145%"
+          ],
+          "pages": [
+            38
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_12e3f127f05f5dd2518fd1bd"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            72880.0
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [
+            {
+              "id": "FO_70D83A284541E45B584C05AF",
+              "measurement_key": "FM_A570038A4AFDD237E573",
+              "company_id": "NVIDIA_CORPORATION",
+              "metric_id": "NET_INCOME",
+              "claim_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+              "source_filing": "2025-10-K.pdf",
+              "page": 38,
+              "fiscal_period": "FY2025",
+              "fiscal_year": 2025,
+              "value": 72880.0,
+              "raw_value": "72880",
+              "unit": "USD millions",
+              "currency": "USD",
+              "scale": "millions",
+              "statement_type": "MD_AND_A",
+              "table_name": "b67bd67a64488a54:2025-10-K.pdf:38:table_483f49a5beac",
+              "row_label": "net income",
+              "column_label": "FY2025",
+              "valid_from": "FY2025",
+              "valid_to": "FY2025",
+              "comparability_status": "UNASSESSED",
+              "build_id": "build_ff4e5bcf11c71930",
+              "business_scope": "CONSOLIDATED",
+              "measurement_nature": "PERIOD_RESULT",
+              "value_kind": "AMOUNT",
+              "period_granularity": "ANNUAL",
+              "source_section": "MD_AND_A"
+            }
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4422,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.59,
+            "hop_efficiency": 0.8333,
+            "directness": 0.3778,
+            "query_term_overlap": 0.1111,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 5,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 Up 145%",
+                "page": 38,
+                "year": 2025,
+                "evidence_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_1630d4f7997c7f05065e8ff9",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 56,
+                "year": 2025,
+                "evidence_id": "claim_v2_591d7688caa4552027cec7ce",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 53,
+                "year": 2025,
+                "evidence_id": "claim_v2_5ccadf989b39c45c8c807404",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 65,
+                "year": 2025,
+                "evidence_id": "claim_v2_f8e75dadca8b5b8a564b7388",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "PASS",
+        "operation": "unit_conversion",
+        "observations": [
+          {
+            "id": "FO_70D83A284541E45B584C05AF",
+            "measurement_key": "FM_A570038A4AFDD237E573",
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "NET_INCOME",
+            "claim_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+            "source_filing": "2025-10-K.pdf",
+            "page": 38,
+            "fiscal_period": "FY2025",
+            "fiscal_year": 2025,
+            "value": 72880.0,
+            "raw_value": "72880",
+            "unit": "USD millions",
+            "currency": "USD",
+            "scale": "millions",
+            "statement_type": "MD_AND_A",
+            "table_name": "b67bd67a64488a54:2025-10-K.pdf:38:table_483f49a5beac",
+            "row_label": "net income",
+            "column_label": "FY2025",
+            "valid_from": "FY2025",
+            "valid_to": "FY2025",
+            "comparability_status": "UNASSESSED",
+            "build_id": "build_ff4e5bcf11c71930",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "value_kind": "AMOUNT",
+            "period_granularity": "ANNUAL",
+            "source_section": "MD_AND_A",
+            "fact_period": "FY2025",
+            "disclosure_version": "2025-10-K.pdf",
+            "evidence_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+            "source": "2025-10-K.pdf#page=38"
+          }
+        ],
+        "value": 72.88,
+        "unit": "USD billions",
+        "display": "72.880 USD billions",
+        "reason_code": "exact_scale_conversion_no_fx"
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "number": false,
+        "unit": true,
+        "company": true,
+        "metric": false,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": true,
+        "measurement_nature": true,
+        "value_kind": true,
+        "period_granularity": true,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "PASS",
+        "false_refusal": false,
+        "safe_refusal": null,
+        "wrong_pass": true
+      },
+      "root_cause": "income before income tax not planned as PRETAX_INCOME; generic income resolves NET_INCOME",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "validation-run-v1",
+      "item_id": "H-CONVERT-INCOME_TAX_EXPENSE",
+      "question": "Convert NVIDIA income tax expense for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "INCOME_TAX_EXPENSE",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 11146,
+        "answer_value": 11.146,
+        "answer_unit": "USD billions",
+        "tolerance": "0.0005",
+        "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "income tax expense"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL",
+        "item_id": "H-CONVERT-INCOME_TAX_EXPENSE",
+        "family_id": "UNIT_CONVERSION:INCOME_TAX_EXPENSE",
+        "question": "Convert NVIDIA income tax expense for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+        "operation": "UNIT_CONVERSION",
+        "partition": "frozen_unexposed_forms_no_tuning"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "Convert NVIDIA income tax expense for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+        "task_type": "CALCULATION",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "INCOME_TAX_EXPENSE",
+        "fact_period": "FY2025",
+        "disclosure_as_of": "FY2025",
+        "document_scope": "2025-10-K.pdf",
+        "comparison": "DELTA_OVER_TIME",
+        "calculation": "UNIT_CONVERSION",
+        "calculation_target_currency": "USD",
+        "calculation_target_scale": "billions",
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2025,
+        "fiscal_year_end": 2025,
+        "fiscal_years": [
+          2025
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": "2025-10-K.pdf",
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "95bdf1dd5009031a",
+          "semantic_fingerprint": "4690b480dc508859",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "INCOME TAX EXPENSE"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Income tax expense 8.6 6.6"
+          ],
+          "pages": [
+            40
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_bd2d184d27e2454095e6a517"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "8.6"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4592,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.565,
+            "hop_efficiency": 0.8333,
+            "directness": 0.4333,
+            "query_term_overlap": 0.3333,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Income tax expense 8.6 6.6",
+                "page": 40,
+                "year": 2025,
+                "evidence_id": "claim_v2_bd2d184d27e2454095e6a517",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "operation": "unit_conversion",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "No complete typed observation for requested company metric and disclosure.",
+        "reason_code": "no_complete_typed_observation_for_requested_company_metric_and_disclosure",
+        "invalid_observations": 0
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": false,
+        "measurement_nature": false,
+        "value_kind": false,
+        "period_granularity": false,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Evidence or metric planning incomplete; see exact raw trace, not inferred pass",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "validation-run-v1",
+      "item_id": "H-CONVERT-TOTAL_SHAREHOLDERS_EQUITY",
+      "question": "Convert NVIDIA total shareholders' equity for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "TOTAL_SHAREHOLDERS_EQUITY",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 79327,
+        "answer_value": 79.327,
+        "answer_unit": "USD billions",
+        "tolerance": "0.0005",
+        "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "statement": "BALANCE_SHEET"
+          }
+        ],
+        "row_anchors": [
+          "total shareholders' equity"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL",
+        "item_id": "H-CONVERT-TOTAL_SHAREHOLDERS_EQUITY",
+        "family_id": "UNIT_CONVERSION:TOTAL_SHAREHOLDERS_EQUITY",
+        "question": "Convert NVIDIA total shareholders' equity for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+        "operation": "UNIT_CONVERSION",
+        "partition": "frozen_unexposed_forms_no_tuning"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "Convert NVIDIA total shareholders' equity for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+        "task_type": "CALCULATION",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "",
+        "fact_period": "FY2025",
+        "disclosure_as_of": "FY2025",
+        "document_scope": "2025-10-K.pdf",
+        "comparison": "DELTA_OVER_TIME",
+        "calculation": "UNIT_CONVERSION",
+        "calculation_target_currency": "USD",
+        "calculation_target_scale": "billions",
+        "evidence_budget": 10,
+        "ambiguity": [
+          "metric_not_resolved"
+        ],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2025,
+        "fiscal_year_end": 2025,
+        "fiscal_years": [
+          2025
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": "2025-10-K.pdf",
+      "paths": [
+        {
+          "path_id": "path_002",
+          "fingerprint": "104b27dbdb987843",
+          "semantic_fingerprint": "71ca777674806908",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "OPERATING EXPENSE RATIO"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total operating expenses $ 16,405 $ 11,329 $ 5,076 45 %\n% of net revenue 12.6 % 18.6 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_c6c0d5c81decd8ae33394ba0"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "12.6"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4544,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.715,
+            "hop_efficiency": 0.8333,
+            "directness": 0.3778,
+            "query_term_overlap": 0.1111,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total operating expenses $ 16,405 $ 11,329 $ 5,076 45 %\n% of net revenue 12.6 % 18.6 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_c6c0d5c81decd8ae33394ba0",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Total operating expenses 12.6 18.6",
+                "page": 40,
+                "year": 2025,
+                "evidence_id": "claim_v2_5263f07f1e129cb7f7f62986",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_006",
+          "fingerprint": "82b99fa40155f235",
+          "semantic_fingerprint": "343a66922fbbb552",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "OPERATING COST"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total operating expenses $ 16,405 $ 11,329 $ 5,076 45 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_6a4ef744f5852f87f0bc3f4d"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "16405"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4468,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6375,
+            "hop_efficiency": 0.8333,
+            "directness": 0.3778,
+            "query_term_overlap": 0.1111,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 3,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total operating expenses $ 16,405 $ 11,329 $ 5,076 45 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_6a4ef744f5852f87f0bc3f4d",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Total operating expenses 16,405 11,329 11,132",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_05bb1e2292ffc13e72de8877",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Operating expenses $ 16,405 $ 11,329 Up 45%",
+                "page": 38,
+                "year": 2025,
+                "evidence_id": "claim_v2_73135373089e8a65e0bbba8c",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_000",
+          "fingerprint": "d2a811407cc65e92",
+          "semantic_fingerprint": "8c87f6fbef882895",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "R AND D RATIO"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Research and development expenses $ 12,914 $ 8,675 $ 4,239 49 %\n% of net revenue 9.9 % 14.2 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_c47fceb4a002f11ef25fde9d"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "9.9"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4463,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.7325,
+            "hop_efficiency": 0.8333,
+            "directness": 0.35,
+            "query_term_overlap": 0.0,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Research and development expenses $ 12,914 $ 8,675 $ 4,239 49 %\n% of net revenue 9.9 % 14.2 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_c47fceb4a002f11ef25fde9d",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Research and development 9.9 14.2",
+                "page": 40,
+                "year": 2025,
+                "evidence_id": "claim_v2_185e3d8f9e986413644fbe56",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_001",
+          "fingerprint": "838fd42801b562bf",
+          "semantic_fingerprint": "5d6990307068807d",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "SG AND A RATIO"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Sales, general and administrative expenses 3,491 2,654 837 32 %\n% of net revenue 2.7 % 4.4 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_ab95bf3cba00f1d317c957c7"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "2.7"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4461,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.73,
+            "hop_efficiency": 0.8333,
+            "directness": 0.35,
+            "query_term_overlap": 0.0,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Sales, general and administrative expenses 3,491 2,654 837 32 %\n% of net revenue 2.7 % 4.4 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_ab95bf3cba00f1d317c957c7",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Sales, general and administrative 2.7 4.4",
+                "page": 40,
+                "year": 2025,
+                "evidence_id": "claim_v2_210a933720276db359fe79d5",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_010",
+          "fingerprint": "b597a5df131e3137",
+          "semantic_fingerprint": "fb8db0817d73e61b",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "REVENUE"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total revenue $ 130,497 $ 60,922 $ 26,974"
+          ],
+          "pages": [
+            80
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_5754bc5fe845e1af9976af76"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "130497"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4434,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6025,
+            "hop_efficiency": 0.8333,
+            "directness": 0.3778,
+            "query_term_overlap": 0.1111,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 4,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 80,
+                "year": 2025,
+                "evidence_id": "claim_v2_5754bc5fe845e1af9976af76",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 79,
+                "year": 2025,
+                "evidence_id": "claim_v2_797d4eafb08fe69336e3f6d7",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 130,497 $ 60,922 $ 26,974",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_2a950d7f9562c107d1ad0320",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Revenue $ 130,497 $ 60,922 Up 114%",
+                "page": 38,
+                "year": 2025,
+                "evidence_id": "claim_v2_05dacf3f65d6f55eb5210c91",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_013",
+          "fingerprint": "c7267c8c8efc2dd3",
+          "semantic_fingerprint": "2a8fe40489de3d29",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "TOTAL CURRENT LIABILITIES"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total current liabilities 18,047 10,631"
+          ],
+          "pages": [
+            54
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_b07fc80e9084be30c81734da"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "18047"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4429,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.5975,
+            "hop_efficiency": 0.8333,
+            "directness": 0.3778,
+            "query_term_overlap": 0.1111,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total current liabilities 18,047 10,631",
+                "page": 54,
+                "year": 2025,
+                "evidence_id": "claim_v2_b07fc80e9084be30c81734da",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_020",
+          "fingerprint": "6a4f42a40e6c8a18",
+          "semantic_fingerprint": "9dfa11014dcf590d",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "TOTAL CURRENT ASSETS"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total current assets 80,126 44,345"
+          ],
+          "pages": [
+            54
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_85b98c401cbbdb6c8d974351"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "80126"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4417,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.585,
+            "hop_efficiency": 0.8333,
+            "directness": 0.3778,
+            "query_term_overlap": 0.1111,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total current assets 80,126 44,345",
+                "page": 54,
+                "year": 2025,
+                "evidence_id": "claim_v2_85b98c401cbbdb6c8d974351",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_024",
+          "fingerprint": "f0178aa3c881ac28",
+          "semantic_fingerprint": "0ed7524c9ccc58c8",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "TOTAL ASSETS"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total assets $ 111,601 $ 65,728"
+          ],
+          "pages": [
+            54
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_fb1a5379e3b092ee97b81d10"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "111601"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.441,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.5775,
+            "hop_efficiency": 0.8333,
+            "directness": 0.3778,
+            "query_term_overlap": 0.1111,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total assets $ 111,601 $ 65,728",
+                "page": 54,
+                "year": 2025,
+                "evidence_id": "claim_v2_fb1a5379e3b092ee97b81d10",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_025",
+          "fingerprint": "8710345a7f00647e",
+          "semantic_fingerprint": "5c90de747948a691",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "TOTAL LIABILITIES"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Total liabilities 32,274 22,750"
+          ],
+          "pages": [
+            54
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_7ef04e791be7c6f00deab465"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "32274"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.441,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.5775,
+            "hop_efficiency": 0.8333,
+            "directness": 0.3778,
+            "query_term_overlap": 0.1111,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Total liabilities 32,274 22,750",
+                "page": 54,
+                "year": 2025,
+                "evidence_id": "claim_v2_7ef04e791be7c6f00deab465",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_003",
+          "fingerprint": "4d2b1aa6e36db1e8",
+          "semantic_fingerprint": "bf2580a96b992540",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "R AND D EXPENSE"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Research and development expenses $ 12,914 $ 8,675 $ 4,239 49 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_244f25f538ee36b903c991d3"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "12914"
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.439,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6575,
+            "hop_efficiency": 0.8333,
+            "directness": 0.35,
+            "query_term_overlap": 0.0,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Research and development expenses $ 12,914 $ 8,675 $ 4,239 49 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_244f25f538ee36b903c991d3",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Research and development 12,914 8,675 7,339",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_21e13f4329c42b87100d1de5",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "AMBIGUOUS",
+        "operation": "unit_conversion",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "Query plan has unresolved fields.",
+        "reason_code": "query_plan_has_unresolved_fields"
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": false,
+        "physical_page": false,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score",
+        "business_scope": false,
+        "measurement_nature": false,
+        "value_kind": false,
+        "period_granularity": false,
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "metadata_complete": false,
+        "status": "AMBIGUOUS",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Evidence or metric planning incomplete; see exact raw trace, not inferred pass",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "validation-run-v1",
+      "item_id": "H-DELTA-PRETAX_INCOME",
+      "question": "Calculate the absolute difference in NVIDIA income before income tax between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "PRETAX_INCOME",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 84026,
+        "answer_value": 50208,
+        "answer_unit": "USD millions",
+        "tolerance": "1",
+        "tolerance_basis": "sum of two printed-million rounding bounds",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "income before income tax"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL",
+        "required_facts": [
+          {
+            "company": "NVIDIA_CORPORATION",
+            "metric": "PRETAX_INCOME",
+            "fact_period": "FY2024",
+            "source_filing": "2025-10-K.pdf",
+            "currency": "USD",
+            "source_scale": "millions",
+            "source_value": 33818,
+            "answer_value": 33818,
+            "answer_unit": "USD millions",
+            "tolerance": "0.5",
+            "tolerance_basis": "half of one printed million; source precision, not prediction error",
+            "direct_locations": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "statement": "INCOME_STATEMENT"
+              }
+            ],
+            "row_anchors": [
+              "income before income tax"
+            ],
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "human_review": "NOT_PERFORMED",
+            "independent_human_review": "NOT_PERFORMED",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "value_kind": "AMOUNT",
+            "period_granularity": "ANNUAL"
+          },
+          {
+            "company": "NVIDIA_CORPORATION",
+            "metric": "PRETAX_INCOME",
+            "fact_period": "FY2025",
+            "source_filing": "2025-10-K.pdf",
+            "currency": "USD",
+            "source_scale": "millions",
+            "source_value": 84026,
+            "answer_value": 84026,
+            "answer_unit": "USD millions",
+            "tolerance": "0.5",
+            "tolerance_basis": "half of one printed million; source precision, not prediction error",
+            "direct_locations": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "statement": "INCOME_STATEMENT"
+              }
+            ],
+            "row_anchors": [
+              "income before income tax"
+            ],
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "human_review": "NOT_PERFORMED",
+            "independent_human_review": "NOT_PERFORMED",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "value_kind": "AMOUNT",
+            "period_granularity": "ANNUAL"
+          }
+        ],
+        "item_id": "H-DELTA-PRETAX_INCOME",
+        "family_id": "ABSOLUTE_CHANGE:PRETAX_INCOME",
+        "question": "Calculate the absolute difference in NVIDIA income before income tax between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+        "operation": "ABSOLUTE_CHANGE",
+        "partition": "frozen_unexposed_forms_no_tuning"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "Calculate the absolute difference in NVIDIA income before income tax between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+        "task_type": "CALCULATION",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "NET_INCOME",
+        "fact_period": "FY2024",
+        "disclosure_as_of": "FY2025",
+        "document_scope": "2025-10-K.pdf",
+        "comparison": "POINT_TO_POINT",
+        "calculation": "ABSOLUTE_CHANGE",
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2024,
+        "fiscal_year_end": 2025,
+        "fiscal_years": [
+          2024,
+          2025
+        ],
+        "temporal_required": true,
+        "require_multi_year": true,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": "2025-10-K.pdf",
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "8cf867aa8749755a",
+          "semantic_fingerprint": "ace89734466d82fa",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "NET INCOME"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Net income $ 72,880 $ 29,760 Up 145%"
+          ],
+          "pages": [
+            38
+          ],
+          "years": [
+            2024
+          ],
+          "evidence_ids": [
+            "claim_v2_12e3f127f05f5dd2518fd1bd"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            29760.0
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [
+            {
+              "id": "FO_CF4F4F6061E22D771435531E",
+              "measurement_key": "FM_FE1B5EE7AE52C5A35075",
+              "company_id": "NVIDIA_CORPORATION",
+              "metric_id": "NET_INCOME",
+              "claim_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+              "source_filing": "2025-10-K.pdf",
+              "page": 38,
+              "fiscal_period": "FY2024",
+              "fiscal_year": 2024,
+              "value": 29760.0,
+              "raw_value": "29760",
+              "unit": "USD millions",
+              "currency": "USD",
+              "scale": "millions",
+              "statement_type": "MD_AND_A",
+              "table_name": "b67bd67a64488a54:2025-10-K.pdf:38:table_483f49a5beac",
+              "row_label": "net income",
+              "column_label": "FY2024",
+              "valid_from": "FY2024",
+              "valid_to": "FY2024",
+              "comparability_status": "UNASSESSED",
+              "build_id": "build_ff4e5bcf11c71930",
+              "business_scope": "CONSOLIDATED",
+              "measurement_nature": "PERIOD_RESULT",
+              "value_kind": "AMOUNT",
+              "period_granularity": "ANNUAL",
+              "source_section": "MD_AND_A"
+            }
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4412,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.59,
+            "hop_efficiency": 0.8333,
+            "directness": 0.375,
+            "query_term_overlap": 0.1,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 5,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 Up 145%",
+                "page": 38,
+                "year": 2024,
+                "evidence_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 52,
+                "year": 2024,
+                "evidence_id": "claim_v2_1630d4f7997c7f05065e8ff9",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 56,
+                "year": 2024,
+                "evidence_id": "claim_v2_591d7688caa4552027cec7ce",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 53,
+                "year": 2024,
+                "evidence_id": "claim_v2_5ccadf989b39c45c8c807404",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 65,
+                "year": 2024,
+                "evidence_id": "claim_v2_f8e75dadca8b5b8a564b7388",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_001",
+          "fingerprint": "f6ef236057e21799",
+          "semantic_fingerprint": "13b354f8a330b272",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "NET INCOME"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Net income $ 72,880 $ 29,760 Up 145%"
+          ],
+          "pages": [
+            38
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_12e3f127f05f5dd2518fd1bd"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            72880.0
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [
+            {
+              "id": "FO_70D83A284541E45B584C05AF",
+              "measurement_key": "FM_A570038A4AFDD237E573",
+              "company_id": "NVIDIA_CORPORATION",
+              "metric_id": "NET_INCOME",
+              "claim_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+              "source_filing": "2025-10-K.pdf",
+              "page": 38,
+              "fiscal_period": "FY2025",
+              "fiscal_year": 2025,
+              "value": 72880.0,
+              "raw_value": "72880",
+              "unit": "USD millions",
+              "currency": "USD",
+              "scale": "millions",
+              "statement_type": "MD_AND_A",
+              "table_name": "b67bd67a64488a54:2025-10-K.pdf:38:table_483f49a5beac",
+              "row_label": "net income",
+              "column_label": "FY2025",
+              "valid_from": "FY2025",
+              "valid_to": "FY2025",
+              "comparability_status": "UNASSESSED",
+              "build_id": "build_ff4e5bcf11c71930",
+              "business_scope": "CONSOLIDATED",
+              "measurement_nature": "PERIOD_RESULT",
+              "value_kind": "AMOUNT",
+              "period_granularity": "ANNUAL",
+              "source_section": "MD_AND_A"
+            }
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4412,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.59,
+            "hop_efficiency": 0.8333,
+            "directness": 0.375,
+            "query_term_overlap": 0.1,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 5,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 Up 145%",
+                "page": 38,
+                "year": 2025,
+                "evidence_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_1630d4f7997c7f05065e8ff9",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 56,
+                "year": 2025,
+                "evidence_id": "claim_v2_591d7688caa4552027cec7ce",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 53,
+                "year": 2025,
+                "evidence_id": "claim_v2_5ccadf989b39c45c8c807404",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Net income $ 72,880 $ 29,760 $ 4,368",
+                "page": 65,
+                "year": 2025,
+                "evidence_id": "claim_v2_f8e75dadca8b5b8a564b7388",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "BACKGROUND_CONTEXT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "PASS",
+        "operation": "absolute_change",
+        "observations": [
+          {
+            "id": "FO_CF4F4F6061E22D771435531E",
+            "measurement_key": "FM_FE1B5EE7AE52C5A35075",
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "NET_INCOME",
+            "claim_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+            "source_filing": "2025-10-K.pdf",
+            "page": 38,
+            "fiscal_period": "FY2024",
+            "fiscal_year": 2024,
+            "value": 29760.0,
+            "raw_value": "29760",
+            "unit": "USD millions",
+            "currency": "USD",
+            "scale": "millions",
+            "statement_type": "MD_AND_A",
+            "table_name": "b67bd67a64488a54:2025-10-K.pdf:38:table_483f49a5beac",
+            "row_label": "net income",
+            "column_label": "FY2024",
+            "valid_from": "FY2024",
+            "valid_to": "FY2024",
+            "comparability_status": "UNASSESSED",
+            "build_id": "build_ff4e5bcf11c71930",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "value_kind": "AMOUNT",
+            "period_granularity": "ANNUAL",
+            "source_section": "MD_AND_A",
+            "fact_period": "FY2024",
+            "disclosure_version": "2025-10-K.pdf",
+            "evidence_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+            "source": "2025-10-K.pdf#page=38"
+          },
+          {
+            "id": "FO_70D83A284541E45B584C05AF",
+            "measurement_key": "FM_A570038A4AFDD237E573",
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "NET_INCOME",
+            "claim_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+            "source_filing": "2025-10-K.pdf",
+            "page": 38,
+            "fiscal_period": "FY2025",
+            "fiscal_year": 2025,
+            "value": 72880.0,
+            "raw_value": "72880",
+            "unit": "USD millions",
+            "currency": "USD",
+            "scale": "millions",
+            "statement_type": "MD_AND_A",
+            "table_name": "b67bd67a64488a54:2025-10-K.pdf:38:table_483f49a5beac",
+            "row_label": "net income",
+            "column_label": "FY2025",
+            "valid_from": "FY2025",
+            "valid_to": "FY2025",
+            "comparability_status": "UNASSESSED",
+            "build_id": "build_ff4e5bcf11c71930",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "value_kind": "AMOUNT",
+            "period_granularity": "ANNUAL",
+            "source_section": "MD_AND_A",
+            "fact_period": "FY2025",
+            "disclosure_version": "2025-10-K.pdf",
+            "evidence_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+            "source": "2025-10-K.pdf#page=38"
+          }
+        ],
+        "comparability_assessment": {
+          "status": "CONDITIONALLY_COMPARABLE",
+          "basis": "same_disclosure_claim_page_table_row_and_unit",
+          "disclosure_version": "2025-10-K.pdf",
+          "evidence_id": "claim_v2_12e3f127f05f5dd2518fd1bd",
+          "page": 38,
+          "table_name": "b67bd67a64488a54:2025-10-K.pdf:38:table_483f49a5beac",
+          "row_label": "net income"
+        },
+        "value": 43120.0,
+        "unit": "USD millions",
+        "display": "FY2025 - FY2024 = 43,120.000 USD millions",
+        "reason_code": "same_disclosure_row_conditionally_comparable"
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "citation_support": null,
+        "physical_page": null,
+        "metadata_complete": false,
+        "joint": false,
+        "status": "PASS",
+        "false_refusal": false,
+        "safe_refusal": null,
+        "wrong_pass": true
+      },
+      "root_cause": "income before income tax not planned as PRETAX_INCOME; generic income resolves NET_INCOME",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "validation-run-v1",
+      "item_id": "H-DELTA-INCOME_TAX_EXPENSE",
+      "question": "Calculate the absolute difference in NVIDIA income tax expense between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+      "reference": {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "INCOME_TAX_EXPENSE",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 11146,
+        "answer_value": 7088,
+        "answer_unit": "USD millions",
+        "tolerance": "1",
+        "tolerance_basis": "sum of two printed-million rounding bounds",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "income tax expense"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL",
+        "required_facts": [
+          {
+            "company": "NVIDIA_CORPORATION",
+            "metric": "INCOME_TAX_EXPENSE",
+            "fact_period": "FY2024",
+            "source_filing": "2025-10-K.pdf",
+            "currency": "USD",
+            "source_scale": "millions",
+            "source_value": 4058,
+            "answer_value": 4058,
+            "answer_unit": "USD millions",
+            "tolerance": "0.5",
+            "tolerance_basis": "half of one printed million; source precision, not prediction error",
+            "direct_locations": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "statement": "INCOME_STATEMENT"
+              }
+            ],
+            "row_anchors": [
+              "income tax expense"
+            ],
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "human_review": "NOT_PERFORMED",
+            "independent_human_review": "NOT_PERFORMED",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "value_kind": "AMOUNT",
+            "period_granularity": "ANNUAL"
+          },
+          {
+            "company": "NVIDIA_CORPORATION",
+            "metric": "INCOME_TAX_EXPENSE",
+            "fact_period": "FY2025",
+            "source_filing": "2025-10-K.pdf",
+            "currency": "USD",
+            "source_scale": "millions",
+            "source_value": 11146,
+            "answer_value": 11146,
+            "answer_unit": "USD millions",
+            "tolerance": "0.5",
+            "tolerance_basis": "half of one printed million; source precision, not prediction error",
+            "direct_locations": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "statement": "INCOME_STATEMENT"
+              }
+            ],
+            "row_anchors": [
+              "income tax expense"
+            ],
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "human_review": "NOT_PERFORMED",
+            "independent_human_review": "NOT_PERFORMED",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "value_kind": "AMOUNT",
+            "period_granularity": "ANNUAL"
+          }
+        ],
+        "item_id": "H-DELTA-INCOME_TAX_EXPENSE",
+        "family_id": "ABSOLUTE_CHANGE:INCOME_TAX_EXPENSE",
+        "question": "Calculate the absolute difference in NVIDIA income tax expense between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+        "operation": "ABSOLUTE_CHANGE",
+        "partition": "frozen_unexposed_forms_no_tuning"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "Calculate the absolute difference in NVIDIA income tax expense between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+        "task_type": "CALCULATION",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "INCOME_TAX_EXPENSE",
+        "fact_period": "FY2024",
+        "disclosure_as_of": "FY2025",
+        "document_scope": "2025-10-K.pdf",
+        "comparison": "POINT_TO_POINT",
+        "calculation": "ABSOLUTE_CHANGE",
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2024,
+        "fiscal_year_end": 2025,
+        "fiscal_years": [
+          2024,
+          2025
+        ],
+        "temporal_required": true,
+        "require_multi_year": true,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": "2025-10-K.pdf",
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "b6d812074dced97c",
+          "semantic_fingerprint": "40e4e2a0c0e0b62c",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "INCOME TAX EXPENSE"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Income tax expense 8.6 6.6"
+          ],
+          "pages": [
+            40
+          ],
+          "years": [
+            2024
+          ],
+          "evidence_ids": [
+            "claim_v2_bd2d184d27e2454095e6a517"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "6.6"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4563,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.565,
+            "hop_efficiency": 0.8333,
+            "directness": 0.425,
+            "query_term_overlap": 0.3,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Income tax expense 8.6 6.6",
+                "page": 40,
+                "year": 2024,
+                "evidence_id": "claim_v2_bd2d184d27e2454095e6a517",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        },
+        {
+          "path_id": "path_001",
+          "fingerprint": "95bdf1dd5009031a",
+          "semantic_fingerprint": "4690b480dc508859",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "INCOME TAX EXPENSE"
+          ],
+          "node_labels": [
+            "Entity",
+            "Entity"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Income tax expense 8.6 6.6"
+          ],
+          "pages": [
+            40
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_bd2d184d27e2454095e6a517"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            "8.6"
+          ],
+          "metric_units": [
+            "percent"
+          ],
+          "financial_observations": [],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4563,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.565,
+            "hop_efficiency": 0.8333,
+            "directness": 0.425,
+            "query_term_overlap": 0.3,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 1,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Income tax expense 8.6 6.6",
+                "page": 40,
+                "year": 2025,
+                "evidence_id": "claim_v2_bd2d184d27e2454095e6a517",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "INSUFFICIENT_EVIDENCE",
+        "operation": "absolute_change",
+        "observations": [],
+        "value": null,
+        "unit": null,
+        "display": "No complete typed observation for requested company metric and disclosure.",
+        "reason_code": "no_complete_typed_observation_for_requested_company_metric_and_disclosure",
+        "invalid_observations": 0
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "core_semantic": false,
+        "numeric_and_unit": false,
+        "citation_support": false,
+        "physical_page": false,
+        "metadata_complete": false,
+        "joint": false,
+        "status": "INSUFFICIENT_EVIDENCE",
+        "false_refusal": true,
+        "safe_refusal": null,
+        "wrong_pass": false
+      },
+      "root_cause": "Evidence or metric planning incomplete; see exact raw trace, not inferred pass",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    },
+    {
+      "run": "validation-run-v1",
+      "item_id": "H-REFUSE-computed-ratio",
+      "question": "Calculate NVIDIA research and development expenses divided by revenue in fiscal 2025.",
+      "reference": {
+        "item_id": "H-REFUSE-computed-ratio",
+        "family_id": "SAFE_REFUSAL:computed-ratio",
+        "question": "Calculate NVIDIA research and development expenses divided by revenue in fiscal 2025.",
+        "source_filing": "2025-10-K.pdf",
+        "operation": "SAFE_REFUSAL",
+        "accepted_statuses": [
+          "INSUFFICIENT_EVIDENCE",
+          "AMBIGUOUS",
+          "OPERATION_UNSUPPORTED"
+        ],
+        "refusal_basis": "declared capability boundary or unresolved request; no broader fact may PASS",
+        "label_tier": "AI_PDF_CAPABILITY_BOUNDARY",
+        "partition": "frozen_unexposed_forms_no_tuning"
+      },
+      "query_plan": {
+        "schema": "query-plan/v1",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "value_kind": "AMOUNT",
+        "raw_question": "Calculate NVIDIA research and development expenses divided by revenue in fiscal 2025.",
+        "task_type": "FACT",
+        "company": "NVIDIA_CORPORATION",
+        "target_metric": "R_AND_D_EXPENSE",
+        "fact_period": "FY2025",
+        "disclosure_as_of": null,
+        "document_scope": null,
+        "comparison": null,
+        "calculation": null,
+        "calculation_target_currency": null,
+        "calculation_target_scale": null,
+        "evidence_budget": 10,
+        "ambiguity": [],
+        "analysis_type": "FACT",
+        "causal_direction": "",
+        "fiscal_year_start": 2025,
+        "fiscal_year_end": 2025,
+        "fiscal_years": [
+          2025
+        ],
+        "temporal_required": false,
+        "require_multi_year": false,
+        "max_hops": 4,
+        "relation_types": [
+          "REPORTS_METRIC"
+        ],
+        "exclude_relations": [
+          "DISCLOSES",
+          "MENTIONS",
+          "POSSIBLE_RELATION"
+        ],
+        "require_explicit_causal": true,
+        "build_id": "build_ff4e5bcf11c71930"
+      },
+      "actual_filter": null,
+      "paths": [
+        {
+          "path_id": "path_000",
+          "fingerprint": "4d2b1aa6e36db1e8",
+          "semantic_fingerprint": "83b4cdba06f14ccc",
+          "nodes": [
+            "NVIDIA CORPORATION",
+            "R AND D EXPENSE"
+          ],
+          "node_labels": [
+            "Company",
+            "FinancialMetric"
+          ],
+          "relationships": [
+            "REPORTS_METRIC"
+          ],
+          "causal_strengths": [
+            "DISCLOSED_ONLY"
+          ],
+          "evidence": [
+            "Research and development expenses $ 12,914 $ 8,675 $ 4,239 49 %"
+          ],
+          "pages": [
+            42
+          ],
+          "years": [
+            2025
+          ],
+          "evidence_ids": [
+            "claim_v2_244f25f538ee36b903c991d3"
+          ],
+          "evidence_build_ids": [
+            "build_ff4e5bcf11c71930"
+          ],
+          "metric_values": [
+            12914.0
+          ],
+          "metric_units": [
+            "USD millions"
+          ],
+          "financial_observations": [
+            {
+              "id": "FO_5143C6F56918464A1EC99E53",
+              "measurement_key": "FM_1CDB71C1BDF37C2FF425",
+              "company_id": "NVIDIA_CORPORATION",
+              "metric_id": "R_AND_D_EXPENSE",
+              "claim_id": "claim_v2_244f25f538ee36b903c991d3",
+              "source_filing": "2025-10-K.pdf",
+              "page": 42,
+              "fiscal_period": "FY2025",
+              "fiscal_year": 2025,
+              "value": 12914.0,
+              "raw_value": "12914",
+              "unit": "USD millions",
+              "currency": "USD",
+              "scale": "millions",
+              "statement_type": "MD_AND_A",
+              "table_name": "b67bd67a64488a54:2025-10-K.pdf:42:table_8d9f0abc2402",
+              "row_label": "research and development expenses",
+              "column_label": "FY2025",
+              "valid_from": "FY2025",
+              "valid_to": "FY2025",
+              "comparability_status": "UNASSESSED",
+              "build_id": "build_ff4e5bcf11c71930",
+              "business_scope": "CONSOLIDATED",
+              "measurement_nature": "PERIOD_RESULT",
+              "value_kind": "AMOUNT",
+              "period_granularity": "ANNUAL",
+              "source_section": "MD_AND_A"
+            }
+          ],
+          "filings": [
+            "2025-10-K.pdf"
+          ],
+          "causal_forms": [
+            "FINANCIAL_RELATION"
+          ],
+          "total_hops": 1,
+          "score": 0.4765,
+          "score_breakdown": {
+            "causal_strength": 0.3,
+            "completeness": 0.5,
+            "temporal_coherence": 0.5,
+            "evidence_quality": 0.6575,
+            "hop_efficiency": 0.8333,
+            "directness": 0.4571,
+            "query_term_overlap": 0.4286,
+            "query_concept_coverage": 0.0,
+            "relation_alignment": 1.0,
+            "relation_evidence_support": 1.0,
+            "endpoint_alignment": 0.0,
+            "tangent_penalty": 0.0
+          },
+          "duplicate_count": 2,
+          "evidence_variants": [
+            [
+              {
+                "evidence": "Research and development expenses $ 12,914 $ 8,675 $ 4,239 49 %",
+                "page": 42,
+                "year": 2025,
+                "evidence_id": "claim_v2_244f25f538ee36b903c991d3",
+                "filing": "2025-10-K.pdf"
+              },
+              {
+                "evidence": "Research and development 12,914 8,675 7,339",
+                "page": 52,
+                "year": 2025,
+                "evidence_id": "claim_v2_21e13f4329c42b87100d1de5",
+                "filing": "2025-10-K.pdf"
+              }
+            ]
+          ],
+          "evidence_role": "MECHANISM_SUPPORT",
+          "graph_structure": "DIRECT_GRAPH_EDGE",
+          "evidence_semantic_scope": "ATOMIC_RELATION"
+        }
+      ],
+      "calculation": {
+        "schema": "deterministic-calculation/v1",
+        "status": "PASS",
+        "operation": "fact",
+        "observations": [
+          {
+            "id": "FO_5143C6F56918464A1EC99E53",
+            "measurement_key": "FM_1CDB71C1BDF37C2FF425",
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "R_AND_D_EXPENSE",
+            "claim_id": "claim_v2_244f25f538ee36b903c991d3",
+            "source_filing": "2025-10-K.pdf",
+            "page": 42,
+            "fiscal_period": "FY2025",
+            "fiscal_year": 2025,
+            "value": 12914.0,
+            "raw_value": "12914",
+            "unit": "USD millions",
+            "currency": "USD",
+            "scale": "millions",
+            "statement_type": "MD_AND_A",
+            "table_name": "b67bd67a64488a54:2025-10-K.pdf:42:table_8d9f0abc2402",
+            "row_label": "research and development expenses",
+            "column_label": "FY2025",
+            "valid_from": "FY2025",
+            "valid_to": "FY2025",
+            "comparability_status": "UNASSESSED",
+            "build_id": "build_ff4e5bcf11c71930",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "value_kind": "AMOUNT",
+            "period_granularity": "ANNUAL",
+            "source_section": "MD_AND_A",
+            "fact_period": "FY2025",
+            "disclosure_version": "2025-10-K.pdf",
+            "evidence_id": "claim_v2_244f25f538ee36b903c991d3",
+            "source": "2025-10-K.pdf#page=42"
+          }
+        ],
+        "value": 12914.0,
+        "unit": "USD millions",
+        "display": "12,914.000 USD millions",
+        "reason_code": "typed_fact_observation"
+      },
+      "status": "PARTIALLY_ANSWERED",
+      "score": {
+        "core_semantic": false,
+        "numeric_and_unit": null,
+        "citation_support": null,
+        "physical_page": null,
+        "metadata_complete": null,
+        "joint": false,
+        "safe_refusal": false,
+        "false_refusal": null,
+        "wrong_pass": true,
+        "status": "PASS"
+      },
+      "root_cause": "divided by operation not recognized; unsupported ratio incorrectly becomes FACT",
+      "fix_status": "NO_POST_FREEZE_FIX; development two-round limit reached; preserve failure"
+    }
+  ],
+  "scope": "AI/PDF diagnosis and actual-store reads only; no database or validation-label mutation",
+  "production_mutations": 0
+}

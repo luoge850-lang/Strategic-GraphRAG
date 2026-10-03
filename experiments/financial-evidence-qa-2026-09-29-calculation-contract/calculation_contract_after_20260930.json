@@ -1,0 +1,42 @@
+{
+  "run_id": "calc-contract-retest-20260930-newline-stable-build",
+  "captured_at_utc": "2026-09-30",
+  "build_id": "build_7feb21b48e594a7a",
+  "source_fingerprint": "ab2693cf127abd39a28c6d70f576ae996778302ee225e11dec8e574b389606d2",
+  "method": "Re-ran the isolated candidate acceptance and source-bound calculation scenarios after normalizing text newlines in build identity. No LLM answer generation was used.",
+  "source_matched_pdf_case": {
+    "question_id": "Q04",
+    "question": "Compare NVIDIA revenue across FY2023, FY2024, and FY2025.",
+    "source_filing": "2025-10-K.pdf",
+    "source_pdf_sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+    "physical_page": 80,
+    "table_row": "Total revenue / REVENUE",
+    "values_usd_millions": {
+      "FY2023": 26974,
+      "FY2024": 60922,
+      "FY2025": 130497
+    },
+    "calculation_status": "PASS",
+    "comparability_assessment": "CONDITIONALLY_COMPARABLE",
+    "basis": "same_disclosure_claim_page_table_row_and_unit",
+    "acceptance_scenario_passed": true,
+    "limitation": "This is arithmetic over values represented in the same disclosure row, not an independent accounting-policy comparability audit or a causal conclusion."
+  },
+  "candidate_build_verification": {
+    "package_integrity": "PASS; 8/8 checks",
+    "engineering_acceptance": "PASS; 8/8 scenarios",
+    "parsed_pages": 395,
+    "vector_chunks": 843,
+    "accepted_triples": 198,
+    "expanded_fact_edges": 362,
+    "llm_calls": 0,
+    "network_calls": 0
+  },
+  "regression_verification": {
+    "calculation_contract_module": "51 passed",
+    "full_python_suite": "227 passed, 2 deprecation warnings, 7 subtests passed",
+    "newline_fingerprint_test": "LF and CRLF text copies produce equal source-file fingerprints",
+    "independent_answer_accuracy": "NOT_MEASURED",
+    "live_browser_query_and_pdf_open": "NOT_PASSED; local API unavailable"
+  }
+}

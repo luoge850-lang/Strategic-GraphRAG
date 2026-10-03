@@ -1,0 +1,103 @@
+{
+  "schema": "live-http-acceptance/v1",
+  "recorded_at": "2026-09-30T10:20:51.225428+00:00",
+  "target_scope": "loopback",
+  "hardware": {
+    "os": "Windows",
+    "python": "3.12.14",
+    "logical_cpus": 16
+  },
+  "setup": {
+    "concurrency": 1,
+    "queries": 5,
+    "repetitions": 1,
+    "result_cache": false,
+    "generation_requested": false,
+    "cold_start": "NOT_MEASURED",
+    "filesystem_cache": "UNCONTROLLED"
+  },
+  "requests": {
+    "success": 5,
+    "total": 5
+  },
+  "scenario_acceptance": {
+    "passed": 1,
+    "total": 5
+  },
+  "latency_ms": {
+    "p50": 1433.16,
+    "max": 29654.675,
+    "p95": null,
+    "p95_status": "SMOKE_SAMPLE_TOO_SMALL_FOR_BENCHMARK"
+  },
+  "readiness": {
+    "http_status": 503,
+    "elapsed_ms": 12027.504,
+    "error_type": "HTTPError",
+    "content_type": "application/json",
+    "response": {
+      "status": "degraded",
+      "checked_at": 1790763615.9561813,
+      "dependencies": {
+        "probe": {
+          "ready": false,
+          "error": "timeout"
+        }
+      }
+    }
+  },
+  "pdf_http_checks": [
+    {
+      "http_status": 200,
+      "elapsed_ms": 6.434,
+      "error_type": null,
+      "content_type": "application/pdf",
+      "source_filing": "2024-10-K.pdf",
+      "sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+      "bytes": 1074533,
+      "page_checks": [
+        {
+          "physical_page": 79,
+          "page_exists": true,
+          "revenue_source_tokens_visible": null
+        }
+      ],
+      "page_count": 96
+    },
+    {
+      "http_status": 200,
+      "elapsed_ms": 19.668,
+      "error_type": null,
+      "content_type": "application/pdf",
+      "source_filing": "2025-10-K.pdf",
+      "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+      "bytes": 1274715,
+      "page_checks": [
+        {
+          "physical_page": 80,
+          "page_exists": true,
+          "revenue_source_tokens_visible": true
+        },
+        {
+          "physical_page": 80,
+          "page_exists": true,
+          "revenue_source_tokens_visible": true
+        },
+        {
+          "physical_page": 80,
+          "page_exists": true,
+          "revenue_source_tokens_visible": true
+        },
+        {
+          "physical_page": 80,
+          "page_exists": true,
+          "revenue_source_tokens_visible": true
+        }
+      ],
+      "page_count": 130
+    }
+  ],
+  "browser_pdf_click": "NOT_VERIFIED_BY_HTTP_RUNNER",
+  "independent_quality": "NOT_MEASURED",
+  "raw_sha256": "0c079cf76a964a1f41e1ed2aba13085a8760f43a4f3558a98ad72b68eeb97d0f"
+}

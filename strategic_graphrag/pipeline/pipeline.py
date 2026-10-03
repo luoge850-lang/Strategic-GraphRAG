@@ -426,7 +426,8 @@ class KnowledgeGraphPipeline:
         logger.info(f"{'='*60}")
 
         # Extract year from filename
-        year_match = re.search(r"(20\d{2})", pdf_path)
+        # Parent directories may contain experiment dates, not filing years.
+        year_match = re.search(r"(20\d{2})", Path(pdf_path).name)
         year = self.config.year_override or (int(year_match.group(1)) if year_match else 2024)
 
         # Build the standard document layer once.  The downstream extraction
@@ -641,7 +642,9 @@ class KnowledgeGraphPipeline:
                     table_triples = verified_table_triples
                     for triple in table_triples:
                         triple["_source"] = "table"
-                        triple["statement_type"] = section_id
+                        triple["source_section"] = section_id
+                        if triple.get("statement_type") in {None,"FINANCIAL_TABLE","UNKNOWN"}:
+                            triple["statement_type"] = "MD_AND_A" if section_id == "MD_AND_A" else "FINANCIAL_NOTES"
                     page_triples.extend(table_triples)
                 else:
                     raw_table_candidates = []

@@ -10,6 +10,7 @@ import {
   CausalPath,
   GNode,
   FilingScope,
+  API_BASE,
 } from "./lib/api";
 import { fmtLabel, nodeLabelStyle } from "./lib/graph";
 import GraphCanvas from "./components/GraphCanvas";
@@ -360,6 +361,7 @@ function PathCard({
 
 export default function App() {
   const [q, setQ] = useState("");
+  const [synthesize, setSynthesize] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<QueryResult | null>(null);
   const [stats, setStats] = useState<GraphStats | null>(null);
@@ -473,7 +475,7 @@ export default function App() {
     setLoading(true);
     setError("");
     try {
-      const r = await postQuery(q.trim(), 10, undefined, undefined, scope);
+      const r = await postQuery(q.trim(), 10, undefined, undefined, scope, "auto", synthesize);
       const safePaths = Array.isArray(r.paths) ? r.paths : [];
       const safeMetadata = r.metadata ?? {};
       const normalized: QueryResult = {
@@ -508,7 +510,7 @@ export default function App() {
     } finally {
       setLoading(false);
     }
-  }, [q, loading, scope]);
+  }, [q, loading, scope, synthesize]);
 
   const clearResults = useCallback(() => {
     setResult(null);
@@ -891,6 +893,18 @@ export default function App() {
                 </span>
               </div>
 
+              <label style={{ display: "flex", alignItems: "flex-start", gap: 8, margin: "0 0 12px", fontSize: 11, lineHeight: 1.45, color: "var(--muted)" }}>
+                <input
+                  type="checkbox"
+                  checked={synthesize}
+                  onChange={(e) => setSynthesize(e.target.checked)}
+                  disabled={loading}
+                  aria-label="Enable model answer synthesis"
+                  style={{ marginTop: 2 }}
+                />
+                <span>Enable model answer synthesis (may send the question and retrieved evidence to the configured external model). Off by default.</span>
+              </label>
+
               <div style={{ position: "relative", marginBottom: 12 }}>
                 <textarea
                   value={q}
@@ -993,6 +1007,48 @@ export default function App() {
                 transition={{ duration: 0.5, ease: [0.2, 0.7, 0.3, 1] }}
                 style={{ display: "flex", flexDirection: "column", gap: 20 }}
               >
+                {result.calculation && (
+                  <section
+                    aria-label="Deterministic calculation status"
+                    className="card-mono reveal-card"
+                    style={{
+                      border: `1.5px solid ${result.calculation.status === "PASS" ? "var(--L3)" : "#b87936"}`,
+                      background: "var(--paper)",
+                      padding: 16,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                        Deterministic calculation · {result.calculation.status}
+                      </span>
+                      {result.calculation.operation && (
+                        <span className="nav-mono">{result.calculation.operation.replace(/_/g, " ")}</span>
+                      )}
+                    </div>
+                    {result.calculation.status === "PASS" ? (
+                      <>
+                        <div style={{ marginTop: 8, fontSize: 13, lineHeight: 1.6 }}>
+                          {result.calculation.display || "Calculation completed; no formatted value was supplied."}
+                        </div>
+                        {result.calculation.comparability_assessment && (
+                          <div style={{ marginTop: 6, fontSize: 10, color: "var(--muted)" }}>
+                            Comparability: {result.calculation.comparability_assessment.status || "UNSPECIFIED"}
+                            {result.calculation.comparability_assessment.basis
+                              ? ` · ${result.calculation.comparability_assessment.basis.replace(/_/g, " ")}`
+                              : ""}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div role="status" style={{ marginTop: 8, fontSize: 12, lineHeight: 1.6 }}>
+                        No numeric result returned. {result.calculation.reason_code
+                          ? result.calculation.reason_code.replace(/_/g, " ")
+                          : "The calculation did not complete successfully."}
+                      </div>
+                    )}
+                  </section>
+                )}
+
                 {/* ══════════════════════════════════════════════
                     PRIMARY: Synthesis Report — the official answer
                     ══════════════════════════════════════════════ */}
@@ -1138,8 +1194,14 @@ export default function App() {
                     <CollapsibleCard title={`Graph evidence chain · path ${selectedPath + 1}`} badge={`${result.paths[selectedPath]?.total_hops || 0} graph hops`} defaultOpen={true}>
                       {result.paths[selectedPath] && (
                         <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 320, overflowY: "auto" }}>
-                          {result.paths[selectedPath].evidence.map((ev, i) =>
-                            ev && ev.length > 15 && (
+                          {result.paths[selectedPath].evidence.map((ev, i) => {
+                            const evidencePath = result.paths[selectedPath];
+                            const page = evidencePath.pages[i];
+                            const filing = evidencePath.filings?.[i];
+                            const sourceUrl = filing && page > 0
+                              ? `${API_BASE}/evaluation/table-quality/source/${encodeURIComponent(filing)}#page=${page}`
+                              : null;
+                            return ev && ev.length > 15 && (
                               <motion.div
                                 key={i}
                                 initial={{ opacity: 0 }}
@@ -1157,15 +1219,28 @@ export default function App() {
                                 <span style={{ fontSize: 10.5, color: "var(--L1)", lineHeight: 1.5 }}>
                                   {ev.length > 280 ? ev.slice(0, 280) + "…" : ev}
                                 </span>
-                                <div style={{ display: "flex", gap: 12, marginTop: 4, fontSize: 9, color: "var(--muted)", fontWeight: 500 }}>
-                                  <span>p.{result.paths[selectedPath].pages[i] || "?"}</span>
-                                  <span>{result.paths[selectedPath].causal_strengths[i] || ""}</span>
-                                  <span>Y{result.paths[selectedPath].years[i] || "?"}</span>
-                                  <span>Claim {result.paths[selectedPath].evidence_ids?.[i] || "?"}</span>
+                                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center", marginTop: 4, fontSize: 9, color: "var(--muted)", fontWeight: 500 }}>
+                                  <span>p.{page || "?"}</span>
+                                  <span>{evidencePath.causal_strengths[i] || ""}</span>
+                                  <span>Y{evidencePath.years[i] || "?"}</span>
+                                  <span>Claim {evidencePath.evidence_ids?.[i] || "?"}</span>
+                                  {sourceUrl ? (
+                                    <a
+                                      href={sourceUrl}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      aria-label={`打开原始文件 ${filing}，PDF物理页 ${page}`}
+                                      style={{ color: "var(--L3)", fontWeight: 700, textDecoration: "underline" }}
+                                    >
+                                      打开 {filing} · PDF 第 {page} 页
+                                    </a>
+                                  ) : (
+                                    <span>Source locator unavailable</span>
+                                  )}
                                 </div>
                               </motion.div>
-                            )
-                          )}
+                            );
+                          })}
                         </div>
                       )}
                     </CollapsibleCard>

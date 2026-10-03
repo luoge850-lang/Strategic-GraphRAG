@@ -1,0 +1,1696 @@
+[
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "COST_OF_REVENUE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 32639,
+    "answer_value": 32639,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "cost of revenue"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-COST_OF_REVENUE",
+    "family_id": "FACT:COST_OF_REVENUE",
+    "question": "What was NVIDIA cost of revenue revenue for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "GROSS_PROFIT",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 97858,
+    "answer_value": 97858,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "gross profit"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-GROSS_PROFIT",
+    "family_id": "FACT:GROSS_PROFIT",
+    "question": "What was NVIDIA gross profit for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "NET_INCOME",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 72880,
+    "answer_value": 72880,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "net income"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-NET_INCOME",
+    "family_id": "FACT:NET_INCOME",
+    "question": "What was NVIDIA net income for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "PRETAX_INCOME",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 84026,
+    "answer_value": 84026,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "income before income tax"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-PRETAX_INCOME",
+    "family_id": "FACT:PRETAX_INCOME",
+    "question": "What was NVIDIA income before income tax for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "INCOME_TAX_EXPENSE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 11146,
+    "answer_value": 11146,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "income tax expense"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-INCOME_TAX_EXPENSE",
+    "family_id": "FACT:INCOME_TAX_EXPENSE",
+    "question": "What was NVIDIA income tax expense for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_CURRENT_LIABILITIES",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 18047,
+    "answer_value": 18047,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total current liabilities"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-TOTAL_CURRENT_LIABILITIES",
+    "family_id": "FACT:TOTAL_CURRENT_LIABILITIES",
+    "question": "What was NVIDIA total current liabilities for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_CURRENT_ASSETS",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 80126,
+    "answer_value": 80126,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total current assets"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-TOTAL_CURRENT_ASSETS",
+    "family_id": "FACT:TOTAL_CURRENT_ASSETS",
+    "question": "What was NVIDIA total current assets for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_ASSETS",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 111601,
+    "answer_value": 111601,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total assets"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-TOTAL_ASSETS",
+    "family_id": "FACT:TOTAL_ASSETS",
+    "question": "What was NVIDIA total assets for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_LIABILITIES",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 32274,
+    "answer_value": 32274,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total liabilities"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-TOTAL_LIABILITIES",
+    "family_id": "FACT:TOTAL_LIABILITIES",
+    "question": "What was NVIDIA total liabilities for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_SHAREHOLDERS_EQUITY",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 79327,
+    "answer_value": 79327,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total shareholders' equity"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-TOTAL_SHAREHOLDERS_EQUITY",
+    "family_id": "FACT:TOTAL_SHAREHOLDERS_EQUITY",
+    "question": "What was NVIDIA total shareholders' equity for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "CASH_AND_CASH_EQUIVALENTS",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 8589,
+    "answer_value": 8589,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "cash and cash equivalents"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-CASH_AND_CASH_EQUIVALENTS",
+    "family_id": "FACT:CASH_AND_CASH_EQUIVALENTS",
+    "question": "What was NVIDIA cash and cash equivalents for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "MARKETABLE_SECURITIES",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 34621,
+    "answer_value": 34621,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "marketable securities"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-MARKETABLE_SECURITIES",
+    "family_id": "FACT:MARKETABLE_SECURITIES",
+    "question": "What was NVIDIA marketable securities for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "INVENTORIES",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 10080,
+    "answer_value": 10080,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "inventories"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-INVENTORIES",
+    "family_id": "FACT:INVENTORIES",
+    "question": "What was NVIDIA inventories for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "GAMING_REVENUE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 11350,
+    "answer_value": 11350,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 80,
+        "statement": "FINANCIAL_NOTES"
+      }
+    ],
+    "row_anchors": [
+      "Gaming"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "GAMING",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-GAMING_REVENUE",
+    "family_id": "FACT:GAMING_REVENUE",
+    "question": "What was NVIDIA Gaming revenue for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "AUTOMOTIVE_REVENUE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 1694,
+    "answer_value": 1694,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 80,
+        "statement": "FINANCIAL_NOTES"
+      }
+    ],
+    "row_anchors": [
+      "Automotive"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "AUTOMOTIVE",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-AUTOMOTIVE_REVENUE",
+    "family_id": "FACT:AUTOMOTIVE_REVENUE",
+    "question": "What was NVIDIA Automotive revenue for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "PROFESSIONAL_VISUALIZATION_REVENUE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 1878,
+    "answer_value": 1878,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; source precision, not prediction error",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 80,
+        "statement": "FINANCIAL_NOTES"
+      }
+    ],
+    "row_anchors": [
+      "Professional Visualization"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "PROFESSIONAL_VISUALIZATION",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-FACT-PROFESSIONAL_VISUALIZATION_REVENUE",
+    "family_id": "FACT:PROFESSIONAL_VISUALIZATION_REVENUE",
+    "question": "What was NVIDIA Professional Visualization revenue for fiscal 2025, as disclosed in the 2025 10-K?",
+    "operation": "FACT",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "COST_OF_REVENUE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 32639,
+    "answer_value": 32.639,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "cost of revenue"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-CONVERT-COST_OF_REVENUE",
+    "family_id": "UNIT_CONVERSION:COST_OF_REVENUE",
+    "question": "Convert NVIDIA cost of revenue for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+    "operation": "UNIT_CONVERSION",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "GROSS_PROFIT",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 97858,
+    "answer_value": 97.858,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "gross profit"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-CONVERT-GROSS_PROFIT",
+    "family_id": "UNIT_CONVERSION:GROSS_PROFIT",
+    "question": "Convert NVIDIA gross profit for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+    "operation": "UNIT_CONVERSION",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "NET_INCOME",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 72880,
+    "answer_value": 72.88,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "net income"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-CONVERT-NET_INCOME",
+    "family_id": "UNIT_CONVERSION:NET_INCOME",
+    "question": "Convert NVIDIA net income for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+    "operation": "UNIT_CONVERSION",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "PRETAX_INCOME",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 84026,
+    "answer_value": 84.026,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "income before income tax"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-CONVERT-PRETAX_INCOME",
+    "family_id": "UNIT_CONVERSION:PRETAX_INCOME",
+    "question": "Convert NVIDIA income before income tax for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+    "operation": "UNIT_CONVERSION",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "INCOME_TAX_EXPENSE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 11146,
+    "answer_value": 11.146,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "income tax expense"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-CONVERT-INCOME_TAX_EXPENSE",
+    "family_id": "UNIT_CONVERSION:INCOME_TAX_EXPENSE",
+    "question": "Convert NVIDIA income tax expense for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+    "operation": "UNIT_CONVERSION",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_CURRENT_LIABILITIES",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 18047,
+    "answer_value": 18.047,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total current liabilities"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-CONVERT-TOTAL_CURRENT_LIABILITIES",
+    "family_id": "UNIT_CONVERSION:TOTAL_CURRENT_LIABILITIES",
+    "question": "Convert NVIDIA total current liabilities for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+    "operation": "UNIT_CONVERSION",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_CURRENT_ASSETS",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 80126,
+    "answer_value": 80.126,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total current assets"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-CONVERT-TOTAL_CURRENT_ASSETS",
+    "family_id": "UNIT_CONVERSION:TOTAL_CURRENT_ASSETS",
+    "question": "Convert NVIDIA total current assets for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+    "operation": "UNIT_CONVERSION",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_ASSETS",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 111601,
+    "answer_value": 111.601,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total assets"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-CONVERT-TOTAL_ASSETS",
+    "family_id": "UNIT_CONVERSION:TOTAL_ASSETS",
+    "question": "Convert NVIDIA total assets for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+    "operation": "UNIT_CONVERSION",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_LIABILITIES",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 32274,
+    "answer_value": 32.274,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total liabilities"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-CONVERT-TOTAL_LIABILITIES",
+    "family_id": "UNIT_CONVERSION:TOTAL_LIABILITIES",
+    "question": "Convert NVIDIA total liabilities for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+    "operation": "UNIT_CONVERSION",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_SHAREHOLDERS_EQUITY",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 79327,
+    "answer_value": 79.327,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed-million rounding propagated through exact division by 1000",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total shareholders' equity"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "item_id": "H-CONVERT-TOTAL_SHAREHOLDERS_EQUITY",
+    "family_id": "UNIT_CONVERSION:TOTAL_SHAREHOLDERS_EQUITY",
+    "question": "Convert NVIDIA total shareholders' equity for fiscal 2025, reported in the 2025 10-K, from USD millions to USD billions.",
+    "operation": "UNIT_CONVERSION",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "COST_OF_REVENUE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 32639,
+    "answer_value": 16018,
+    "answer_unit": "USD millions",
+    "tolerance": "1",
+    "tolerance_basis": "sum of two printed-million rounding bounds",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "cost of revenue"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "required_facts": [
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "COST_OF_REVENUE",
+        "fact_period": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 16621,
+        "answer_value": 16621,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "cost of revenue"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      },
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "COST_OF_REVENUE",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 32639,
+        "answer_value": 32639,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "cost of revenue"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      }
+    ],
+    "item_id": "H-DELTA-COST_OF_REVENUE",
+    "family_id": "ABSOLUTE_CHANGE:COST_OF_REVENUE",
+    "question": "Calculate the absolute difference in NVIDIA cost of revenue between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+    "operation": "ABSOLUTE_CHANGE",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "GROSS_PROFIT",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 97858,
+    "answer_value": 53557,
+    "answer_unit": "USD millions",
+    "tolerance": "1",
+    "tolerance_basis": "sum of two printed-million rounding bounds",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "gross profit"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "required_facts": [
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "GROSS_PROFIT",
+        "fact_period": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 44301,
+        "answer_value": 44301,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "gross profit"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      },
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "GROSS_PROFIT",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 97858,
+        "answer_value": 97858,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "gross profit"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      }
+    ],
+    "item_id": "H-DELTA-GROSS_PROFIT",
+    "family_id": "ABSOLUTE_CHANGE:GROSS_PROFIT",
+    "question": "Calculate the absolute difference in NVIDIA gross profit between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+    "operation": "ABSOLUTE_CHANGE",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "NET_INCOME",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 72880,
+    "answer_value": 43120,
+    "answer_unit": "USD millions",
+    "tolerance": "1",
+    "tolerance_basis": "sum of two printed-million rounding bounds",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "net income"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "required_facts": [
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "NET_INCOME",
+        "fact_period": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 29760,
+        "answer_value": 29760,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "net income"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      },
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "NET_INCOME",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 72880,
+        "answer_value": 72880,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "net income"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      }
+    ],
+    "item_id": "H-DELTA-NET_INCOME",
+    "family_id": "ABSOLUTE_CHANGE:NET_INCOME",
+    "question": "Calculate the absolute difference in NVIDIA net income between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+    "operation": "ABSOLUTE_CHANGE",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "PRETAX_INCOME",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 84026,
+    "answer_value": 50208,
+    "answer_unit": "USD millions",
+    "tolerance": "1",
+    "tolerance_basis": "sum of two printed-million rounding bounds",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "income before income tax"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "required_facts": [
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "PRETAX_INCOME",
+        "fact_period": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 33818,
+        "answer_value": 33818,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "income before income tax"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      },
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "PRETAX_INCOME",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 84026,
+        "answer_value": 84026,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "income before income tax"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      }
+    ],
+    "item_id": "H-DELTA-PRETAX_INCOME",
+    "family_id": "ABSOLUTE_CHANGE:PRETAX_INCOME",
+    "question": "Calculate the absolute difference in NVIDIA income before income tax between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+    "operation": "ABSOLUTE_CHANGE",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "INCOME_TAX_EXPENSE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 11146,
+    "answer_value": 7088,
+    "answer_unit": "USD millions",
+    "tolerance": "1",
+    "tolerance_basis": "sum of two printed-million rounding bounds",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "income tax expense"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "PERIOD_RESULT",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "required_facts": [
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "INCOME_TAX_EXPENSE",
+        "fact_period": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 4058,
+        "answer_value": 4058,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "income tax expense"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      },
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "INCOME_TAX_EXPENSE",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 11146,
+        "answer_value": 11146,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "statement": "INCOME_STATEMENT"
+          }
+        ],
+        "row_anchors": [
+          "income tax expense"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      }
+    ],
+    "item_id": "H-DELTA-INCOME_TAX_EXPENSE",
+    "family_id": "ABSOLUTE_CHANGE:INCOME_TAX_EXPENSE",
+    "question": "Calculate the absolute difference in NVIDIA income tax expense between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+    "operation": "ABSOLUTE_CHANGE",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_CURRENT_LIABILITIES",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 18047,
+    "answer_value": 7416,
+    "answer_unit": "USD millions",
+    "tolerance": "1",
+    "tolerance_basis": "sum of two printed-million rounding bounds",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total current liabilities"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "required_facts": [
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "TOTAL_CURRENT_LIABILITIES",
+        "fact_period": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 10631,
+        "answer_value": 10631,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "statement": "BALANCE_SHEET"
+          }
+        ],
+        "row_anchors": [
+          "total current liabilities"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      },
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "TOTAL_CURRENT_LIABILITIES",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 18047,
+        "answer_value": 18047,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "statement": "BALANCE_SHEET"
+          }
+        ],
+        "row_anchors": [
+          "total current liabilities"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      }
+    ],
+    "item_id": "H-DELTA-TOTAL_CURRENT_LIABILITIES",
+    "family_id": "ABSOLUTE_CHANGE:TOTAL_CURRENT_LIABILITIES",
+    "question": "Calculate the absolute difference in NVIDIA total current liabilities between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+    "operation": "ABSOLUTE_CHANGE",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_CURRENT_ASSETS",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 80126,
+    "answer_value": 35781,
+    "answer_unit": "USD millions",
+    "tolerance": "1",
+    "tolerance_basis": "sum of two printed-million rounding bounds",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 54,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total current assets"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED",
+    "independent_human_review": "NOT_PERFORMED",
+    "business_scope": "CONSOLIDATED",
+    "measurement_nature": "BALANCE",
+    "value_kind": "AMOUNT",
+    "period_granularity": "ANNUAL",
+    "required_facts": [
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "TOTAL_CURRENT_ASSETS",
+        "fact_period": "FY2024",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 44345,
+        "answer_value": 44345,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "statement": "BALANCE_SHEET"
+          }
+        ],
+        "row_anchors": [
+          "total current assets"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      },
+      {
+        "company": "NVIDIA_CORPORATION",
+        "metric": "TOTAL_CURRENT_ASSETS",
+        "fact_period": "FY2025",
+        "source_filing": "2025-10-K.pdf",
+        "currency": "USD",
+        "source_scale": "millions",
+        "source_value": 80126,
+        "answer_value": 80126,
+        "answer_unit": "USD millions",
+        "tolerance": "0.5",
+        "tolerance_basis": "half of one printed million; source precision, not prediction error",
+        "direct_locations": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "statement": "BALANCE_SHEET"
+          }
+        ],
+        "row_anchors": [
+          "total current assets"
+        ],
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "human_review": "NOT_PERFORMED",
+        "independent_human_review": "NOT_PERFORMED",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "value_kind": "AMOUNT",
+        "period_granularity": "ANNUAL"
+      }
+    ],
+    "item_id": "H-DELTA-TOTAL_CURRENT_ASSETS",
+    "family_id": "ABSOLUTE_CHANGE:TOTAL_CURRENT_ASSETS",
+    "question": "Calculate the absolute difference in NVIDIA total current assets between fiscal 2024 and fiscal 2025 using its 2025 10-K.",
+    "operation": "ABSOLUTE_CHANGE",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "item_id": "H-REFUSE-quarter-gaming",
+    "family_id": "SAFE_REFUSAL:quarter-gaming",
+    "question": "What was NVIDIA Gaming revenue in Q1 FY2025 as reported in its 2025 10-K?",
+    "source_filing": "2025-10-K.pdf",
+    "operation": "SAFE_REFUSAL",
+    "accepted_statuses": [
+      "INSUFFICIENT_EVIDENCE",
+      "AMBIGUOUS",
+      "OPERATION_UNSUPPORTED"
+    ],
+    "refusal_basis": "declared capability boundary or unresolved request; no broader fact may PASS",
+    "label_tier": "AI_PDF_CAPABILITY_BOUNDARY",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "item_id": "H-REFUSE-quarter-net-income",
+    "family_id": "SAFE_REFUSAL:quarter-net-income",
+    "question": "What was NVIDIA net income in second quarter of fiscal 2025 as reported in its 2025 10-K?",
+    "source_filing": "2025-10-K.pdf",
+    "operation": "SAFE_REFUSAL",
+    "accepted_statuses": [
+      "INSUFFICIENT_EVIDENCE",
+      "AMBIGUOUS",
+      "OPERATION_UNSUPPORTED"
+    ],
+    "refusal_basis": "declared capability boundary or unresolved request; no broader fact may PASS",
+    "label_tier": "AI_PDF_CAPABILITY_BOUNDARY",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "item_id": "H-REFUSE-future-assets",
+    "family_id": "SAFE_REFUSAL:future-assets",
+    "question": "What were NVIDIA total assets in fiscal 2026?",
+    "source_filing": "2025-10-K.pdf",
+    "operation": "SAFE_REFUSAL",
+    "accepted_statuses": [
+      "INSUFFICIENT_EVIDENCE",
+      "AMBIGUOUS",
+      "OPERATION_UNSUPPORTED"
+    ],
+    "refusal_basis": "declared capability boundary or unresolved request; no broader fact may PASS",
+    "label_tier": "AI_PDF_CAPABILITY_BOUNDARY",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "item_id": "H-REFUSE-unknown-region",
+    "family_id": "SAFE_REFUSAL:unknown-region",
+    "question": "What was NVIDIA regional revenue in fiscal 2025?",
+    "source_filing": "2025-10-K.pdf",
+    "operation": "SAFE_REFUSAL",
+    "accepted_statuses": [
+      "INSUFFICIENT_EVIDENCE",
+      "AMBIGUOUS",
+      "OPERATION_UNSUPPORTED"
+    ],
+    "refusal_basis": "declared capability boundary or unresolved request; no broader fact may PASS",
+    "label_tier": "AI_PDF_CAPABILITY_BOUNDARY",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "item_id": "H-REFUSE-missing-year-inventory",
+    "family_id": "SAFE_REFUSAL:missing-year-inventory",
+    "question": "Compare NVIDIA inventories between years.",
+    "source_filing": "2025-10-K.pdf",
+    "operation": "SAFE_REFUSAL",
+    "accepted_statuses": [
+      "INSUFFICIENT_EVIDENCE",
+      "AMBIGUOUS",
+      "OPERATION_UNSUPPORTED"
+    ],
+    "refusal_basis": "declared capability boundary or unresolved request; no broader fact may PASS",
+    "label_tier": "AI_PDF_CAPABILITY_BOUNDARY",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "item_id": "H-REFUSE-computed-ratio",
+    "family_id": "SAFE_REFUSAL:computed-ratio",
+    "question": "Calculate NVIDIA research and development expenses divided by revenue in fiscal 2025.",
+    "source_filing": "2025-10-K.pdf",
+    "operation": "SAFE_REFUSAL",
+    "accepted_statuses": [
+      "INSUFFICIENT_EVIDENCE",
+      "AMBIGUOUS",
+      "OPERATION_UNSUPPORTED"
+    ],
+    "refusal_basis": "declared capability boundary or unresolved request; no broader fact may PASS",
+    "label_tier": "AI_PDF_CAPABILITY_BOUNDARY",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  },
+  {
+    "item_id": "H-REFUSE-percentage-point",
+    "family_id": "SAFE_REFUSAL:percentage-point",
+    "question": "What was NVIDIA gross margin percentage-point change between fiscal 2024 and fiscal 2025?",
+    "source_filing": "2025-10-K.pdf",
+    "operation": "SAFE_REFUSAL",
+    "accepted_statuses": [
+      "INSUFFICIENT_EVIDENCE",
+      "AMBIGUOUS",
+      "OPERATION_UNSUPPORTED"
+    ],
+    "refusal_basis": "declared capability boundary or unresolved request; no broader fact may PASS",
+    "label_tier": "AI_PDF_CAPABILITY_BOUNDARY",
+    "partition": "frozen_unexposed_forms_no_tuning"
+  }
+]

@@ -1,0 +1,233 @@
+[
+  {
+    "item_id": "FQA-459504a0c8aab868b348",
+    "family_id": "FQA-459504a0c8aab868b348",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "R_AND_D_EXPENSE",
+    "fact_period": "FY2022",
+    "source_filing": "2023-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 5268,
+    "answer_value": 5268,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2023-10-K.pdf",
+        "page": 43,
+        "statement": "MD_AND_A"
+      }
+    ],
+    "row_anchors": [
+      "research and development"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED"
+  },
+  {
+    "item_id": "FQA-841546b4d92198e1bb46",
+    "family_id": "FQA-841546b4d92198e1bb46",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "MARKETABLE_SECURITIES",
+    "fact_period": "FY2022",
+    "source_filing": "2023-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 19218,
+    "answer_value": 19218,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2023-10-K.pdf",
+        "page": 56,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "marketable securities"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED"
+  },
+  {
+    "item_id": "FQA-9ebad1d7a48a48c4c012",
+    "family_id": "FQA-9ebad1d7a48a48c4c012",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_CURRENT_ASSETS",
+    "fact_period": "FY2022",
+    "source_filing": "2023-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 28829,
+    "answer_value": 28829,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2023-10-K.pdf",
+        "page": 56,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total current assets"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED"
+  },
+  {
+    "item_id": "FQA-e4a8908ea7e94a8710a1",
+    "family_id": "FQA-e4a8908ea7e94a8710a1",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "ACCOUNTS_RECEIVABLE",
+    "fact_period": "FY2022",
+    "source_filing": "2023-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 4650,
+    "answer_value": 4650,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2023-10-K.pdf",
+        "page": 56,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "accounts receivable"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED"
+  },
+  {
+    "item_id": "FQA-DEV-d687185a6ce263bdbd63",
+    "family_id": "FQA-DEV-d687185a6ce263bdbd63",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "REVENUE",
+    "fact_period": "FY2024",
+    "source_filing": "2024-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 60922,
+    "answer_value": 60922,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2024-10-K.pdf",
+        "page": 79,
+        "statement": "FINANCIAL_NOTES"
+      },
+      {
+        "file": "2024-10-K.pdf",
+        "page": 50,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "total revenue"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED"
+  },
+  {
+    "item_id": "FQA-DEV-3c57ba0a364db4d47d0b",
+    "family_id": "FQA-DEV-3c57ba0a364db4d47d0b",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "TOTAL_CURRENT_ASSETS",
+    "fact_period": "FY2024",
+    "source_filing": "2024-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 44345,
+    "answer_value": 44345,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2024-10-K.pdf",
+        "page": 52,
+        "statement": "BALANCE_SHEET"
+      }
+    ],
+    "row_anchors": [
+      "total current assets"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED"
+  },
+  {
+    "item_id": "FQA-DEV-2ad79e78ab860ac3675c",
+    "family_id": "FQA-DEV-2ad79e78ab860ac3675c",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "REVENUE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 130497,
+    "answer_value": 130497,
+    "answer_unit": "USD millions",
+    "tolerance": "0.5",
+    "tolerance_basis": "half of one printed million; fixed before prediction",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 80,
+        "statement": "FINANCIAL_NOTES"
+      },
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "total revenue"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED"
+  },
+  {
+    "item_id": "FQAV-DEV-USD-BILLIONS-2025-REVENUE",
+    "family_id": "FQAV-DEV-USD-BILLIONS-2025-REVENUE",
+    "company": "NVIDIA_CORPORATION",
+    "metric": "REVENUE",
+    "fact_period": "FY2025",
+    "source_filing": "2025-10-K.pdf",
+    "currency": "USD",
+    "source_scale": "millions",
+    "source_value": 130497,
+    "answer_value": 130.497,
+    "answer_unit": "USD billions",
+    "tolerance": "0.0005",
+    "tolerance_basis": "printed million half-unit divided by 1000; exact scale conversion",
+    "direct_locations": [
+      {
+        "file": "2025-10-K.pdf",
+        "page": 80,
+        "statement": "FINANCIAL_NOTES"
+      },
+      {
+        "file": "2025-10-K.pdf",
+        "page": 52,
+        "statement": "INCOME_STATEMENT"
+      }
+    ],
+    "row_anchors": [
+      "total revenue"
+    ],
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "human_review": "NOT_PERFORMED"
+  }
+]

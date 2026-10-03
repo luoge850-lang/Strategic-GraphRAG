@@ -1,0 +1,15 @@
+# Preserve byte-exact inputs whose SHA-256 values are bound in experiment manifests.
+/experiments/financial-evidence-qa-2026-09-28/** -text whitespace=cr-at-eol,-blank-at-eol
+/experiments/financial-evidence-qa-2026-09-29-calculation-contract/** -text whitespace=cr-at-eol,-blank-at-eol
+/experiments/public-demo-delivery-2026-09-30/** -text whitespace=cr-at-eol,-blank-at-eol
+/docs/financial_qa_candidate_protocol_v4.md -text whitespace=cr-at-eol,-blank-at-eol
+/scripts/run_financial_retrieval_matrix.py -text whitespace=cr-at-eol
+/scripts/summarize_financial_candidate_run.py -text whitespace=cr-at-eol
+/strategic_graphrag/engine/query_understanding.py -text whitespace=cr-at-eol
+/requirements-lock-2026-09-19.txt -text whitespace=cr-at-eol
+experiments/project-closure-2026-09-30/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+experiments/service-validity-2026-10-02/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+experiments/answer-correctness-2026-10-03/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+/deployment/complete_fact_scoring.py -text whitespace=cr-at-eol
+/deployment/answer_closure_scoring.py -text whitespace=cr-at-eol
+/deployment/run_answer_closure.py -text whitespace=cr-at-eol

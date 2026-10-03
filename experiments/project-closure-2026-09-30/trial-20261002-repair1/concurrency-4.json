@@ -1,0 +1,285 @@
+{
+  "requests": [
+    {
+      "concurrency": 4,
+      "repeat": 0,
+      "case_id": "single_year",
+      "score": {
+        "status": "FAIL",
+        "basis": "deterministic calculation status, exact source-row value/formula and currency-scale unit",
+        "calculation_status": null,
+        "actual_value": null,
+        "expected_value": 130497.0,
+        "actual_unit": null,
+        "expected_unit": "USD millions"
+      },
+      "http_status": 429,
+      "elapsed_ms": 6.628,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "execution_status": "RATE_LIMITED",
+        "answer_status": "NOT_REQUESTED",
+        "grounding_status": "NOT_EXECUTED",
+        "outcome": "RATE_LIMITED",
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests. Retry later.",
+          "request_id": "4b6980aafaa94aa19c05703870da26b0"
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "repeat": 0,
+      "case_id": "disclosure_version",
+      "score": {
+        "status": "FAIL",
+        "basis": "deterministic calculation status, exact source-row value/formula and currency-scale unit",
+        "calculation_status": null,
+        "actual_value": null,
+        "expected_value": 26974.0,
+        "actual_unit": null,
+        "expected_unit": "USD millions"
+      },
+      "http_status": 429,
+      "elapsed_ms": 6.443,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "execution_status": "RATE_LIMITED",
+        "answer_status": "NOT_REQUESTED",
+        "grounding_status": "NOT_EXECUTED",
+        "outcome": "RATE_LIMITED",
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests. Retry later.",
+          "request_id": "9c0df63e365440dcb1a5dcfc3ad9b4c5"
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "repeat": 0,
+      "case_id": "growth",
+      "score": {
+        "status": "FAIL",
+        "basis": "deterministic calculation status, exact source-row value/formula and currency-scale unit",
+        "calculation_status": null,
+        "actual_value": null,
+        "expected_value": 383.7880922369689,
+        "actual_unit": null,
+        "expected_unit": "percent"
+      },
+      "http_status": 429,
+      "elapsed_ms": 7.008,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "execution_status": "RATE_LIMITED",
+        "answer_status": "NOT_REQUESTED",
+        "grounding_status": "NOT_EXECUTED",
+        "outcome": "RATE_LIMITED",
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests. Retry later.",
+          "request_id": "ec421a0ee8aa47d7a73079e2577809e0"
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "repeat": 0,
+      "case_id": "unit_conversion",
+      "score": {
+        "status": "FAIL",
+        "basis": "deterministic calculation status, exact source-row value/formula and currency-scale unit",
+        "calculation_status": null,
+        "actual_value": null,
+        "expected_value": 130.497,
+        "actual_unit": null,
+        "expected_unit": "USD billions"
+      },
+      "http_status": null,
+      "elapsed_ms": 6.243,
+      "error_type": "ConnectionResetError",
+      "content_type": ""
+    },
+    {
+      "concurrency": 4,
+      "repeat": 0,
+      "case_id": "unanswerable",
+      "score": {
+        "status": "FAIL",
+        "basis": "out-of-corpus year: explicit insufficient evidence and no unrelated citation",
+        "calculation_status": null,
+        "actual_value": null,
+        "expected_value": null,
+        "actual_unit": null,
+        "expected_unit": null
+      },
+      "http_status": 429,
+      "elapsed_ms": 1.139,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "execution_status": "RATE_LIMITED",
+        "answer_status": "NOT_REQUESTED",
+        "grounding_status": "NOT_EXECUTED",
+        "outcome": "RATE_LIMITED",
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests. Retry later.",
+          "request_id": "495f213a1c124186b78358389d4f544c"
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "repeat": 1,
+      "case_id": "single_year",
+      "score": {
+        "status": "FAIL",
+        "basis": "deterministic calculation status, exact source-row value/formula and currency-scale unit",
+        "calculation_status": null,
+        "actual_value": null,
+        "expected_value": 130497.0,
+        "actual_unit": null,
+        "expected_unit": "USD millions"
+      },
+      "http_status": 429,
+      "elapsed_ms": 1.358,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "execution_status": "RATE_LIMITED",
+        "answer_status": "NOT_REQUESTED",
+        "grounding_status": "NOT_EXECUTED",
+        "outcome": "RATE_LIMITED",
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests. Retry later.",
+          "request_id": "1ecb9c013a3745b599120f8b8d47cdae"
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "repeat": 1,
+      "case_id": "disclosure_version",
+      "score": {
+        "status": "FAIL",
+        "basis": "deterministic calculation status, exact source-row value/formula and currency-scale unit",
+        "calculation_status": null,
+        "actual_value": null,
+        "expected_value": 26974.0,
+        "actual_unit": null,
+        "expected_unit": "USD millions"
+      },
+      "http_status": 429,
+      "elapsed_ms": 1.227,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "execution_status": "RATE_LIMITED",
+        "answer_status": "NOT_REQUESTED",
+        "grounding_status": "NOT_EXECUTED",
+        "outcome": "RATE_LIMITED",
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests. Retry later.",
+          "request_id": "1ab4b21ee6b0427eb0e78b19d4bf9bfe"
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "repeat": 1,
+      "case_id": "growth",
+      "score": {
+        "status": "FAIL",
+        "basis": "deterministic calculation status, exact source-row value/formula and currency-scale unit",
+        "calculation_status": null,
+        "actual_value": null,
+        "expected_value": 383.7880922369689,
+        "actual_unit": null,
+        "expected_unit": "percent"
+      },
+      "http_status": 429,
+      "elapsed_ms": 1.312,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "execution_status": "RATE_LIMITED",
+        "answer_status": "NOT_REQUESTED",
+        "grounding_status": "NOT_EXECUTED",
+        "outcome": "RATE_LIMITED",
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests. Retry later.",
+          "request_id": "11a37a5ac1b549469d6db898091f3c5b"
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "repeat": 1,
+      "case_id": "unit_conversion",
+      "score": {
+        "status": "FAIL",
+        "basis": "deterministic calculation status, exact source-row value/formula and currency-scale unit",
+        "calculation_status": null,
+        "actual_value": null,
+        "expected_value": 130.497,
+        "actual_unit": null,
+        "expected_unit": "USD billions"
+      },
+      "http_status": 429,
+      "elapsed_ms": 1.443,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "execution_status": "RATE_LIMITED",
+        "answer_status": "NOT_REQUESTED",
+        "grounding_status": "NOT_EXECUTED",
+        "outcome": "RATE_LIMITED",
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests. Retry later.",
+          "request_id": "18091746e23748baa0d9fbb84565b7e7"
+        }
+      }
+    },
+    {
+      "concurrency": 4,
+      "repeat": 1,
+      "case_id": "unanswerable",
+      "score": {
+        "status": "FAIL",
+        "basis": "out-of-corpus year: explicit insufficient evidence and no unrelated citation",
+        "calculation_status": null,
+        "actual_value": null,
+        "expected_value": null,
+        "actual_unit": null,
+        "expected_unit": null
+      },
+      "http_status": 429,
+      "elapsed_ms": 1.383,
+      "error_type": "HTTPError",
+      "content_type": "application/json",
+      "response": {
+        "execution_status": "RATE_LIMITED",
+        "answer_status": "NOT_REQUESTED",
+        "grounding_status": "NOT_EXECUTED",
+        "outcome": "RATE_LIMITED",
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests. Retry later.",
+          "request_id": "06af8b16a08845fc8aa928032e1548a7"
+        }
+      }
+    }
+  ],
+  "wall_seconds": 0.027485300000080315,
+  "throughput_requests_per_second": 363.83084776119523
+}

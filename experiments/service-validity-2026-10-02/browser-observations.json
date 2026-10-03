@@ -1,0 +1,16 @@
+{
+  "build_id": "build_c3b1d950e8acce78",
+  "application_code_commit": "14c7458f1ad3199a48ed2f0f1865802fe3ea94ff",
+  "source_identity": "same fingerprint verified by run-three-modes-v2/preflight.json",
+  "question": "Convert NVIDIA fiscal 2025 revenue from USD millions to USD billions.",
+  "observed_calculation": "PASS; 130.497 USD billions",
+  "observed_evidence": "Total revenue $ 130,497 $ 60,922 $ 26,974; claim_v2_5754bc5fe845e1af9976af76; p.80",
+  "actual_query_capture": "browser-calculation-full.png",
+  "citation_click": "Opened original PDF in in-app browser at /api/evaluation/table-quality/source/2025-10-K.pdf#page=80",
+  "pdf_physical_page_verdict": "NOT_VERIFIED",
+  "pdf_viewer_observation": "Existing viewer displayed page 2 of 130 despite #page=80; later reload screenshot showed failed document icon. HTTP source endpoint separately returned 200 application/pdf.",
+  "pdf_controls_tool_error": "Cannot click content inside a closed shadow root",
+  "pdf_capture": "browser-pdf-page80.png",
+  "reload_capture": "browser-pdf-reload.png",
+  "limits": "The page80 filename is the requested target, NOT proof of observed page80. Interrupted first navigation and reused viewer cannot establish an application root cause. No security bypass or synthetic browser screenshot."
+}

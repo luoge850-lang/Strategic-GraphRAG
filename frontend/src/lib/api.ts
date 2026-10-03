@@ -1,6 +1,7 @@
 // Vite dev uses the /api proxy; the FastAPI-hosted production build is
 // same-origin and exposes these routes at the root.
-const B = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "/api" : "");
+export const API_BASE = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "/api" : "");
+const B = API_BASE;
 
 async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}, timeoutMs = 15000) {
   const controller = new AbortController();
@@ -65,6 +66,19 @@ export interface QueryResult {
   intent: string;
   intent_display: string;
   answer: string;
+  calculation?: {
+    status: "PASS" | "AMBIGUOUS" | "INSUFFICIENT_EVIDENCE" | "INVALID_INPUT" | "OPERATION_UNSUPPORTED" | "DEPENDENCY_ERROR" | string;
+    operation?: string;
+    value?: unknown;
+    unit?: string | null;
+    display?: string;
+    reason_code?: string;
+    comparability_assessment?: {
+      status?: string;
+      basis?: string;
+      [key: string]: unknown;
+    };
+  } | null;
   execution_status: "SUCCEEDED" | "DEPENDENCY_ERROR" | "MODEL_ERROR" | "TIMEOUT" | "RATE_LIMITED" | "AUTH_ERROR" | "VALIDATION_ERROR" | "CONTRACT_ERROR" | "INTERNAL_ERROR";
   answer_status: "NOT_REQUESTED" | "ANSWERED" | "PARTIALLY_ANSWERED" | "ABSTAINED";
   grounding_status: "VERIFIED" | "FAILED" | "NOT_EXECUTED" | "NOT_APPLICABLE" | "INSUFFICIENT";

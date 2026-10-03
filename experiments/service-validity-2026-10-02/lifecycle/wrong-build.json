@@ -1,0 +1,45 @@
+{
+  "schema": "deployment-preflight/v1",
+  "status": "BLOCKED",
+  "recorded_at": "2026-10-02T12:02:08.873750+00:00",
+  "build_id": "build_0000000000000000",
+  "elapsed_ms": 72.461,
+  "checks": [
+    {
+      "name": "configuration",
+      "status": "PASS",
+      "detail": {
+        "errors": [],
+        "production": false
+      }
+    },
+    {
+      "name": "immutable_candidate",
+      "status": "FAIL",
+      "detail": {
+        "schema": "isolated-package-verification/v2",
+        "build_id": "build_0000000000000000",
+        "status": "FAIL",
+        "checks": {
+          "identity": false,
+          "graph": false,
+          "vector": false,
+          "acceptance": false,
+          "backend": true,
+          "execution_config": true,
+          "ledger": true,
+          "hashes": true
+        },
+        "errors": [
+          "graph_build_id_or_empty",
+          "vector_manifest_mismatch",
+          "acceptance_failed_or_build_mismatch",
+          "ledger_build_id_mismatch"
+        ]
+      }
+    }
+  ],
+  "business_data_mutations": 0,
+  "llm_calls": 0,
+  "limitations": "Metadata reads on a writable Chroma runtime can perform storage housekeeping; immutable candidate is never opened by Chroma."
+}

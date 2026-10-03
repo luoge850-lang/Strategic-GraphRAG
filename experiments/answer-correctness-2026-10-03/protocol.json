@@ -1,0 +1,24 @@
+{
+  "schema": "answer-correctness-closure/v1",
+  "baseline_commit": "88298582f83ac6437758f6a166e44d630ae8e376",
+  "baseline_build": "build_c3b1d950e8acce78",
+  "scope": "NVIDIA FY2023-FY2025 10-K corpus; supported typed facts, disclosed percentages, basic same-row comparison/calculation, explicit safe refusal",
+  "label_tier": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+  "development_round_limit": 2,
+  "new_validation_target_families": 40,
+  "gates": {
+    "known_substitution_wrong_pass": 0,
+    "frozen_validation_substitution_wrong_pass": 0,
+    "answerable_core_semantic_accuracy_minimum": 0.90,
+    "answerable_false_refusal": "report separately; cannot pass by refusing all",
+    "citation_support": "source-linked direct support; unjudged separate",
+    "metadata_joint": "report separately, never substitute for core semantics",
+    "browser": "five real flows, correct PDF physical-page display",
+    "stable_additional": "isolated source+database+vector+configuration rollback and lifecycle"
+  },
+  "test_rule": "Freeze source-authored questions, labels, tolerances and scoring before new validation query; no tuning on validation responses; all exposed October 2 failures are development data.",
+  "input_conditions": ["question_only", "explicit_user_scope_fixture", "reference_scope_diagnostic"],
+  "runtime": {"retrieval_mode": "graph", "synthesize": false, "use_cache": false, "max_paths": 10},
+  "public_claim": "Engineering diagnostic only, not independent human-reviewed accuracy or paper-level generalization",
+  "retention": "Never overwrite historical records, candidate packages, user configs, tmp or old databases"
+}

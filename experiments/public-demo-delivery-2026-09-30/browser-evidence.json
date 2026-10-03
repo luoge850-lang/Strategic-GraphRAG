@@ -1,0 +1,20 @@
+{
+  "schema": "actual-browser-evidence/v1",
+  "recorded_at": "2026-09-30T10:35:19Z",
+  "scope": "local legacy-store integration, not production",
+  "application_url": "http://127.0.0.1:8001/",
+  "question": "What was NVIDIA revenue in fiscal 2025?",
+  "synthesis_enabled": false,
+  "observed_graph": {"nodes": 134, "edges": 381},
+  "observed_calculation_status": "INSUFFICIENT_EVIDENCE",
+  "action": "Clicked the displayed source citation in the real browser UI",
+  "opened_url": "http://127.0.0.1:8001/evaluation/table-quality/source/2025-10-K.pdf#page=80",
+  "pdf_physical_page": 80,
+  "pdf_page_rendered": true,
+  "numeric_scenario_passed": false,
+  "screenshots": [
+    {"file": "browser-revenue-legacy.jpg", "sha256": "ea179c403344cd248053f8528a420c261ee4c0bd82d014c8dda47ba033b5e737"},
+    {"file": "browser-pdf-page80.jpg", "sha256": "9c9d76de049bf652aea5467ad2d3572e2c6a72e4af2273af5ed6dec8c0f67e89"}
+  ],
+  "limitations": "Single browser question/citation; no independent answer quality or public deployment claim."
+}

@@ -1,0 +1,280 @@
+{
+  "schema": "candidate-trial-summary/v1",
+  "build_id": "build_c3b1d950e8acce78",
+  "concurrency": [
+    {
+      "concurrency": 1,
+      "scenario_passed": 10,
+      "total": 10,
+      "http_success": 10,
+      "p50_ms": 20.961,
+      "http_status_counts": {
+        "200": 10
+      },
+      "success_latency_p50_ms": 20.961,
+      "success_latency_p95_ms": 32.555,
+      "successful_throughput_per_second": 43.52987215713319,
+      "p95_ms_nearest_rank": 32.555,
+      "throughput_per_second": 43.52987215713319,
+      "sample_limit": "ten requests on five fixed smoke questions, descriptive only",
+      "passed_success_subset": {
+        "numerator": 10,
+        "denominator": 10
+      }
+    },
+    {
+      "concurrency": 2,
+      "scenario_passed": 10,
+      "total": 10,
+      "http_success": 10,
+      "p50_ms": 18.341,
+      "http_status_counts": {
+        "200": 10
+      },
+      "success_latency_p50_ms": 18.341,
+      "success_latency_p95_ms": 49.663,
+      "successful_throughput_per_second": 76.79559623341223,
+      "p95_ms_nearest_rank": 49.663,
+      "throughput_per_second": 76.79559623341223,
+      "sample_limit": "ten requests on five fixed smoke questions, descriptive only",
+      "passed_success_subset": {
+        "numerator": 10,
+        "denominator": 10
+      }
+    },
+    {
+      "concurrency": 4,
+      "scenario_passed": 10,
+      "total": 10,
+      "http_success": 10,
+      "p50_ms": 23.355,
+      "http_status_counts": {
+        "200": 10
+      },
+      "success_latency_p50_ms": 23.355,
+      "success_latency_p95_ms": 39.487,
+      "successful_throughput_per_second": 122.42899118544483,
+      "p95_ms_nearest_rank": 39.487,
+      "throughput_per_second": 122.42899118544483,
+      "sample_limit": "ten requests on five fixed smoke questions, descriptive only",
+      "passed_success_subset": {
+        "numerator": 10,
+        "denominator": 10
+      }
+    }
+  ],
+  "development": {
+    "requests": 26,
+    "families": 20,
+    "http_success": 26,
+    "numeric_passed": 8,
+    "numeric_judged": 8,
+    "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+    "known_support_citation_hits": 14,
+    "known_support_citation_judged": 25,
+    "status_counts": {
+      "NOT_APPLICABLE": 9,
+      "PASS": 14,
+      "NO_CALCULATION": 1,
+      "AMBIGUOUS": 1,
+      "INSUFFICIENT_EVIDENCE": 1
+    },
+    "type_slices": {
+      "relation": {
+        "requests": 3,
+        "numeric_judged": 0,
+        "numeric_passed": 0
+      },
+      "fact_year_in_later_disclosure": {
+        "requests": 4,
+        "numeric_judged": 4,
+        "numeric_passed": 4
+      },
+      "cross_year_comparison": {
+        "requests": 6,
+        "numeric_judged": 0,
+        "numeric_passed": 0
+      },
+      "unanswerable_or_ambiguous": {
+        "requests": 5,
+        "numeric_judged": 0,
+        "numeric_passed": 0
+      },
+      "relation_or_conditional_risk": {
+        "requests": 4,
+        "numeric_judged": 0,
+        "numeric_passed": 0
+      },
+      "single_year_fact": {
+        "requests": 3,
+        "numeric_judged": 3,
+        "numeric_passed": 3
+      },
+      "unit_conversion_or_calculation": {
+        "requests": 1,
+        "numeric_judged": 1,
+        "numeric_passed": 1
+      }
+    },
+    "numerical_failures": [],
+    "limits": "numeric score covers eight explicit single-value references, not 26 semantic answers; citation hits are not citation correctness or Recall; development data used for repairs"
+  },
+  "http_process_tree_peak_rss_bytes": 163434496,
+  "startup_including_preflight_ms": 11576.86300000023,
+  "llm_generation_calls": 0,
+  "raw_hashes": {
+    "concurrency-1.json": "914c75a0c3507f1c2f17d719fb42dcaa6a511134907462a57d11ba657a0f775f",
+    "concurrency-2.json": "08111eea006d6c76797d0237504c2d5859ecf4ba12d238dd88e57e78c892ee5f",
+    "concurrency-4.json": "7234e4222bffa9eca2fa612e9972b0637aee0806c75802e3336d5314d3526fed",
+    "immutable-after.json": "89037c65b05bcde9524fe9bb539dc93a2a47a9815e484ba7daf42484281d89c4",
+    "preflight.json": "61e08e4db29aa6f7dcd4d6c22161145cb6f3e6e0a4535a397bcaec2e592ba1e5",
+    "resources.json": "bd9afba07accf615b996aed7782655678d5826442ee3e1b552ee043efc1b1e71"
+  },
+  "before_repair": {
+    "schema": "candidate-trial-summary/v1",
+    "build_id": "build_c69e08565d907662",
+    "concurrency": [
+      {
+        "concurrency": 1,
+        "scenario_passed": 10,
+        "total": 10,
+        "http_success": 10,
+        "p50_ms": 28.4145,
+        "http_status_counts": {
+          "200": 10
+        },
+        "success_latency_p50_ms": 28.4145,
+        "success_latency_p95_ms": 56.777,
+        "successful_throughput_per_second": 35.178702532037924,
+        "p95_ms_nearest_rank": 56.777,
+        "throughput_per_second": 35.178702532037924,
+        "sample_limit": "ten requests on five fixed smoke questions, descriptive only",
+        "passed_success_subset": {
+          "numerator": 10,
+          "denominator": 10
+        }
+      },
+      {
+        "concurrency": 2,
+        "scenario_passed": 9,
+        "total": 10,
+        "http_success": 9,
+        "p50_ms": 24.352,
+        "http_status_counts": {
+          "200": 9,
+          "429": 1
+        },
+        "success_latency_p50_ms": 24.363,
+        "success_latency_p95_ms": 59.339,
+        "successful_throughput_per_second": 57.56908770260703,
+        "p95_ms_nearest_rank": 59.339,
+        "throughput_per_second": 63.965653002896694,
+        "sample_limit": "ten requests on five fixed smoke questions, descriptive only",
+        "passed_success_subset": {
+          "numerator": 9,
+          "denominator": 9
+        }
+      },
+      {
+        "concurrency": 4,
+        "scenario_passed": 0,
+        "total": 10,
+        "http_success": 0,
+        "p50_ms": 1.7269999999999999,
+        "http_status_counts": {
+          "429": 10
+        },
+        "success_latency_p50_ms": null,
+        "success_latency_p95_ms": null,
+        "successful_throughput_per_second": 0.0,
+        "p95_ms_nearest_rank": 6.636,
+        "throughput_per_second": 371.9836773573631,
+        "sample_limit": "ten requests on five fixed smoke questions, descriptive only",
+        "passed_success_subset": {
+          "numerator": 0,
+          "denominator": 0
+        }
+      }
+    ],
+    "development": {
+      "requests": 26,
+      "families": 20,
+      "http_success": 26,
+      "numeric_passed": 6,
+      "numeric_judged": 8,
+      "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+      "known_support_citation_hits": 12,
+      "known_support_citation_judged": 25,
+      "status_counts": {
+        "NOT_APPLICABLE": 9,
+        "PASS": 14,
+        "NO_CALCULATION": 1,
+        "AMBIGUOUS": 1,
+        "INSUFFICIENT_EVIDENCE": 1
+      },
+      "type_slices": {
+        "relation": {
+          "requests": 3,
+          "numeric_judged": 0,
+          "numeric_passed": 0
+        },
+        "fact_year_in_later_disclosure": {
+          "requests": 4,
+          "numeric_judged": 4,
+          "numeric_passed": 2
+        },
+        "cross_year_comparison": {
+          "requests": 6,
+          "numeric_judged": 0,
+          "numeric_passed": 0
+        },
+        "unanswerable_or_ambiguous": {
+          "requests": 5,
+          "numeric_judged": 0,
+          "numeric_passed": 0
+        },
+        "relation_or_conditional_risk": {
+          "requests": 4,
+          "numeric_judged": 0,
+          "numeric_passed": 0
+        },
+        "single_year_fact": {
+          "requests": 3,
+          "numeric_judged": 3,
+          "numeric_passed": 3
+        },
+        "unit_conversion_or_calculation": {
+          "requests": 1,
+          "numeric_judged": 1,
+          "numeric_passed": 1
+        }
+      },
+      "numerical_failures": [
+        "FQA-459504a0c8aab868b348",
+        "FQA-e4a8908ea7e94a8710a1"
+      ],
+      "limits": "numeric score covers eight explicit single-value references, not 26 semantic answers; citation hits are not citation correctness or Recall; development data used for repairs"
+    },
+    "http_process_tree_peak_rss_bytes": 164446208,
+    "startup_including_preflight_ms": 11472.308500000054,
+    "llm_generation_calls": 0,
+    "raw_hashes": {
+      "concurrency-1.json": "cb3dfc022452d39e6b13edd16e41950606b40a4da8f8b312eeae0c89a1ab8f2b",
+      "concurrency-2.json": "bd78cfbf130e862203c26f1ca57cc482fcb7f3d062393e4ac98d2f403c32fe4b",
+      "concurrency-4.json": "c807b07118722d038bfa315ada41d02061490b2995f12c5983a4156d371082b4",
+      "development-answers.json": "fcfa83f1f0e623793ee49e0c97ef9fdb2887f17a672a59275ce6b8588c2c1792",
+      "immutable-after.json": "dde8f7e692f070bb4c37641df7c679d14d9dde972bf271a30fa0753119eaa885",
+      "preflight.json": "1c8a224db2dd4295754377884561b18c34867d65dec8156a8934466b20a18d76",
+      "resources.json": "e047789707df6b809c7a998ca64eda76d71917a07c83a6d2514d2a1dc9a92994"
+    }
+  },
+  "development_trial_hashes": {
+    "concurrency-1.json": "1659efbc29a139757890f73b8f938da62ad5350f81ebbe2d582ed344b88f5d3c",
+    "concurrency-2.json": "75ec8aabecd6837dfab27e71742846d0d60bf5ba377d6675eed50cb122cd66ec",
+    "concurrency-4.json": "e2349a8cacb7b7882f69a16e57c524a39fe8436ed2327e5b6e91fd53a8357207",
+    "development-answers.json": "6196153969213414b2b5c2a455f5dd6993a2834426b65c1c184af0271f05f1fb",
+    "immutable-after.json": "89037c65b05bcde9524fe9bb539dc93a2a47a9815e484ba7daf42484281d89c4",
+    "preflight.json": "0194260f9fbf6c7dea1684ed54fd844611eaaf4d6bd238f5b7bd749497d946af",
+    "resources.json": "bdd548f37f472ca41270253fe36af0a056f847a1438794b5a6cfe46eed105346"
+  }
+}

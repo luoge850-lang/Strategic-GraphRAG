@@ -26,7 +26,7 @@ import logging
 import time
 from copy import deepcopy
 from typing import Any, Dict, List, Optional, Tuple, Set
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 
 import numpy as np
 from neo4j import GraphDatabase
@@ -46,6 +46,8 @@ from .evidence_quality import (
 )
 from ..evidence_bundle import from_graph_paths, from_vector_hits
 from ..build_identity import build_id_from_env
+from ..schema.financial_observation import FinancialObservation
+from .financial_calculation import calculate_public, dependency_failure
 from ..response_contract import (
     apply_response_contract,
     classify_outcome,
@@ -80,6 +82,7 @@ class CausalPath:
     evidence_build_ids: List[Optional[str]] = field(default_factory=list)
     metric_values: List[Optional[float]] = field(default_factory=list)
     metric_units: List[Optional[str]] = field(default_factory=list)
+    financial_observations: List[FinancialObservation] = field(default_factory=list)
     causal_forms: List[str] = field(default_factory=list)  # Direct vs mediated form
     total_hops: int = 0
     aggregate_score: float = 0.0
@@ -486,6 +489,8 @@ class CausalPathFinder:
             [r IN rels | coalesce(r.evidence_id, '')] AS evidence_ids,
             [r IN rels | coalesce(r.build_id, '')] AS evidence_build_ids,
             [r IN rels | coalesce(r.source_filing, r.filing, '')] AS filings,
+            [r IN rels | r.metric_value] AS metric_values,
+            [r IN rels | r.metric_unit] AS metric_units,
             [r IN rels | coalesce(r.causal_form, 'UNMODELED_DIRECT')] AS causal_forms,
             length(p) AS hops
         ORDER BY hops ASC, node_names ASC, relationships ASC, evidence_ids ASC
@@ -519,6 +524,8 @@ class CausalPathFinder:
                 evidence_ids=rec["evidence_ids"],
                 filings=rec["filings"],
                 evidence_build_ids=rec.get("evidence_build_ids", []),
+                metric_values=rec.get("metric_values", []),
+                metric_units=rec.get("metric_units", []),
                 causal_forms=rec["causal_forms"],
                 total_hops=rec["hops"],
             )
@@ -592,37 +599,45 @@ class CausalPathFinder:
         year_start: Optional[int] = None,
         year_end: Optional[int] = None,
         source_filing: Optional[str] = None,
+        company_id: Optional[str] = None,
+        build_id: Optional[str] = None,
         limit: int = 100,
     ) -> List[CausalPath]:
-        """Fetch strict one-hop metric facts without generic-path starvation."""
+        """Fetch strict, period-specific FinancialObservation-backed facts."""
         cypher = """
         MATCH (company:Company)-[r:REPORTS_METRIC]->(metric:FinancialMetric)
         WHERE (toUpper(replace(coalesce(metric.id, ''), ' ', '_')) = $metric_id
                OR toUpper(replace(coalesce(metric.name, ''), ' ', '_')) = $metric_id)
-          AND ($year_start IS NULL OR r.year >= $year_start)
-          AND ($year_end IS NULL OR r.year <= $year_end)
-          AND ($source_filing IS NULL
-               OR coalesce(r.source_filing, r.filing, '') = $source_filing)
           AND r.evidence_id IS NOT NULL
-          AND size(trim(coalesce(r.evidence_sentence, ''))) >= 20
-          AND EXISTS {
-              MATCH (claim:EvidenceClaim {id: r.evidence_id})
-              WHERE claim.verification_status = 'VERBATIM'
-          }
+          AND ($company_id IS NULL OR toUpper(coalesce(company.id, '')) = $company_id)
+        MATCH (claim:EvidenceClaim {id: r.evidence_id})
+        WHERE claim.verification_status = 'VERBATIM'
+          AND size(trim(coalesce(claim.text, r.evidence_sentence, ''))) >= 20
+        MATCH (observation:FinancialObservation)-[:SUPPORTED_BY_CLAIM]->(claim)
+        WHERE toUpper(coalesce(observation.metric_id, '')) = $metric_id
+          AND observation.recorded_to IS NULL
+          AND (r.observation_id IS NULL OR r.observation_id = observation.id)
+          AND ($year_start IS NULL OR observation.fiscal_year >= $year_start)
+          AND ($year_end IS NULL OR observation.fiscal_year <= $year_end)
+          AND ($source_filing IS NULL OR observation.source_filing = $source_filing)
+          AND ($build_id IS NULL OR (observation.build_id = $build_id AND r.build_id = $build_id))
         RETURN
           [coalesce(company.name, company.id), coalesce(metric.name, metric.id)] AS node_names,
           ['Company', 'FinancialMetric'] AS node_labels,
           ['REPORTS_METRIC'] AS relationships,
           [coalesce(r.causal_strength, 'DISCLOSED_ONLY')] AS causal_strengths,
-          [coalesce(r.evidence_sentence, '')] AS evidence,
-          [coalesce(r.page, 0)] AS pages,
-          [coalesce(r.year, 0)] AS years,
-          [coalesce(r.evidence_id, '')] AS evidence_ids,
-          [coalesce(r.build_id, '')] AS evidence_build_ids,
-          [coalesce(r.source_filing, r.filing, '')] AS filings,
+          [coalesce(claim.text, r.evidence_sentence, '')] AS evidence,
+          [coalesce(observation.page, claim.page, r.page, 0)] AS pages,
+          [coalesce(observation.fiscal_year, 0)] AS years,
+          [coalesce(claim.id, '')] AS evidence_ids,
+          [coalesce(observation.build_id, '')] AS evidence_build_ids,
+          [coalesce(observation.source_filing, claim.doc_id, r.source_filing, r.filing, '')] AS filings,
+          [observation.value] AS metric_values,
+          [observation.unit] AS metric_units,
+          properties(observation) AS financial_observation,
           [coalesce(r.causal_form, 'FINANCIAL_RELATION')] AS causal_forms,
           1 AS hops
-        ORDER BY r.year ASC, r.evidence_id ASC
+        ORDER BY observation.fiscal_year ASC, observation.source_filing ASC, claim.id ASC
         LIMIT $limit
         """
         try:
@@ -633,13 +648,27 @@ class CausalPathFinder:
                     year_start=year_start,
                     year_end=year_end,
                     source_filing=source_filing,
+                    company_id=(company_id or "NVIDIA_CORPORATION").upper().replace(" ", "_"),
+                    build_id=build_id,
                     limit=limit,
                 ))
         except Neo4jError as exc:
             logger.warning("Direct metric retrieval failed: %s", exc)
             return []
-        return [
-            CausalPath(
+        paths = []
+        observation_fields = {item.name for item in fields(FinancialObservation)}
+        for index, record in enumerate(records):
+            raw_observation = record.get("financial_observation") or {}
+            try:
+                observation = FinancialObservation(**{
+                    key: raw_observation[key]
+                    for key in observation_fields
+                    if key in raw_observation
+                })
+            except (TypeError, ValueError, KeyError):
+                logger.warning("Skipping incomplete Neo4j FinancialObservation for claim %s", record.get("evidence_ids"))
+                continue
+            paths.append(CausalPath(
                 path_id=f"metric_{index:03d}",
                 nodes=record["node_names"],
                 node_labels=record["node_labels"],
@@ -651,11 +680,13 @@ class CausalPathFinder:
                 evidence_ids=record["evidence_ids"],
                 filings=record["filings"],
                 evidence_build_ids=record.get("evidence_build_ids", []),
+                metric_values=record.get("metric_values", []),
+                metric_units=record.get("metric_units", []),
+                financial_observations=[observation],
                 causal_forms=record["causal_forms"],
                 total_hops=1,
-            )
-            for index, record in enumerate(records)
-        ]
+            ))
+        return paths
 
     def find_temporal_evolution(
         self,
@@ -905,6 +936,7 @@ CRITICAL STYLE RULES:
                 or None
             )
         build_id = build_id_from_env()
+        query_plan["build_id"] = build_id
         router_decision = QueryRouter.route(
             user_query, requested_retrieval_mode, structured_query.target_metric
         )
@@ -963,6 +995,7 @@ CRITICAL STYLE RULES:
                 "intent_display": "Connection Error",
                 "answer": "[CONNECTION ERROR] Neo4j database is unavailable. The AuraDB free tier may be restarting. Please wait 30 seconds and retry.",
                 "outcome": "DEPENDENCY_ERROR",
+                "calculation": dependency_failure("neo4j"),
                 "paths": [],
                 "evidence_sentences": [],
                 "metadata": {
@@ -1153,13 +1186,17 @@ CRITICAL STYLE RULES:
             ]
             if constrained_paths:
                 candidate_paths = constrained_paths
-        if target_metric and temporal_context["require_multi_year"]:
-            candidate_paths.extend(self.path_finder.find_metric_disclosures(
+        if target_metric and metric_only:
+            metric_paths = self.path_finder.find_metric_disclosures(
                 target_metric,
                 year_start=effective_year_start,
                 year_end=effective_year_end,
                 source_filing=source_filing,
-            ))
+                company_id=query_plan.get("company") or "NVIDIA_CORPORATION",
+                build_id=build_id,
+            )
+            if metric_paths:
+                candidate_paths = metric_paths
         metric_trend_query = bool(
             target_metric
             and temporal_context["require_multi_year"]
@@ -1614,12 +1651,13 @@ CRITICAL STYLE RULES:
             "answer": answer,
             "calculation": {
                 "schema": "deterministic-calculation/v1",
-                "status": "NOT_COMPUTED",
+                "status": "NOT_APPLICABLE",
                 "operation": "vector_baseline",
                 "observations": [],
                 "value": None,
                 "unit": None,
                 "display": "Vector baseline does not expose graph-bound numeric observations.",
+                "reason_code": "vector_baseline_has_no_typed_financial_observations",
             },
             "citations": citations,
             "structured_report": {
@@ -3336,12 +3374,13 @@ Now generate the analysis report:"""
             "answer": answer,
             "calculation": {
                 "schema": "deterministic-calculation/v1",
-                "status": "NOT_COMPUTED",
+                "status": "INSUFFICIENT_EVIDENCE",
                 "operation": "none",
                 "observations": [],
                 "value": None,
                 "unit": None,
                 "display": "No path-bound numeric observations were available.",
+                "reason_code": "no_verified_graph_evidence",
             },
             "outcome": "ABSTAINED",
             "structured_report": {
@@ -3364,12 +3403,13 @@ Now generate the analysis report:"""
                 "answer_evidence_status": "NO_GRAPH_EVIDENCE",
                 "calculation": {
                     "schema": "deterministic-calculation/v1",
-                    "status": "NOT_COMPUTED",
+                    "status": "INSUFFICIENT_EVIDENCE",
                     "operation": "none",
                     "observations": [],
                     "value": None,
                     "unit": None,
                     "display": "No path-bound numeric observations were available.",
+                    "reason_code": "no_verified_graph_evidence",
                 },
                 "temporal": temporal_status,
                 "llm": self._llm_route_metadata(),
@@ -3383,117 +3423,11 @@ Now generate the analysis report:"""
         query_plan: Dict[str, Any],
         question: str,
     ) -> Dict[str, Any]:
-        """Expose only path-bound deterministic arithmetic in the response.
-
-        Production Neo4j paths without metric observations deliberately return
-        ``NOT_COMPUTED``.  The isolated staging adapter supplies the same
-        metric fields that a production projection must provide, allowing the
-        acceptance run to verify that arithmetic is part of the public engine
-        response rather than a test-only side calculation.
-        """
-        observations: List[Dict[str, Any]] = []
-        for path in paths:
-            values = list(path.metric_values or [])
-            units = list(path.metric_units or [])
-            for index, raw_value in enumerate(values):
-                if raw_value is None:
-                    continue
-                try:
-                    value = float(str(raw_value).replace(",", ""))
-                except (TypeError, ValueError):
-                    continue
-                observations.append({
-                    "value": value,
-                    "unit": units[index] if index < len(units) else None,
-                    "year": path.years[index] if index < len(path.years) else None,
-                    "filing": path.filings[index] if index < len(path.filings) else None,
-                    "page": path.pages[index] if index < len(path.pages) else None,
-                    "claim_id": path.evidence_ids[index] if index < len(path.evidence_ids) else None,
-                })
-        unique: List[Dict[str, Any]] = []
-        seen = set()
-        for item in observations:
-            key = (item["value"], item["unit"], item["year"], item["filing"], item["claim_id"])
-            if key not in seen:
-                seen.add(key)
-                unique.append(item)
-        if not unique:
-            return {
-                "schema": "deterministic-calculation/v1",
-                "status": "NOT_COMPUTED",
-                "operation": "none",
-                "observations": [],
-                "value": None,
-                "unit": None,
-                "display": "No path-bound numeric observations were available.",
-            }
-
-        lowered = question.lower()
-        if "convert" in lowered or "conversion" in lowered:
-            source = unique[0]
-            unit = str(source.get("unit") or "")
-            if "million" not in unit.lower() or "billion" not in lowered:
-                return {
-                    "schema": "deterministic-calculation/v1",
-                    "status": "FAILED",
-                    "operation": "unit_to_billions",
-                    "observations": unique,
-                    "value": None,
-                    "unit": None,
-                    "display": "Source unit is not verified as USD millions.",
-                }
-            value = source["value"] / 1000.0
-            return {
-                "schema": "deterministic-calculation/v1",
-                "status": "PASS",
-                "operation": "unit_to_billions",
-                "observations": unique,
-                "value": value,
-                "unit": "USD billions",
-                "display": f"{value:.3f} USD billions from {source['value']:,.3f} {unit} / 1000.",
-            }
-
-        requested_years = sorted({int(year) for year in re.findall(r"20\d{2}", question)})
-        is_comparison = (
-            str(query_plan.get("task_type") or "").upper() == "COMPARISON"
-            or bool(re.search(r"\b(compare|versus|vs\.?|across|between)\b", lowered))
-        )
-        if is_comparison:
-            by_year = {int(item["year"]): item for item in unique if item.get("year")}
-            missing = [year for year in requested_years if year not in by_year]
-            if missing:
-                return {
-                    "schema": "deterministic-calculation/v1",
-                    "status": "FAILED",
-                    "operation": "cross_year",
-                    "observations": unique,
-                    "value": None,
-                    "unit": None,
-                    "missing_years": missing,
-                    "display": f"Missing requested fiscal years: {', '.join(map(str, missing))}.",
-                }
-            ordered = [by_year[year] for year in requested_years]
-            display = "; ".join(f"FY{item['year']}: {item['value']:,.3f} {item.get('unit') or ''}".strip() for item in ordered)
-            return {
-                "schema": "deterministic-calculation/v1",
-                "status": "PASS",
-                "operation": "cross_year",
-                "observations": ordered,
-                "value": None,
-                "unit": ordered[0].get("unit") if ordered else None,
-                "display": display,
-            }
-
-        source = unique[0]
-        return {
-            "schema": "deterministic-calculation/v1",
-            "status": "PASS",
-            "operation": "fact",
-            "observations": unique,
-            "value": source["value"],
-            "unit": source.get("unit"),
-            "display": f"{source['value']:,.3f} {source.get('unit') or ''}".strip(),
-        }
+        """Expose calculations only from the parsed plan and typed observations."""
+        # `question` remains in the signature for callers that imported this
+        # helper directly. It is intentionally not parsed here; parse_query()
+        # owns operation/year/unit interpretation and serializes it in plan.
+        return calculate_public(paths, query_plan=query_plan)
 
     def _serialize_path(self, path: CausalPath) -> Dict:
         """Serialize a CausalPath to a JSON-safe dict."""
@@ -3512,6 +3446,10 @@ Now generate the analysis report:"""
             "evidence_build_ids": path.evidence_build_ids,
             "metric_values": path.metric_values,
             "metric_units": path.metric_units,
+            "financial_observations": [
+                observation.to_dict()
+                for observation in path.financial_observations
+            ],
             "filings": path.filings,
             "causal_forms": path.causal_forms,
             "total_hops": path.total_hops,

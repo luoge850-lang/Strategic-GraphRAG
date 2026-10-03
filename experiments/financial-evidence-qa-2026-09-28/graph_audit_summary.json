@@ -1,0 +1,27 @@
+{
+  "schema": "strategic-graphrag-public-graph-audit-summary/v1",
+  "generated_at_utc": "2026-09-28T05:50:10.765859+00:00",
+  "scope": "当前真实 Neo4j 中的 EvidenceClaim 与原生业务边；只读审计",
+  "read_only": true,
+  "neo4j_write_queries": 0,
+  "status": "WARN",
+  "connection": "PASS",
+  "documents_loaded": 3,
+  "counts": {
+    "claims": 381,
+    "native_business_edges": 381,
+    "normalized_triple_groups": 129,
+    "different_evidence_duplicate_groups": 69,
+    "same_evidence_duplicate_groups": 0,
+    "missing_required_field_instances": 0,
+    "quote_mismatches": 0,
+    "ontology_direction_or_type_conflicts": 0,
+    "linkage_direction_or_type_conflicts": 0,
+    "source_quotes_checked": 381
+  },
+  "limitations": [
+    "来源与结构一致性不等同于语义蕴含验证",
+    "未执行因果有效性或风险事实/条件风险语义分类人工审查",
+    "不同证据上的相同规范化三元组保留，不据此判为错误重复"
+  ]
+}

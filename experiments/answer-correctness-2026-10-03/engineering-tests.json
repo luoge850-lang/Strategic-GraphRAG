@@ -1,0 +1,5 @@
+{
+  "command": "python -m pytest -q",
+  "exit_code": 0,
+  "scope": "engineering regression, not answer accuracy"
+}

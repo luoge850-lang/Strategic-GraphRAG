@@ -1,0 +1,39 @@
+{
+  "run_id": "calc-contract-baseline-20260929T085537Z",
+  "captured_at_utc": "2026-09-29T08:55:37Z",
+  "base_commit": "fb9f65a9c61fe07b7c1179a3295c2aa3018d8e4d",
+  "capture_method": "Direct calls to GraphRAGEngine._public_calculation using the repository's calculation-contract test fixtures; captured before source edits.",
+  "interpretation": "Observed baseline defects, not evaluation accuracy or service-level results.",
+  "cases": [
+    {
+      "case": "currency_conflict",
+      "input": {"unit": "USD millions", "currency": "EUR", "value": 1234.5, "requested_currency": "EUR", "requested_scale": "billions"},
+      "observed": {"status": "PASS", "value": 1.2345, "unit": "EUR billions", "reason": "exact_scale_conversion_no_fx"},
+      "defect": "A currency field contradicting the parsed unit was accepted as a valid no-FX conversion."
+    },
+    {
+      "case": "scale_conflict",
+      "input": {"unit": "USD millions", "scale": "billions", "value": 1234.5, "requested_currency": "USD", "requested_scale": "billions"},
+      "observed": {"status": "PASS", "value": 1234.5, "unit": "USD billions", "reason": "exact_scale_conversion_no_fx"},
+      "defect": "Explicit scale overrode the scale encoded in unit, producing a 1000x magnitude error."
+    },
+    {
+      "case": "annual_query_using_quarter_observation",
+      "input": {"fiscal_period": "Q1 FY2024", "fiscal_year": 2024, "value": 100, "requested_period": "FY2024"},
+      "observed": {"status": "PASS", "value": 100, "unit": "USD millions", "reason": "typed_fact_observation"},
+      "defect": "Year-only filtering treated a quarterly observation as an annual fact."
+    },
+    {
+      "case": "growth_from_non_comparable_values",
+      "input": {"periods": {"FY2023": {"value": 100, "comparability_status": "NOT_COMPARABLE"}, "FY2024": {"value": 120, "comparability_status": "NOT_COMPARABLE"}}, "operation": "percent_change"},
+      "observed": {"status": "PASS", "value": 20.0, "unit": "%", "reason": "same_metric_comparable_years"},
+      "defect": "The calculation ignored explicit NOT_COMPARABLE flags."
+    },
+    {
+      "case": "growth_pairing_across_companies",
+      "input": {"company_filter": null, "observations": [{"company_id": "Company_A", "fiscal_period": "FY2023", "value": 100}, {"company_id": "Company_B", "fiscal_period": "FY2024", "value": 120}], "operation": "percent_change"},
+      "observed": {"status": "PASS", "value": 20.0, "unit": "%", "reason": "same_metric_comparable_years", "companies_used": ["Company_A", "Company_B"]},
+      "defect": "The computation paired observations from different companies when the plan omitted company."
+    }
+  ]
+}

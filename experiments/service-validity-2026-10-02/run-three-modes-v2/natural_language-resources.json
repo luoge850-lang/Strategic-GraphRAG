@@ -1,0 +1,14 @@
+{
+  "requests": 38,
+  "startup_ms": 1538.8369000002058,
+  "peak_rss_bytes_between_requests": 165318656,
+  "sampling_scope": "HTTP tree only, sampled after requests, not true transient peak",
+  "database": "preserved real Neo4j, already warm; restarted HTTP process per condition",
+  "os_cache": "uncontrolled",
+  "route": "graph",
+  "synthesize": false,
+  "query_cache": false,
+  "generation_calls": 0,
+  "embedding_inference": "not measured separately; graph route",
+  "platform": "Windows-11-10.0.26100-SP0"
+}

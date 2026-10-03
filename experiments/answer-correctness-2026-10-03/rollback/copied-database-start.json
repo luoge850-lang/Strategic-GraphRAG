@@ -1,0 +1,12 @@
+{
+  "status": "READY",
+  "pid": 29888,
+  "uri": "bolt://127.0.0.1:17692",
+  "builds": [
+    {
+      "build_id": "build_c3b1d950e8acce78",
+      "nodes": 663
+    }
+  ],
+  "config_mutations": 0
+}

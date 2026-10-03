@@ -1,0 +1,17 @@
+{
+  "schema": "service-validity-clean-checkout/v1",
+  "verified_delivery_commit": "e17768e6f9184da331dc143463c0179fec7ec79e",
+  "application_build_id": "build_c3b1d950e8acce78",
+  "checkout_kind": "separate managed checkout, tracked tree clean, detached HEAD; existing minimal Python environment used for standard-library-only scoring",
+  "commands": [
+    "git switch --detach e17768e",
+    "python deployment/test_complete_fact_scoring.py",
+    "python deployment/summarize_service_validity.py --root experiments/service-validity-2026-10-02 --output reports/validity-clean-recomputed-e17768e.json",
+    "python deployment/verify_validity_artifacts.py --root experiments/service-validity-2026-10-02 --recomputed reports/validity-clean-recomputed-e17768e.json"
+  ],
+  "observed": {"scorer_regressions": "7 passed", "hash_files": 37, "hash_mismatches": 0, "relative_link_missing": 0, "summary_equal": true},
+  "remote_artifacts_verified": ["summary-release.json", "browser-calculation-full.png"],
+  "first_linux_ci": {"run_id": 37029537082, "frontend": "SUCCESS", "contracts": "FAILURE", "cause": "raw_hashes path keys used Windows backslashes; metric values and content digests recomputed unchanged; strict summary comparison failed"},
+  "portability_repair": "Canonicalize only path-key separators, reject key collisions, continue comparing all metrics and byte hashes. Retained summary and source labels unchanged. Dedicated regressions distinguish changed scores and digests.",
+  "not_claimed": "Fresh end-to-end database installation or public deployment; this verifies public offline reproduction."
+}

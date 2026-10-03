@@ -30,6 +30,12 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _sha256_normalized_text_file(path: Path) -> str:
+    """Hash text content independently of the checkout's newline convention."""
+    content = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(content).hexdigest()
+
+
 def git_sha(root: Path = ROOT) -> Optional[str]:
     try:
         result = subprocess.run(
@@ -51,7 +57,10 @@ def _fingerprint_files(paths: Iterable[Path], *, root: Path = ROOT) -> str:
         except ValueError:
             name = path.name
         digest.update(name.encode("utf-8"))
-        digest.update(sha256_file(path).encode("ascii"))
+        # These are source/configuration text files, not byte-exact data inputs.
+        # Git's core.autocrlf must not make the same source tree produce a
+        # different build identity on another Windows checkout.
+        digest.update(_sha256_normalized_text_file(path).encode("ascii"))
     return digest.hexdigest()
 
 

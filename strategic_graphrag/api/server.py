@@ -1185,7 +1185,12 @@ async def get_table_quality_source(filename: str):
     source_path = _TABLE_QUALITY_SOURCE_FILES.get(filename)
     if source_path is None or not source_path.exists():
         raise HTTPException(status_code=404, detail="Source filing not found")
-    return FileResponse(source_path, media_type="application/pdf", filename=filename)
+    return FileResponse(
+        source_path,
+        media_type="application/pdf",
+        filename=filename,
+        content_disposition_type="inline",
+    )
 
 
 @app.post("/query", response_model=QueryResponse)

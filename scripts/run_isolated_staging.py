@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from strategic_graphrag.build_identity import make_build_identity, sha256_file
-from strategic_graphrag.document_layer import DocumentLayerReader
+from strategic_graphrag.document_layer import DocumentLayerReader, ValidatedSnapshotReader
 from strategic_graphrag.evidence_bundle import from_graph_paths
 from strategic_graphrag.engine.graph_rag_engine import GraphRAGEngine, PathScorer
 from strategic_graphrag.engine.query_understanding import parse_query
@@ -110,6 +110,13 @@ def identity_for(pdfs: List[Path], corpus_id: str):
         corpus_id=corpus_id,
         parser_version=reader.parser_version,
         parser_config_hash=reader.config_hash,
+        prompt_version="not_applicable_rule_table_v1",
+        extraction_provider="local_rules_and_tables",
+        extraction_model="not_applicable",
+        query_model="disabled_for_local_acceptance",
+        report_model="disabled_for_local_acceptance",
+        embedding_backend="chroma_onnx",
+        embedding_model="all-MiniLM-L6-v2",
         root=ROOT,
     )
 
@@ -194,6 +201,7 @@ def phase_identity(package: Path, identity: Dict[str, Any], build_id: str) -> No
             "provider": identity["extraction_provider"],
             "model": identity["extraction_model"],
             "prompt_version": identity["prompt_version"],
+            "llm_calls": 0,
         },
         "query": {
             "model": identity["query_model"],
@@ -221,6 +229,7 @@ def phase_documents(package: Path, pdfs: List[Path], build_id: str) -> None:
             "filename": pdf.name,
             "pdf_sha256": document.pdf_sha256,
             "snapshot": package_rel(output, package),
+            "snapshot_sha256": file_hash(output),
             "total_pages": document.total_pages,
             "coverage": coverage,
             "status": "PASS" if coverage["conservation_holds"] and coverage["failed"] == 0 else "FAIL",
@@ -240,6 +249,21 @@ def phase_documents(package: Path, pdfs: List[Path], build_id: str) -> None:
     ], counts={"documents": len(summary), "pages": sum(item["total_pages"] for item in summary)})
 
 
+def normalize_no_llm_candidate_metadata(results: List[Dict[str, Any]]) -> None:
+    """Separate configured model defaults from models actually called."""
+    for item in results:
+        llm_stats = item.get("llm") or {}
+        if int(llm_stats.get("calls") or 0) or int(llm_stats.get("network_calls") or 0):
+            raise RuntimeError("no-LLM staging run unexpectedly made a model/network call")
+        item["configured_llm_provider"] = item.pop("llm_provider", None)
+        item["configured_llm_model"] = item.pop("llm_model", None)
+        item["configured_prompt_version"] = item.pop("prompt_version", None)
+        item["llm_provider"] = "not_used"
+        item["llm_model"] = "not_used"
+        item["prompt_version"] = "not_applicable_rule_table_v1"
+        item["execution_extraction_mode"] = "local_rules_and_tables"
+
+
 def phase_candidates(package: Path, pdfs: List[Path], build_id: str) -> None:
     config = PipelineConfig(
         pdf_dir=str(pdfs[0].parent),
@@ -254,7 +278,13 @@ def phase_candidates(package: Path, pdfs: List[Path], build_id: str) -> None:
         build_id=build_id,
     )
     pipeline = KnowledgeGraphPipeline(config)
+    document_summary = json_read(package / "document_layer_summary.json")
+    pipeline.document_reader = ValidatedSnapshotReader({
+        item["filename"]: {"path": package / item["snapshot"], "snapshot_sha256": item["snapshot_sha256"]}
+        for item in document_summary["files"]
+    }, pipeline.document_reader)
     results = pipeline.process_batch(pdf_paths=[str(path) for path in pdfs])
+    normalize_no_llm_candidate_metadata(results)
     if len(results) != len(pdfs) or any(item.get("status") != "completed" for item in results):
         raise RuntimeError(f"candidate extraction did not complete for all PDFs: {results}")
     json_write(package / "candidate_extraction.json", {
@@ -355,6 +385,11 @@ def phase_accepted(package: Path, build_id: str) -> None:
                     "scale": triple.get("scale"),
                     "report_period": triple.get("report_period") or f"FY{filing_year}",
                     "source_row_id": triple.get("source_row_id"),
+                    "statement_type": triple.get("statement_type"),
+                    "source_section": triple.get("source_section"),
+                    "table_name": triple.get("table_name"),
+                    "row_label": triple.get("row_label"),
+                    "comparability_status": triple.get("comparability_status"),
                 }
                 edges.append(edge)
             accepted.append({
@@ -582,7 +617,7 @@ def acceptance_questions(engine, vector, graph: Dict[str, Any], build_id: str) -
     natural_questions = [
         {"id": "Q01", "question": "What was NVIDIA's revenue in FY2025?", "retrieval_mode": "graph", "expected": {"fact_year": 2025, "value": 130497.0, "unit": "USD millions", "filing": "2025-10-K.pdf"}},
         {"id": "Q02", "question": "What revenue for fiscal 2024 was disclosed in the 2025 filing?", "retrieval_mode": "graph", "expected": {"fact_year": 2024, "disclosure_as_of": "FY2025", "value": 60922.0, "unit": "USD millions", "filing": "2025-10-K.pdf"}},
-        {"id": "Q03", "question": "Convert FY2025 revenue from USD millions to USD billions.", "retrieval_mode": "graph", "expected": {"fact_year": 2025, "source_value": 130497.0, "source_unit": "USD millions", "value": 130.497, "unit": "USD billions", "operation": "unit_to_billions"}},
+        {"id": "Q03", "question": "Convert FY2025 revenue from USD millions to USD billions.", "retrieval_mode": "graph", "expected": {"fact_year": 2025, "source_value": 130497.0, "source_unit": "USD millions", "value": 130.497, "unit": "USD billions", "operation": "unit_conversion"}},
         {"id": "Q04", "question": "Compare NVIDIA revenue across FY2023, FY2024, and FY2025.", "retrieval_mode": "hybrid_temporal", "expected": {"years": {2023: 26974.0, 2024: 60922.0, 2025: 130497.0}, "unit": "USD millions", "operation": "cross_year"}},
         {"id": "Q05", "question": "What REPORTS_METRIC relationship connects NVIDIA_CORPORATION to REVENUE?", "retrieval_mode": "graph", "expected": {"relation": "REPORTS_METRIC", "requires_citation": True}},
         {"id": "Q06", "question": "What was NVIDIA revenue in FY2026?", "retrieval_mode": "graph", "expected": {"abstain": True, "fact_year": 2026}},
@@ -608,17 +643,22 @@ def acceptance_questions(engine, vector, graph: Dict[str, Any], build_id: str) -
                 failures.append("absence_query_execution_status")
             if response.get("answer_status") != "ABSTAINED" or paths or citations:
                 failures.append("absence_query_did_not_abstain_cleanly")
-            if calculation.get("status") != "NOT_COMPUTED":
-                failures.append("absence_query_calculation_present")
+            if calculation.get("status") != "INSUFFICIENT_EVIDENCE" or calculation.get("observations"):
+                failures.append("absence_query_evidence_status")
             return failures
         if response.get("execution_status") != "SUCCEEDED":
             failures.append("execution_status")
         if response.get("grounding_status") != "VERIFIED":
             failures.append("grounding_status")
-        if calculation.get("status") != "PASS":
-            failures.append("calculation_status")
-        if not response.get("answer") or calculation.get("display") not in response.get("answer", ""):
-            failures.append("calculation_not_in_public_answer")
+        relation_only = bool(expected.get("relation"))
+        if relation_only:
+            if calculation.get("status") != "NOT_APPLICABLE":
+                failures.append("relation_numeric_calculation_status")
+        else:
+            if calculation.get("status") != "PASS":
+                failures.append("calculation_status")
+            if not response.get("answer") or calculation.get("display") not in response.get("answer", ""):
+                failures.append("calculation_not_in_public_answer")
         if not citations or any(not citation.get("evidence_id") or not citation.get("source_filing") or not citation.get("page") or "#page=" not in citation.get("original_locator", "") for citation in citations):
             failures.append("citation_contract")
         cited_ids = {citation.get("evidence_id") for citation in citations}
@@ -629,29 +669,29 @@ def acceptance_questions(engine, vector, graph: Dict[str, Any], build_id: str) -
             if plan.get("fact_period") != f"FY{expected['fact_year']}":
                 failures.append("fact_period")
             observations = calculation.get("observations") or []
-            if expected.get("operation") == "unit_to_billions":
+            if expected.get("operation") == "unit_conversion":
                 source_value = expected.get("source_value")
                 source_unit = expected.get("source_unit")
                 source_ok = any(
-                    item.get("year") == expected["fact_year"]
+                    item.get("fiscal_year") == expected["fact_year"]
                     and source_value is not None
                     and abs(float(item.get("value")) - float(source_value)) < 1e-6
                     and item.get("unit") == source_unit
-                    and (not expected.get("filing") or item.get("filing") == expected["filing"])
+                    and (not expected.get("filing") or item.get("source_filing") == expected["filing"])
                     for item in observations
                 )
                 if not source_ok:
                     failures.append("fact_source_value_unit_filing")
-            elif not any(item.get("year") == expected["fact_year"] and abs(float(item.get("value")) - expected["value"]) < 1e-6 and item.get("unit") == expected["unit"] and (not expected.get("filing") or item.get("filing") == expected["filing"]) for item in observations):
+            elif not any(item.get("fiscal_year") == expected["fact_year"] and abs(float(item.get("value")) - expected["value"]) < 1e-6 and item.get("unit") == expected["unit"] and (not expected.get("filing") or item.get("source_filing") == expected["filing"]) for item in observations):
                 failures.append("fact_value_unit_filing")
         if expected.get("disclosure_as_of") and plan.get("disclosure_as_of") != expected["disclosure_as_of"]:
             failures.append("disclosure_as_of")
         if expected.get("operation") and calculation.get("operation") != expected["operation"]:
             failures.append("calculation_operation")
-        if expected.get("operation") == "unit_to_billions" and (abs(float(calculation.get("value") or 0) - expected["value"]) > 1e-6 or calculation.get("unit") != expected["unit"]):
+        if expected.get("operation") == "unit_conversion" and (abs(float(calculation.get("value") or 0) - expected["value"]) > 1e-6 or calculation.get("unit") != expected["unit"]):
             failures.append("unit_conversion_value")
         if expected.get("operation") == "cross_year":
-            observed = {int(item.get("year")): float(item.get("value")) for item in calculation.get("observations", []) if item.get("year") is not None}
+            observed = {int(item.get("fiscal_year")): float(item.get("value")) for item in calculation.get("observations", []) if item.get("fiscal_year") is not None}
             if observed != expected["years"]:
                 failures.append("complete_year_set_or_values")
         if expected.get("relation") and not any(expected["relation"] in path.get("relationships", []) for path in paths):
@@ -770,6 +810,20 @@ def package_artifacts(package: Path, build_id: str) -> Dict[str, Any]:
     }
 
 
+def embedding_provenance_matches(identity: Dict[str, Any], vector: Dict[str, Any]) -> bool:
+    configured = str(vector.get("configured_embedding_backend") or vector.get("embedding_backend") or "").strip().lower()
+    runtime = str(vector.get("runtime_embedding_backend") or vector.get("embedding_backend") or "").strip().lower()
+    identity_backend = str(identity.get("embedding_backend") or "").strip().lower()
+    identity_model = str(identity.get("embedding_model") or "").strip()
+    manifest_model = str(vector.get("embedding_model") or "").strip()
+    return (
+        configured == runtime == identity_backend == "chroma_onnx"
+        and vector.get("backend_consistent", True) is True
+        and bool(identity_model)
+        and identity_model == manifest_model
+    )
+
+
 def verify_package(package: Path, build_id: Optional[str] = None) -> Dict[str, Any]:
     checks = {
         "identity": False,
@@ -777,6 +831,7 @@ def verify_package(package: Path, build_id: Optional[str] = None) -> Dict[str, A
         "vector": False,
         "acceptance": False,
         "backend": False,
+        "execution_config": False,
         "ledger": False,
         "hashes": False,
     }
@@ -826,11 +881,40 @@ def verify_package(package: Path, build_id: Optional[str] = None) -> Dict[str, A
         )
         if not checks["vector"]:
             errors.append("vector_manifest_mismatch")
-        configured = str(vector.get("configured_embedding_backend") or vector.get("embedding_backend") or "").strip().lower()
-        actual = str(vector.get("runtime_embedding_backend") or vector.get("embedding_backend") or "").strip().lower()
-        checks["backend"] = configured == actual == "chroma_onnx" and vector.get("backend_consistent", True) is True
+        checks["backend"] = embedding_provenance_matches(identity, vector)
         if not checks["backend"]:
             errors.append("embedding_backend_mismatch")
+
+    metadata = read_optional("build_metadata.json")
+    candidate = read_optional("candidate_extraction.json")
+    if metadata is not None and candidate is not None:
+        extraction = metadata.get("extraction") or {}
+        candidate_files = candidate.get("files") or []
+        candidate_execution_ok = (
+            candidate.get("mode") == "dry_run_no_llm"
+            and len(candidate_files) == len(identity.get("pdfs") or {}) == 3
+            and all(
+                int((item.get("llm") or {}).get("calls") or 0) == 0
+                and int((item.get("llm") or {}).get("network_calls") or 0) == 0
+                and item.get("llm_provider") == "not_used"
+                and item.get("llm_model") == "not_used"
+                and item.get("prompt_version") == "not_applicable_rule_table_v1"
+                and item.get("execution_extraction_mode") == "local_rules_and_tables"
+                for item in candidate_files
+            )
+        )
+        checks["execution_config"] = (
+            extraction.get("mode") == "RULE_AND_TABLE_NO_LLM"
+            and extraction.get("provider") == identity.get("extraction_provider") == "local_rules_and_tables"
+            and extraction.get("model") == identity.get("extraction_model") == "not_applicable"
+            and extraction.get("prompt_version") == identity.get("prompt_version") == "not_applicable_rule_table_v1"
+            and extraction.get("llm_calls") == 0
+            and identity.get("query_model") == "disabled_for_local_acceptance"
+            and identity.get("report_model") == "disabled_for_local_acceptance"
+            and candidate_execution_ok
+        )
+        if not checks["execution_config"]:
+            errors.append("execution_configuration_mismatch")
 
     acceptance = read_optional("acceptance_results.json")
     if acceptance is not None:
@@ -886,12 +970,19 @@ def verify_package(package: Path, build_id: Optional[str] = None) -> Dict[str, A
             checks["ledger"] = bool(immutable_entries) and actual_immutable == listed_immutable
 
         hash_ok = True
+        immutable_set = {id(item) for item in immutable_entries if isinstance(item, dict)}
         for item in all_entries:
             relative = str(item.get("path") or "")
             target = package / PurePosixPath(relative)
             if not target.is_file():
                 hash_ok = False
                 errors.append(f"missing_ledger_file:{relative or '<empty>'}")
+                continue
+            # build.log and lifecycle.jsonl are append-only operational logs;
+            # they are intentionally outside the immutable snapshot hash.
+            # Their ledger records prove presence and initial provenance, but
+            # publication and restart are allowed to append new events.
+            if id(item) not in immutable_set:
                 continue
             expected_bytes = item.get("bytes")
             if expected_bytes is None or int(expected_bytes) != target.stat().st_size:
@@ -939,7 +1030,22 @@ def main() -> int:
     parser.add_argument("--publish", action="store_true")
     parser.add_argument("--rollback-to", default=None)
     parser.add_argument("--verify", action="store_true")
+    parser.add_argument(
+        "--verify-build-id",
+        default=None,
+        help="Read-only verification of a specific immutable build package",
+    )
     args = parser.parse_args()
+    if args.verify_build_id:
+        if args.rollback_to or args.publish or args.resume or args.fault_after or args.verify:
+            parser.error("--verify-build-id cannot be combined with build, publish, resume, rollback, or --verify options")
+        if not re.fullmatch(r"build_[0-9a-f]{16}", args.verify_build_id):
+            parser.error("--verify-build-id must be a canonical build_<16 lowercase hex> identifier")
+        target = STAGING_ROOT / args.verify_build_id
+        result = verify_package(target, args.verify_build_id)
+        print(json.dumps(result, ensure_ascii=False))
+        return 0 if result["status"] == "PASS" else 1
+
     if args.rollback_to:
         target = STAGING_ROOT / args.rollback_to
         verification = verify_package(target, args.rollback_to)

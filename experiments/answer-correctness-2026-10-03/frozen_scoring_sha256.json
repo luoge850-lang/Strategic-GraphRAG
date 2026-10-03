@@ -1,0 +1,5 @@
+{
+  "deployment/complete_fact_scoring.py": "7a336eca3c4d8d6614085c06812c5c43923055ba57385573d0583c87b3f456b8",
+  "deployment/answer_closure_scoring.py": "f6759fd906976b8bd36776a21c573d5d39359a2b79ba83c4019063c5ce43b2a1",
+  "deployment/run_answer_closure.py": "00f72afbb339fa227d6b8732e849124bdba3cd6a3ea4c1906095cf1ae75878dd"
+}

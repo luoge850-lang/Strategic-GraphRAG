@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 
 import pytest
+from fastapi.testclient import TestClient
 
+from strategic_graphrag.api import server
 from strategic_graphrag.api.server import read_table_quality, table_quality_summary, update_table_quality
 
 
@@ -66,6 +68,21 @@ def test_supported_cell_requires_all_gold_fields(tmp_path):
             },
             path,
         )
+
+
+def test_source_filing_is_served_inline_for_citation_viewer(tmp_path, monkeypatch):
+    source = tmp_path / "2025-10-K.pdf"
+    source.write_bytes(b"%PDF-1.4 test source")
+    monkeypatch.setitem(server._TABLE_QUALITY_SOURCE_FILES, source.name, source)
+
+    response = TestClient(server.app).get(
+        f"/evaluation/table-quality/source/{source.name}#page=80"
+    )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    assert response.headers["content-disposition"] == 'inline; filename="2025-10-K.pdf"'
+    assert response.content == b"%PDF-1.4 test source"
 
 
 def test_table_annotation_rejects_unallowlisted_source_and_invalid_page(tmp_path):

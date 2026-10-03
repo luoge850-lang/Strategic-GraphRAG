@@ -1,0 +1,4874 @@
+{
+  "schema": "service-validity-summary/v1",
+  "build_id": "build_c3b1d950e8acce78",
+  "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+  "modes": {
+    "natural_language": {
+      "development_previously_used": {
+        "questions": 26,
+        "families": 20,
+        "scored_fact_questions": 8,
+        "scored_fact_families": 7,
+        "fact_fields": {
+          "number": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "unit": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "company": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "metric": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "period": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "disclosure": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "statement": {
+            "numerator": 1,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "citation_support": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "physical_page": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "joint": {
+            "numerator": 1,
+            "denominator": 8,
+            "unjudged": 0
+          }
+        },
+        "unscored_semantic_questions": 18,
+        "pages": {
+          "direct_page_hit": {
+            "numerator": 13,
+            "denominator": 23,
+            "unjudged": 3
+          },
+          "background_page_hit": {
+            "numerator": 1,
+            "denominator": 2,
+            "unjudged": 24
+          },
+          "positive_page_hit_legacy": {
+            "numerator": 14,
+            "denominator": 25,
+            "unjudged": 1
+          }
+        },
+        "http": {
+          "numerator": 26,
+          "denominator": 26,
+          "unjudged": 0
+        },
+        "http_statuses": {
+          "200": 26
+        },
+        "latency_p50_ms": 46.558499999999995,
+        "latency_p95_ms": 379.689,
+        "build_id": "build_c3b1d950e8acce78",
+        "mode": "natural_language",
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW"
+      },
+      "frozen_adjacent_diagnostic_no_tuning": {
+        "questions": 12,
+        "families": 11,
+        "scored_fact_questions": 12,
+        "scored_fact_families": 11,
+        "fact_fields": {
+          "number": {
+            "numerator": 9,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "unit": {
+            "numerator": 11,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "company": {
+            "numerator": 11,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "metric": {
+            "numerator": 9,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "period": {
+            "numerator": 11,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "disclosure": {
+            "numerator": 11,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "statement": {
+            "numerator": 2,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "citation_support": {
+            "numerator": 8,
+            "denominator": 10,
+            "unjudged": 2
+          },
+          "physical_page": {
+            "numerator": 9,
+            "denominator": 10,
+            "unjudged": 2
+          },
+          "joint": {
+            "numerator": 2,
+            "denominator": 12,
+            "unjudged": 0
+          }
+        },
+        "unscored_semantic_questions": 0,
+        "pages": {
+          "direct_page_hit": {
+            "numerator": 10,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "background_page_hit": {
+            "numerator": 0,
+            "denominator": 0,
+            "unjudged": 12
+          },
+          "positive_page_hit_legacy": {
+            "numerator": 10,
+            "denominator": 12,
+            "unjudged": 0
+          }
+        },
+        "http": {
+          "numerator": 12,
+          "denominator": 12,
+          "unjudged": 0
+        },
+        "http_statuses": {
+          "200": 12
+        },
+        "latency_p50_ms": 20.909,
+        "latency_p95_ms": 233.717,
+        "build_id": "build_c3b1d950e8acce78",
+        "mode": "natural_language",
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW"
+      }
+    },
+    "user_scope": {
+      "development_previously_used": {
+        "questions": 26,
+        "families": 20,
+        "scored_fact_questions": 8,
+        "scored_fact_families": 7,
+        "fact_fields": {
+          "number": {
+            "numerator": 2,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "unit": {
+            "numerator": 2,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "company": {
+            "numerator": 2,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "metric": {
+            "numerator": 2,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "period": {
+            "numerator": 2,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "disclosure": {
+            "numerator": 2,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "statement": {
+            "numerator": 0,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "citation_support": {
+            "numerator": 2,
+            "denominator": 2,
+            "unjudged": 6
+          },
+          "physical_page": {
+            "numerator": 2,
+            "denominator": 2,
+            "unjudged": 6
+          },
+          "joint": {
+            "numerator": 0,
+            "denominator": 8,
+            "unjudged": 0
+          }
+        },
+        "unscored_semantic_questions": 18,
+        "pages": {
+          "direct_page_hit": {
+            "numerator": 2,
+            "denominator": 23,
+            "unjudged": 3
+          },
+          "background_page_hit": {
+            "numerator": 1,
+            "denominator": 2,
+            "unjudged": 24
+          },
+          "positive_page_hit_legacy": {
+            "numerator": 3,
+            "denominator": 25,
+            "unjudged": 1
+          }
+        },
+        "http": {
+          "numerator": 26,
+          "denominator": 26,
+          "unjudged": 0
+        },
+        "http_statuses": {
+          "200": 26
+        },
+        "latency_p50_ms": 24.82,
+        "latency_p95_ms": 276.863,
+        "build_id": "build_c3b1d950e8acce78",
+        "mode": "user_scope",
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW"
+      },
+      "frozen_adjacent_diagnostic_no_tuning": {
+        "questions": 12,
+        "families": 11,
+        "scored_fact_questions": 12,
+        "scored_fact_families": 11,
+        "fact_fields": {
+          "number": {
+            "numerator": 0,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "unit": {
+            "numerator": 1,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "company": {
+            "numerator": 1,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "metric": {
+            "numerator": 0,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "period": {
+            "numerator": 1,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "disclosure": {
+            "numerator": 1,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "statement": {
+            "numerator": 0,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "citation_support": {
+            "numerator": 0,
+            "denominator": 1,
+            "unjudged": 11
+          },
+          "physical_page": {
+            "numerator": 1,
+            "denominator": 1,
+            "unjudged": 11
+          },
+          "joint": {
+            "numerator": 0,
+            "denominator": 12,
+            "unjudged": 0
+          }
+        },
+        "unscored_semantic_questions": 0,
+        "pages": {
+          "direct_page_hit": {
+            "numerator": 1,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "background_page_hit": {
+            "numerator": 0,
+            "denominator": 0,
+            "unjudged": 12
+          },
+          "positive_page_hit_legacy": {
+            "numerator": 1,
+            "denominator": 12,
+            "unjudged": 0
+          }
+        },
+        "http": {
+          "numerator": 12,
+          "denominator": 12,
+          "unjudged": 0
+        },
+        "http_statuses": {
+          "200": 12
+        },
+        "latency_p50_ms": 13.6475,
+        "latency_p95_ms": 31.415,
+        "build_id": "build_c3b1d950e8acce78",
+        "mode": "user_scope",
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW"
+      }
+    },
+    "reference_scope_diagnostic": {
+      "development_previously_used": {
+        "questions": 26,
+        "families": 20,
+        "scored_fact_questions": 8,
+        "scored_fact_families": 7,
+        "fact_fields": {
+          "number": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "unit": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "company": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "metric": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "period": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "disclosure": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "statement": {
+            "numerator": 1,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "citation_support": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "physical_page": {
+            "numerator": 8,
+            "denominator": 8,
+            "unjudged": 0
+          },
+          "joint": {
+            "numerator": 1,
+            "denominator": 8,
+            "unjudged": 0
+          }
+        },
+        "unscored_semantic_questions": 18,
+        "pages": {
+          "direct_page_hit": {
+            "numerator": 13,
+            "denominator": 23,
+            "unjudged": 3
+          },
+          "background_page_hit": {
+            "numerator": 1,
+            "denominator": 2,
+            "unjudged": 24
+          },
+          "positive_page_hit_legacy": {
+            "numerator": 14,
+            "denominator": 25,
+            "unjudged": 1
+          }
+        },
+        "http": {
+          "numerator": 26,
+          "denominator": 26,
+          "unjudged": 0
+        },
+        "http_statuses": {
+          "200": 26
+        },
+        "latency_p50_ms": 26.4585,
+        "latency_p95_ms": 42.435,
+        "build_id": "build_c3b1d950e8acce78",
+        "mode": "reference_scope_diagnostic",
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW"
+      },
+      "frozen_adjacent_diagnostic_no_tuning": {
+        "questions": 12,
+        "families": 11,
+        "scored_fact_questions": 12,
+        "scored_fact_families": 11,
+        "fact_fields": {
+          "number": {
+            "numerator": 9,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "unit": {
+            "numerator": 11,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "company": {
+            "numerator": 11,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "metric": {
+            "numerator": 9,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "period": {
+            "numerator": 11,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "disclosure": {
+            "numerator": 11,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "statement": {
+            "numerator": 2,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "citation_support": {
+            "numerator": 8,
+            "denominator": 10,
+            "unjudged": 2
+          },
+          "physical_page": {
+            "numerator": 9,
+            "denominator": 10,
+            "unjudged": 2
+          },
+          "joint": {
+            "numerator": 2,
+            "denominator": 12,
+            "unjudged": 0
+          }
+        },
+        "unscored_semantic_questions": 0,
+        "pages": {
+          "direct_page_hit": {
+            "numerator": 10,
+            "denominator": 12,
+            "unjudged": 0
+          },
+          "background_page_hit": {
+            "numerator": 0,
+            "denominator": 0,
+            "unjudged": 12
+          },
+          "positive_page_hit_legacy": {
+            "numerator": 10,
+            "denominator": 12,
+            "unjudged": 0
+          }
+        },
+        "http": {
+          "numerator": 12,
+          "denominator": 12,
+          "unjudged": 0
+        },
+        "http_statuses": {
+          "200": 12
+        },
+        "latency_p50_ms": 24.2155,
+        "latency_p95_ms": 36.461,
+        "build_id": "build_c3b1d950e8acce78",
+        "mode": "reference_scope_diagnostic",
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW"
+      }
+    }
+  },
+  "records": [
+    {
+      "item_id": "FQA-3fbfaf549f970fd5d280",
+      "family_id": "3fbfaf549f970fd5d280",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2023-10-K.pdf#43"
+        ],
+        "direct_page_labels": [
+          "2023-10-K.pdf#12"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-459504a0c8aab868b348",
+      "family_id": "459504a0c8aab868b348",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": true,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": true,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-c282e2ba770b72ca",
+      "family_id": "459504a0c8aab868b348",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-841546b4d92198e1bb46",
+      "family_id": "841546b4d92198e1bb46",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#44",
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-fec24883393037be",
+      "family_id": "841546b4d92198e1bb46",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#44",
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-9ebad1d7a48a48c4c012",
+      "family_id": "9ebad1d7a48a48c4c012",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-ef6bf1e8bc6a41c5",
+      "family_id": "9ebad1d7a48a48c4c012",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-e4a8908ea7e94a8710a1",
+      "family_id": "e4a8908ea7e94a8710a1",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-0ea7b124454381d8",
+      "family_id": "e4a8908ea7e94a8710a1",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-34545952401c5dd5a682",
+      "family_id": "34545952401c5dd5a682",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#36",
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-ea958195867b7fb5",
+      "family_id": "34545952401c5dd5a682",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43",
+          "2023-10-K.pdf#54"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-33764b55e0611be080cc",
+      "family_id": "33764b55e0611be080cc",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2025-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-987035dd8ccaceaef0fc",
+      "family_id": "987035dd8ccaceaef0fc",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2025-10-K.pdf#10"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-dd161d65dc8249591b85",
+      "family_id": "dd161d65dc8249591b85",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": null,
+        "background_page_hit": false,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2023-10-K.pdf#85",
+          "2024-10-K.pdf#36",
+          "2024-10-K.pdf#50",
+          "2025-10-K.pdf#38",
+          "2025-10-K.pdf#52"
+        ],
+        "direct_page_labels": [],
+        "background_page_labels": [
+          "2025-10-K.pdf#14",
+          "2025-10-K.pdf#17"
+        ]
+      }
+    },
+    {
+      "item_id": "FQA-c2180a4fa48947a326c9",
+      "family_id": "c2180a4fa48947a326c9",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2025-10-K.pdf#3"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-72398095458d46295ba0",
+      "family_id": "72398095458d46295ba0",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#10",
+          "2025-10-K.pdf#27",
+          "2025-10-K.pdf#37"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#18",
+          "2025-10-K.pdf#5"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-a22d89953a5d9c3be464",
+      "family_id": "a22d89953a5d9c3be464",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#36",
+          "2025-10-K.pdf#6"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#5"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-5afddf4bb22cb702148e",
+      "family_id": "5afddf4bb22cb702148e",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#10",
+          "2025-10-K.pdf#27",
+          "2025-10-K.pdf#37"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#18",
+          "2025-10-K.pdf#7"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-02e0949518b4d6c7875b",
+      "family_id": "02e0949518b4d6c7875b",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#22",
+          "2025-10-K.pdf#30"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#17",
+          "2025-10-K.pdf#18"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-3bcb4dd7d3f1f7a7ae8f",
+      "family_id": "3bcb4dd7d3f1f7a7ae8f",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": null,
+        "background_page_hit": true,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#19",
+          "2025-10-K.pdf#30"
+        ],
+        "direct_page_labels": [],
+        "background_page_labels": [
+          "2025-10-K.pdf#17",
+          "2025-10-K.pdf#22"
+        ]
+      }
+    },
+    {
+      "item_id": "FQA-789e153b6944977a435d",
+      "family_id": "789e153b6944977a435d",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": null,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": null,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#17",
+          "2025-10-K.pdf#22",
+          "2025-10-K.pdf#30"
+        ],
+        "direct_page_labels": [],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-d687185a6ce263bdbd63",
+      "family_id": "DEV-d687185a6ce263bdbd63",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2024-10-K.pdf#79"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-3c57ba0a364db4d47d0b",
+      "family_id": "DEV-3c57ba0a364db4d47d0b",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-2ad79e78ab860ac3675c",
+      "family_id": "DEV-2ad79e78ab860ac3675c",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-DEV-USD-BILLIONS-2025-REVENUE",
+      "family_id": "DEV-2ad79e78ab860ac3675c",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-06a7af746433df32954f",
+      "family_id": "DEV-06a7af746433df32954f",
+      "partition": "development_previously_used",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2023-10-K.pdf#86"
+        ],
+        "direct_page_labels": [
+          "2023-10-K.pdf#54"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V01",
+      "family_id": "TOTAL_ASSETS",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V02",
+      "family_id": "INVENTORIES",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V03",
+      "family_id": "ACCOUNTS_PAYABLE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": false,
+        "physical_page": false,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2023-10-K.pdf#43",
+          "2023-10-K.pdf#44",
+          "2023-10-K.pdf#54",
+          "2023-10-K.pdf#81",
+          "2023-10-K.pdf#85",
+          "2023-10-K.pdf#86"
+        ],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V04",
+      "family_id": "OPERATING_COST",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": true,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": true,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V05",
+      "family_id": "SALES_GENERAL_ADMIN_EXPENSE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": true,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": true,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V06",
+      "family_id": "R_AND_D_EXPENSE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V07",
+      "family_id": "NET_INCOME",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V08",
+      "family_id": "TOTAL_ASSETS",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V09",
+      "family_id": "ACCOUNTS_RECEIVABLE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V10",
+      "family_id": "REVENUE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2024-10-K.pdf#79"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V11",
+      "family_id": "CASH_FLOW_ACCOUNTS_RECEIVABLE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": true,
+        "company": true,
+        "metric": false,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2023-10-K.pdf#56"
+        ],
+        "direct_page_labels": [
+          "2023-10-K.pdf#58"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V12",
+      "family_id": "DATA_CENTER_REVENUE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "natural_language",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": true,
+        "company": true,
+        "metric": false,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": false,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2025-10-K.pdf#80"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-3fbfaf549f970fd5d280",
+      "family_id": "3fbfaf549f970fd5d280",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#52"
+        ],
+        "direct_page_labels": [
+          "2023-10-K.pdf#12"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-459504a0c8aab868b348",
+      "family_id": "459504a0c8aab868b348",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-c282e2ba770b72ca",
+      "family_id": "459504a0c8aab868b348",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-841546b4d92198e1bb46",
+      "family_id": "841546b4d92198e1bb46",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#44",
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-fec24883393037be",
+      "family_id": "841546b4d92198e1bb46",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#44",
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-9ebad1d7a48a48c4c012",
+      "family_id": "9ebad1d7a48a48c4c012",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-ef6bf1e8bc6a41c5",
+      "family_id": "9ebad1d7a48a48c4c012",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-e4a8908ea7e94a8710a1",
+      "family_id": "e4a8908ea7e94a8710a1",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-0ea7b124454381d8",
+      "family_id": "e4a8908ea7e94a8710a1",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-34545952401c5dd5a682",
+      "family_id": "34545952401c5dd5a682",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#42"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#36",
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-ea958195867b7fb5",
+      "family_id": "34545952401c5dd5a682",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43",
+          "2023-10-K.pdf#54"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-33764b55e0611be080cc",
+      "family_id": "33764b55e0611be080cc",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2025-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-987035dd8ccaceaef0fc",
+      "family_id": "987035dd8ccaceaef0fc",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#10"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-dd161d65dc8249591b85",
+      "family_id": "dd161d65dc8249591b85",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": null,
+        "background_page_hit": false,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [],
+        "background_page_labels": [
+          "2025-10-K.pdf#14",
+          "2025-10-K.pdf#17"
+        ]
+      }
+    },
+    {
+      "item_id": "FQA-c2180a4fa48947a326c9",
+      "family_id": "c2180a4fa48947a326c9",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2025-10-K.pdf#3"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-72398095458d46295ba0",
+      "family_id": "72398095458d46295ba0",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#10",
+          "2025-10-K.pdf#27",
+          "2025-10-K.pdf#37"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#18",
+          "2025-10-K.pdf#5"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-a22d89953a5d9c3be464",
+      "family_id": "a22d89953a5d9c3be464",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#36",
+          "2025-10-K.pdf#6"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#5"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-5afddf4bb22cb702148e",
+      "family_id": "5afddf4bb22cb702148e",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#10",
+          "2025-10-K.pdf#27",
+          "2025-10-K.pdf#37"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#18",
+          "2025-10-K.pdf#7"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-02e0949518b4d6c7875b",
+      "family_id": "02e0949518b4d6c7875b",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#22",
+          "2025-10-K.pdf#30"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#17",
+          "2025-10-K.pdf#18"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-3bcb4dd7d3f1f7a7ae8f",
+      "family_id": "3bcb4dd7d3f1f7a7ae8f",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": null,
+        "background_page_hit": true,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#19",
+          "2025-10-K.pdf#30"
+        ],
+        "direct_page_labels": [],
+        "background_page_labels": [
+          "2025-10-K.pdf#17",
+          "2025-10-K.pdf#22"
+        ]
+      }
+    },
+    {
+      "item_id": "FQA-789e153b6944977a435d",
+      "family_id": "789e153b6944977a435d",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": null,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": null,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#17",
+          "2025-10-K.pdf#22",
+          "2025-10-K.pdf#30"
+        ],
+        "direct_page_labels": [],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-d687185a6ce263bdbd63",
+      "family_id": "DEV-d687185a6ce263bdbd63",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-3c57ba0a364db4d47d0b",
+      "family_id": "DEV-3c57ba0a364db4d47d0b",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#54"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-2ad79e78ab860ac3675c",
+      "family_id": "DEV-2ad79e78ab860ac3675c",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-DEV-USD-BILLIONS-2025-REVENUE",
+      "family_id": "DEV-2ad79e78ab860ac3675c",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-06a7af746433df32954f",
+      "family_id": "DEV-06a7af746433df32954f",
+      "partition": "development_previously_used",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#54"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V01",
+      "family_id": "TOTAL_ASSETS",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V02",
+      "family_id": "INVENTORIES",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V03",
+      "family_id": "ACCOUNTS_PAYABLE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V04",
+      "family_id": "OPERATING_COST",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V05",
+      "family_id": "SALES_GENERAL_ADMIN_EXPENSE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V06",
+      "family_id": "R_AND_D_EXPENSE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#42"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V07",
+      "family_id": "NET_INCOME",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#38"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V08",
+      "family_id": "TOTAL_ASSETS",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#54"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V09",
+      "family_id": "ACCOUNTS_RECEIVABLE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#54"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V10",
+      "family_id": "REVENUE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V11",
+      "family_id": "CASH_FLOW_ACCOUNTS_RECEIVABLE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#58"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V12",
+      "family_id": "DATA_CENTER_REVENUE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "user_scope",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": true,
+        "company": true,
+        "metric": false,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": false,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2025-10-K.pdf#80"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-3fbfaf549f970fd5d280",
+      "family_id": "3fbfaf549f970fd5d280",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2023-10-K.pdf#43"
+        ],
+        "direct_page_labels": [
+          "2023-10-K.pdf#12"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-459504a0c8aab868b348",
+      "family_id": "459504a0c8aab868b348",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": true,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": true,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-c282e2ba770b72ca",
+      "family_id": "459504a0c8aab868b348",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-841546b4d92198e1bb46",
+      "family_id": "841546b4d92198e1bb46",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#44",
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-fec24883393037be",
+      "family_id": "841546b4d92198e1bb46",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#44",
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-9ebad1d7a48a48c4c012",
+      "family_id": "9ebad1d7a48a48c4c012",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-ef6bf1e8bc6a41c5",
+      "family_id": "9ebad1d7a48a48c4c012",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-e4a8908ea7e94a8710a1",
+      "family_id": "e4a8908ea7e94a8710a1",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-0ea7b124454381d8",
+      "family_id": "e4a8908ea7e94a8710a1",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-34545952401c5dd5a682",
+      "family_id": "34545952401c5dd5a682",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#36",
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-ea958195867b7fb5",
+      "family_id": "34545952401c5dd5a682",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43",
+          "2023-10-K.pdf#54"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-33764b55e0611be080cc",
+      "family_id": "33764b55e0611be080cc",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2025-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-987035dd8ccaceaef0fc",
+      "family_id": "987035dd8ccaceaef0fc",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#10"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-dd161d65dc8249591b85",
+      "family_id": "dd161d65dc8249591b85",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": null,
+        "background_page_hit": false,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [],
+        "background_page_labels": [
+          "2025-10-K.pdf#14",
+          "2025-10-K.pdf#17"
+        ]
+      }
+    },
+    {
+      "item_id": "FQA-c2180a4fa48947a326c9",
+      "family_id": "c2180a4fa48947a326c9",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2025-10-K.pdf#3"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-72398095458d46295ba0",
+      "family_id": "72398095458d46295ba0",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#10",
+          "2025-10-K.pdf#27",
+          "2025-10-K.pdf#37"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#18",
+          "2025-10-K.pdf#5"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-a22d89953a5d9c3be464",
+      "family_id": "a22d89953a5d9c3be464",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#36",
+          "2025-10-K.pdf#6"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#5"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-5afddf4bb22cb702148e",
+      "family_id": "5afddf4bb22cb702148e",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#10",
+          "2025-10-K.pdf#27",
+          "2025-10-K.pdf#37"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#18",
+          "2025-10-K.pdf#7"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-02e0949518b4d6c7875b",
+      "family_id": "02e0949518b4d6c7875b",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#22",
+          "2025-10-K.pdf#30"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#17",
+          "2025-10-K.pdf#18"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-3bcb4dd7d3f1f7a7ae8f",
+      "family_id": "3bcb4dd7d3f1f7a7ae8f",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": null,
+        "background_page_hit": true,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#19",
+          "2025-10-K.pdf#30"
+        ],
+        "direct_page_labels": [],
+        "background_page_labels": [
+          "2025-10-K.pdf#17",
+          "2025-10-K.pdf#22"
+        ]
+      }
+    },
+    {
+      "item_id": "FQA-789e153b6944977a435d",
+      "family_id": "789e153b6944977a435d",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": null,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": null,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#17",
+          "2025-10-K.pdf#22",
+          "2025-10-K.pdf#30"
+        ],
+        "direct_page_labels": [],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-d687185a6ce263bdbd63",
+      "family_id": "DEV-d687185a6ce263bdbd63",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2024-10-K.pdf#79"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-3c57ba0a364db4d47d0b",
+      "family_id": "DEV-3c57ba0a364db4d47d0b",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-2ad79e78ab860ac3675c",
+      "family_id": "DEV-2ad79e78ab860ac3675c",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQAV-DEV-USD-BILLIONS-2025-REVENUE",
+      "family_id": "DEV-2ad79e78ab860ac3675c",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2025-10-K.pdf#80"
+        ],
+        "direct_page_labels": [
+          "2025-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "FQA-DEV-06a7af746433df32954f",
+      "family_id": "DEV-06a7af746433df32954f",
+      "partition": "development_previously_used",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": null,
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2023-10-K.pdf#86"
+        ],
+        "direct_page_labels": [
+          "2023-10-K.pdf#54"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V01",
+      "family_id": "TOTAL_ASSETS",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V02",
+      "family_id": "INVENTORIES",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V03",
+      "family_id": "ACCOUNTS_PAYABLE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": false,
+        "company": false,
+        "metric": false,
+        "period": false,
+        "disclosure": false,
+        "statement": false,
+        "citation_support": false,
+        "physical_page": false,
+        "status_success": false,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [
+          "2023-10-K.pdf#43",
+          "2023-10-K.pdf#44",
+          "2023-10-K.pdf#54",
+          "2023-10-K.pdf#81",
+          "2023-10-K.pdf#85",
+          "2023-10-K.pdf#86"
+        ],
+        "direct_page_labels": [
+          "2023-10-K.pdf#56"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V04",
+      "family_id": "OPERATING_COST",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": true,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": true,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V05",
+      "family_id": "SALES_GENERAL_ADMIN_EXPENSE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": true,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": true,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2023-10-K.pdf#43"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V06",
+      "family_id": "R_AND_D_EXPENSE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V07",
+      "family_id": "NET_INCOME",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V08",
+      "family_id": "TOTAL_ASSETS",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V09",
+      "family_id": "ACCOUNTS_RECEIVABLE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": true,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2024-10-K.pdf#52"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V10",
+      "family_id": "REVENUE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": true,
+        "unit": true,
+        "company": true,
+        "metric": true,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2024-10-K.pdf#79"
+        ],
+        "direct_page_labels": [
+          "2024-10-K.pdf#50"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V11",
+      "family_id": "CASH_FLOW_ACCOUNTS_RECEIVABLE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": true,
+        "company": true,
+        "metric": false,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": null,
+        "physical_page": null,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": false,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": false,
+        "unjudged_cited_pages": [
+          "2023-10-K.pdf#56"
+        ],
+        "direct_page_labels": [
+          "2023-10-K.pdf#58"
+        ],
+        "background_page_labels": []
+      }
+    },
+    {
+      "item_id": "V12",
+      "family_id": "DATA_CENTER_REVENUE",
+      "partition": "frozen_adjacent_diagnostic_no_tuning",
+      "mode": "reference_scope_diagnostic",
+      "http_status": 200,
+      "fact": {
+        "number": false,
+        "unit": true,
+        "company": true,
+        "metric": false,
+        "period": true,
+        "disclosure": true,
+        "statement": false,
+        "citation_support": false,
+        "physical_page": true,
+        "status_success": true,
+        "joint": false,
+        "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+        "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+        "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+      },
+      "pages": {
+        "direct_page_hit": true,
+        "background_page_hit": null,
+        "positive_page_hit_legacy": true,
+        "unjudged_cited_pages": [],
+        "direct_page_labels": [
+          "2025-10-K.pdf#80"
+        ],
+        "background_page_labels": []
+      }
+    }
+  ],
+  "historical_rescore": {
+    "trial-20261002-development": {
+      "build_id": "build_c69e08565d907662",
+      "mode": "reference_scope_diagnostic",
+      "questions": 26,
+      "families": 20,
+      "numeric": {
+        "numerator": 6,
+        "denominator": 8,
+        "unjudged": 0
+      },
+      "joint": {
+        "numerator": 0,
+        "denominator": 8,
+        "unjudged": 0
+      },
+      "pages": {
+        "direct_page_hit": {
+          "numerator": 11,
+          "denominator": 23,
+          "unjudged": 3
+        },
+        "background_page_hit": {
+          "numerator": 1,
+          "denominator": 2,
+          "unjudged": 24
+        },
+        "positive_page_hit_legacy": {
+          "numerator": 12,
+          "denominator": 25,
+          "unjudged": 1
+        }
+      },
+      "records": [
+        {
+          "item_id": "FQA-3fbfaf549f970fd5d280",
+          "family_id": "3fbfaf549f970fd5d280",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2023-10-K.pdf#43"
+            ],
+            "direct_page_labels": [
+              "2023-10-K.pdf#12"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-459504a0c8aab868b348",
+          "family_id": "459504a0c8aab868b348",
+          "fact": {
+            "number": false,
+            "unit": true,
+            "company": true,
+            "metric": false,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": false,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#43"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-c282e2ba770b72ca",
+          "family_id": "459504a0c8aab868b348",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#43"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-841546b4d92198e1bb46",
+          "family_id": "841546b4d92198e1bb46",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#44",
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-fec24883393037be",
+          "family_id": "841546b4d92198e1bb46",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#44",
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-9ebad1d7a48a48c4c012",
+          "family_id": "9ebad1d7a48a48c4c012",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-ef6bf1e8bc6a41c5",
+          "family_id": "9ebad1d7a48a48c4c012",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-e4a8908ea7e94a8710a1",
+          "family_id": "e4a8908ea7e94a8710a1",
+          "fact": {
+            "number": false,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": null,
+            "physical_page": null,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2023-10-K.pdf#58"
+            ],
+            "direct_page_labels": [
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-0ea7b124454381d8",
+          "family_id": "e4a8908ea7e94a8710a1",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2023-10-K.pdf#58"
+            ],
+            "direct_page_labels": [
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-34545952401c5dd5a682",
+          "family_id": "34545952401c5dd5a682",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2024-10-K.pdf#36",
+              "2024-10-K.pdf#50"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-ea958195867b7fb5",
+          "family_id": "34545952401c5dd5a682",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#43",
+              "2023-10-K.pdf#54"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-33764b55e0611be080cc",
+          "family_id": "33764b55e0611be080cc",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2025-10-K.pdf#52"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-987035dd8ccaceaef0fc",
+          "family_id": "987035dd8ccaceaef0fc",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#80"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#10"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-dd161d65dc8249591b85",
+          "family_id": "dd161d65dc8249591b85",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": null,
+            "background_page_hit": false,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#80"
+            ],
+            "direct_page_labels": [],
+            "background_page_labels": [
+              "2025-10-K.pdf#14",
+              "2025-10-K.pdf#17"
+            ]
+          }
+        },
+        {
+          "item_id": "FQA-c2180a4fa48947a326c9",
+          "family_id": "c2180a4fa48947a326c9",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2025-10-K.pdf#3"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-72398095458d46295ba0",
+          "family_id": "72398095458d46295ba0",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#10",
+              "2025-10-K.pdf#27",
+              "2025-10-K.pdf#37"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#18",
+              "2025-10-K.pdf#5"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-a22d89953a5d9c3be464",
+          "family_id": "a22d89953a5d9c3be464",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#36",
+              "2025-10-K.pdf#6"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#5"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-5afddf4bb22cb702148e",
+          "family_id": "5afddf4bb22cb702148e",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#10",
+              "2025-10-K.pdf#27",
+              "2025-10-K.pdf#37"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#18",
+              "2025-10-K.pdf#7"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-02e0949518b4d6c7875b",
+          "family_id": "02e0949518b4d6c7875b",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#22",
+              "2025-10-K.pdf#30"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#17",
+              "2025-10-K.pdf#18"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-3bcb4dd7d3f1f7a7ae8f",
+          "family_id": "3bcb4dd7d3f1f7a7ae8f",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": null,
+            "background_page_hit": true,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#19",
+              "2025-10-K.pdf#30"
+            ],
+            "direct_page_labels": [],
+            "background_page_labels": [
+              "2025-10-K.pdf#17",
+              "2025-10-K.pdf#22"
+            ]
+          }
+        },
+        {
+          "item_id": "FQA-789e153b6944977a435d",
+          "family_id": "789e153b6944977a435d",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": null,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": null,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#17",
+              "2025-10-K.pdf#22",
+              "2025-10-K.pdf#30"
+            ],
+            "direct_page_labels": [],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-DEV-d687185a6ce263bdbd63",
+          "family_id": "DEV-d687185a6ce263bdbd63",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2024-10-K.pdf#79"
+            ],
+            "direct_page_labels": [
+              "2024-10-K.pdf#50"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-DEV-3c57ba0a364db4d47d0b",
+          "family_id": "DEV-3c57ba0a364db4d47d0b",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2024-10-K.pdf#52"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-DEV-2ad79e78ab860ac3675c",
+          "family_id": "DEV-2ad79e78ab860ac3675c",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#80"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#52"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-DEV-USD-BILLIONS-2025-REVENUE",
+          "family_id": "DEV-2ad79e78ab860ac3675c",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#80"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#52"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-DEV-06a7af746433df32954f",
+          "family_id": "DEV-06a7af746433df32954f",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2023-10-K.pdf#86"
+            ],
+            "direct_page_labels": [
+              "2023-10-K.pdf#54"
+            ],
+            "background_page_labels": []
+          }
+        }
+      ]
+    },
+    "trial-20261002-repair1": {
+      "build_id": "build_c3b1d950e8acce78",
+      "mode": "reference_scope_diagnostic",
+      "questions": 26,
+      "families": 20,
+      "numeric": {
+        "numerator": 8,
+        "denominator": 8,
+        "unjudged": 0
+      },
+      "joint": {
+        "numerator": 1,
+        "denominator": 8,
+        "unjudged": 0
+      },
+      "pages": {
+        "direct_page_hit": {
+          "numerator": 13,
+          "denominator": 23,
+          "unjudged": 3
+        },
+        "background_page_hit": {
+          "numerator": 1,
+          "denominator": 2,
+          "unjudged": 24
+        },
+        "positive_page_hit_legacy": {
+          "numerator": 14,
+          "denominator": 25,
+          "unjudged": 1
+        }
+      },
+      "records": [
+        {
+          "item_id": "FQA-3fbfaf549f970fd5d280",
+          "family_id": "3fbfaf549f970fd5d280",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2023-10-K.pdf#43"
+            ],
+            "direct_page_labels": [
+              "2023-10-K.pdf#12"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-459504a0c8aab868b348",
+          "family_id": "459504a0c8aab868b348",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": true,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": true,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#43"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-c282e2ba770b72ca",
+          "family_id": "459504a0c8aab868b348",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#43"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-841546b4d92198e1bb46",
+          "family_id": "841546b4d92198e1bb46",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#44",
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-fec24883393037be",
+          "family_id": "841546b4d92198e1bb46",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#44",
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-9ebad1d7a48a48c4c012",
+          "family_id": "9ebad1d7a48a48c4c012",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-ef6bf1e8bc6a41c5",
+          "family_id": "9ebad1d7a48a48c4c012",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-e4a8908ea7e94a8710a1",
+          "family_id": "e4a8908ea7e94a8710a1",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-0ea7b124454381d8",
+          "family_id": "e4a8908ea7e94a8710a1",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#56"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-34545952401c5dd5a682",
+          "family_id": "34545952401c5dd5a682",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2024-10-K.pdf#36",
+              "2024-10-K.pdf#50"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-ea958195867b7fb5",
+          "family_id": "34545952401c5dd5a682",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2023-10-K.pdf#43",
+              "2023-10-K.pdf#54"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-33764b55e0611be080cc",
+          "family_id": "33764b55e0611be080cc",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2025-10-K.pdf#52"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-987035dd8ccaceaef0fc",
+          "family_id": "987035dd8ccaceaef0fc",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#80"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#10"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-dd161d65dc8249591b85",
+          "family_id": "dd161d65dc8249591b85",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": null,
+            "background_page_hit": false,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#80"
+            ],
+            "direct_page_labels": [],
+            "background_page_labels": [
+              "2025-10-K.pdf#14",
+              "2025-10-K.pdf#17"
+            ]
+          }
+        },
+        {
+          "item_id": "FQA-c2180a4fa48947a326c9",
+          "family_id": "c2180a4fa48947a326c9",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2025-10-K.pdf#3"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-72398095458d46295ba0",
+          "family_id": "72398095458d46295ba0",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#10",
+              "2025-10-K.pdf#27",
+              "2025-10-K.pdf#37"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#18",
+              "2025-10-K.pdf#5"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-a22d89953a5d9c3be464",
+          "family_id": "a22d89953a5d9c3be464",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#36",
+              "2025-10-K.pdf#6"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#5"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-5afddf4bb22cb702148e",
+          "family_id": "5afddf4bb22cb702148e",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#10",
+              "2025-10-K.pdf#27",
+              "2025-10-K.pdf#37"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#18",
+              "2025-10-K.pdf#7"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-02e0949518b4d6c7875b",
+          "family_id": "02e0949518b4d6c7875b",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#22",
+              "2025-10-K.pdf#30"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#17",
+              "2025-10-K.pdf#18"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-3bcb4dd7d3f1f7a7ae8f",
+          "family_id": "3bcb4dd7d3f1f7a7ae8f",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": null,
+            "background_page_hit": true,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#19",
+              "2025-10-K.pdf#30"
+            ],
+            "direct_page_labels": [],
+            "background_page_labels": [
+              "2025-10-K.pdf#17",
+              "2025-10-K.pdf#22"
+            ]
+          }
+        },
+        {
+          "item_id": "FQA-789e153b6944977a435d",
+          "family_id": "789e153b6944977a435d",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": null,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": null,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#17",
+              "2025-10-K.pdf#22",
+              "2025-10-K.pdf#30"
+            ],
+            "direct_page_labels": [],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-DEV-d687185a6ce263bdbd63",
+          "family_id": "DEV-d687185a6ce263bdbd63",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2024-10-K.pdf#79"
+            ],
+            "direct_page_labels": [
+              "2024-10-K.pdf#50"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-DEV-3c57ba0a364db4d47d0b",
+          "family_id": "DEV-3c57ba0a364db4d47d0b",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": true,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": true,
+            "unjudged_cited_pages": [],
+            "direct_page_labels": [
+              "2024-10-K.pdf#52"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-DEV-2ad79e78ab860ac3675c",
+          "family_id": "DEV-2ad79e78ab860ac3675c",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#80"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#52"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQAV-DEV-USD-BILLIONS-2025-REVENUE",
+          "family_id": "DEV-2ad79e78ab860ac3675c",
+          "fact": {
+            "number": true,
+            "unit": true,
+            "company": true,
+            "metric": true,
+            "period": true,
+            "disclosure": true,
+            "statement": false,
+            "citation_support": true,
+            "physical_page": true,
+            "status_success": true,
+            "joint": false,
+            "label_tier": "AI_PDF_SOURCE_DIAGNOSIS_NOT_HUMAN_REVIEW",
+            "support_scope": "source-checked row anchor, numeral, location and evidence-ID linkage; no human Gold",
+            "location_scope": "known independently judged physical-page positions; unmatched pages UNJUDGED, not automatically wrong; not browser navigation score"
+          },
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2025-10-K.pdf#80"
+            ],
+            "direct_page_labels": [
+              "2025-10-K.pdf#52"
+            ],
+            "background_page_labels": []
+          }
+        },
+        {
+          "item_id": "FQA-DEV-06a7af746433df32954f",
+          "family_id": "DEV-06a7af746433df32954f",
+          "fact": null,
+          "pages": {
+            "direct_page_hit": false,
+            "background_page_hit": null,
+            "positive_page_hit_legacy": false,
+            "unjudged_cited_pages": [
+              "2023-10-K.pdf#86"
+            ],
+            "direct_page_labels": [
+              "2023-10-K.pdf#54"
+            ],
+            "background_page_labels": []
+          }
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Page hit is not fragment support; unjudged pages are not negative labels.",
+    "Full joint requires specific statement context; FINANCIAL_STATEMENTS is not a substitute.",
+    "New adjacent facts share some existing metric families; not independent human Gold.",
+    "No relation/conditional/comparison answer accuracy assigned without complete source labels/adjudication.",
+    "Graph-only sequential runs; no direct speed comparison with embedding-inclusive historical retrieval."
+  ],
+  "raw_hashes": {
+    "database-resume.json": "fb713ad3834932e5b31a6bb66a3841d569ae19be21a6a81ed1a156319fc5f2f6",
+    "development_fact_labels.json": "2394152a33966560ea6a1ea86a1f18f82ed0159d5ac85c5cf8f4e4d154add255",
+    "frozen_inputs_sha256.json": "3b67655be0c9001c58e77e61f8226d1fdbf452252a2b2cb9d67130935f26b535",
+    "protocol.json": "57d6e6f584e2e61fe6e28b509add2747180a0095834b4f307846849b11e57dcc",
+    "validation_fact_labels.json": "1ee6ce705130215474ddc4c17d1f63f0a4820cf417c00b5765dfa2f5df19ae8a",
+    "lifecycle\\dependency-unavailable.json": "5d864c936934106bb8a8bf63d383d7d108e0f7841e05f8bb8814921fce11089c",
+    "lifecycle\\lifecycle.json": "60b8bfcffecd3476a32280a991948e02f84163d0bc569fcb970956e7f1bb6a0f",
+    "lifecycle\\recovery.json": "b9afb3b5f13f4e8f456f8adfaf9ca84f747db2d7fc9e24d95993bb3cb13d57a1",
+    "lifecycle\\wrong-build.json": "e38855fb37bd8dea0973bdb926c4c3bc24798bfae182a8d5f478d53664626339",
+    "run-three-modes\\immutable-before.json": "89037c65b05bcde9524fe9bb539dc93a2a47a9815e484ba7daf42484281d89c4",
+    "run-three-modes\\preflight.json": "ecb7a5112c3ff818df113a42b09327276dcc3a56d6ad8ea0745719d125d472bc",
+    "run-three-modes-v2\\immutable-after.json": "89037c65b05bcde9524fe9bb539dc93a2a47a9815e484ba7daf42484281d89c4",
+    "run-three-modes-v2\\immutable-before.json": "89037c65b05bcde9524fe9bb539dc93a2a47a9815e484ba7daf42484281d89c4",
+    "run-three-modes-v2\\natural_language-resources.json": "5847df5f20157237e24a9d1b97d391911b2e3e10ccf5d06c484360a851a7073b",
+    "run-three-modes-v2\\natural_language.jsonl": "7483a2387cd9bd40cbedfcccb4ccb616bd6f72d3b90f95da231bf79c96994020",
+    "run-three-modes-v2\\preflight.json": "b0df74c55b1854a791973cc496c04953a13ef2317fc313488f08e8abae1e2b14",
+    "run-three-modes-v2\\reference_scope_diagnostic-resources.json": "6dc16bac4be701ff23eed79b5b3eaea4ac97866af2f24a2ef83b712325f76f08",
+    "run-three-modes-v2\\reference_scope_diagnostic.jsonl": "b6b5e5ae82e24659bae2e7599606e04e2eff0510adfd029ed9d6333731b2a3c9",
+    "run-three-modes-v2\\user_scope-resources.json": "e9d00933cce17be4491b16205f0f0bc1c8e4e1fa9e7e18dc29be13bcc1b43b2b",
+    "run-three-modes-v2\\user_scope.jsonl": "e978faaa55f82865833293db1273f68038cbd1b6871cf4ba4a3215f6597beda2",
+    "lifecycle\\initial-five\\requests.jsonl": "67fc757e5a684b0a0472f7e6aa69323387fdbb3cdbc1a290719d72c7a2ed626e",
+    "lifecycle\\restart-five\\requests.jsonl": "707370dd9c1e6a0596666066a29168be46ea263beff74a3819e5b5f7abe859fb"
+  }
+}

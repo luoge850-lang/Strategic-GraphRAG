@@ -1,0 +1,18 @@
+{
+  "requests": 21,
+  "startup_ms": 1573.17250000051,
+  "sampled_http_rss_bytes": 4747264,
+  "sampling_scope": "HTTP process sampled between requests, not peak system memory",
+  "hardware": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel",
+  "platform": "Windows-11-10.0.26100-SP0",
+  "cpu_count": 16,
+  "memory_total_bytes": 16961822720,
+  "database": "real Neo4j warm/uncontrolled OS cache",
+  "retrieval_mode": "graph",
+  "synthesize": false,
+  "use_cache": false,
+  "rate_limit": "unchanged default; <=40 queries per block",
+  "llm_calls": 0,
+  "embedding_calls": "not instrumented; graph-only route",
+  "cost": null
+}

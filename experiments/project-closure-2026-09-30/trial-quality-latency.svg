@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="340" viewBox="0 0 1000 340">
+<rect width="1000" height="340" fill="#f5f3ec"/>
+<g font-family="Arial,sans-serif" fill="#202923">
+<text x="40" y="40" font-size="23">Evidence before confidence</text>
+<text x="40" y="70" font-size="13">AI/PDF development diagnosis, not an independent accuracy claim</text>
+<text x="40" y="115" font-size="16">Before repair: 6/8 explicit numerical references</text>
+<rect x="40" y="127" width="320" height="24" fill="#dddccf"/>
+<rect x="40" y="127" width="240.0" height="24" fill="#577b5f"/>
+<text x="40" y="200" font-size="16">After repair: 8/8 explicit numerical references</text>
+<rect x="40" y="212" width="320" height="24" fill="#dddccf"/>
+<rect x="40" y="212" width="320.0" height="24" fill="#577b5f"/>
+<text x="500" y="115" font-size="16">Real HTTP query latency (warm database)</text>
+<text x="500" y="152" font-size="14">Concurrency 1: 10/10 passed</text>
+<text x="500" y="171" font-size="13">p50 20.96 ms / p95 32.55 ms</text>
+<text x="500" y="200" font-size="14">Concurrency 2: 10/10 passed</text>
+<text x="500" y="219" font-size="13">p50 18.34 ms / p95 49.66 ms</text>
+<text x="500" y="248" font-size="14">Concurrency 4: 10/10 passed</text>
+<text x="500" y="267" font-size="13">p50 23.36 ms / p95 39.49 ms</text>
+<text x="40" y="308" font-size="12">Five fixed smoke questions; ten requests per concurrency. No LLM generation. OS cache uncontrolled.</text>
+</g></svg>

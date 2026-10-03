@@ -1,0 +1,12 @@
+{
+  "verified_commit": "ff3ace2ff743ca63c75f5a058569b95bc823d84f",
+  "checkout": "fresh local clone; no project virtual environment, private config, PDFs or database copied into checkout",
+  "python": "external pre-existing Python 3.12 executable; offline verifier and summary computation use standard library only",
+  "commands": [
+    {"command": "python -m deployment.verify_answer_closure_artifacts", "exit_code": 0, "integrity": "PASS", "hash_entries": 72, "exact_summaries": 3, "errors": [], "reliable_answer_quality_gate": "FAIL"},
+    {"command": "python -c 'from strategic_graphrag.build_identity import source_fingerprint; print(source_fingerprint())'", "exit_code": 0, "source_tree_sha256": "f0694cf94608d880f2c5d4ea666b46aad6621cc0f7605e47cb0a2bbed0c90a37", "matches_candidate": true},
+    {"command": "python deployment/test_complete_fact_scoring.py", "exit_code": 0, "tests": 10, "scope": "scoring counterexample tests, not QA accuracy"}
+  ],
+  "github": {"remote_verified_commit": "ff3ace2ff743ca63c75f5a058569b95bc823d84f", "branch": "codex/financial-evidence-qa-delivery-2026-09-29", "pr": "https://github.com/luoge850-lang/Strategic-GraphRAG/pull/1", "force_push": false, "merged": false},
+  "limits": ["This validates offline recomputation and checkout source identity, not fresh installation of all service dependencies or public deployment.", "Published public_sha256.json seals the original 65 artifacts; this later checkout receipt is separately versioned by Git and does not alter that seal."]
+}

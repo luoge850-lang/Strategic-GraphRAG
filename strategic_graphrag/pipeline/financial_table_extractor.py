@@ -13,9 +13,15 @@ from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 
 TABLE_METRICS: Sequence[Tuple[str, str]] = (
+    ("accounts payable", "ACCOUNTS_PAYABLE"),
+    ("data center", "DATA_CENTER_REVENUE"),
+    ("gaming", "GAMING_REVENUE"),
+    ("automotive", "AUTOMOTIVE_REVENUE"),
+    ("professional visualization", "PROFESSIONAL_VISUALIZATION_REVENUE"),
     ("cash and cash equivalents", "CASH_AND_CASH_EQUIVALENTS"),
     ("marketable securities", "MARKETABLE_SECURITIES"),
     ("accounts receivable", "ACCOUNTS_RECEIVABLE"),
+    ("accounts receivable net", "ACCOUNTS_RECEIVABLE"),
     ("inventories", "INVENTORIES"),
     ("total current assets", "TOTAL_CURRENT_ASSETS"),
     ("total assets", "TOTAL_ASSETS"),
@@ -439,12 +445,40 @@ def extract_financial_table_triples(
     triples: List[Dict] = []
     seen = set()
     for table in tables:
+        parent_metric = None
+        parent_row = None
         for row in table or []:
             row_text = _row_text(row)
             metric = _find_metric(row_text)
+            disclosed_ratio = False
+            if re.match(r"^%\s+of\s+(?:net\s+)?revenue\b", row_text, re.IGNORECASE):
+                ratios = {"R_AND_D_EXPENSE": "R_AND_D_RATIO", "SG_AND_A_EXPENSE": "SG_AND_A_RATIO",
+                          "OPERATING_COST": "OPERATING_EXPENSE_RATIO"}
+                if parent_metric in ratios:
+                    metric = ("% of revenue", ratios[parent_metric])
+                    disclosed_ratio = True
+            elif metric:
+                parent_metric, parent_row = metric[1], row_text
+            else:
+                parent_metric, parent_row = None, None
             if not metric or not _numeric_values(row_text):
                 continue
             metric_alias, metric_id = metric
+            # A working-capital cash-flow adjustment is not the closing balance.
+            # Component disclosures likewise must not become total expenses.
+            statement_type = "FINANCIAL_TABLE"
+            if re.search(r"consolidated statements of cash flows", page_text, re.IGNORECASE):
+                statement_type = "CASH_FLOW_STATEMENT"
+                if metric_id in {"ACCOUNTS_RECEIVABLE", "INVENTORIES", "ACCOUNTS_PAYABLE"}:
+                    metric_id = "CASH_FLOW_CHANGE_" + metric_id
+            elif re.search(r"(?im)^note\s+\d+\s*[-:]\s*stock[- ]based compensation", page_text):
+                statement_type = "STOCK_BASED_COMPENSATION_NOTE"
+                if metric_id in {"R_AND_D_EXPENSE", "SG_AND_A_EXPENSE", "COST_OF_REVENUE"}:
+                    metric_id = "STOCK_BASED_" + metric_id
+            elif re.search(r"consolidated balance sheets", page_text, re.IGNORECASE):
+                statement_type = "BALANCE_SHEET"
+            elif re.search(r"(?im)^\s*consolidated statements of income\s*$", page_text):
+                statement_type = "INCOME_STATEMENT"
             # MD&A contains a percentage-of-revenue table whose row labels
             # reuse income-statement names.  In that context "Gross profit
             # 75.0" is a margin percentage, not USD gross profit.
@@ -471,12 +505,19 @@ def extract_financial_table_triples(
             if not row_evidence.strip():
                 continue
             evidence = _table_context(page_text, row_evidence)
+            if disclosed_ratio:
+                parent_evidence = _find_exact_row(page_text, parent_row, _find_metric(parent_row)[0])
+                if not parent_evidence:
+                    continue
+                evidence = evidence.replace(row_evidence, parent_evidence + "\n" + row_evidence)
             periods = _periods_for_evidence(page_text, row_evidence, filing_year)
             period_text = ",".join(str(year) for year in periods)
             unit = _unit(page_text, row_evidence)
+            if disclosed_ratio:
+                unit = "percent"
             # The table may report dollars while nearby prose mentions a
             # percentage view of the same metric.  Use row-level units first.
-            if unit == "percent" and "$" in row_evidence:
+            if not disclosed_ratio and unit == "percent" and "$" in row_evidence:
                 unit = "USD millions" if "in millions" in page_text.lower() else "USD"
             key = (metric_id, row_evidence)
             if key in seen:
@@ -486,7 +527,7 @@ def extract_financial_table_triples(
             # exact page line is the authoritative row for values and units.
             values = _numeric_values(
                 row_evidence,
-                drop_trailing_change=_has_change_column_header(page_text, row_evidence),
+                drop_trailing_change=False if disclosed_ratio else _has_change_column_header(page_text, row_evidence),
             )
             if not values:
                 values = _numeric_values(row_text)
@@ -502,6 +543,12 @@ def extract_financial_table_triples(
                 for period, value in zip(periods, values)
             ]
             resolved_company_id = str(company_id or "").strip() or None
+            table_name = _table_name(page_text, row_evidence)
+            if disclosed_ratio:
+                # Both adjacent source rows are necessary to identify what the
+                # repeated '% of revenue' row measures. Preserve, never invent,
+                # the parent label as part of the verbatim claim.
+                row_evidence = parent_evidence + "\n" + row_evidence
             triples.append({
                 "source": resolved_company_id or "",
                 "source_category": "Company" if resolved_company_id else "UnresolvedCompany",
@@ -527,12 +574,12 @@ def extract_financial_table_triples(
                 "table_context": evidence,
                 "metric_values_json": json.dumps(period_values, ensure_ascii=False),
                 "metric_value": values[0],
-                "metric_unit": _unit(page_text, row_evidence),
-                "unit": _unit(page_text, row_evidence),
-                "currency": "USD" if _unit(page_text, row_evidence).upper().startswith("USD") else None,
+                "metric_unit": unit,
+                "unit": unit,
+                "currency": "USD" if unit.upper().startswith("USD") else None,
                 "scale": (
-                    "millions" if "million" in _unit(page_text, row_evidence).lower()
-                    else "thousands" if "thousand" in _unit(page_text, row_evidence).lower()
+                    "millions" if "million" in unit.lower()
+                    else "thousands" if "thousand" in unit.lower()
                     else None
                 ),
                 "sign": "negative" if str(values[0]).startswith("-") else "positive",
@@ -541,13 +588,13 @@ def extract_financial_table_triples(
                 # multi-line citation context.  Passing the full context
                 # makes the row lookup miss and can select an unrelated
                 # heading near the end of the page.
-                "table_name": _table_name(page_text, row_evidence),
+                "table_name": table_name,
                 "row_label": metric_alias,
-                "table_id": _table_name(page_text, row_evidence),
+                "table_id": table_name,
                 "row_id": metric_id,
                 "column_id": str(periods[0]) if periods else str(filing_year),
                 "source_span": row_evidence,
-                "statement_type": "FINANCIAL_TABLE",
+                "statement_type": statement_type,
                 "comparability_status": "UNASSESSED",
             })
     return triples

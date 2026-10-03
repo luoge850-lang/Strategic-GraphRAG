@@ -1,0 +1,149 @@
+{
+  "schema": "financial-retrieval-raw-run/v1",
+  "created_at_utc": "2026-09-30T05:58:06.994517+00:00",
+  "run_started_at_utc": "2026-09-30T05:57:47.522127+00:00",
+  "run_completed_at_utc": "2026-09-30T05:58:06.994517+00:00",
+  "run_wall_clock_seconds": 19.472,
+  "request_throughput_per_second_including_setup_and_serial_queries": 8.012,
+  "build_id": "build_7feb21b48e594a7a",
+  "source_fingerprint": "ab2693cf127abd39a28c6d70f576ae996778302ee225e11dec8e574b389606d2",
+  "protocol_sha256": "d2a5baca4e49dcdf95444ea63e84050cbc44e2d14f0283183402e6080d28a4ee",
+  "candidate_dataset_sha256": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af",
+  "runner_sha256": "367e7c3d1e0caed9bff2698f948aae03eafdc320c104b0a62935686a87011084",
+  "dependency_lock_sha256": "994e613c8846b9d1c165121d4b539489be147a097ab96ce0a8795f213afe58f8",
+  "frozen_input_sha256_before": {
+    "runner": "367e7c3d1e0caed9bff2698f948aae03eafdc320c104b0a62935686a87011084",
+    "query_parser": "fd12e6aeff36bcf0e65b934bf930f0128b6fb583948bc2345afc8f48e3054454",
+    "summarizer": "ba5a9ef0ee387ad0a3fc78351c46c6db78e1f5db84ffbb9a6ab05507d62c86ce",
+    "protocol": "d2a5baca4e49dcdf95444ea63e84050cbc44e2d14f0283183402e6080d28a4ee",
+    "dataset": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af",
+    "dependency_lock": "994e613c8846b9d1c165121d4b539489be147a097ab96ce0a8795f213afe58f8"
+  },
+  "frozen_input_sha256_after": {
+    "runner": "367e7c3d1e0caed9bff2698f948aae03eafdc320c104b0a62935686a87011084",
+    "query_parser": "fd12e6aeff36bcf0e65b934bf930f0128b6fb583948bc2345afc8f48e3054454",
+    "summarizer": "ba5a9ef0ee387ad0a3fc78351c46c6db78e1f5db84ffbb9a6ab05507d62c86ce",
+    "protocol": "d2a5baca4e49dcdf95444ea63e84050cbc44e2d14f0283183402e6080d28a4ee",
+    "dataset": "086083c4e9ab4d53fbffa869740276d83c50979b1a501d26fb9f887f74c1a3af",
+    "dependency_lock": "994e613c8846b9d1c165121d4b539489be147a097ab96ce0a8795f213afe58f8"
+  },
+  "raw_jsonl_sha256": "a7a85006571ff3fb7297590630b375f637544008345714646e3b9a1f3bc3e511",
+  "source_pdf_hashes": {
+    "2023-10-K.pdf": {
+      "sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+      "bytes": 1578179
+    },
+    "2024-10-K.pdf": {
+      "sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+      "bytes": 1074533
+    },
+    "2025-10-K.pdf": {
+      "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+      "bytes": 1274715
+    }
+  },
+  "vector_index_chunks": 843,
+  "accepted_triples": 198,
+  "expanded_fact_edges": 362,
+  "matrix_modes": [
+    "keyword_bm25",
+    "dense_semantic",
+    "keyword_dense_fusion_rrf",
+    "fusion_graph_expansion",
+    "fusion_graph_expansion_temporal",
+    "fusion_temporal_only"
+  ],
+  "records": 156,
+  "candidate_family_count": 20,
+  "selected_family_ids": [
+    "02e0949518b4d6c7875b",
+    "33764b55e0611be080cc",
+    "34545952401c5dd5a682",
+    "3bcb4dd7d3f1f7a7ae8f",
+    "3fbfaf549f970fd5d280",
+    "459504a0c8aab868b348",
+    "5afddf4bb22cb702148e",
+    "72398095458d46295ba0",
+    "789e153b6944977a435d",
+    "841546b4d92198e1bb46",
+    "987035dd8ccaceaef0fc",
+    "9ebad1d7a48a48c4c012",
+    "DEV-06a7af746433df32954f",
+    "DEV-2ad79e78ab860ac3675c",
+    "DEV-3c57ba0a364db4d47d0b",
+    "DEV-d687185a6ce263bdbd63",
+    "a22d89953a5d9c3be464",
+    "c2180a4fa48947a326c9",
+    "dd161d65dc8249591b85",
+    "e4a8908ea7e94a8710a1"
+  ],
+  "limited_smoke_run": false,
+  "candidate_question_count": 26,
+  "quality_metrics": "AI/PDF source-reviewed development diagnostics; not human Gold or independent test",
+  "cold_start_latency": "NOT_MEASURED",
+  "runtime": {
+    "os": "Windows-11-10.0.26100-SP0",
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "cpu_count_logical": 16,
+    "memory_total_bytes": 16961822720,
+    "process_peak_rss_bytes": 315101184,
+    "warmup_seconds_excluded_from_request_latency": 0.21224990000018806,
+    "warmup_state": "local ONNX query embedding initialized once; result cache not used",
+    "concurrency": 1,
+    "cold_start_latency": "NOT_MEASURED",
+    "model_generation_enabled": false,
+    "query_embedding_model": "all-MiniLM-L6-v2",
+    "query_embedding_model_archive_sha256": "913d7300ceae3b2dbc2c50d1de4baacab4be7b9380491c27fab7418616a16ec3",
+    "installed_runtime_versions": {
+      "chromadb": "1.5.9",
+      "onnxruntime": "1.28.0",
+      "tokenizers": "0.22.2",
+      "numpy": "2.5.2",
+      "pillow": "12.3.0"
+    },
+    "llm_calls": 0,
+    "network_calls": 0,
+    "candidate_pool_chunks": 843,
+    "evidence_budget_unique_pages": 10,
+    "arm_candidate_budget": 50,
+    "bm25": {
+      "k1": 1.5,
+      "b": 0.75
+    },
+    "rrf_k0": 60,
+    "graph_expansion": "从关键词与语义融合检索前 10 页做一跳共享端点扩展；只使用同构建身份的事实边",
+    "temporal_filter": "structured parser fact-year/disclosure scope; fails closed if temporal scope unresolved",
+    "latency_ms": {
+      "fusion_temporal_only": {
+        "n": 26,
+        "p50": 144.027,
+        "p95": 152.922
+      },
+      "fusion_graph_expansion": {
+        "n": 26,
+        "p50": 143.372,
+        "p95": 150.465
+      },
+      "fusion_graph_expansion_temporal": {
+        "n": 26,
+        "p50": 146.024,
+        "p95": 158.471
+      },
+      "keyword_bm25": {
+        "n": 26,
+        "p50": 3.37,
+        "p95": 4.695
+      },
+      "dense_semantic": {
+        "n": 26,
+        "p50": 140.77,
+        "p95": 152.827
+      },
+      "keyword_dense_fusion_rrf": {
+        "n": 26,
+        "p50": 145.078,
+        "p95": 157.411
+      }
+    }
+  }
+}

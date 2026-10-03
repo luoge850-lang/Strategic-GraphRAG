@@ -5,6 +5,7 @@ import {
   TableQualityRow,
   getTableQuality,
   patchTableQuality,
+  API_BASE,
 } from "../lib/api";
 
 type SaveState = "idle" | "dirty" | "saving" | "saved" | "error";
@@ -50,7 +51,7 @@ export default function TableQualityAnnotationPanel() {
 
   const sourceUrl = useMemo(() => {
     if (!current) return "";
-    return `/evaluation/table-quality/source/${encodeURIComponent(current.source_filing)}#page=${current.page}`;
+    return `${API_BASE}/evaluation/table-quality/source/${encodeURIComponent(current.source_filing)}#page=${current.page}`;
   }, [current]);
 
   useEffect(() => {
