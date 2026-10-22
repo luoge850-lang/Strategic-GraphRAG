@@ -1,0 +1,2695 @@
+{
+  "build_id": "build_8a5ce6d74be82a7c",
+  "scope": "Derived 25-question diagnostics, not full raw HTTP responses or human Gold. Original raw records remain local.",
+  "questions": [
+    {
+      "id": "R01",
+      "question": "What was NVIDIA Gross profit for FY2021, using the 2023 annual report?",
+      "family": "NVIDIA_CORPORATION/GROSS_PROFIT",
+      "expected": {
+        "id": "R01",
+        "family": "NVIDIA_CORPORATION/GROSS_PROFIT",
+        "question": "What was NVIDIA Gross profit for FY2021, using the 2023 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "GROSS_PROFIT",
+            "value": 10396.0,
+            "unit": "USD millions",
+            "fact_period": "FY2021",
+            "disclosure_version": "2023-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2023-10-K.pdf",
+                "page": 54,
+                "anchor": "Gross profit"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 10396.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Gross profit                                                                          15,356           17,475           10,396",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_9B8A284397046C6B7928E4FF",
+                "measurement_key": "FM_BF40F6FC329EA0099431",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "GROSS_PROFIT",
+                "claim_id": "claim_v2_d01ee263afc0557d514f5c59",
+                "source_filing": "2023-10-K.pdf",
+                "page": 54,
+                "fiscal_period": "FY2021",
+                "fiscal_year": 2021,
+                "value": 10396.0,
+                "raw_value": "10396",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "INCOME_STATEMENT",
+                "table_name": "CONSOLIDATED STATEMENTS OF INCOME",
+                "row_label": "gross profit",
+                "column_label": "FY2021",
+                "valid_from": "FY2021",
+                "valid_to": "FY2021",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "CONSOLIDATED STATEMENTS OF INCOME",
+                "document_sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+                "source_row": "Gross profit 15,356 17,475 10,396",
+                "table_context": "Table of Contents\nNVIDIA CORPORATION AND SUBSIDIARIES\nCONSOLIDATED STATEMENTS OF INCOME\n(In millions, except per share data)\nYear Ended\nJanuary 29, January 30, January 31,\n2023 2022 2021\nRevenue $ 26,974 $ 26,914 $ 16,675\nCost of revenue 11,618 9,439 6,279\nGross profit 15,356 17,475 10,396\nOperating expenses\nResearch and development 7,339 5,268 3,924\nGross profit 15,356 17,475 10,396",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2021",
+                "disclosure_version": "2023-10-K.pdf",
+                "evidence_id": "claim_v2_d01ee263afc0557d514f5c59",
+                "source": "2023-10-K.pdf#page=54"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R02",
+      "question": "Give NVIDIA Revenue for FY2022, using the 2023 annual report?",
+      "family": "NVIDIA_CORPORATION/REVENUE",
+      "expected": {
+        "id": "R02",
+        "family": "NVIDIA_CORPORATION/REVENUE",
+        "question": "Give NVIDIA Revenue for FY2022, using the 2023 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "REVENUE",
+            "value": 26914.0,
+            "unit": "USD millions",
+            "fact_period": "FY2022",
+            "disclosure_version": "2023-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2023-10-K.pdf",
+                "page": 54,
+                "anchor": "Revenue"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 26914.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Revenue                                                             $        26,974  $        26,914  $        16,675",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_D0C35D9E81C15ADBA29A16ED",
+                "measurement_key": "FM_9C32265E91250F0A33DA",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "REVENUE",
+                "claim_id": "claim_v2_81152fc586862fe1b62df9c8",
+                "source_filing": "2023-10-K.pdf",
+                "page": 54,
+                "fiscal_period": "FY2022",
+                "fiscal_year": 2022,
+                "value": 26914.0,
+                "raw_value": "26914",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "INCOME_STATEMENT",
+                "table_name": "CONSOLIDATED STATEMENTS OF INCOME",
+                "row_label": "revenue",
+                "column_label": "FY2022",
+                "valid_from": "FY2022",
+                "valid_to": "FY2022",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "CONSOLIDATED STATEMENTS OF INCOME",
+                "document_sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+                "source_row": "Revenue $ 26,974 $ 26,914 $ 16,675",
+                "table_context": "Table of Contents\nNVIDIA CORPORATION AND SUBSIDIARIES\nCONSOLIDATED STATEMENTS OF INCOME\n(In millions, except per share data)\nYear Ended\nJanuary 29, January 30, January 31,\n2023 2022 2021\nRevenue $ 26,974 $ 26,914 $ 16,675\nCost of revenue 11,618 9,439 6,279\nGross profit 15,356 17,475 10,396\nOperating expenses\nResearch and development 7,339 5,268 3,924\nRevenue $ 26,974 $ 26,914 $ 16,675",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2022",
+                "disclosure_version": "2023-10-K.pdf",
+                "evidence_id": "claim_v2_81152fc586862fe1b62df9c8",
+                "source": "2023-10-K.pdf#page=54"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R03",
+      "question": "Report NVIDIA Income from operations for FY2021, using the 2023 annual report?",
+      "family": "NVIDIA_CORPORATION/OPERATING_INCOME",
+      "expected": {
+        "id": "R03",
+        "family": "NVIDIA_CORPORATION/OPERATING_INCOME",
+        "question": "Report NVIDIA Income from operations for FY2021, using the 2023 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "OPERATING_INCOME",
+            "value": 4532.0,
+            "unit": "USD millions",
+            "fact_period": "FY2021",
+            "disclosure_version": "2023-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2023-10-K.pdf",
+                "page": 54,
+                "anchor": "Income from operations"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 4532.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Income from operations                                                                 4,224           10,041             4,532",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "NOT_REQUESTED",
+      "mechanical_score": {
+        "core": false,
+        "successful": false,
+        "precision_correct": null,
+        "numeric": false,
+        "identity": false,
+        "operation": false,
+        "citation_identity": false,
+        "citation_reference": false,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": false,
+            "amount": false,
+            "citation_identity": false,
+            "citation_reference": false,
+            "metadata": false,
+            "observations": []
+          }
+        ]
+      },
+      "ai_pdf_core": false,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R04",
+      "question": "How much was NVIDIA Net income for FY2022, using the 2023 annual report?",
+      "family": "NVIDIA_CORPORATION/NET_INCOME",
+      "expected": {
+        "id": "R04",
+        "family": "NVIDIA_CORPORATION/NET_INCOME",
+        "question": "How much was NVIDIA Net income for FY2022, using the 2023 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "NET_INCOME",
+            "value": 9752.0,
+            "unit": "USD millions",
+            "fact_period": "FY2022",
+            "disclosure_version": "2023-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2023-10-K.pdf",
+                "page": 54,
+                "anchor": "Net income"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 9752.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Net income                                                           $         4,368  $         9,752  $         4,332",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": false,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": false,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_2CE5E45E066C5FAA11560EA7",
+                "measurement_key": "FM_34D51E22CABCF1FCE839",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "NET_INCOME",
+                "claim_id": "claim_v2_0409a588a5e29eff819b02a9",
+                "source_filing": "2023-10-K.pdf",
+                "page": 55,
+                "fiscal_period": "FY2022",
+                "fiscal_year": 2022,
+                "value": 9752.0,
+                "raw_value": "9752",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "COMPREHENSIVE_INCOME_STATEMENT",
+                "table_name": "CONSOLIDATED STATEMENTS OF COMPREHENSIVE INCOME",
+                "row_label": "net income",
+                "column_label": "FY2022",
+                "valid_from": "FY2022",
+                "valid_to": "FY2022",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "CONSOLIDATED STATEMENTS OF COMPREHENSIVE INCOME",
+                "document_sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+                "source_row": "Net income $ 4,368 $ 9,752 $ 4,332",
+                "table_context": "Table of Contents\nNVIDIA CORPORATION AND SUBSIDIARIES\nCONSOLIDATED STATEMENTS OF COMPREHENSIVE INCOME\n(In millions)\nYear Ended\nJanuary 29, January 30, January 31,\n2023 2022 2021\nNet income $ 4,368 $ 9,752 $ 4,332\nOther comprehensive income (loss), net of tax\nAvailable-for-sale debt securities:\nNet unrealized gain (loss) (31) (16) 2\nReclassification adjustments for net realized gain (loss) included in net income 1 — (2)\nNet income $ 4,368 $ 9,752 $ 4,332",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2022",
+                "disclosure_version": "2023-10-K.pdf",
+                "evidence_id": "claim_v2_0409a588a5e29eff819b02a9",
+                "source": "2023-10-K.pdf#page=55"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R05",
+      "question": "What was NVIDIA Research and development for FY2023, using the 2023 annual report?",
+      "family": "NVIDIA_CORPORATION/R_AND_D_EXPENSE",
+      "expected": {
+        "id": "R05",
+        "family": "NVIDIA_CORPORATION/R_AND_D_EXPENSE",
+        "question": "What was NVIDIA Research and development for FY2023, using the 2023 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "R_AND_D_EXPENSE",
+            "value": 7339.0,
+            "unit": "USD millions",
+            "fact_period": "FY2023",
+            "disclosure_version": "2023-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2023-10-K.pdf",
+                "page": 54,
+                "anchor": "Research and development"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 7339.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Research and development                                                         7,339             5,268             3,924",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_7813428FBC0A1B29B2B394C4",
+                "measurement_key": "FM_9DC49CDA05A28D71812C",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "R_AND_D_EXPENSE",
+                "claim_id": "claim_v2_fe40223661cfcee36484244d",
+                "source_filing": "2023-10-K.pdf",
+                "page": 54,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 7339.0,
+                "raw_value": "7339",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "INCOME_STATEMENT",
+                "table_name": "CONSOLIDATED STATEMENTS OF INCOME",
+                "row_label": "research and development",
+                "column_label": "FY2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "CONSOLIDATED STATEMENTS OF INCOME",
+                "document_sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+                "source_row": "Research and development 7,339 5,268 3,924",
+                "table_context": "Table of Contents\nNVIDIA CORPORATION AND SUBSIDIARIES\nCONSOLIDATED STATEMENTS OF INCOME\n(In millions, except per share data)\nYear Ended\nJanuary 29, January 30, January 31,\n2023 2022 2021\nRevenue $ 26,974 $ 26,914 $ 16,675\nCost of revenue 11,618 9,439 6,279\nGross profit 15,356 17,475 10,396\nOperating expenses\nResearch and development 7,339 5,268 3,924\nResearch and development 7,339 5,268 3,924",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "2023-10-K.pdf",
+                "evidence_id": "claim_v2_fe40223661cfcee36484244d",
+                "source": "2023-10-K.pdf#page=54"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R06",
+      "question": "Give NVIDIA Sales, general and administrative for FY2023, using the 2024 annual report?",
+      "family": "NVIDIA_CORPORATION/SG_AND_A_EXPENSE",
+      "expected": {
+        "id": "R06",
+        "family": "NVIDIA_CORPORATION/SG_AND_A_EXPENSE",
+        "question": "Give NVIDIA Sales, general and administrative for FY2023, using the 2024 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "SG_AND_A_EXPENSE",
+            "value": 2440.0,
+            "unit": "USD millions",
+            "fact_period": "FY2023",
+            "disclosure_version": "2024-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2024-10-K.pdf",
+                "page": 50,
+                "anchor": "Sales, general and administrative"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 2440.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Sales, general and administrative                                                           2,654               2,440               2,166",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": true,
+        "request_joint": true,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": true,
+            "observations": [
+              {
+                "id": "FO_B7C4CF95ED514D52DB94E6FF",
+                "measurement_key": "FM_A8ABBD0D6D681FA49751",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "SG_AND_A_EXPENSE",
+                "claim_id": "claim_v2_02181f9b46c4c90348434e2a",
+                "source_filing": "2024-10-K.pdf",
+                "page": 50,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 2440.0,
+                "raw_value": "2440",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "INCOME_STATEMENT",
+                "table_name": "Consolidated Statements of Income",
+                "row_label": "sales general and administrative",
+                "column_label": "Jan 29, 2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated Statements of Income",
+                "document_sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+                "source_row": "Sales, general and administrative 2,654 2,440 2,166",
+                "table_context": "Table of Contents\nNVIDIA Corporation and Subsidiaries\nConsolidated Statements of Income\n(In millions, except per share data)\nYear Ended\nJan 28, 2024 Jan 29, 2023 Jan 30, 2022\nRevenue $ 60,922 $ 26,974 $ 26,914\nCost of revenue 16,621 11,618 9,439\nGross profit 44,301 15,356 17,475\nOperating expenses\nResearch and development 8,675 7,339 5,268\nSales, general and administrative 2,654 2,440 2,166\nSales, general and administrative 2,654 2,440 2,166",
+                "period_start": "2022-01-31",
+                "period_end": "2023-01-29",
+                "period_bounds_status": "SOURCE_END_AND_PRIOR_END",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "2024-10-K.pdf",
+                "evidence_id": "claim_v2_02181f9b46c4c90348434e2a",
+                "source": "2024-10-K.pdf#page=50"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R07",
+      "question": "Report NVIDIA Operating lease assets for FY2024, using the 2024 annual report?",
+      "family": "NVIDIA_CORPORATION/OPERATING_LEASE_ASSETS",
+      "expected": {
+        "id": "R07",
+        "family": "NVIDIA_CORPORATION/OPERATING_LEASE_ASSETS",
+        "question": "Report NVIDIA Operating lease assets for FY2024, using the 2024 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "OPERATING_LEASE_ASSETS",
+            "value": 1346.0,
+            "unit": "USD millions",
+            "fact_period": "FY2024",
+            "disclosure_version": "2024-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2024-10-K.pdf",
+                "page": 52,
+                "anchor": "Operating lease assets"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 1346.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Operating lease assets                                                                                               1,346               1,038",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": true,
+        "request_joint": true,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": true,
+            "observations": [
+              {
+                "id": "FO_289BB4F456D4A0D023284494",
+                "measurement_key": "FM_32C7041798416670E507",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "OPERATING_LEASE_ASSETS",
+                "claim_id": "claim_v2_e77f81e1a261a72b7f029a21",
+                "source_filing": "2024-10-K.pdf",
+                "page": 52,
+                "fiscal_period": "FY2024",
+                "fiscal_year": 2024,
+                "value": 1346.0,
+                "raw_value": "1346",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated Balance Sheets",
+                "row_label": "operating lease assets",
+                "column_label": "Jan 28, 2024",
+                "valid_from": "FY2024",
+                "valid_to": "FY2024",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated Balance Sheets",
+                "document_sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+                "source_row": "Operating lease assets 1,346 1,038",
+                "table_context": "Table of Contents\nNVIDIA Corporation and Subsidiaries\nConsolidated Balance Sheets\n(In millions, except par value)\nJan 28, 2024 Jan 29, 2023\nAssets\nCurrent assets:\nCash and cash equivalents $ 7,280 $ 3,389\nMarketable securities 18,704 9,907\nAccounts receivable, net 9,999 3,827\nInventories 5,282 5,159\nPrepaid expenses and other current assets 3,080 791\nOperating lease assets 1,346 1,038",
+                "period_start": "2024-01-28",
+                "period_end": "2024-01-28",
+                "period_bounds_status": "SOURCE_END_AND_PRIOR_END",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2024",
+                "disclosure_version": "2024-10-K.pdf",
+                "evidence_id": "claim_v2_e77f81e1a261a72b7f029a21",
+                "source": "2024-10-K.pdf#page=52"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R08",
+      "question": "How much was NVIDIA Long-term debt for FY2023, using the 2024 annual report?",
+      "family": "NVIDIA_CORPORATION/LONG_TERM_DEBT",
+      "expected": {
+        "id": "R08",
+        "family": "NVIDIA_CORPORATION/LONG_TERM_DEBT",
+        "question": "How much was NVIDIA Long-term debt for FY2023, using the 2024 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "LONG_TERM_DEBT",
+            "value": 9703.0,
+            "unit": "USD millions",
+            "fact_period": "FY2023",
+            "disclosure_version": "2024-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2024-10-K.pdf",
+                "page": 52,
+                "anchor": "Long-term debt"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 9703.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Long-term debt                                                                                                      8,459               9,703",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": true,
+        "request_joint": true,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": true,
+            "observations": [
+              {
+                "id": "FO_C155C8D06EDF57C061ABB3CF",
+                "measurement_key": "FM_6A427A72A5F032816C2C",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "LONG_TERM_DEBT",
+                "claim_id": "claim_v2_75d1676fc1dee041a7e6d946",
+                "source_filing": "2024-10-K.pdf",
+                "page": 52,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 9703.0,
+                "raw_value": "9703",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated Balance Sheets",
+                "row_label": "long-term debt",
+                "column_label": "Jan 29, 2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated Balance Sheets",
+                "document_sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+                "source_row": "Long-term debt 8,459 9,703",
+                "table_context": "Table of Contents\nNVIDIA Corporation and Subsidiaries\nConsolidated Balance Sheets\n(In millions, except par value)\nJan 28, 2024 Jan 29, 2023\nAssets\nCurrent assets:\nCash and cash equivalents $ 7,280 $ 3,389\nMarketable securities 18,704 9,907\nAccounts receivable, net 9,999 3,827\nInventories 5,282 5,159\nPrepaid expenses and other current assets 3,080 791\nLong-term debt 8,459 9,703",
+                "period_start": "2023-01-29",
+                "period_end": "2023-01-29",
+                "period_bounds_status": "SOURCE_END_AND_PRIOR_END",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "2024-10-K.pdf",
+                "evidence_id": "claim_v2_75d1676fc1dee041a7e6d946",
+                "source": "2024-10-K.pdf#page=52"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R09",
+      "question": "What was NVIDIA Net income for FY2023, using the 2024 annual report?",
+      "family": "NVIDIA_CORPORATION/NET_INCOME",
+      "expected": {
+        "id": "R09",
+        "family": "NVIDIA_CORPORATION/NET_INCOME",
+        "question": "What was NVIDIA Net income for FY2023, using the 2024 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "NET_INCOME",
+            "value": 4368.0,
+            "unit": "USD millions",
+            "fact_period": "FY2023",
+            "disclosure_version": "2024-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2024-10-K.pdf",
+                "page": 50,
+                "anchor": "Net income"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 4368.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Net income                                                                 $          29,760  $           4,368  $           9,752",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": true,
+        "request_joint": true,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": true,
+            "observations": [
+              {
+                "id": "FO_7F50BA9946DBB167E732A62A",
+                "measurement_key": "FM_56BAC21F3A625AC362A5",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "NET_INCOME",
+                "claim_id": "claim_v2_ec185458efd3269675b21210",
+                "source_filing": "2024-10-K.pdf",
+                "page": 50,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 4368.0,
+                "raw_value": "4368",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "INCOME_STATEMENT",
+                "table_name": "Consolidated Statements of Income",
+                "row_label": "net income",
+                "column_label": "Jan 29, 2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated Statements of Income",
+                "document_sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+                "source_row": "Net income $ 29,760 $ 4,368 $ 9,752",
+                "table_context": "Table of Contents\nNVIDIA Corporation and Subsidiaries\nConsolidated Statements of Income\n(In millions, except per share data)\nYear Ended\nJan 28, 2024 Jan 29, 2023 Jan 30, 2022\nRevenue $ 60,922 $ 26,974 $ 26,914\nCost of revenue 16,621 11,618 9,439\nGross profit 44,301 15,356 17,475\nOperating expenses\nResearch and development 8,675 7,339 5,268\nSales, general and administrative 2,654 2,440 2,166\nNet income $ 29,760 $ 4,368 $ 9,752",
+                "period_start": "2022-01-31",
+                "period_end": "2023-01-29",
+                "period_bounds_status": "SOURCE_END_AND_PRIOR_END",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "2024-10-K.pdf",
+                "evidence_id": "claim_v2_ec185458efd3269675b21210",
+                "source": "2024-10-K.pdf#page=50"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R10",
+      "question": "Give NVIDIA Net income for FY2022, using the 2024 annual report?",
+      "family": "NVIDIA_CORPORATION/NET_INCOME",
+      "expected": {
+        "id": "R10",
+        "family": "NVIDIA_CORPORATION/NET_INCOME",
+        "question": "Give NVIDIA Net income for FY2022, using the 2024 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "NET_INCOME",
+            "value": 9752.0,
+            "unit": "USD millions",
+            "fact_period": "FY2022",
+            "disclosure_version": "2024-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2024-10-K.pdf",
+                "page": 50,
+                "anchor": "Net income"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 9752.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Net income                                                                 $          29,760  $           4,368  $           9,752",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": true,
+        "request_joint": true,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": true,
+            "observations": [
+              {
+                "id": "FO_2D4C658EDA0D8C0401442D32",
+                "measurement_key": "FM_34D51E22CABCF1FCE839",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "NET_INCOME",
+                "claim_id": "claim_v2_ec185458efd3269675b21210",
+                "source_filing": "2024-10-K.pdf",
+                "page": 50,
+                "fiscal_period": "FY2022",
+                "fiscal_year": 2022,
+                "value": 9752.0,
+                "raw_value": "9752",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "INCOME_STATEMENT",
+                "table_name": "Consolidated Statements of Income",
+                "row_label": "net income",
+                "column_label": "Jan 30, 2022",
+                "valid_from": "FY2022",
+                "valid_to": "FY2022",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated Statements of Income",
+                "document_sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+                "source_row": "Net income $ 29,760 $ 4,368 $ 9,752",
+                "table_context": "Table of Contents\nNVIDIA Corporation and Subsidiaries\nConsolidated Statements of Income\n(In millions, except per share data)\nYear Ended\nJan 28, 2024 Jan 29, 2023 Jan 30, 2022\nRevenue $ 60,922 $ 26,974 $ 26,914\nCost of revenue 16,621 11,618 9,439\nGross profit 44,301 15,356 17,475\nOperating expenses\nResearch and development 8,675 7,339 5,268\nSales, general and administrative 2,654 2,440 2,166\nNet income $ 29,760 $ 4,368 $ 9,752",
+                "period_start": "UNKNOWN",
+                "period_end": "2022-01-30",
+                "period_bounds_status": "SOURCE_END_ONLY",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2022",
+                "disclosure_version": "2024-10-K.pdf",
+                "evidence_id": "claim_v2_ec185458efd3269675b21210",
+                "source": "2024-10-K.pdf#page=50"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R11",
+      "question": "Report NVIDIA Property and equipment, net for FY2025, using the 2025 annual report?",
+      "family": "NVIDIA_CORPORATION/PROPERTY_PLANT_EQUIPMENT",
+      "expected": {
+        "id": "R11",
+        "family": "NVIDIA_CORPORATION/PROPERTY_PLANT_EQUIPMENT",
+        "question": "Report NVIDIA Property and equipment, net for FY2025, using the 2025 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "PROPERTY_PLANT_EQUIPMENT",
+            "value": 6283.0,
+            "unit": "USD millions",
+            "fact_period": "FY2025",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 54,
+                "anchor": "Property and equipment, net"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 6283.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Property and equipment, net                                                                                          6,283               3,914",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": true,
+        "request_joint": true,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": true,
+            "observations": [
+              {
+                "id": "FO_8EF613382F74FE01168035E0",
+                "measurement_key": "FM_9921BFF8A362FCE8DE8B",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "PROPERTY_PLANT_EQUIPMENT",
+                "claim_id": "claim_v2_5c2c76f70560f7c404a0f1fd",
+                "source_filing": "2025-10-K.pdf",
+                "page": 54,
+                "fiscal_period": "FY2025",
+                "fiscal_year": 2025,
+                "value": 6283.0,
+                "raw_value": "6283",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated Balance Sheets",
+                "row_label": "property and equipment net",
+                "column_label": "Jan 26, 2025",
+                "valid_from": "FY2025",
+                "valid_to": "FY2025",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated Balance Sheets",
+                "document_sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+                "source_row": "Property and equipment, net 6,283 3,914",
+                "table_context": "Table of Contents\nNVIDIA Corporation and Subsidiaries\nConsolidated Balance Sheets\n(In millions, except par value)\nJan 26, 2025 Jan 28, 2024\nAssets\nCurrent assets:\nCash and cash equivalents $ 8,589 $ 7,280\nMarketable securities 34,621 18,704\nAccounts receivable, net 23,065 9,999\nInventories 10,080 5,282\nPrepaid expenses and other current assets 3,771 3,080\nProperty and equipment, net 6,283 3,914",
+                "period_start": "2025-01-26",
+                "period_end": "2025-01-26",
+                "period_bounds_status": "SOURCE_END_AND_PRIOR_END",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2025",
+                "disclosure_version": "2025-10-K.pdf",
+                "evidence_id": "claim_v2_5c2c76f70560f7c404a0f1fd",
+                "source": "2025-10-K.pdf#page=54"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R12",
+      "question": "How much was NVIDIA Intangible assets, net for FY2024, using the 2025 annual report?",
+      "family": "NVIDIA_CORPORATION/INTANGIBLE_ASSETS",
+      "expected": {
+        "id": "R12",
+        "family": "NVIDIA_CORPORATION/INTANGIBLE_ASSETS",
+        "question": "How much was NVIDIA Intangible assets, net for FY2024, using the 2025 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "INTANGIBLE_ASSETS",
+            "value": 1112.0,
+            "unit": "USD millions",
+            "fact_period": "FY2024",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 54,
+                "anchor": "Intangible assets, net"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 1112.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Intangible assets, net                                                                                        807                1,112",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ABSTAINED",
+      "mechanical_score": {
+        "core": false,
+        "successful": false,
+        "precision_correct": null,
+        "numeric": false,
+        "identity": false,
+        "operation": false,
+        "citation_identity": false,
+        "citation_reference": false,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": true,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": false,
+            "amount": false,
+            "citation_identity": false,
+            "citation_reference": false,
+            "metadata": false,
+            "observations": []
+          }
+        ]
+      },
+      "ai_pdf_core": false,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R13",
+      "question": "What was NVIDIA Total operating expenses for FY2023, using the 2025 annual report?",
+      "family": "NVIDIA_CORPORATION/OPERATING_COST",
+      "expected": {
+        "id": "R13",
+        "family": "NVIDIA_CORPORATION/OPERATING_COST",
+        "question": "What was NVIDIA Total operating expenses for FY2023, using the 2025 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "OPERATING_COST",
+            "value": 11132.0,
+            "unit": "USD millions",
+            "fact_period": "FY2023",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "anchor": "Total operating expenses"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 11132.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Total operating expenses                                                              16,405              11,329              11,132",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": true,
+        "request_joint": true,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": true,
+            "observations": [
+              {
+                "id": "FO_E4FB9A796AEDD58D7E884BC7",
+                "measurement_key": "FM_1A3F920FB5140A47C3C3",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "OPERATING_COST",
+                "claim_id": "claim_v2_05bb1e2292ffc13e72de8877",
+                "source_filing": "2025-10-K.pdf",
+                "page": 52,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 11132.0,
+                "raw_value": "11132",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "INCOME_STATEMENT",
+                "table_name": "Consolidated Statements of Income",
+                "row_label": "total operating expenses",
+                "column_label": "Jan 29, 2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated Statements of Income",
+                "document_sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+                "source_row": "Total operating expenses 16,405 11,329 11,132",
+                "table_context": "Table of Contents\nNVIDIA Corporation and Subsidiaries\nConsolidated Statements of Income\n(In millions, except per share data)\nYear Ended\nJan 26, 2025 Jan 28, 2024 Jan 29, 2023\nRevenue $ 130,497 $ 60,922 $ 26,974\nCost of revenue 32,639 16,621 11,618\nGross profit 97,858 44,301 15,356\nOperating expenses\nResearch and development 12,914 8,675 7,339\nSales, general and administrative 3,491 2,654 2,440\nTotal operating expenses 16,405 11,329 11,132",
+                "period_start": "UNKNOWN",
+                "period_end": "2023-01-29",
+                "period_bounds_status": "SOURCE_END_ONLY",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "2025-10-K.pdf",
+                "evidence_id": "claim_v2_05bb1e2292ffc13e72de8877",
+                "source": "2025-10-K.pdf#page=52"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R14",
+      "question": "Give NVIDIA Operating lease assets for FY2024, using the 2025 annual report?",
+      "family": "NVIDIA_CORPORATION/OPERATING_LEASE_ASSETS",
+      "expected": {
+        "id": "R14",
+        "family": "NVIDIA_CORPORATION/OPERATING_LEASE_ASSETS",
+        "question": "Give NVIDIA Operating lease assets for FY2024, using the 2025 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "OPERATING_LEASE_ASSETS",
+            "value": 1346.0,
+            "unit": "USD millions",
+            "fact_period": "FY2024",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 54,
+                "anchor": "Operating lease assets"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 1346.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Operating lease assets                                                                                              1,793               1,346",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": true,
+        "request_joint": true,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": true,
+            "observations": [
+              {
+                "id": "FO_74E04DAB50B4FF48C8357262",
+                "measurement_key": "FM_32C7041798416670E507",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "OPERATING_LEASE_ASSETS",
+                "claim_id": "claim_v2_7693b97350875cf3f8933883",
+                "source_filing": "2025-10-K.pdf",
+                "page": 54,
+                "fiscal_period": "FY2024",
+                "fiscal_year": 2024,
+                "value": 1346.0,
+                "raw_value": "1346",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated Balance Sheets",
+                "row_label": "operating lease assets",
+                "column_label": "Jan 28, 2024",
+                "valid_from": "FY2024",
+                "valid_to": "FY2024",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated Balance Sheets",
+                "document_sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+                "source_row": "Operating lease assets 1,793 1,346",
+                "table_context": "Table of Contents\nNVIDIA Corporation and Subsidiaries\nConsolidated Balance Sheets\n(In millions, except par value)\nJan 26, 2025 Jan 28, 2024\nAssets\nCurrent assets:\nCash and cash equivalents $ 8,589 $ 7,280\nMarketable securities 34,621 18,704\nAccounts receivable, net 23,065 9,999\nInventories 10,080 5,282\nPrepaid expenses and other current assets 3,771 3,080\nOperating lease assets 1,793 1,346",
+                "period_start": "2024-01-28",
+                "period_end": "2024-01-28",
+                "period_bounds_status": "SOURCE_END_AND_PRIOR_END",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2024",
+                "disclosure_version": "2025-10-K.pdf",
+                "evidence_id": "claim_v2_7693b97350875cf3f8933883",
+                "source": "2025-10-K.pdf#page=54"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R15",
+      "question": "Report NVIDIA Accumulated other comprehensive income for FY2024, using the 2025 annual report?",
+      "family": "NVIDIA_CORPORATION/ACCUMULATED_OTHER_COMPREHENSIVE_INCOME",
+      "expected": {
+        "id": "R15",
+        "family": "NVIDIA_CORPORATION/ACCUMULATED_OTHER_COMPREHENSIVE_INCOME",
+        "question": "Report NVIDIA Accumulated other comprehensive income for FY2024, using the 2025 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "ACCUMULATED_OTHER_COMPREHENSIVE_INCOME",
+            "value": 27.0,
+            "unit": "USD millions",
+            "fact_period": "FY2024",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 54,
+                "anchor": "Accumulated other comprehensive income"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 27.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Accumulated other comprehensive income                                                                   28                27",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": true,
+        "request_joint": true,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": true,
+            "observations": [
+              {
+                "id": "FO_3118FE032F9BC5CA08EF362E",
+                "measurement_key": "FM_D1BA10D8DC067620E1D7",
+                "company_id": "NVIDIA_CORPORATION",
+                "metric_id": "ACCUMULATED_OTHER_COMPREHENSIVE_INCOME",
+                "claim_id": "claim_v2_00cfedd04e527e926b68b68f",
+                "source_filing": "2025-10-K.pdf",
+                "page": 54,
+                "fiscal_period": "FY2024",
+                "fiscal_year": 2024,
+                "value": 27.0,
+                "raw_value": "27",
+                "unit": "USD millions",
+                "currency": "USD",
+                "scale": "millions",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Shareholders’ equity:",
+                "row_label": "accumulated other comprehensive income",
+                "column_label": "Jan 28, 2024",
+                "valid_from": "FY2024",
+                "valid_to": "FY2024",
+                "comparability_status": "UNASSESSED",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "FINANCIAL_STATEMENTS",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated Balance Sheets",
+                "document_sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+                "source_row": "Accumulated other comprehensive income 28 27",
+                "table_context": "Table of Contents\nNVIDIA Corporation and Subsidiaries\nConsolidated Balance Sheets\n(In millions, except par value)\nJan 26, 2025 Jan 28, 2024\nAssets\nCurrent assets:\nCash and cash equivalents $ 8,589 $ 7,280\nMarketable securities 34,621 18,704\nAccounts receivable, net 23,065 9,999\nInventories 10,080 5,282\nPrepaid expenses and other current assets 3,771 3,080\nAccumulated other comprehensive income 28 27",
+                "period_start": "2024-01-28",
+                "period_end": "2024-01-28",
+                "period_bounds_status": "SOURCE_END_AND_PRIOR_END",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2024",
+                "disclosure_version": "2025-10-K.pdf",
+                "evidence_id": "claim_v2_00cfedd04e527e926b68b68f",
+                "source": "2025-10-K.pdf#page=54"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R16",
+      "question": "How much was TSMC Retained Earnings for FY2022, using the 2023 annual report?",
+      "family": "TSMC/RETAINED_EARNINGS",
+      "expected": {
+        "id": "R16",
+        "family": "TSMC/RETAINED_EARNINGS",
+        "question": "How much was TSMC Retained Earnings for FY2022, using the 2023 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "TSMC",
+            "metric_id": "RETAINED_EARNINGS",
+            "value": 2637524688.0,
+            "unit": "TWD thousands",
+            "fact_period": "FY2022",
+            "disclosure_version": "TSMC-2023-Annual-Report.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "TSMC-2023-Annual-Report.pdf",
+                "page": 66,
+                "anchor": "Retained Earnings"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 2637524688.0,
+        "expected_unit": "TWD thousands",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Retained Earnings                                                           3,158,030,792                   2,637,524,688                    520,506,104                     20%",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_8959C8FD742C99107DD716AD",
+                "measurement_key": "FM_26DE7CB68D0ECDD83DE9",
+                "company_id": "TSMC",
+                "metric_id": "RETAINED_EARNINGS",
+                "claim_id": "claim_v2_48e88b63209b05bfd3f5fdd3",
+                "source_filing": "TSMC-2023-Annual-Report.pdf",
+                "page": 66,
+                "fiscal_period": "FY2022",
+                "fiscal_year": 2022,
+                "value": 2637524688.0,
+                "raw_value": "2637524688",
+                "unit": "TWD thousands",
+                "currency": "TWD",
+                "scale": "thousands",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated financial status",
+                "row_label": "Retained Earnings",
+                "column_label": "FY2022",
+                "valid_from": "FY2022",
+                "valid_to": "FY2022",
+                "comparability_status": "SAME_TABLE",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "MD_AND_A",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated\nUnit: NT$ thousands",
+                "document_sha256": "b609c154ca5a02f55ee20f098f6553ec253ec73c184f343d07ae155d3d5524bf",
+                "source_row": "Consolidated\nUnit: NT$ thousands\nItem 2023 2022 Difference %\nRetained Earnings 3,158,030,792 2,637,524,688 520,506,104 20%",
+                "table_context": "Consolidated\nUnit: NT$ thousands\nItem 2023 2022 Difference %\nRetained Earnings 3,158,030,792 2,637,524,688 520,506,104 20%",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2022",
+                "disclosure_version": "TSMC-2023-Annual-Report.pdf",
+                "evidence_id": "claim_v2_48e88b63209b05bfd3f5fdd3",
+                "source": "TSMC-2023-Annual-Report.pdf#page=66"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R17",
+      "question": "What was TSMC Property, Plant and Equipment for FY2023, using the 2023 annual report?",
+      "family": "TSMC/PROPERTY_PLANT_EQUIPMENT",
+      "expected": {
+        "id": "R17",
+        "family": "TSMC/PROPERTY_PLANT_EQUIPMENT",
+        "question": "What was TSMC Property, Plant and Equipment for FY2023, using the 2023 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "TSMC",
+            "metric_id": "PROPERTY_PLANT_EQUIPMENT",
+            "value": 3064474984.0,
+            "unit": "TWD thousands",
+            "fact_period": "FY2023",
+            "disclosure_version": "TSMC-2023-Annual-Report.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "TSMC-2023-Annual-Report.pdf",
+                "page": 66,
+                "anchor": "Property, Plant and Equipment"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 3064474984.0,
+        "expected_unit": "TWD thousands",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Property, Plant and Equipment                                                3,064,474,984                   2,693,836,970                    370,638,014                     14%",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_AE4ED5FFC2F5A5A991260D58",
+                "measurement_key": "FM_AAE47C5171CA11C90B5C",
+                "company_id": "TSMC",
+                "metric_id": "PROPERTY_PLANT_EQUIPMENT",
+                "claim_id": "claim_v2_c0ad1371ee3b410f62b5f933",
+                "source_filing": "TSMC-2023-Annual-Report.pdf",
+                "page": 66,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 3064474984.0,
+                "raw_value": "3064474984",
+                "unit": "TWD thousands",
+                "currency": "TWD",
+                "scale": "thousands",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated financial status",
+                "row_label": "Property, Plant and Equipment",
+                "column_label": "FY2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "SAME_TABLE",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "MD_AND_A",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated\nUnit: NT$ thousands",
+                "document_sha256": "b609c154ca5a02f55ee20f098f6553ec253ec73c184f343d07ae155d3d5524bf",
+                "source_row": "Consolidated\nUnit: NT$ thousands\nItem 2023 2022 Difference %\nProperty, Plant and Equipment 3,064,474,984 2,693,836,970 370,638,014 14%",
+                "table_context": "Consolidated\nUnit: NT$ thousands\nItem 2023 2022 Difference %\nProperty, Plant and Equipment 3,064,474,984 2,693,836,970 370,638,014 14%",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "TSMC-2023-Annual-Report.pdf",
+                "evidence_id": "claim_v2_c0ad1371ee3b410f62b5f933",
+                "source": "TSMC-2023-Annual-Report.pdf#page=66"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R18",
+      "question": "Give TSMC Cost of Revenue for FY2023, using the 2023 annual report?",
+      "family": "TSMC/COST_OF_REVENUE",
+      "expected": {
+        "id": "R18",
+        "family": "TSMC/COST_OF_REVENUE",
+        "question": "Give TSMC Cost of Revenue for FY2023, using the 2023 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "TSMC",
+            "metric_id": "COST_OF_REVENUE",
+            "value": 986625213.0,
+            "unit": "TWD thousands",
+            "fact_period": "FY2023",
+            "disclosure_version": "TSMC-2023-Annual-Report.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "TSMC-2023-Annual-Report.pdf",
+                "page": 67,
+                "anchor": "Cost of Revenue"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 986625213.0,
+        "expected_unit": "TWD thousands",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Cost of Revenue                                                            986,625,213                    915,536,486                      71,088,727                     8%",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_E2E350700A95115A5DC4B8F4",
+                "measurement_key": "FM_9D02783DC92E7855B583",
+                "company_id": "TSMC",
+                "metric_id": "COST_OF_REVENUE",
+                "claim_id": "claim_v2_ec002d6529d0dda2c31d948f",
+                "source_filing": "TSMC-2023-Annual-Report.pdf",
+                "page": 67,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 986625213.0,
+                "raw_value": "986625213",
+                "unit": "TWD thousands",
+                "currency": "TWD",
+                "scale": "thousands",
+                "statement_type": "INCOME_STATEMENT",
+                "table_name": "Consolidated financial performance",
+                "row_label": "Cost of Revenue",
+                "column_label": "FY2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "SAME_TABLE",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "MD_AND_A",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated\nUnit: NT$ thousands",
+                "document_sha256": "b609c154ca5a02f55ee20f098f6553ec253ec73c184f343d07ae155d3d5524bf",
+                "source_row": "Consolidated\nUnit: NT$ thousands\nItem 2023 2022 Difference %\nCost of Revenue 986,625,213 915,536,486 71,088,727 8%",
+                "table_context": "Consolidated\nUnit: NT$ thousands\nItem 2023 2022 Difference %\nCost of Revenue 986,625,213 915,536,486 71,088,727 8%",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "TSMC-2023-Annual-Report.pdf",
+                "evidence_id": "claim_v2_ec002d6529d0dda2c31d948f",
+                "source": "TSMC-2023-Annual-Report.pdf#page=67"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R19",
+      "question": "Report TSMC Operating Expenses for FY2022, using the 2023 annual report?",
+      "family": "TSMC/OPERATING_COST",
+      "expected": {
+        "id": "R19",
+        "family": "TSMC/OPERATING_COST",
+        "question": "Report TSMC Operating Expenses for FY2022, using the 2023 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "TSMC",
+            "metric_id": "OPERATING_COST",
+            "value": 226707552.0,
+            "unit": "TWD thousands",
+            "fact_period": "FY2022",
+            "disclosure_version": "TSMC-2023-Annual-Report.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "TSMC-2023-Annual-Report.pdf",
+                "page": 67,
+                "anchor": "Operating Expenses"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 226707552.0,
+        "expected_unit": "TWD thousands",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Operating Expenses                                                         253,833,716                    226,707,552                      27,126,164                     12%",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_717423E2B97B6F14C9E80130",
+                "measurement_key": "FM_D5483DECB5474743C17E",
+                "company_id": "TSMC",
+                "metric_id": "OPERATING_COST",
+                "claim_id": "claim_v2_f3a68e44e561e59f11b4e09a",
+                "source_filing": "TSMC-2023-Annual-Report.pdf",
+                "page": 67,
+                "fiscal_period": "FY2022",
+                "fiscal_year": 2022,
+                "value": 226707552.0,
+                "raw_value": "226707552",
+                "unit": "TWD thousands",
+                "currency": "TWD",
+                "scale": "thousands",
+                "statement_type": "INCOME_STATEMENT",
+                "table_name": "Consolidated financial performance",
+                "row_label": "Operating Expenses",
+                "column_label": "FY2022",
+                "valid_from": "FY2022",
+                "valid_to": "FY2022",
+                "comparability_status": "SAME_TABLE",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "MD_AND_A",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated\nUnit: NT$ thousands",
+                "document_sha256": "b609c154ca5a02f55ee20f098f6553ec253ec73c184f343d07ae155d3d5524bf",
+                "source_row": "Consolidated\nUnit: NT$ thousands\nItem 2023 2022 Difference %\nOperating Expenses 253,833,716 226,707,552 27,126,164 12%",
+                "table_context": "Consolidated\nUnit: NT$ thousands\nItem 2023 2022 Difference %\nOperating Expenses 253,833,716 226,707,552 27,126,164 12%",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2022",
+                "disclosure_version": "TSMC-2023-Annual-Report.pdf",
+                "evidence_id": "claim_v2_f3a68e44e561e59f11b4e09a",
+                "source": "TSMC-2023-Annual-Report.pdf#page=67"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R20",
+      "question": "How much was TSMC Noncurrent Liabilities for FY2023, using the 2023 annual report?",
+      "family": "TSMC/NONCURRENT_LIABILITIES",
+      "expected": {
+        "id": "R20",
+        "family": "TSMC/NONCURRENT_LIABILITIES",
+        "question": "How much was TSMC Noncurrent Liabilities for FY2023, using the 2023 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "TSMC",
+            "metric_id": "NONCURRENT_LIABILITIES",
+            "value": 1135525052.0,
+            "unit": "TWD thousands",
+            "fact_period": "FY2023",
+            "disclosure_version": "TSMC-2023-Annual-Report.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "TSMC-2023-Annual-Report.pdf",
+                "page": 66,
+                "anchor": "Noncurrent Liabilities"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 1135525052.0,
+        "expected_unit": "TWD thousands",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Noncurrent Liabilities                                                        1,135,525,052                   1,060,063,194                      75,461,858                     7%",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_818BF671024E01D0873736CB",
+                "measurement_key": "FM_41B88C8FC7AC76F00008",
+                "company_id": "TSMC",
+                "metric_id": "NONCURRENT_LIABILITIES",
+                "claim_id": "claim_v2_09b1da677781db2907d5db7f",
+                "source_filing": "TSMC-2023-Annual-Report.pdf",
+                "page": 66,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 1135525052.0,
+                "raw_value": "1135525052",
+                "unit": "TWD thousands",
+                "currency": "TWD",
+                "scale": "thousands",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated financial status",
+                "row_label": "Noncurrent Liabilities",
+                "column_label": "FY2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "SAME_TABLE",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "MD_AND_A",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated\nUnit: NT$ thousands",
+                "document_sha256": "b609c154ca5a02f55ee20f098f6553ec253ec73c184f343d07ae155d3d5524bf",
+                "source_row": "Consolidated\nUnit: NT$ thousands\nItem 2023 2022 Difference %\nNoncurrent Liabilities 1,135,525,052 1,060,063,194 75,461,858 7%",
+                "table_context": "Consolidated\nUnit: NT$ thousands\nItem 2023 2022 Difference %\nNoncurrent Liabilities 1,135,525,052 1,060,063,194 75,461,858 7%",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "TSMC-2023-Annual-Report.pdf",
+                "evidence_id": "claim_v2_09b1da677781db2907d5db7f",
+                "source": "TSMC-2023-Annual-Report.pdf#page=66"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R21",
+      "question": "What was TSMC Total Equity for FY2024, using the 2024 annual report?",
+      "family": "TSMC/TOTAL_EQUITY",
+      "expected": {
+        "id": "R21",
+        "family": "TSMC/TOTAL_EQUITY",
+        "question": "What was TSMC Total Equity for FY2024, using the 2024 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "TSMC",
+            "metric_id": "TOTAL_EQUITY",
+            "value": 4323575865.0,
+            "unit": "TWD thousands",
+            "fact_period": "FY2024",
+            "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "TSMC-2024-Annual-Report.pdf",
+                "page": 63,
+                "anchor": "Total Equity"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 4323575865.0,
+        "expected_unit": "TWD thousands",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Total Equity                                                                4,323,575,865                   3,483,262,847                    840,313,018                     24%",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_A89FCD99CE1970FC18AC6DAD",
+                "measurement_key": "FM_A1F5D9D4FDF624667732",
+                "company_id": "TSMC",
+                "metric_id": "TOTAL_EQUITY",
+                "claim_id": "claim_v2_47106c933137739021a83221",
+                "source_filing": "TSMC-2024-Annual-Report.pdf",
+                "page": 63,
+                "fiscal_period": "FY2024",
+                "fiscal_year": 2024,
+                "value": 4323575865.0,
+                "raw_value": "4323575865",
+                "unit": "TWD thousands",
+                "currency": "TWD",
+                "scale": "thousands",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated financial status",
+                "row_label": "Total Equity",
+                "column_label": "FY2024",
+                "valid_from": "FY2024",
+                "valid_to": "FY2024",
+                "comparability_status": "SAME_TABLE",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "MD_AND_A",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated\nUnit: NT$ thousands",
+                "document_sha256": "35fb134a4de264d0e68e663cea9bd8d211160abd6d267c6e94bcb8d77921a8a5",
+                "source_row": "Consolidated\nUnit: NT$ thousands\nItem 2024 2023 Difference %\nTotal Equity 4,323,575,865 3,483,262,847 840,313,018 24%",
+                "table_context": "Consolidated\nUnit: NT$ thousands\nItem 2024 2023 Difference %\nTotal Equity 4,323,575,865 3,483,262,847 840,313,018 24%",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2024",
+                "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+                "evidence_id": "claim_v2_47106c933137739021a83221",
+                "source": "TSMC-2024-Annual-Report.pdf#page=63"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R22",
+      "question": "Give TSMC Intangible Assets for FY2023, using the 2024 annual report?",
+      "family": "TSMC/INTANGIBLE_ASSETS",
+      "expected": {
+        "id": "R22",
+        "family": "TSMC/INTANGIBLE_ASSETS",
+        "question": "Give TSMC Intangible Assets for FY2023, using the 2024 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "TSMC",
+            "metric_id": "INTANGIBLE_ASSETS",
+            "value": 22766744.0,
+            "unit": "TWD thousands",
+            "fact_period": "FY2023",
+            "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "TSMC-2024-Annual-Report.pdf",
+                "page": 63,
+                "anchor": "Intangible Assets"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 22766744.0,
+        "expected_unit": "TWD thousands",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Intangible Assets                                                             26,282,520                      22,766,744                       3,515,776                     15%",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_49BB19E86F152B40F9B05922",
+                "measurement_key": "FM_F9AD1031E5E7800AC3F7",
+                "company_id": "TSMC",
+                "metric_id": "INTANGIBLE_ASSETS",
+                "claim_id": "claim_v2_9a9e8f8995e2b35cd2530e36",
+                "source_filing": "TSMC-2024-Annual-Report.pdf",
+                "page": 63,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 22766744.0,
+                "raw_value": "22766744",
+                "unit": "TWD thousands",
+                "currency": "TWD",
+                "scale": "thousands",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated financial status",
+                "row_label": "Intangible Assets",
+                "column_label": "FY2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "SAME_TABLE",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "MD_AND_A",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated\nUnit: NT$ thousands",
+                "document_sha256": "35fb134a4de264d0e68e663cea9bd8d211160abd6d267c6e94bcb8d77921a8a5",
+                "source_row": "Consolidated\nUnit: NT$ thousands\nItem 2024 2023 Difference %\nIntangible Assets 26,282,520 22,766,744 3,515,776 15%",
+                "table_context": "Consolidated\nUnit: NT$ thousands\nItem 2024 2023 Difference %\nIntangible Assets 26,282,520 22,766,744 3,515,776 15%",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+                "evidence_id": "claim_v2_9a9e8f8995e2b35cd2530e36",
+                "source": "TSMC-2024-Annual-Report.pdf#page=63"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R23",
+      "question": "Report TSMC Noncurrent Liabilities for FY2023, using the 2024 annual report?",
+      "family": "TSMC/NONCURRENT_LIABILITIES",
+      "expected": {
+        "id": "R23",
+        "family": "TSMC/NONCURRENT_LIABILITIES",
+        "question": "Report TSMC Noncurrent Liabilities for FY2023, using the 2024 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "TSMC",
+            "metric_id": "NONCURRENT_LIABILITIES",
+            "value": 1135525052.0,
+            "unit": "TWD thousands",
+            "fact_period": "FY2023",
+            "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "TSMC-2024-Annual-Report.pdf",
+                "page": 63,
+                "anchor": "Noncurrent Liabilities"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 1135525052.0,
+        "expected_unit": "TWD thousands",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Noncurrent Liabilities                                                        1,103,837,171                   1,135,525,052                      (31,687,881)                         -3%",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_BEBBC4A5DB671706BFE5C220",
+                "measurement_key": "FM_41B88C8FC7AC76F00008",
+                "company_id": "TSMC",
+                "metric_id": "NONCURRENT_LIABILITIES",
+                "claim_id": "claim_v2_67d43a2276fc4a09cf9a262d",
+                "source_filing": "TSMC-2024-Annual-Report.pdf",
+                "page": 63,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 1135525052.0,
+                "raw_value": "1135525052",
+                "unit": "TWD thousands",
+                "currency": "TWD",
+                "scale": "thousands",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated financial status",
+                "row_label": "Noncurrent Liabilities",
+                "column_label": "FY2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "SAME_TABLE",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "MD_AND_A",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated\nUnit: NT$ thousands",
+                "document_sha256": "35fb134a4de264d0e68e663cea9bd8d211160abd6d267c6e94bcb8d77921a8a5",
+                "source_row": "Consolidated\nUnit: NT$ thousands\nItem 2024 2023 Difference %\nNoncurrent Liabilities 1,103,837,171 1,135,525,052 (31,687,881) -3%",
+                "table_context": "Consolidated\nUnit: NT$ thousands\nItem 2024 2023 Difference %\nNoncurrent Liabilities 1,103,837,171 1,135,525,052 (31,687,881) -3%",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+                "evidence_id": "claim_v2_67d43a2276fc4a09cf9a262d",
+                "source": "TSMC-2024-Annual-Report.pdf#page=63"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R24",
+      "question": "How much was TSMC Income before Income Tax for FY2023, using the 2024 annual report?",
+      "family": "TSMC/PRETAX_INCOME",
+      "expected": {
+        "id": "R24",
+        "family": "TSMC/PRETAX_INCOME",
+        "question": "How much was TSMC Income before Income Tax for FY2023, using the 2024 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "TSMC",
+            "metric_id": "PRETAX_INCOME",
+            "value": 979171324.0,
+            "unit": "TWD thousands",
+            "fact_period": "FY2023",
+            "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "TSMC-2024-Annual-Report.pdf",
+                "page": 64,
+                "anchor": "Income before Income Tax"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 979171324.0,
+        "expected_unit": "TWD thousands",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Income before Income Tax                                                   1,405,838,635                    979,171,324                    426,667,311                     44%",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_B72840500A77B6A5ED334339",
+                "measurement_key": "FM_86DE9F59C454E8D56B44",
+                "company_id": "TSMC",
+                "metric_id": "PRETAX_INCOME",
+                "claim_id": "claim_v2_7a49d385b1319399a09b9646",
+                "source_filing": "TSMC-2024-Annual-Report.pdf",
+                "page": 64,
+                "fiscal_period": "FY2023",
+                "fiscal_year": 2023,
+                "value": 979171324.0,
+                "raw_value": "979171324",
+                "unit": "TWD thousands",
+                "currency": "TWD",
+                "scale": "thousands",
+                "statement_type": "INCOME_STATEMENT",
+                "table_name": "Consolidated financial performance",
+                "row_label": "Income before Income Tax",
+                "column_label": "FY2023",
+                "valid_from": "FY2023",
+                "valid_to": "FY2023",
+                "comparability_status": "SAME_TABLE",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "PERIOD_RESULT",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "MD_AND_A",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated\nUnit: NT$ thousands",
+                "document_sha256": "35fb134a4de264d0e68e663cea9bd8d211160abd6d267c6e94bcb8d77921a8a5",
+                "source_row": "Consolidated\nUnit: NT$ thousands\nItem 2024 2023 Difference %\nIncome before Income Tax 1,405,838,635 979,171,324 426,667,311 44%",
+                "table_context": "Consolidated\nUnit: NT$ thousands\nItem 2024 2023 Difference %\nIncome before Income Tax 1,405,838,635 979,171,324 426,667,311 44%",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2023",
+                "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+                "evidence_id": "claim_v2_7a49d385b1319399a09b9646",
+                "source": "TSMC-2024-Annual-Report.pdf#page=64"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    },
+    {
+      "id": "R25",
+      "question": "What was TSMC Noncurrent Liabilities for FY2024, using the 2024 annual report?",
+      "family": "TSMC/NONCURRENT_LIABILITIES",
+      "expected": {
+        "id": "R25",
+        "family": "TSMC/NONCURRENT_LIABILITIES",
+        "question": "What was TSMC Noncurrent Liabilities for FY2024, using the 2024 annual report?",
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "TSMC",
+            "metric_id": "NONCURRENT_LIABILITIES",
+            "value": 1103837171.0,
+            "unit": "TWD thousands",
+            "fact_period": "FY2024",
+            "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "BALANCE",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "TSMC-2024-Annual-Report.pdf",
+                "page": 63,
+                "anchor": "Noncurrent Liabilities"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 1103837171.0,
+        "expected_unit": "TWD thousands",
+        "answer_tolerance": 0.5,
+        "expected_operation": "fact",
+        "source_row": "Noncurrent Liabilities                                                        1,103,837,171                   1,135,525,052                      (31,687,881)                         -3%",
+        "source_answerable": true,
+        "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+        "review": "AI_PDF_NOT_HUMAN_GOLD"
+      },
+      "state": "ANSWERED",
+      "mechanical_score": {
+        "core": true,
+        "successful": true,
+        "precision_correct": true,
+        "numeric": true,
+        "identity": true,
+        "operation": true,
+        "citation_identity": true,
+        "citation_reference": true,
+        "metadata_joint": false,
+        "request_joint": false,
+        "false_refusal": false,
+        "severe_wrong_success": false,
+        "details": [
+          {
+            "identity": true,
+            "amount": true,
+            "citation_identity": true,
+            "citation_reference": true,
+            "metadata": false,
+            "observations": [
+              {
+                "id": "FO_1F0E63AC0DF01F771992C5BB",
+                "measurement_key": "FM_9881DCAC76B2788EEF90",
+                "company_id": "TSMC",
+                "metric_id": "NONCURRENT_LIABILITIES",
+                "claim_id": "claim_v2_67d43a2276fc4a09cf9a262d",
+                "source_filing": "TSMC-2024-Annual-Report.pdf",
+                "page": 63,
+                "fiscal_period": "FY2024",
+                "fiscal_year": 2024,
+                "value": 1103837171.0,
+                "raw_value": "1103837171",
+                "unit": "TWD thousands",
+                "currency": "TWD",
+                "scale": "thousands",
+                "statement_type": "BALANCE_SHEET",
+                "table_name": "Consolidated financial status",
+                "row_label": "Noncurrent Liabilities",
+                "column_label": "FY2024",
+                "valid_from": "FY2024",
+                "valid_to": "FY2024",
+                "comparability_status": "SAME_TABLE",
+                "build_id": "build_8a5ce6d74be82a7c",
+                "business_scope": "CONSOLIDATED",
+                "measurement_nature": "BALANCE",
+                "value_kind": "AMOUNT",
+                "period_granularity": "ANNUAL",
+                "source_section": "MD_AND_A",
+                "financial_basis": "ACTUAL_REPORTED",
+                "basis_evidence": "Consolidated\nUnit: NT$ thousands",
+                "document_sha256": "35fb134a4de264d0e68e663cea9bd8d211160abd6d267c6e94bcb8d77921a8a5",
+                "source_row": "Consolidated\nUnit: NT$ thousands\nItem 2024 2023 Difference %\nNoncurrent Liabilities 1,103,837,171 1,135,525,052 (31,687,881) -3%",
+                "table_context": "Consolidated\nUnit: NT$ thousands\nItem 2024 2023 Difference %\nNoncurrent Liabilities 1,103,837,171 1,135,525,052 (31,687,881) -3%",
+                "period_start": "UNKNOWN",
+                "period_end": "UNKNOWN",
+                "period_bounds_status": "UNKNOWN",
+                "eps_basis": "NOT_APPLICABLE",
+                "fact_period": "FY2024",
+                "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+                "evidence_id": "claim_v2_67d43a2276fc4a09cf9a262d",
+                "source": "TSMC-2024-Annual-Report.pdf#page=63"
+              }
+            ]
+          }
+        ]
+      },
+      "ai_pdf_core": true,
+      "review": "AI_PDF_NOT_HUMAN_GOLD"
+    }
+  ]
+}

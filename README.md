@@ -1,12 +1,37 @@
 # Strategic-GraphRAG
 
+Evidence-grounded financial-report research with graph/vector retrieval, typed financial facts, deterministic checks and source-page citations.
+
+## Current research status · audited 2026-10-22
+
+**Latest local candidate: `build_8a5ce6d74be82a7c` (2026-10-18). Its implementation is not merged into this branch.** This update publishes documentation and derived diagnostics only; `stable` remains a different runtime snapshot. A fresh clone does not recreate the latest candidate or its five-report stores.
+
+The local research corpus contains five unchanged annual reports from NVIDIA and TSMC (815 physical pages), with 695 financial observations and 1861 vector text chunks. TSMC reports are Taiwan annual reports, not SEC 20-Fs. Facts, chunks and provenance edges are different quantities.
+
+| Recorded October 18 service sample | Core correct / source-answerable | False refusals | Complete request/source/mechanical metadata |
+|---|---:|---:|---:|
+| Exposed development groups | 22/22; 27/27; 10/10 | 0/22; 0/27; 0/10 | 17/22; 25/27; 8/10 |
+| Source-first frozen25 | **23/25 (92.0%)** | **1/25**, plus1 NOT_REQUESTED | **9/25** |
+
+The25 questions use known, correlated metric families. Their core Wilson95% interval is approximately75.0%–97.8%; these are selected-sample AI/PDF diagnostics, **not universal92% accuracy, fully unseen-family validation or human Gold**. Successful numeric answers were23/23 correct; severe wrong successes were0 in these final groups. Earlier failures remain part of the project history.
+
+On October22, the local source fingerprint was matched and saved raw-record scores recomputed exactly. No fresh service, browser, extraction or generation evaluation was run. Current financial answers are deterministic; actual generation calls in this experiment were0. Full date metadata, two source-answerable language failures and broader engineering acceptance remain unresolved.
+
+[Full project overview and limitations](docs/project-status-2026-10-22.md) · [Derived scores](docs/research-status-2026-10-22/results.json) · [25-question diagnostics](docs/research-status-2026-10-22/question-diagnostics.json) · [File/worktree organization policy](docs/project-organization.md)
+
+## Historical GitHub snapshot and experiments
+
+The content below retains earlier build identities and results. It is not the latest local candidate's runtime documentation or acceptance evidence. Localhost review URLs are machine-local, not a public deployment.
+
+# Strategic-GraphRAG
+
 An evidence-first financial retrieval research project for NVIDIA fiscal
 2023–2025 SEC 10-K filings. It links financial observations to their filing,
 fact period, disclosure version, source page, and supporting evidence. It is a
 research and engineering prototype—not an investment adviser, causal
 identification system, or production service.
 
-## Latest candidate update · 2026-09-30
+## Historical candidate update · 2026-09-30
 
 > **Release boundary:** GitHub's default branch is `stable`. The latest
 > source-matched experiment is on [PR #1](https://github.com/luoge850-lang/Strategic-GraphRAG/pull/1)

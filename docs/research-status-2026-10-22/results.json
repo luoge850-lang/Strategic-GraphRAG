@@ -1,0 +1,394 @@
+{
+  "audit_date": "2026-10-22",
+  "experiment_date": "2026-10-18",
+  "build_id": "build_8a5ce6d74be82a7c",
+  "source_fingerprint": "5ff28e24e8b7dfc91a3af2ab4c51bac2f22abc17e600f62fac45d9e57d3ee942",
+  "review": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+  "human_reviews": 0,
+  "generation_calls": 0,
+  "reproduction": "Saved raw record score recomputation on 2026-10-22; not a fresh service run",
+  "scope": "Five unchanged reports; known and correlated metric families; not population accuracy",
+  "groups": {
+    "round2/development28": {
+      "total": 28,
+      "source_answerable_core": {
+        "n": 22,
+        "d": 22,
+        "value": 1.0,
+        "wilson95": [
+          0.8513451253913862,
+          1
+        ]
+      },
+      "successful_numeric_precision": {
+        "n": 20,
+        "d": 20,
+        "value": 1.0,
+        "wilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ]
+      },
+      "false_refusal": {
+        "n": 0,
+        "d": 22,
+        "value": 0.0,
+        "wilson95": [
+          0,
+          0.1486548746086139
+        ]
+      },
+      "nonanswer_not_refusal": 0,
+      "all_unfulfilled": {
+        "n": 0,
+        "d": 22,
+        "value": 0.0,
+        "wilson95": [
+          0,
+          0.1486548746086139
+        ]
+      },
+      "numeric_and_unit": {
+        "n": 20,
+        "d": 20,
+        "value": 1.0,
+        "wilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ]
+      },
+      "complete_request_and_mechanical_metadata": {
+        "n": 17,
+        "d": 22,
+        "value": 0.7727272727272727,
+        "wilson95": [
+          0.5656004682477889,
+          0.8987696001475127
+        ]
+      },
+      "successful_numeric_requested_source_support": {
+        "n": 20,
+        "d": 20,
+        "value": 1.0,
+        "wilson95": [
+          0.838874841947188,
+          0.9999999999999999
+        ]
+      },
+      "severe_wrong_success": 0,
+      "boundary_controls": {
+        "n": 6,
+        "d": 6,
+        "value": 1.0,
+        "wilson95": [
+          0.6096657120978477,
+          1
+        ]
+      },
+      "http": {
+        "200": 28
+      },
+      "partial_relation_core": 2
+    },
+    "round2/development37": {
+      "total": 37,
+      "source_answerable_core": {
+        "n": 27,
+        "d": 27,
+        "value": 1.0,
+        "wilson95": [
+          0.875444970258139,
+          1
+        ]
+      },
+      "successful_numeric_precision": {
+        "n": 25,
+        "d": 25,
+        "value": 1.0,
+        "wilson95": [
+          0.8668077490609579,
+          1
+        ]
+      },
+      "false_refusal": {
+        "n": 0,
+        "d": 27,
+        "value": 0.0,
+        "wilson95": [
+          0,
+          0.12455502974186107
+        ]
+      },
+      "nonanswer_not_refusal": 0,
+      "all_unfulfilled": {
+        "n": 0,
+        "d": 27,
+        "value": 0.0,
+        "wilson95": [
+          0,
+          0.12455502974186107
+        ]
+      },
+      "numeric_and_unit": {
+        "n": 25,
+        "d": 25,
+        "value": 1.0,
+        "wilson95": [
+          0.8668077490609579,
+          1
+        ]
+      },
+      "complete_request_and_mechanical_metadata": {
+        "n": 25,
+        "d": 27,
+        "value": 0.9259259259259259,
+        "wilson95": [
+          0.7663040731697743,
+          0.9794453459390107
+        ]
+      },
+      "successful_numeric_requested_source_support": {
+        "n": 25,
+        "d": 25,
+        "value": 1.0,
+        "wilson95": [
+          0.8668077490609579,
+          1
+        ]
+      },
+      "severe_wrong_success": 0,
+      "boundary_controls": {
+        "n": 10,
+        "d": 10,
+        "value": 1.0,
+        "wilson95": [
+          0.7224672001371218,
+          0.9999999999999999
+        ]
+      },
+      "http": {
+        "200": 37
+      },
+      "partial_relation_core": 2
+    },
+    "round2/exposed10": {
+      "total": 10,
+      "source_answerable_core": {
+        "n": 10,
+        "d": 10,
+        "value": 1.0,
+        "wilson95": [
+          0.7224672001371218,
+          0.9999999999999999
+        ]
+      },
+      "successful_numeric_precision": {
+        "n": 10,
+        "d": 10,
+        "value": 1.0,
+        "wilson95": [
+          0.7224672001371218,
+          0.9999999999999999
+        ]
+      },
+      "false_refusal": {
+        "n": 0,
+        "d": 10,
+        "value": 0.0,
+        "wilson95": [
+          2.7755575615628914e-17,
+          0.27753279986287815
+        ]
+      },
+      "nonanswer_not_refusal": 0,
+      "all_unfulfilled": {
+        "n": 0,
+        "d": 10,
+        "value": 0.0,
+        "wilson95": [
+          2.7755575615628914e-17,
+          0.27753279986287815
+        ]
+      },
+      "numeric_and_unit": {
+        "n": 10,
+        "d": 10,
+        "value": 1.0,
+        "wilson95": [
+          0.7224672001371218,
+          0.9999999999999999
+        ]
+      },
+      "complete_request_and_mechanical_metadata": {
+        "n": 8,
+        "d": 10,
+        "value": 0.8,
+        "wilson95": [
+          0.49016247153665027,
+          0.943317848545623
+        ]
+      },
+      "successful_numeric_requested_source_support": {
+        "n": 10,
+        "d": 10,
+        "value": 1.0,
+        "wilson95": [
+          0.7224672001371218,
+          0.9999999999999999
+        ]
+      },
+      "severe_wrong_success": 0,
+      "boundary_controls": {
+        "n": 0,
+        "d": 0,
+        "value": null,
+        "wilson95": null
+      },
+      "http": {
+        "200": 10
+      },
+      "partial_relation_core": 0
+    },
+    "round2/causal-controls": {
+      "total": 3,
+      "source_answerable_core": {
+        "n": 0,
+        "d": 0,
+        "value": null,
+        "wilson95": null
+      },
+      "successful_numeric_precision": {
+        "n": 0,
+        "d": 0,
+        "value": null,
+        "wilson95": null
+      },
+      "false_refusal": {
+        "n": 0,
+        "d": 0,
+        "value": null,
+        "wilson95": null
+      },
+      "nonanswer_not_refusal": 0,
+      "all_unfulfilled": {
+        "n": 0,
+        "d": 0,
+        "value": null,
+        "wilson95": null
+      },
+      "numeric_and_unit": {
+        "n": 0,
+        "d": 0,
+        "value": null,
+        "wilson95": null
+      },
+      "complete_request_and_mechanical_metadata": {
+        "n": 0,
+        "d": 0,
+        "value": null,
+        "wilson95": null
+      },
+      "successful_numeric_requested_source_support": {
+        "n": 0,
+        "d": 0,
+        "value": null,
+        "wilson95": null
+      },
+      "severe_wrong_success": 0,
+      "boundary_controls": {
+        "n": 3,
+        "d": 3,
+        "value": 1.0,
+        "wilson95": [
+          0.4385029682449681,
+          1
+        ]
+      },
+      "http": {
+        "200": 3
+      },
+      "partial_relation_core": 0
+    },
+    "round2/reserved": {
+      "total": 25,
+      "source_answerable_core": {
+        "n": 23,
+        "d": 25,
+        "value": 0.92,
+        "wilson95": [
+          0.7503389104960532,
+          0.9777795987151519
+        ]
+      },
+      "successful_numeric_precision": {
+        "n": 23,
+        "d": 23,
+        "value": 1.0,
+        "wilson95": [
+          0.8568833815495799,
+          0.9999999999999999
+        ]
+      },
+      "false_refusal": {
+        "n": 1,
+        "d": 25,
+        "value": 0.04,
+        "wilson95": [
+          0.007096233501987542,
+          0.19544063736193124
+        ]
+      },
+      "nonanswer_not_refusal": 1,
+      "all_unfulfilled": {
+        "n": 2,
+        "d": 25,
+        "value": 0.08,
+        "wilson95": [
+          0.022220401284848285,
+          0.24966108950394714
+        ]
+      },
+      "numeric_and_unit": {
+        "n": 23,
+        "d": 25,
+        "value": 0.92,
+        "wilson95": [
+          0.7503389104960532,
+          0.9777795987151519
+        ]
+      },
+      "complete_request_and_mechanical_metadata": {
+        "n": 9,
+        "d": 25,
+        "value": 0.36,
+        "wilson95": [
+          0.2024788077445856,
+          0.5548150225183462
+        ]
+      },
+      "successful_numeric_requested_source_support": {
+        "n": 22,
+        "d": 23,
+        "value": 0.9565217391304348,
+        "wilson95": [
+          0.7900884492974176,
+          0.9922833338565464
+        ]
+      },
+      "severe_wrong_success": 0,
+      "boundary_controls": {
+        "n": 0,
+        "d": 0,
+        "value": null,
+        "wilson95": null
+      },
+      "http": {
+        "200": 25
+      },
+      "partial_relation_core": 0
+    }
+  },
+  "original_summary_sha256": "781193d71d4dcf2ac3dd51634d83dd8a43fa94c2068a744a811afd89e92b9e4c",
+  "original_ledger_sha256": "e96b794a898d2670df83e7722867fd48be23952f57674185514f93d52f6feb0c",
+  "latest_runtime_source_published": false
+}
