@@ -1,0 +1,2 @@
+# Optional measurement dependency; application inference does not require it.
+psutil==7.0.0

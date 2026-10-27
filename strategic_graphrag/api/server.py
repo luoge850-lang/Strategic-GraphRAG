@@ -20,22 +20,35 @@ import logging
 import hmac
 import threading
 import time
+import tempfile
 import uuid
 from collections import OrderedDict, defaultdict, deque
 from copy import deepcopy
-from typing import Optional, List, Dict, Literal
+from typing import Any, Optional, List, Dict, Literal, Union
 
 from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, HTMLResponse, Response
 from fastapi.concurrency import run_in_threadpool
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from dotenv import load_dotenv
 from pathlib import Path
+from ..build_identity import BuildIdentityMismatch
+from ..response_contract import (
+    ANSWER_STATUSES,
+    EXECUTION_STATUSES,
+    GROUNDING_STATUSES,
+    OUTCOMES,
+    apply_response_contract,
+    is_generation_error_text,
+    response_state,
+)
 
 # Add project root to path
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
 
 load_dotenv()
 
@@ -98,6 +111,10 @@ async def request_guard(request: Request, call_next):
             return JSONResponse(
                 status_code=401,
                 content={
+                    "execution_status": "AUTH_ERROR",
+                    "answer_status": "NOT_REQUESTED",
+                    "grounding_status": "NOT_EXECUTED",
+                    "outcome": "AUTH_ERROR",
                     "error": {
                         "code": "UNAUTHORIZED",
                         "message": "A valid X-API-Key is required.",
@@ -108,14 +125,23 @@ async def request_guard(request: Request, call_next):
             )
 
     client_key = request.client.host if request.client else "unknown"
+    # Serving the application shell/assets must remain possible when an API
+    # quota is exhausted. Read-only navigation also uses a separate bucket
+    # from expensive question execution, so citations remain inspectable.
+    quota_exempt=request.url.path in {'/','/favicon.ico','/health','/health/live','/health/ready'} or request.url.path.startswith('/assets/')
+    quota_key=client_key+(':read' if request.method in {'GET','HEAD'} else ':query')
     now = time.monotonic()
-    bucket = _RATE_BUCKETS[client_key]
+    bucket = _RATE_BUCKETS[quota_key]
     while bucket and now - bucket[0] >= 60:
         bucket.popleft()
-    if request.url.path not in {"/", "/health", "/health/live", "/health/ready"} and len(bucket) >= _RATE_LIMIT_PER_MINUTE:
+    if not quota_exempt and len(bucket) >= _RATE_LIMIT_PER_MINUTE:
         return JSONResponse(
             status_code=429,
             content={
+                "execution_status": "RATE_LIMITED",
+                "answer_status": "NOT_REQUESTED",
+                "grounding_status": "NOT_EXECUTED",
+                "outcome": "RATE_LIMITED",
                 "error": {
                     "code": "RATE_LIMITED",
                     "message": "Too many requests. Retry later.",
@@ -124,7 +150,8 @@ async def request_guard(request: Request, call_next):
             },
             headers={"X-Request-ID": request_id, "Retry-After": "60"},
         )
-    bucket.append(now)
+    if not quota_exempt:
+        bucket.append(now)
 
     try:
         response = await call_next(request)
@@ -133,6 +160,10 @@ async def request_guard(request: Request, call_next):
         response = JSONResponse(
             status_code=500,
             content={
+                "execution_status": "INTERNAL_ERROR",
+                "answer_status": "NOT_REQUESTED",
+                "grounding_status": "NOT_EXECUTED",
+                "outcome": "INTERNAL_ERROR",
                 "error": {
                     "code": "INTERNAL_SERVER_ERROR",
                     "message": "The request could not be completed.",
@@ -164,19 +195,519 @@ async def structured_http_error(request: Request, exc: HTTPException):
     else:
         error = {"code": "HTTP_ERROR", "message": str(exc.detail)}
     error["request_id"] = request_id
+    state = response_state(
+        {"outcome": error.get("outcome"), "error": error},
+        http_status=exc.status_code,
+    )
+    error.update({
+        "execution_status": state["execution_status"],
+        "answer_status": state["answer_status"],
+        "grounding_status": state["grounding_status"],
+    })
     return JSONResponse(
         status_code=exc.status_code,
-        content={"error": error},
+        content={
+            "execution_status": state["execution_status"],
+            "answer_status": state["answer_status"],
+            "grounding_status": state["grounding_status"],
+            "outcome": state["outcome"],
+            "status_provenance": state["status_provenance"],
+            "error": error,
+        },
+        headers={"X-Request-ID": request_id},
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def structured_validation_error(request: Request, exc: RequestValidationError):
+    """Keep FastAPI request-shape failures in the same machine contract."""
+    request_id = getattr(request.state, "request_id", str(uuid.uuid4()))
+    return JSONResponse(
+        status_code=422,
+        content={
+            "execution_status": "VALIDATION_ERROR",
+            "answer_status": "NOT_REQUESTED",
+            "grounding_status": "NOT_EXECUTED",
+            "outcome": "VALIDATION_ERROR",
+            "error": {
+                "code": "VALIDATION_ERROR",
+                "message": "The request did not satisfy the API schema.",
+                "request_id": request_id,
+                "details": exc.errors(),
+            },
+        },
         headers={"X-Request-ID": request_id},
     )
 
 # Serve the built Vite application when available.  The public/index.html
 # fallback keeps the API usable before a frontend build has been produced.
-FRONTEND_ROOT = Path(__file__).resolve().parent.parent.parent / "frontend"
+FRONTEND_ROOT = PROJECT_ROOT / "frontend"
+FRONTEND_DIST = Path(os.getenv('GRAPHRAG_FRONTEND_DIST',str(FRONTEND_ROOT / 'dist')))
+EXTRACTION_SAMPLE_PATH = PROJECT_ROOT / "evaluation" / "annotation" / "extraction_sample_v1.jsonl"
+EXTRACTION_SAMPLE_PATHS = {
+    "baseline": EXTRACTION_SAMPLE_PATH,
+    "2025_post_repair_v2": PROJECT_ROOT / "evaluation" / "annotation" / "extraction_sample_2025_post_repair_v2.jsonl",
+    "2025_post_repair_human_v1": PROJECT_ROOT / "evaluation" / "annotation" / "extraction_sample_2025_post_repair_human_v1.jsonl",
+}
+HUMAN_EXTRACTION_SAMPLE_KEY = "2025_post_repair_human_v1"
+_EXTRACTION_SAMPLE_LOCK = threading.Lock()
+TABLE_QUALITY_PATH = PROJECT_ROOT / "evaluation" / "annotation" / "table_quality_candidate_2026-09-19.jsonl"
+_TABLE_QUALITY_LOCK = threading.Lock()
+_TABLE_QUALITY_GOLD_FIELDS = (
+    "company_id",
+    "fiscal_year",
+    "metric_id",
+    "value",
+    "unit",
+    "source_filing",
+    "page",
+    "row_label",
+    "column_label",
+    "table_name",
+    "evidence_text",
+    "cell_supported",
+)
+_TABLE_QUALITY_STATUS = {"UNLABELED_CANDIDATE", "IN_PROGRESS", "HUMAN_REVIEWED"}
+_TABLE_QUALITY_SOURCE_FILES = {
+    "2023-10-K.pdf": PROJECT_ROOT / "data" / "pdfs_other" / "2023-10-K.pdf",
+    "2024-10-K.pdf": PROJECT_ROOT / "data" / "pdfs_other" / "2024-10-K.pdf",
+    "2025-10-K.pdf": PROJECT_ROOT / "data" / "pdfs" / "2025-10-K.pdf",
+}
+# Prefer the claim-ID-v2 worklist generated from the current graph. Keep the
+# older v1 path as a compatibility fallback, but never merge the two datasets.
+_GOLDEN_QA_V2_PATH = PROJECT_ROOT / "evaluation" / "golden_qa_human_v2.jsonl"
+_GOLDEN_QA_V1_PATH = PROJECT_ROOT / "evaluation" / "golden_qa_human_v1.jsonl"
+GOLDEN_QA_PATH = _GOLDEN_QA_V2_PATH if _GOLDEN_QA_V2_PATH.exists() else _GOLDEN_QA_V1_PATH
+_GOLDEN_QA_LOCK = threading.Lock()
+_GOLDEN_QA_STATUSES = {"HUMAN_REVIEW_PENDING", "IN_PROGRESS", "HUMAN_REVIEWED"}
+
+
+_ANNOTATION_LABEL_FIELDS = (
+    "source_entity_correct",
+    "target_entity_correct",
+    "relation_correct",
+    "evidence_supports_relation",
+)
+_ANNOTATION_PATCH_FIELDS = set(_ANNOTATION_LABEL_FIELDS) | {
+    "missing_gold_relations",
+    "annotation_status",
+    "annotator",
+    "notes",
+}
+
+
+def read_extraction_sample(path: Optional[Path] = None) -> List[Dict]:
+    """Read the JSONL annotation sample without mutating the source file."""
+    sample_path = path or EXTRACTION_SAMPLE_PATH
+    with sample_path.open("r", encoding="utf-8", newline="") as handle:
+        rows = []
+        for line_number, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Invalid JSON on annotation sample line {line_number}") from exc
+            if not isinstance(row, dict):
+                raise ValueError(f"Annotation sample line {line_number} is not an object")
+            rows.append(row)
+    return rows
+
+
+def extraction_sample_path(sample: str = "baseline") -> Path:
+    """Resolve a named annotation set without allowing arbitrary file paths."""
+    try:
+        return EXTRACTION_SAMPLE_PATHS[sample]
+    except KeyError as exc:
+        allowed = ", ".join(sorted(EXTRACTION_SAMPLE_PATHS))
+        raise ValueError(f"Unknown extraction sample '{sample}'. Choose one of: {allowed}") from exc
+
+
+def extraction_sample_summary(rows: List[Dict]) -> Dict[str, int]:
+    labeled = sum(1 for row in rows if row.get("annotation_status") == "LABELED")
+    return {"total": len(rows), "labeled": labeled, "unlabeled": len(rows) - labeled}
+
+
+def read_table_quality(path: Optional[Path] = None) -> List[Dict]:
+    """Read the table-quality queue without changing candidate or gold values."""
+    queue_path = path or TABLE_QUALITY_PATH
+    with queue_path.open("r", encoding="utf-8", newline="") as handle:
+        rows = []
+        for line_number, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Invalid JSON on table-quality line {line_number}") from exc
+            if not isinstance(row, dict) or not row.get("queue_id"):
+                raise ValueError(f"Invalid table-quality row on line {line_number}")
+            rows.append(row)
+    return rows
+
+
+def table_quality_summary(rows: List[Dict]) -> Dict[str, int]:
+    reviewed = sum(row.get("review_status") == "HUMAN_REVIEWED" for row in rows)
+    in_progress = sum(row.get("review_status") == "IN_PROGRESS" for row in rows)
+    return {
+        "total": len(rows),
+        "reviewed": reviewed,
+        "in_progress": in_progress,
+        "pending": len(rows) - reviewed,
+    }
+
+
+def _normalize_table_gold(gold: Dict[str, Any]) -> Dict[str, Any]:
+    unknown = set(gold) - set(_TABLE_QUALITY_GOLD_FIELDS)
+    if unknown:
+        raise ValueError(f"Unsupported table gold fields: {sorted(unknown)}")
+    normalized = dict(gold)
+    for field in ("fiscal_year", "page"):
+        value = normalized.get(field)
+        if value in (None, ""):
+            continue
+        try:
+            normalized[field] = int(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"{field} must be an integer") from exc
+        if field == "page" and normalized[field] < 1:
+            raise ValueError("page must be a positive integer")
+    source_filing = normalized.get("source_filing")
+    if source_filing not in (None, "") and source_filing not in _TABLE_QUALITY_SOURCE_FILES:
+        raise ValueError("source_filing must reference an allowlisted active filing")
+    if "value" in normalized and normalized["value"] not in (None, ""):
+        value = normalized["value"]
+        if isinstance(value, bool):
+            raise ValueError("value must be numeric or a raw numeric string")
+        try:
+            normalized["value"] = float(value)
+        except (TypeError, ValueError):
+            if not isinstance(value, str):
+                raise ValueError("value must be numeric or a raw numeric string")
+    if "cell_supported" in normalized:
+        value = normalized["cell_supported"]
+        if value not in (True, False, "uncertain", None, ""):
+            raise ValueError("cell_supported must be true, false, uncertain, or null")
+    return normalized
+
+
+def update_table_quality(queue_id: str, updates: Dict[str, Any], path: Optional[Path] = None) -> tuple[Dict, List[Dict]]:
+    """Atomically update one table annotation while preserving system predictions."""
+    allowed = {"gold", "reviewer", "review_notes", "review_status"}
+    unknown = set(updates) - allowed
+    if unknown:
+        raise ValueError(f"Unsupported table annotation fields: {sorted(unknown)}")
+    if "gold" in updates:
+        if not isinstance(updates["gold"], dict):
+            raise ValueError("gold must be an object")
+        updates = {**updates, "gold": _normalize_table_gold(updates["gold"])}
+    status = updates.get("review_status")
+    if status is not None and status not in _TABLE_QUALITY_STATUS:
+        raise ValueError(f"review_status must be one of: {', '.join(sorted(_TABLE_QUALITY_STATUS))}")
+
+    queue_path = path or TABLE_QUALITY_PATH
+    with _TABLE_QUALITY_LOCK:
+        rows = read_table_quality(queue_path)
+        updated_row = None
+        for row in rows:
+            if row.get("queue_id") != queue_id:
+                continue
+            if "gold" in updates:
+                gold = dict(row.get("gold") or {})
+                gold.update(updates["gold"])
+                row["gold"] = _normalize_table_gold(gold)
+            for field in ("reviewer", "review_notes", "review_status"):
+                if field in updates:
+                    row[field] = updates[field]
+            if row.get("review_status") == "HUMAN_REVIEWED":
+                gold = row.get("gold") or {}
+                if not str(row.get("reviewer") or "").strip():
+                    raise ValueError("reviewer is required before marking HUMAN_REVIEWED")
+                if gold.get("cell_supported") not in (True, False):
+                    raise ValueError("cell_supported must be true or false before marking HUMAN_REVIEWED")
+                if gold.get("cell_supported") is True:
+                    missing = [field for field in _TABLE_QUALITY_GOLD_FIELDS if field != "cell_supported" and gold.get(field) in (None, "")]
+                    if missing:
+                        raise ValueError(f"supported cells require gold fields: {missing}")
+            updated_row = row
+            break
+        if updated_row is None:
+            raise KeyError(queue_id)
+        temp_path = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", newline="", dir=str(queue_path.parent),
+                prefix=f".{queue_path.name}.", suffix=".tmp", delete=False,
+            ) as handle:
+                temp_path = Path(handle.name)
+                for row in rows:
+                    handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temp_path, queue_path)
+        finally:
+            if temp_path is not None and temp_path.exists():
+                temp_path.unlink()
+    return updated_row, rows
+
+
+def update_extraction_sample(
+    claim_id: str,
+    updates: Dict,
+    path: Optional[Path] = None,
+) -> tuple[Dict, List[Dict]]:
+    """Patch one row and atomically replace the JSONL file.
+
+    Unchanged source lines are copied byte-for-byte; only the matched JSON object
+    is serialized again. The temporary file lives beside the source for an
+    atomic os.replace on the same filesystem.
+    """
+    unknown = set(updates) - _ANNOTATION_PATCH_FIELDS
+    if unknown:
+        raise ValueError(f"Unsupported annotation fields: {sorted(unknown)}")
+    for field in _ANNOTATION_LABEL_FIELDS:
+        if field in updates:
+            value = updates[field]
+            if value is not None and not isinstance(value, bool) and value != "uncertain":
+                raise ValueError(f"{field} must be true, false, uncertain, or null")
+    if "missing_gold_relations" in updates:
+        values = updates["missing_gold_relations"]
+        if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
+            raise ValueError("missing_gold_relations must be a string array")
+    if updates.get("annotation_status") == "LABELED" and not str(updates.get("annotator") or "").strip():
+        raise ValueError("annotator is required before an annotation can be marked LABELED")
+
+    sample_path = path or EXTRACTION_SAMPLE_PATH
+    with _EXTRACTION_SAMPLE_LOCK:
+        with sample_path.open("r", encoding="utf-8", newline="") as handle:
+            raw_lines = handle.readlines()
+
+        updated_row = None
+        updated_lines = []
+        rows = []
+        for line in raw_lines:
+            if not line.strip():
+                updated_lines.append(line)
+                continue
+            row = json.loads(line)
+            if not isinstance(row, dict):
+                raise ValueError("Annotation sample contains a non-object row")
+            if row.get("claim_id") == claim_id:
+                labels = dict(row.get("labels") or {})
+                for field in _ANNOTATION_LABEL_FIELDS:
+                    if field in updates:
+                        labels[field] = updates[field]
+                if "missing_gold_relations" in updates:
+                    labels["missing_gold_relations"] = updates["missing_gold_relations"]
+                row["labels"] = labels
+                for field in ("annotation_status", "annotator", "notes"):
+                    if field in updates:
+                        row[field] = updates[field]
+                updated_row = row
+                line_ending = "\r\n" if line.endswith("\r\n") else "\n" if line.endswith("\n") else ""
+                updated_lines.append(json.dumps(row, ensure_ascii=False) + line_ending)
+            else:
+                updated_lines.append(line)
+            rows.append(row)
+
+        if updated_row is None:
+            raise KeyError(claim_id)
+
+        temp_path = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                encoding="utf-8",
+                newline="",
+                dir=str(sample_path.parent),
+                prefix=f".{sample_path.name}.",
+                suffix=".tmp",
+                delete=False,
+            ) as handle:
+                temp_path = Path(handle.name)
+                handle.writelines(updated_lines)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temp_path, sample_path)
+        finally:
+            if temp_path is not None and temp_path.exists():
+                temp_path.unlink()
+
+    return updated_row, rows
+
+
+def read_golden_qa(path: Optional[Path] = None) -> List[Dict]:
+    """Read the independent human Golden QA work file."""
+    qa_path = path or GOLDEN_QA_PATH
+    with qa_path.open("r", encoding="utf-8", newline="") as handle:
+        rows = []
+        for line_number, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Invalid JSON on Golden QA line {line_number}") from exc
+            if not isinstance(row, dict):
+                raise ValueError(f"Golden QA line {line_number} is not an object")
+            rows.append(row)
+    return rows
+
+
+def golden_qa_summary(rows: List[Dict]) -> Dict[str, int]:
+    reviewed = sum(row.get("review_status") == "HUMAN_REVIEWED" for row in rows)
+    return {"total": len(rows), "reviewed": reviewed, "pending": len(rows) - reviewed}
+
+
+def _validate_golden_qa_row(row: Dict) -> None:
+    """Validate fields required before a row can become human Golden QA."""
+    if row.get("review_status") != "HUMAN_REVIEWED":
+        return
+    missing = []
+    if not str(row.get("reviewer") or "").strip():
+        missing.append("reviewer")
+    if not str(row.get("reference_answer") or "").strip():
+        missing.append("reference_answer")
+    if not isinstance(row.get("answerable"), bool):
+        missing.append("answerable")
+    if not isinstance(row.get("requires_abstention"), bool):
+        missing.append("requires_abstention")
+    evidence_ids = row.get("gold_evidence_ids")
+    if not isinstance(evidence_ids, list) or any(
+        not isinstance(value, str) or not value.strip() for value in evidence_ids
+    ):
+        missing.append("gold_evidence_ids")
+    gold_pages = row.get("gold_pages")
+    if not isinstance(gold_pages, list) or any(
+        not isinstance(value, int) or isinstance(value, bool) or value <= 0
+        for value in gold_pages
+    ):
+        missing.append("gold_pages")
+    grades = row.get("relevant_evidence_grades")
+    if not isinstance(grades, dict) or any(
+        not isinstance(value, int) or isinstance(value, bool) or value not in {0, 1, 2}
+        for value in grades.values()
+    ):
+        missing.append("relevant_evidence_grades")
+    if isinstance(evidence_ids, list) and isinstance(grades, dict) and not set(evidence_ids).issubset(grades):
+        missing.append("relevant_evidence_grades(missing gold IDs)")
+    if row.get("answerable") is True:
+        if not evidence_ids:
+            missing.append("gold_evidence_ids(nonempty for answerable row)")
+        if not gold_pages:
+            missing.append("gold_pages(nonempty for answerable row)")
+        if row.get("requires_abstention") is not False:
+            missing.append("requires_abstention(false for answerable row)")
+    if row.get("answerable") is False and row.get("requires_abstention") is not True:
+        missing.append("requires_abstention(true for unanswerable row)")
+    if missing:
+        raise ValueError(
+            "Cannot mark Golden QA as HUMAN_REVIEWED; missing or invalid: "
+            f"{sorted(set(missing))}"
+        )
+
+
+def update_golden_qa(
+    qa_id: str,
+    updates: Dict,
+    path: Optional[Path] = None,
+) -> tuple[Dict, List[Dict]]:
+    """Update only the independent human QA file with an atomic replacement."""
+    allowed = {
+        "reference_answer",
+        "gold_evidence_ids",
+        "gold_pages",
+        "relevant_evidence_grades",
+        "answerable",
+        "requires_abstention",
+        "reviewer",
+        "review_notes",
+        "review_status",
+    }
+    unknown = set(updates) - allowed
+    if unknown:
+        raise ValueError(f"Unsupported Golden QA fields: {sorted(unknown)}")
+    if "review_status" in updates and updates["review_status"] not in _GOLDEN_QA_STATUSES:
+        raise ValueError(f"review_status must be one of: {sorted(_GOLDEN_QA_STATUSES)}")
+    if "gold_evidence_ids" in updates and (
+        not isinstance(updates["gold_evidence_ids"], list)
+        or any(
+            not isinstance(value, str) or not value.strip()
+            for value in updates["gold_evidence_ids"]
+        )
+    ):
+        raise ValueError("gold_evidence_ids must be a string array")
+    if "gold_pages" in updates and (
+        not isinstance(updates["gold_pages"], list)
+        or any(
+            not isinstance(value, int) or isinstance(value, bool) or value <= 0
+            for value in updates["gold_pages"]
+        )
+    ):
+        raise ValueError("gold_pages must be an integer array")
+    if "relevant_evidence_grades" in updates:
+        grades = updates["relevant_evidence_grades"]
+        if not isinstance(grades, dict) or any(
+            not isinstance(key, str)
+            or not isinstance(value, int)
+            or isinstance(value, bool)
+            or value not in {0, 1, 2}
+            for key, value in grades.items()
+        ):
+            raise ValueError("relevant_evidence_grades must map string IDs to 0, 1, or 2")
+    for field in ("answerable", "requires_abstention"):
+        if field in updates and updates[field] is not None and not isinstance(updates[field], bool):
+            raise ValueError(f"{field} must be true, false, or null")
+
+    qa_path = path or GOLDEN_QA_PATH
+    with _GOLDEN_QA_LOCK:
+        with qa_path.open("r", encoding="utf-8", newline="") as handle:
+            raw_lines = handle.readlines()
+        updated_row = None
+        updated_lines = []
+        rows = []
+        for line in raw_lines:
+            if not line.strip():
+                updated_lines.append(line)
+                continue
+            row = json.loads(line)
+            if not isinstance(row, dict):
+                raise ValueError("Golden QA contains a non-object row")
+            if row.get("id") == qa_id:
+                row.update(updates)
+                _validate_golden_qa_row(row)
+                updated_row = row
+                line_ending = "\r\n" if line.endswith("\r\n") else "\n" if line.endswith("\n") else ""
+                updated_lines.append(json.dumps(row, ensure_ascii=False) + line_ending)
+            else:
+                updated_lines.append(line)
+            rows.append(row)
+        if updated_row is None:
+            raise KeyError(qa_id)
+        temp_path = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                encoding="utf-8",
+                newline="",
+                dir=str(qa_path.parent),
+                prefix=f".{qa_path.name}.",
+                suffix=".tmp",
+                delete=False,
+            ) as handle:
+                temp_path = Path(handle.name)
+                handle.writelines(updated_lines)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temp_path, qa_path)
+        finally:
+            if temp_path is not None and temp_path.exists():
+                temp_path.unlink()
+    return updated_row, rows
 
 
 def get_frontend_index() -> Path:
-    dist_index = FRONTEND_ROOT / "dist" / "index.html"
+    dist_index = FRONTEND_DIST / "index.html"
     public_index = FRONTEND_ROOT / "public" / "index.html"
     return dist_index if dist_index.exists() else public_index
 
@@ -184,7 +715,7 @@ def get_frontend_index() -> Path:
 # Vite emits JavaScript/CSS into ``dist/assets``.  Returning index.html from
 # the root route is not enough: without this mount the browser receives the
 # shell but every hashed asset URL returns 404.
-FRONTEND_ASSETS = FRONTEND_ROOT / "dist" / "assets"
+FRONTEND_ASSETS = FRONTEND_DIST / "assets"
 if FRONTEND_ASSETS.exists():
     app.mount("/assets", StaticFiles(directory=FRONTEND_ASSETS), name="frontend-assets")
 
@@ -373,6 +904,13 @@ class QueryResponse(BaseModel):
     intent: str
     intent_display: str
     answer: str
+    calculation: Optional[Dict] = None
+    citations: List[Dict] = Field(default_factory=list)
+    execution_status: str = "SUCCEEDED"
+    answer_status: str = "ABSTAINED"
+    grounding_status: str = "NOT_EXECUTED"
+    outcome: str = "ABSTAINED"
+    status_provenance: Dict = Field(default_factory=dict)
     structured_report: Optional[Dict] = None
     paths: List[Dict]
     evidence_sentences: List[str]
@@ -383,6 +921,12 @@ class VectorQueryResponse(BaseModel):
     query: str
     answer: str
     documents: List[str]
+    execution_status: str = "SUCCEEDED"
+    answer_status: str = "NOT_REQUESTED"
+    grounding_status: str = "NOT_EXECUTED"
+    outcome: str = "PARTIALLY_ANSWERED"
+    status_provenance: Dict = Field(default_factory=dict)
+    metadata: Dict = Field(default_factory=dict)
 
 
 class GraphStats(BaseModel):
@@ -393,6 +937,8 @@ class GraphStats(BaseModel):
     by_label: Dict[str, int]
     by_relationship: Dict[str, int]
     source_filing: Optional[str] = None
+    build_id: Optional[str] = None
+    inventory: Dict = Field(default_factory=dict)
 
 
 class TemporalEvent(BaseModel):
@@ -461,6 +1007,45 @@ class SubgraphRequest(BaseModel):
     max_nodes: int = Field(default=50, ge=10, le=200)
 
 
+AnnotationLabel = Union[StrictBool, Literal["uncertain"]]
+
+
+class ExtractionAnnotationPatch(BaseModel):
+    source_entity_correct: Optional[AnnotationLabel] = None
+    target_entity_correct: Optional[AnnotationLabel] = None
+    relation_correct: Optional[AnnotationLabel] = None
+    evidence_supports_relation: Optional[AnnotationLabel] = None
+    missing_gold_relations: Optional[List[StrictStr]] = None
+    annotation_status: Optional[StrictStr] = None
+    annotator: Optional[StrictStr] = None
+    notes: Optional[StrictStr] = None
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class GoldenQAPatch(BaseModel):
+    reference_answer: Optional[StrictStr] = None
+    gold_evidence_ids: Optional[List[StrictStr]] = None
+    gold_pages: Optional[List[int]] = None
+    relevant_evidence_grades: Optional[Dict[StrictStr, int]] = None
+    answerable: Optional[StrictBool] = None
+    requires_abstention: Optional[StrictBool] = None
+    reviewer: Optional[StrictStr] = None
+    review_notes: Optional[StrictStr] = None
+    review_status: Optional[StrictStr] = None
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class TableQualityPatch(BaseModel):
+    gold: Optional[Dict[str, Any]] = None
+    reviewer: Optional[StrictStr] = None
+    review_notes: Optional[StrictStr] = None
+    review_status: Optional[StrictStr] = None
+
+    model_config = ConfigDict(extra="forbid")
+
+
 # =============================================================================
 # Endpoints
 # =============================================================================
@@ -475,6 +1060,194 @@ async def root():
         "version": "1.0.0",
         "endpoints": ["POST /query", "POST /query/vector", "GET /graph/statistics", "GET /graph/subgraph", "GET /evidence/{entity_id}", "GET /graph/temporal/{risk_id}"],
     }
+
+
+@app.get("/annotation")
+@app.get("/annotation/")
+async def annotation_page():
+    """Serve the standalone annotation UI without exposing it in the main demo nav."""
+    index_path = get_frontend_index()
+    if index_path.exists():
+        return FileResponse(index_path)
+    raise HTTPException(status_code=404, detail="Frontend build not found")
+
+
+@app.get("/golden-qa")
+@app.get("/golden-qa/")
+async def golden_qa_page():
+    """Serve the standalone human Golden QA review UI."""
+    index_path = get_frontend_index()
+    if index_path.exists():
+        return FileResponse(index_path)
+    raise HTTPException(status_code=404, detail="Frontend build not found")
+
+
+@app.get("/table-qa")
+@app.get("/table-qa/")
+async def table_quality_page():
+    """Serve the independent table-cell annotation UI."""
+    index_path = get_frontend_index()
+    if index_path.exists():
+        return FileResponse(index_path)
+    raise HTTPException(status_code=404, detail="Frontend build not found")
+
+
+@app.get("/evaluation/extraction-sample")
+async def get_extraction_sample(sample: str = "baseline"):
+    try:
+        path = extraction_sample_path(sample)
+        rows = read_extraction_sample(path)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Extraction annotation sample not found")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except OSError as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+    return {"sample": sample, "rows": rows, **extraction_sample_summary(rows)}
+
+
+@app.patch("/evaluation/extraction-sample/{claim_id}")
+async def patch_extraction_sample(
+    claim_id: str,
+    req: ExtractionAnnotationPatch,
+    sample: str = "baseline",
+):
+    try:
+        path = extraction_sample_path(sample)
+        if sample != HUMAN_EXTRACTION_SAMPLE_KEY:
+            raise HTTPException(
+                status_code=403,
+                detail=(
+                    "This extraction sample is read-only. The original 60-row baseline and historical "
+                    "2025_post_repair_v2 are immutable; annotate only 2025_post_repair_human_v1."
+                ),
+            )
+        updated_row, rows = update_extraction_sample(
+            claim_id,
+            req.model_dump(exclude_unset=True),
+            path,
+        )
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Extraction annotation sample not found")
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Claim not found: {claim_id}")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except OSError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    return {"sample": sample, "row": updated_row, **extraction_sample_summary(rows)}
+
+
+@app.get("/evaluation/golden-qa")
+async def get_golden_qa():
+    try:
+        rows = read_golden_qa()
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Golden QA file not found")
+    except (ValueError, OSError) as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+    return {"rows": rows, **golden_qa_summary(rows)}
+
+
+@app.patch("/evaluation/golden-qa/{qa_id}")
+async def patch_golden_qa(qa_id: str, req: GoldenQAPatch):
+    try:
+        updated_row, rows = update_golden_qa(qa_id, req.model_dump(exclude_unset=True))
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Golden QA file not found")
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Golden QA item not found: {qa_id}")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except OSError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    return {"row": updated_row, **golden_qa_summary(rows)}
+
+
+@app.get("/evaluation/table-quality")
+async def get_table_quality():
+    try:
+        rows = read_table_quality()
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Table-quality queue not found")
+    except (ValueError, OSError) as exc:
+        raise HTTPException(status_code=500, detail=str(exc))
+    return {"rows": rows, **table_quality_summary(rows)}
+
+
+@app.patch("/evaluation/table-quality/{queue_id}")
+async def patch_table_quality(queue_id: str, req: TableQualityPatch):
+    try:
+        updated_row, rows = update_table_quality(queue_id, req.model_dump(exclude_unset=True))
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Table-quality queue not found")
+    except KeyError:
+        raise HTTPException(status_code=404, detail=f"Table-quality row not found: {queue_id}")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except OSError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    return {"row": updated_row, **table_quality_summary(rows)}
+
+
+@app.get("/evaluation/table-quality/source/{filename}")
+async def get_table_quality_source(filename: str):
+    source_path = _registered_source(filename)
+    if source_path is None or not source_path.exists():
+        raise HTTPException(status_code=404, detail="Source filing not found")
+    return FileResponse(
+        source_path,
+        media_type="application/pdf",
+        filename=filename,
+        content_disposition_type="inline",
+    )
+
+
+def _registered_source(filename: str):
+    registry_path = os.getenv('GRAPHRAG_SOURCE_REGISTRY', '').strip()
+    if not registry_path:
+        return _TABLE_QUALITY_SOURCE_FILES.get(filename)
+    import hashlib
+    registry = json.loads(Path(registry_path).read_text(encoding='utf-8'))
+    if registry.get('build_id') != os.getenv('GRAPHRAG_BUILD_ID'):
+        raise HTTPException(status_code=409, detail='Source registry build mismatch')
+    rows = [row for row in registry.get('documents', []) if row.get('filename') == filename]
+    if len(rows) != 1:
+        raise HTTPException(status_code=404, detail='Source not registered in this build')
+    path = Path(rows[0]['path'])
+    if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != rows[0]['sha256']:
+        raise HTTPException(status_code=409, detail='Source PDF integrity mismatch')
+    return path
+
+
+@app.get('/evaluation/table-quality/source/{filename}/page/{physical_page}')
+async def view_source_physical_page(filename: str, physical_page: int):
+    import html
+    from urllib.parse import quote
+    path = _registered_source(filename)
+    if path is None:
+        raise HTTPException(status_code=404, detail='Source not found')
+    import pymupdf
+    with pymupdf.open(path) as pdf:
+        if not 1 <= physical_page <= len(pdf):
+            raise HTTPException(status_code=404, detail='Physical page out of range')
+    title = html.escape(f'{filename} · PDF physical page {physical_page}')
+    base = '/evaluation/table-quality/source/' + quote(filename)
+    build = html.escape(os.getenv('GRAPHRAG_BUILD_ID','UNKNOWN'))
+    return HTMLResponse(f'<!doctype html><meta charset="utf-8"><title>{title}</title><style>body{{margin:16px;background:#eee;color:#111;font:16px sans-serif}}img{{max-width:100%;background:white}}</style><h1>{title}</h1><p>BUILD {build} · Rendered directly from the hash-checked original PDF</p><a href="{base}">Open original PDF</a><p><img alt="{title}" src="{base}/page-image/{physical_page}"></p>')
+
+
+@app.get('/evaluation/table-quality/source/{filename}/page-image/{physical_page}')
+async def source_physical_page_image(filename: str, physical_page: int):
+    path = _registered_source(filename)
+    if path is None:
+        raise HTTPException(status_code=404, detail='Source not found')
+    import pymupdf
+    with pymupdf.open(path) as pdf:
+        if not 1 <= physical_page <= len(pdf):
+            raise HTTPException(status_code=404, detail='Physical page out of range')
+        png = pdf[physical_page-1].get_pixmap(matrix=pymupdf.Matrix(1.5,1.5)).tobytes('png')
+    return Response(png, media_type='image/png')
 
 
 @app.post("/query", response_model=QueryResponse)
@@ -497,7 +1270,7 @@ async def graphrag_query(req: QueryRequest):
                 "ttl_seconds": _QUERY_CACHE_TTL_SECONDS,
             }
             _QUERY_CACHE.move_to_end(cache_key)
-            return QueryResponse(**result)
+            return QueryResponse(**apply_response_contract(result, provenance_note="api_cache_hit"))
         if cached:
             _QUERY_CACHE.pop(cache_key, None)
         engine = get_graph_engine()
@@ -508,6 +1281,8 @@ async def graphrag_query(req: QueryRequest):
         if req.retrieval_mode in {"auto", "vector", "hybrid", "hybrid_temporal"}:
             try:
                 vector_engine = get_vector_engine()
+            except BuildIdentityMismatch:
+                raise
             except Exception as e:
                 logger.warning("Vector engine unavailable; continuing in degraded hybrid mode: %s", e)
         result = await run_in_threadpool(
@@ -523,6 +1298,26 @@ async def graphrag_query(req: QueryRequest):
             vector_top_k=req.vector_top_k,
             synthesize=req.synthesize,
         )
+        result = apply_response_contract(result, provenance_note="api_engine_result")
+        engine_status = str(result.get("execution_status") or "").upper()
+        if engine_status != "SUCCEEDED":
+            status_code = {
+                "DEPENDENCY_ERROR": 503,
+                "MODEL_ERROR": 502,
+                "TIMEOUT": 504,
+                "RATE_LIMITED": 429,
+                "AUTH_ERROR": 401,
+                "VALIDATION_ERROR": 422,
+                "CONTRACT_ERROR": 500,
+                "INTERNAL_ERROR": 500,
+            }.get(engine_status, 500)
+            error = result.get("metadata", {}).get("error") or {
+                "code": engine_status,
+                "message": "The query could not be completed.",
+            }
+            error = dict(error)
+            error["outcome"] = result.get("outcome")
+            raise HTTPException(status_code=status_code, detail=error)
         result.setdefault("metadata", {})["cache"] = {
             "hit": False,
             "ttl_seconds": _QUERY_CACHE_TTL_SECONDS,
@@ -536,9 +1331,14 @@ async def graphrag_query(req: QueryRequest):
         return QueryResponse(**result)
     except HTTPException:
         raise
+    except BuildIdentityMismatch:
+        raise HTTPException(status_code=409,detail={'code':'BUILD_IDENTITY_MISMATCH','outcome':'VALIDATION_ERROR','message':'Candidate artifacts do not share the expected build identity'})
     except Exception as e:
         logger.error(f"Query error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail={"code": "INTERNAL_ERROR", "outcome": "INTERNAL_ERROR"},
+        )
 
 
 @app.post("/query/vector", response_model=VectorQueryResponse)
@@ -548,17 +1348,72 @@ async def vector_query(req: QueryRequest):
     """
     try:
         engine = get_vector_engine()
-        answer, docs = engine.ask(
+        retrieval = engine.retrieve_with_metadata(
             req.question,
             k=5,
             source_filing=resolve_source_filing(req.source_filing, req.cross_filing),
         )
-        return VectorQueryResponse(query=req.question, answer=answer, documents=docs)
+        if retrieval.get("status") == "ERROR":
+            raise HTTPException(
+                status_code=503,
+                detail={
+                    "code": "DEPENDENCY_ERROR",
+                    "outcome": "DEPENDENCY_ERROR",
+                    "dependency": "chroma",
+                    "message": "Vector retrieval is unavailable.",
+                },
+            )
+        docs = [hit.get("document", "") for hit in retrieval.get("hits", [])]
+        execution_status = "SUCCEEDED"
+        generation_error = None
+        if req.synthesize and docs:
+            try:
+                answer = engine.generate(req.question, docs)
+                if is_generation_error_text(answer):
+                    execution_status = "MODEL_ERROR"
+                    generation_error = "GENERATION_SENTINEL"
+            except TimeoutError as exc:
+                answer = "[TIMEOUT] Vector synthesis timed out."
+                execution_status = "TIMEOUT"
+                generation_error = type(exc).__name__
+            except Exception as exc:
+                answer = "[MODEL ERROR] Vector synthesis failed."
+                execution_status = "MODEL_ERROR"
+                generation_error = type(exc).__name__
+        elif docs:
+            answer = "\n\n".join(docs[:5])
+        else:
+            answer = "[INSUFFICIENT EVIDENCE] No vector chunks were retrieved."
+        answer_status = (
+            "NOT_REQUESTED" if not req.synthesize
+            else "ABSTAINED" if not docs
+            else "ANSWERED" if execution_status == "SUCCEEDED"
+            else "NOT_REQUESTED"
+        )
+        result = {
+            "query": req.question,
+            "answer": answer,
+            "documents": docs,
+            "metadata": {
+                "retrieval": retrieval,
+                "error": {"code": execution_status, "detail": generation_error} if generation_error else None,
+            },
+        }
+        return VectorQueryResponse(**apply_response_contract(
+            result,
+            execution_status=execution_status,
+            answer_status=answer_status,
+            grounding_status="NOT_EXECUTED",
+            provenance_note="api_vector_result",
+        ))
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Vector query error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=500,
+            detail={"code": "INTERNAL_ERROR", "outcome": "INTERNAL_ERROR"},
+        )
 
 
 @app.get("/graph/statistics", response_model=GraphStats)
@@ -580,6 +1435,14 @@ async def graph_statistics(
                 timeout=float(os.getenv("GRAPH_ENDPOINT_TIMEOUT_SECONDS", "12")),
             )
             _graph_cache_put(cache_key, stats)
+        inventory=await run_in_threadpool(get_schema_manager().inventory,scoped_filing)
+        inventory['vector_chunks']=None
+        try:
+            vector=get_vector_engine()
+            if vector.build_id == os.getenv('GRAPHRAG_BUILD_ID'):
+                inventory['vector_chunks']=await run_in_threadpool(lambda: len(vector.collection.get(where={'source_filing':scoped_filing},include=[])['ids']) if scoped_filing else vector.collection.count())
+        except Exception:
+            logger.warning('Vector inventory unavailable; no zero count substituted')
         return GraphStats(
             total_nodes=stats.get("total_nodes", 0),
             total_relationships=stats.get("total_rels", 0),
@@ -588,6 +1451,7 @@ async def graph_statistics(
             by_label=stats.get("by_label", {}),
             by_relationship=stats.get("by_relationship", {}),
             source_filing=scoped_filing,
+            build_id=os.getenv('GRAPHRAG_BUILD_ID'),inventory=inventory,
         )
     except HTTPException:
         raise
@@ -773,7 +1637,7 @@ async def temporal_changes(entity_id: str, limit: int = Query(50, ge=1, le=200))
             run_in_threadpool(
                 get_schema_manager()._read,
                 """
-                MATCH (earlier:EvidenceClaim)-[:HAS_TEMPORAL_CHANGE]->(change:TemporalChange)-[:CHANGES_TO]->(later:EvidenceClaim)
+                MATCH (earlier:EvidenceClaim)-[:HAS_TEMPORAL_CHANGE]->(change:TemporalChange {model_version:'bitemporal_fact_v2'})-[:CHANGES_TO]->(later:EvidenceClaim)
                 WHERE toLower(change.source_id) CONTAINS toLower($entity_id)
                    OR toLower(change.target_id) CONTAINS toLower($entity_id)
                 RETURN change.id AS id, change.change_type AS change_type,
@@ -889,13 +1753,10 @@ def _probe_readiness() -> Dict:
         dependencies["neo4j"] = {"ready": bool(rows and rows[0].get("ok") == 1)}
     except Exception as exc:
         dependencies["neo4j"] = {"ready": False, "error": type(exc).__name__}
-    if _vector_engine is None:
-        dependencies["vector"] = {"ready": False, "status": "warming"}
-    else:
-        try:
-            dependencies["vector"] = _vector_engine.diagnostics()
-        except Exception as exc:
-            dependencies["vector"] = {"ready": False, "error": type(exc).__name__}
+    try:
+        dependencies["vector"] = get_vector_engine().diagnostics()
+    except Exception as exc:
+        dependencies["vector"] = {"ready": False, "error": type(exc).__name__}
     try:
         from strategic_graphrag.llm_provider import get_llm
         llm = get_llm()
@@ -906,8 +1767,11 @@ def _probe_readiness() -> Dict:
         }
     except Exception as exc:
         dependencies["llm"] = {"ready": False, "error": type(exc).__name__}
+    deterministic=all(dependencies[k].get('ready') for k in ['neo4j','vector'])
     return {
-        "status": "ready" if all(item.get("ready") for item in dependencies.values()) else "degraded",
+        "status": "ready" if deterministic else "degraded",
+        "deterministic_ready": deterministic,
+        "generation_ready": bool(deterministic and dependencies['llm'].get('ready')),
         "checked_at": time.time(),
         "dependencies": dependencies,
         "active_filing": resolve_active_filing(),
@@ -932,6 +1796,12 @@ async def health_ready():
         }
     status_code = 200 if _READINESS["status"] == "ready" else 503
     return JSONResponse(status_code=status_code, content=_READINESS)
+
+
+@app.get('/health/generation')
+async def health_generation():
+    result=await run_in_threadpool(_probe_readiness)
+    return JSONResponse(status_code=200 if result['generation_ready'] else 503,content=result)
 
 
 @app.get("/health")

@@ -1,3 +1,21 @@
+# Strategic-GraphRAG — reviewed source publication
+
+**2026-10-27 · latest local core source is included in this review branch; this is not a stable release.**
+
+Five-report NVIDIA/TSMC financial-QA research prototype: typed financial observations, graph/vector evidence retrieval, independent request slots, deterministic calculations and source-page review. Actual model generation remains unavailable.
+
+This publication preserves the latest engine/pipeline/UI code and the source-first experiment's raw records and scoring inputs. Existing local candidate `build_8a5ce6d74be82a7c` remains frozen. Private-path portability edits to historical deployment wrappers give this publication a **different source fingerprint**; rebuild artifacts for this revision rather than bypassing identity checks.
+
+Restoration checks: two clean frontend installs/builds passed; an independent offline Python runtime passed dependency checks and served the preserved candidate. Full tests: **418 passed,2 known pre-existing failures**. The same two failures reproduce in the original environment. Tests and thresholds were not weakened. This branch remains for review while those failures and existing financial-answer limitations are documented.
+
+[Verified restoration and identity boundaries](docs/restoration/README.md) · [Actual dependency pins](docs/restoration/runtime-pins-2026-10-27.txt) · [Latest original experiment](experiments/core-accuracy-20261018/README.md) · [File organization policy](docs/project-organization.md)
+
+The saved25-question source-first diagnostic scored23/25 core answers and9/25 complete-request/source/metadata checks. It is AI/PDF evidence, not universal92% accuracy or human Gold. The operational restoration checks are not a new accuracy benchmark. PDFs, credentials, active databases, vector stores and environments are not uploaded.
+
+## Historical GitHub documentation
+
+The sections below retain the older default-branch documentation and build boundaries. “Not included” statements below describe those historical updates, not this source review branch.
+
 # Strategic-GraphRAG
 
 Evidence-grounded financial-report research with graph/vector retrieval, typed financial facts, deterministic checks and source-page citations.

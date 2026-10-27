@@ -1,0 +1,1002 @@
+[
+  {
+    "id": "V01",
+    "question": "According to NVIDIA’s 2025 10-K, give company revenue for FY2024.",
+    "kind": "fact",
+    "family": "revenue",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "REVENUE",
+        "value": 60922,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Revenue"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 60922,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V02",
+    "question": "According to NVIDIA’s 2025 10-K, give cost of revenue for FY2024.",
+    "kind": "fact",
+    "family": "cost_of_revenue",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "COST_OF_REVENUE",
+        "value": 16621,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Cost of revenue"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 16621,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V03",
+    "question": "According to NVIDIA’s 2025 10-K, give gross profit for FY2024.",
+    "kind": "fact",
+    "family": "gross_profit",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "GROSS_PROFIT",
+        "value": 44301,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Gross profit"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 44301,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V04",
+    "question": "According to NVIDIA’s 2025 10-K, give research and development for FY2024.",
+    "kind": "fact",
+    "family": "r_and_d_expense",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "R_AND_D_EXPENSE",
+        "value": 8675,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Research and development"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 8675,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V05",
+    "question": "According to NVIDIA’s 2025 10-K, give sales, general and administrative for FY2024.",
+    "kind": "fact",
+    "family": "sg_and_a_expense",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "SG_AND_A_EXPENSE",
+        "value": 2654,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Sales, general and administrative"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 2654,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V06",
+    "question": "According to NVIDIA’s 2025 10-K, give total operating expenses for FY2024.",
+    "kind": "fact",
+    "family": "operating_cost",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "OPERATING_COST",
+        "value": 11329,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Total operating expenses"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 11329,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V07",
+    "question": "According to NVIDIA’s 2025 10-K, give operating income for FY2024.",
+    "kind": "fact",
+    "family": "operating_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "OPERATING_INCOME",
+        "value": 32972,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Operating income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 32972,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V08",
+    "question": "According to NVIDIA’s 2025 10-K, give interest income for FY2024.",
+    "kind": "fact",
+    "family": "interest_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "INTEREST_INCOME",
+        "value": 866,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Interest income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 866,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V09",
+    "question": "According to NVIDIA’s 2025 10-K, give signed interest expense for FY2024.",
+    "kind": "fact",
+    "family": "interest_expense",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "INTEREST_EXPENSE",
+        "value": -257,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Interest expense"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": -257,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V10",
+    "question": "According to NVIDIA’s 2025 10-K, give income before income tax for FY2024.",
+    "kind": "fact",
+    "family": "pretax_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "PRETAX_INCOME",
+        "value": 33818,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Income before income tax"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 33818,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V11",
+    "question": "According to NVIDIA’s 2025 10-K, give net income for FY2024.",
+    "kind": "fact",
+    "family": "net_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "NET_INCOME",
+        "value": 29760,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Net income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 29760,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V12",
+    "question": "According to NVIDIA’s 2025 10-K, give total comprehensive income for FY2024.",
+    "kind": "fact",
+    "family": "comprehensive_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "COMPREHENSIVE_INCOME",
+        "value": 29830,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 53,
+            "anchor": "Total comprehensive income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 29830,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V13",
+    "question": "According to NVIDIA’s 2025 10-K, give closing cash and cash equivalents for FY2024.",
+    "kind": "fact",
+    "family": "cash_and_cash_equivalents",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "CASH_AND_CASH_EQUIVALENTS",
+        "value": 7280,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Cash and cash equivalents"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 7280,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V14",
+    "question": "According to NVIDIA’s 2025 10-K, give closing accounts receivable, net for FY2024.",
+    "kind": "fact",
+    "family": "accounts_receivable",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "ACCOUNTS_RECEIVABLE",
+        "value": 9999,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Accounts receivable, net"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 9999,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V15",
+    "question": "According to NVIDIA’s 2025 10-K, give closing inventories for FY2024.",
+    "kind": "fact",
+    "family": "inventories",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "INVENTORIES",
+        "value": 5282,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Inventories"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 5282,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V16",
+    "question": "According to NVIDIA’s 2025 10-K, give net property and equipment for FY2024.",
+    "kind": "fact",
+    "family": "property_plant_equipment",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "PROPERTY_PLANT_EQUIPMENT",
+        "value": 3914,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Property and equipment, net"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 3914,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V17",
+    "question": "According to NVIDIA’s 2025 10-K, give total assets for FY2024.",
+    "kind": "fact",
+    "family": "total_assets",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "TOTAL_ASSETS",
+        "value": 65728,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Total assets"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 65728,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V18",
+    "question": "According to NVIDIA’s 2025 10-K, give total liabilities for FY2024.",
+    "kind": "fact",
+    "family": "total_liabilities",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "TOTAL_LIABILITIES",
+        "value": 22750,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Total liabilities"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 22750,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V19",
+    "question": "According to NVIDIA’s 2025 10-K, give goodwill for FY2024.",
+    "kind": "fact",
+    "family": "goodwill",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "GOODWILL",
+        "value": 4430,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Goodwill"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 4430,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V20",
+    "question": "According to NVIDIA’s 2025 10-K, give long-term debt for FY2024.",
+    "kind": "fact",
+    "family": "long_term_debt",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "LONG_TERM_DEBT",
+        "value": 8459,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Long-term debt"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 8459,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V21",
+    "question": "According to NVIDIA’s 2025 10-K, give deferred income tax assets for FY2024.",
+    "kind": "fact",
+    "family": "deferred_tax_assets",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "DEFERRED_TAX_ASSETS",
+        "value": 6081,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Deferred income tax assets"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 6081,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V22",
+    "question": "According to NVIDIA’s 2025 10-K, give cash paid for interest for FY2024.",
+    "kind": "fact",
+    "family": "cash_paid_interest",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "CASH_PAID_INTEREST",
+        "value": 252,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_MOVEMENT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 56,
+            "anchor": "Cash paid for interest"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 252,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V23",
+    "question": "According to NVIDIA’s 2025 10-K, give cash-flow change in accounts receivable for FY2024.",
+    "kind": "fact",
+    "family": "cash_flow_change_accounts_receivable",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "CASH_FLOW_CHANGE_ACCOUNTS_RECEIVABLE",
+        "value": -6172,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_MOVEMENT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 56,
+            "anchor": "Accounts receivable"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": -6172,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V24",
+    "question": "According to NVIDIA’s 2025 10-K, give Automotive end-market revenue for FY2024.",
+    "kind": "fact",
+    "family": "automotive_revenue",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "AUTOMOTIVE_REVENUE",
+        "value": 1091,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "AUTOMOTIVE",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 80,
+            "anchor": "Automotive"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1091,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V25",
+    "question": "According to NVIDIA’s 2025 10-K, give Professional Visualization revenue for FY2024.",
+    "kind": "fact",
+    "family": "professional_visualization_revenue",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "PROFESSIONAL_VISUALIZATION_REVENUE",
+        "value": 1553,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "PROFESSIONAL_VISUALIZATION",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 80,
+            "anchor": "Professional Visualization"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1553,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "NEW_QUESTION_EXPOSED_METRIC_FAMILY_POSSIBLE"
+  },
+  {
+    "id": "V26",
+    "family": "quarterly_not_annual",
+    "question": "What was NVIDIA interest expense for Q2 FY2024 in its 2025 annual report?",
+    "kind": "boundary",
+    "operands": [],
+    "source_answerable": false,
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_BOUNDARY_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V27",
+    "family": "unavailable_future",
+    "question": "Give NVIDIA observed revenue for FY2035 from the five annual reports.",
+    "kind": "boundary",
+    "operands": [],
+    "source_answerable": false,
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_BOUNDARY_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V28",
+    "family": "customer_specific",
+    "question": "Give TSMC sales specifically to NVIDIA during FY2024, with a supported amount.",
+    "kind": "boundary",
+    "operands": [],
+    "source_answerable": false,
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_BOUNDARY_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V29",
+    "family": "unidentified_loss",
+    "question": "What exact NVIDIA revenue loss did TSMC natural disasters cause in FY2024?",
+    "kind": "boundary",
+    "operands": [],
+    "source_answerable": false,
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_BOUNDARY_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V30",
+    "family": "adjusted_basis",
+    "question": "Give NVIDIA non-GAAP adjusted net income for FY2024.",
+    "kind": "boundary",
+    "operands": [],
+    "source_answerable": false,
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_BOUNDARY_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V31",
+    "family": "unknown_additional_metric",
+    "question": "Give NVIDIA FY2024 revenue and employee satisfaction together.",
+    "kind": "boundary",
+    "operands": [],
+    "source_answerable": false,
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_BOUNDARY_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V32",
+    "family": "geographic_restriction",
+    "question": "Give NVIDIA FY2024 revenue only in Europe.",
+    "kind": "boundary",
+    "operands": [],
+    "source_answerable": false,
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_BOUNDARY_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V33",
+    "family": "unconsolidated_scope",
+    "question": "Give TSMC unconsolidated total assets for FY2024.",
+    "kind": "boundary",
+    "operands": [],
+    "source_answerable": false,
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_BOUNDARY_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V34",
+    "family": "proforma_actual_boundary",
+    "question": "Give NVIDIA actual reported FY2021 revenue using only the unaudited pro forma table in the 2023 10-K.",
+    "kind": "boundary",
+    "operands": [],
+    "source_answerable": false,
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_BOUNDARY_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V35",
+    "family": "missing_scope",
+    "question": "Give financial performance without selecting a company, metric or period.",
+    "kind": "boundary",
+    "operands": [],
+    "source_answerable": false,
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_BOUNDARY_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V36",
+    "family": "cross_dependency",
+    "question": "Which company depends on the other for wafer foundry production: NVIDIA or TSMC? Cite the disclosed direction.",
+    "kind": "relationship",
+    "operands": [],
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_RELATION_FAMILY_NEW_WORDING"
+  },
+  {
+    "id": "V37",
+    "family": "cross_conditional_risk",
+    "question": "Describe a conditional natural disaster pathway from TSMC operations to NVIDIA supply, and specify what these sources cannot quantify.",
+    "kind": "relationship",
+    "operands": [],
+    "source_answerable": true,
+    "review_grade": "AI_PDF_NOT_HUMAN_GOLD",
+    "independence": "EXPOSED_RELATION_FAMILY_NEW_WORDING"
+  }
+]

@@ -1,0 +1,87 @@
+Browser tab: 2, Title: "Strategic-GraphRAG · Financial Causal Intelligence", URL: "http://127.0.0.1:8025/".
+1 AXWebArea Strategic-GraphRAG · Financial Causal Intelligence, URL: 127.0.0.1:8025/
+	2 container root
+		3 text Strategic-GraphRAG
+		4 container
+			5 heading NVIDIA & TSMC Filings Evidence Explorer, Value: 1
+				6 text NVIDIA & TSMC Filings
+				7 text Evidence Explorer
+			8 text Financial observations and disclosed dependencies from five annual filings. Research prototype: source citations support review, not universal accuracy.
+			75 text 2
+			76 text 公司 · 当前范围
+			77 text 5
+			78 text 文件 · 当前范围
+			79 text 695
+			80 text 财务观测 · 当前范围
+			81 text 3
+			82 text 公司依赖／风险披露
+			83 text 1,861
+			84 text 向量文本块 · 当前范围
+			9 heading The knowledge graph, in ink, Value: 2
+				10 text The knowledge graph, in ink
+			11 container
+				12 text 74 nodes, 169 edges  entities in this view · companies, metrics and risks ·  1  candidates
+			85 text Causal path Graph node
+			14 container
+				15 text field (settable)
+				86 image
+				17 text 74 nodes · 169 edges · ready  · scroll to zoom · drag to pan · click to select
+			18 container
+				19 text ANNUAL REPORTS ·  ALL INDEXED FILINGS  · 视图  74  个实体 /  169  条聚合边
+				20 text 数据库全库（含辅助来源连接）： 1398  节点 /  5389  关系 · BUILD  BUILD_8A5CE6D74BE82A7C
+			21 heading Ask a financial question, Value: 2
+				22 text Ask a financial question
+			23 text 请明确公司、指标和财年；每次提问独立处理，不继承上一问。引用用于核对原文，不保证所有问题均可回答。
+			24 text FILING SCOPE
+			25 pop up button (collapsed, settable) FILING SCOPE, Value: All indexed filings, ID: filing-scope, Secondary Actions: Expand
+				26 menu
+					27 FY2025 · 10-K
+					28 FY2024 · 10-K
+					29 FY2023 · 10-K
+					30 TSMC FY2023 · Annual report (TWD)
+					31 TSMC FY2024 · Annual report (TWD)
+					32 (selected) All indexed filings
+			33 text Cross-year mode
+			34 container
+				35 checkbox (settable, integer) Description: Enable model answer synthesis, Value: 0
+				36 text Enable model answer synthesis (may send the question and retrieved evidence to the configured external model). Off by default.
+			37 container
+				38 text entry area (settable) How much contribution expense did NVIDIA disclose for employee retirement plans in FY2025?
+				39 button Analyze →
+			40 button 英伟达2025财年的税前利润是多少？
+			41 button 台积电2024年的总资产是多少？
+			42 button Calculate NVIDIA net income divided by revenue in fiscal 2025.
+			43 button What possible risk path connects TSMC natural disasters to NVIDIA wafer supply?
+			44 button Show another batch of example questions
+			87 button Clear results
+			46 text 本次结果对应问题 / QUESTION:  HOW MUCH CONTRIBUTION EXPENSE DID NVIDIA DISCLOSE FOR EMPLOYEE RETIREMENT PLANS IN FY2025?
+			47 container Deterministic calculation status
+				48 text DETERMINISTIC CALCULATION ·  PASS fact
+				88 text 314.000 USD millions
+				89 container
+					90 text 请求完整性：已回答  1 / 1  项。  所有请求项均已核对。
+			52 text ANALYSIS Financial fact  ·  1  candidates · avg  0.00 EXECUTION ·  SUCCEEDED ANSWER ·  ANSWERED GROUNDING ·  VERIFIED 本次返回事实已通过来源身份与计算检查；这不等于人工原文审核。完整性另见已回答项数。 314.000 USD millions RESPONSE ·  ANSWERED  · BUILD  BUILD_8A5CE6D74BE82A7C  · SELECTED SCOPE:  ALL INDEXED FILINGS
+			91 container Answer sources
+				92 heading 回答来源 · PDF 物理页（点击在当前页打开）, Value: 3
+					93 text 回答来源 · PDF 物理页（点击在当前页打开）
+				94 link Description: 核对 2025-10-K.pdf 物理页 78, Value: 127.0.0.1:8025/evaluation/table-quality/source/2025-10-K.pdf/page/78
+			95 button Evidence paths 1 of 1 ▾
+				96 heading Evidence paths, Value: 2
+					97 text Evidence paths
+				98 text 1 of 1
+				99 text ▾
+			100 button Graph evidence chain · path 1 1 graph hops ▾
+				101 heading Graph evidence chain · path 1, Value: 2
+					102 text Graph evidence chain · path 1
+				103 text 1 graph hops
+				104 text ▾
+			105 text [ 1 ] Our contribution expense for fiscal years 2025, 2024, and 2023 was $314 million, $255 million, and $227 million, respectively p. 78 DISCLOSED_ONLY Y 2025 Claim  claim_v2_ffcf18f058dcec08fdd25e79
+			106 link Description: 打开原始文件 2025-10-K.pdf，PDF物理页 78, Value: 127.0.0.1:8025/evaluation/table-quality/source/2025-10-K.pdf/page/78
+			107 button Retrieval logic Financial fact ▾
+				108 heading Retrieval logic, Value: 2
+					109 text Retrieval logic
+				110 text Financial fact
+				111 text ▾
+		74 text STRATEGIC-GRAPHRAG · RESEARCH PROTOTYPE · FINITE-SAMPLE ACCEPTANCE ONLY
+
+The focused UI element is 1 AXWebArea Strategic-GraphRAG · Financial Causal Intelligence, URL: 127.0.0.1:8025/

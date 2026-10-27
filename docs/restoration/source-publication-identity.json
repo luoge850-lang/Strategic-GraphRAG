@@ -1,0 +1,35 @@
+{
+  "credential_findings": "three mocked unit-test password literals, no live credentials",
+  "private_paths": "removed from public-only wrappers/report strings",
+  "edits": [
+    {
+      "path": "deployment/acceptance_20261015.py",
+      "kind": "portable workspace lookup in historical deployment wrapper"
+    },
+    {
+      "path": "deployment/disk_audit_20261016.py",
+      "kind": "portable workspace lookup in historical deployment wrapper"
+    },
+    {
+      "path": "deployment/seal_five_delivery.py",
+      "kind": "portable workspace lookup in historical deployment wrapper"
+    },
+    {
+      "path": "deployment/package_five_delivery.py",
+      "kind": "documentation strings only; user-home examples redacted"
+    },
+    {
+      "path": "experiments\\core-accuracy-20261018\\round2-tests.txt",
+      "kind": "derived public copy of test output; original local log unchanged"
+    },
+    {
+      "path": ".env.example",
+      "kind": "public-only development API key field cleared"
+    }
+  ],
+  "core_source_byte_equal": true,
+  "frozen_local_fingerprint": "5ff28e24e8b7dfc91a3af2ab4c51bac2f22abc17e600f62fac45d9e57d3ee942",
+  "public_source_fingerprint": "684c50fd106545572c7d99152431842731a9ea74ae4e937fe53ca1030df027ce",
+  "identity_boundary": "Portable public wrapper changes produce a distinct source fingerprint; do not load the old frozen package under this new source identity. Frozen local source/runtime remain unchanged.",
+  "gitignore": "Private configurations and runtime stores excluded in public copy"
+}

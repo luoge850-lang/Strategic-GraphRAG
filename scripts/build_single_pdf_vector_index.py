@@ -26,6 +26,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from strategic_graphrag.pipeline.text_splitter import RecursiveTextSplitter
+from strategic_graphrag.build_identity import build_id_from_env
 
 
 def clean_text(text: str) -> str:
@@ -45,7 +46,13 @@ def chunk_page(text: str, chunk_size: int = 1200, overlap: int = 250) -> List[st
     return [chunk.strip() for chunk in splitter.split_text(text) if chunk.strip()]
 
 
-def build_index(pdf_path: Path, db_path: Path, collection_name: str) -> Dict[str, int | str]:
+def build_index(
+    pdf_path: Path,
+    db_path: Path,
+    collection_name: str,
+    *,
+    build_id: str | None = None,
+) -> Dict[str, int | str]:
     if not pdf_path.exists() or pdf_path.suffix.lower() != ".pdf":
         raise FileNotFoundError(f"Single PDF not found: {pdf_path}")
 
@@ -66,6 +73,7 @@ def build_index(pdf_path: Path, db_path: Path, collection_name: str) -> Dict[str
                     "page": page_index,
                     "chunk_id": chunk_id,
                     "chunk_index": chunk_index,
+                    "build_id": build_id or "UNBOUND",
                 })
                 ids.append(chunk_id)
 
@@ -99,6 +107,7 @@ def build_index(pdf_path: Path, db_path: Path, collection_name: str) -> Dict[str
         "collection_count": collection.count(),
         "embedding_backend": embedding_backend,
         "embedding_model": embedding_model,
+        "build_id": build_id,
     }
 
 
@@ -127,6 +136,10 @@ def main() -> None:
         action="store_true",
         help="Delete and recreate the named collection before indexing the selected PDFs",
     )
+    parser.add_argument(
+        "--build-id", default=build_id_from_env(),
+        help="Shared build identity from the reconstruction manifest",
+    )
     args = parser.parse_args()
     pdfs = args.pdfs or [Path("data/pdfs/2025-10-K.pdf")]
     if args.replace_collection:
@@ -136,7 +149,7 @@ def main() -> None:
         except Exception:
             pass
     results = [
-        build_index(pdf, args.db_path, args.collection)
+        build_index(pdf, args.db_path, args.collection, build_id=args.build_id)
         for pdf in pdfs
     ]
     print(json.dumps({"files": results, "collection": args.collection}, indent=2))

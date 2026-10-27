@@ -1,0 +1,362 @@
+[
+  {
+    "id": "H01",
+    "family": "prepaid_current_assets",
+    "question": "In the 2025 annual report, what was NVIDIA prepaid expenses and other current assets for FY2025?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "PREPAID_CURRENT_ASSETS",
+        "value": 3771,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Prepaid expenses and other current assets"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 3771,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_answerable": true,
+    "in_declared_supported_scope": false,
+    "exposure": "No saved exact canonical family/alias hit; adjacent broader metrics exposed",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "H02",
+    "family": "operating_lease_assets",
+    "question": "In the 2025 annual report, what was NVIDIA operating lease assets for FY2025?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "OPERATING_LEASE_ASSETS",
+        "value": 1793,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Operating lease assets"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1793,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_answerable": true,
+    "in_declared_supported_scope": false,
+    "exposure": "No saved exact canonical family/alias hit; adjacent broader metrics exposed",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "H03",
+    "family": "accumulated_other_comprehensive_income",
+    "question": "In the 2025 annual report, what was NVIDIA accumulated other comprehensive income for FY2025?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "ACCUMULATED_OTHER_COMPREHENSIVE_INCOME",
+        "value": 28,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Accumulated other comprehensive income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 28,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_answerable": true,
+    "in_declared_supported_scope": false,
+    "exposure": "No saved exact canonical family/alias hit; adjacent broader metrics exposed",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "H04",
+    "family": "other_long_term_liabilities",
+    "question": "In the 2025 annual report, what was NVIDIA other long-term liabilities for FY2025?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "OTHER_LONG_TERM_LIABILITIES",
+        "value": 4245,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Other long-term liabilities"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 4245,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_answerable": true,
+    "in_declared_supported_scope": false,
+    "exposure": "No saved exact canonical family/alias hit; adjacent broader metrics exposed",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "H05",
+    "family": "other_income_net",
+    "question": "From NVIDIA's 2025 annual report, give the amount for the income-statement line 'Other, net' for FY2025.",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "OTHER_INCOME_NET",
+        "value": 1034,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Other, net"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1034,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_answerable": true,
+    "in_declared_supported_scope": false,
+    "exposure": "No saved exact canonical family/alias hit; adjacent broader metrics exposed",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "H06",
+    "family": "total_other_income_net",
+    "question": "In the 2025 annual report, what was NVIDIA other income (expense), net for FY2025?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "TOTAL_OTHER_INCOME_NET",
+        "value": 2573,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Other income (expense), net"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 2573,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_answerable": true,
+    "in_declared_supported_scope": false,
+    "exposure": "No saved exact canonical family/alias hit; adjacent broader metrics exposed",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "H07",
+    "family": "other_comprehensive_income_net",
+    "question": "In the 2025 annual report, what was NVIDIA other comprehensive income (loss), net of tax for FY2025?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "OTHER_COMPREHENSIVE_INCOME_NET",
+        "value": 1,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 53,
+            "anchor": "Other comprehensive income (loss), net of tax"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_answerable": true,
+    "in_declared_supported_scope": false,
+    "exposure": "No saved exact canonical family/alias hit; adjacent broader metrics exposed",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "H08",
+    "family": "acquisition_termination_cost",
+    "question": "In the 2025 annual report, what was NVIDIA acquisition termination cost for FY2023?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "ACQUISITION_TERMINATION_COST",
+        "value": 1353,
+        "unit": "USD millions",
+        "fact_period": "FY2023",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Acquisition termination cost"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1353,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_answerable": true,
+    "in_declared_supported_scope": false,
+    "exposure": "No saved exact canonical family/alias hit; adjacent broader metrics exposed",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "H09",
+    "family": "other_operating_income_expense_net",
+    "question": "In the 2024 annual report, what was TSMC other operating income and expenses, net for FY2024?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "TSMC",
+        "metric_id": "OTHER_OPERATING_INCOME_EXPENSE_NET",
+        "value": -1230199,
+        "unit": "TWD thousands",
+        "fact_period": "FY2024",
+        "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "TSMC-2024-Annual-Report.pdf",
+            "page": 64,
+            "anchor": "Other Operating Income and Expenses, Net"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": -1230199,
+    "expected_unit": "TWD thousands",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_answerable": true,
+    "in_declared_supported_scope": false,
+    "exposure": "No saved exact canonical family/alias hit; adjacent broader metrics exposed",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "H10",
+    "family": "other_comprehensive_gain_net",
+    "question": "In the 2024 annual report, what was TSMC other comprehensive gain (loss), net of income tax for FY2024?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "TSMC",
+        "metric_id": "OTHER_COMPREHENSIVE_GAIN_NET",
+        "value": 71585646,
+        "unit": "TWD thousands",
+        "fact_period": "FY2024",
+        "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "TSMC-2024-Annual-Report.pdf",
+            "page": 64,
+            "anchor": "Other Comprehensive Gain (Loss), Net of Income Tax"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 71585646,
+    "expected_unit": "TWD thousands",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_answerable": true,
+    "in_declared_supported_scope": false,
+    "exposure": "No saved exact canonical family/alias hit; adjacent broader metrics exposed",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  }
+]

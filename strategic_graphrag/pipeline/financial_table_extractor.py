@@ -13,10 +13,38 @@ from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
 
 TABLE_METRICS: Sequence[Tuple[str, str]] = (
+    ("accumulated other comprehensive income", "ACCUMULATED_OTHER_COMPREHENSIVE_INCOME"),
+    ("accumulated other comprehensive income loss", "ACCUMULATED_OTHER_COMPREHENSIVE_INCOME"),
+    ("prepaid expenses and other current assets", "PREPAID_CURRENT_ASSETS"),
+    ("operating lease assets", "OPERATING_LEASE_ASSETS"),
+    ("other long-term liabilities", "OTHER_LONG_TERM_LIABILITIES"),
+    ("other comprehensive income net of tax", "OTHER_COMPREHENSIVE_INCOME_NET"),
+    ("other comprehensive income loss net of tax", "OTHER_COMPREHENSIVE_INCOME_NET"),
+    ("networking", "DATA_CENTER_NETWORKING_REVENUE"),
+    ("goodwill", "GOODWILL"),
+    ("long-term debt", "LONG_TERM_DEBT"),
+    ("deferred income tax assets", "DEFERRED_TAX_ASSETS"),
+    ("cash paid for interest", "CASH_PAID_FOR_INTEREST"),
+    ("cash paid for income taxes net", "CASH_PAID_FOR_INCOME_TAXES"),
+    ("interest income", "INTEREST_INCOME"),
+    ("interest expense", "INTEREST_EXPENSE"),
+    ("total comprehensive income", "COMPREHENSIVE_INCOME"),
+    ("comprehensive income", "COMPREHENSIVE_INCOME"),
+    ("property and equipment net", "PROPERTY_PLANT_EQUIPMENT"),
+    ("accounts payable", "ACCOUNTS_PAYABLE"),
+    ("data center", "DATA_CENTER_REVENUE"),
+    ("gaming", "GAMING_REVENUE"),
+    ("automotive", "AUTOMOTIVE_REVENUE"),
+    ("professional visualization", "PROFESSIONAL_VISUALIZATION_REVENUE"),
     ("cash and cash equivalents", "CASH_AND_CASH_EQUIVALENTS"),
     ("marketable securities", "MARKETABLE_SECURITIES"),
     ("accounts receivable", "ACCOUNTS_RECEIVABLE"),
+    ("accounts receivable net", "ACCOUNTS_RECEIVABLE"),
     ("inventories", "INVENTORIES"),
+    ("intangible assets net", "INTANGIBLE_ASSETS"),
+    ("intangible assets", "INTANGIBLE_ASSETS"),
+    ("other assets", "OTHER_ASSETS"),
+    ("retained earnings", "RETAINED_EARNINGS"),
     ("total current assets", "TOTAL_CURRENT_ASSETS"),
     ("total assets", "TOTAL_ASSETS"),
     ("total current liabilities", "TOTAL_CURRENT_LIABILITIES"),
@@ -43,6 +71,10 @@ TABLE_METRICS: Sequence[Tuple[str, str]] = (
     ("cash flow from operating activities", "OPERATING_CASH_FLOW"),
     ("capital expenditures", "CAPEX"),
 )
+
+
+class TableParseError(RuntimeError):
+    """Raised when a table backend fails; an empty list is not a valid result."""
 
 _NUMBER_RE = re.compile(r"(?<![A-Za-z])\(?-?\$?\d[\d,]*(?:\.\d+)?%?\)?")
 _YEAR_RE = re.compile(r"(?<!\d)(20\d{2})(?!\d)")
@@ -90,7 +122,11 @@ def _find_metric(row_text: str) -> Optional[Tuple[str, str]]:
     return None
 
 
-def _numeric_values(row_text: str) -> List[str]:
+def _numeric_values(
+    row_text: str,
+    *,
+    drop_trailing_change: Optional[bool] = None,
+) -> List[str]:
     # Change annotations such as "Up 114%" are not reported values.
     row_text = re.sub(
         r"\bup\s+[-(]?\d[\d,]*(?:\.\d+)?%?\)?(?:\s+pts?)?",
@@ -98,19 +134,28 @@ def _numeric_values(row_text: str) -> List[str]:
         row_text,
         flags=re.IGNORECASE,
     )
-    # Financial tables commonly append a year-over-year change percentage
-    # after the reported dollar values (``$ 12,914 ... 49 %``).  It is not a
-    # value belonging to the metric row.  Percentage-of-revenue rows do not
-    # contain a dollar marker, so they remain unaffected.
-    row_text = re.sub(
-        r"\s+\(?-?\d[\d,]*(?:\.\d+)?\)?\s*%\s*$",
-        "",
-        row_text,
-    )
+    if drop_trailing_change is None:
+        # Without table-cell/header metadata, use only a conservative fallback:
+        # a percent tail is a change column when the row otherwise looks like
+        # an amount row.  A row such as ``Gross margin 75.0% 72.7%`` keeps both
+        # values.  Callers with page/table context should pass the explicit
+        # header decision instead of relying on this heuristic.
+        label = re.split(r"(?<![A-Za-z])\(?-?\$?\d", row_text, maxsplit=1)[0]
+        drop_trailing_change = bool(
+            re.search(r"\s\(?-?\d[\d,]*(?:\.\d+)?\)?\s*%\s*$", row_text)
+            and ("," in row_text or "$" in row_text)
+            and not re.search(r"\b(?:margin|ratio|rate|percentage)\b", label, re.IGNORECASE)
+        )
+    if drop_trailing_change:
+        row_text = re.sub(
+            r"\s+\(?-?\d[\d,]*(?:\.\d+)?\)?\s*%\s*$",
+            "",
+            row_text,
+        )
     values = []
     for match in _NUMBER_RE.findall(row_text):
         parenthesized = match.startswith("(") and match.endswith(")")
-        cleaned = match.replace("$", "").replace(",", "").strip("()")
+        cleaned = match.replace("$", "").replace(",", "").replace("%", "").strip("()")
         # SEC tables use accounting parentheses for negative amounts.  Keep
         # that sign in the structured value instead of silently turning cash
         # outflows and contra-balances into positive figures.
@@ -191,10 +236,9 @@ def _periods_for_evidence(page_text: str, evidence: str, filing_year: int) -> Li
             if year not in years:
                 years.append(year)
         if len(years) >= 2:
-            # A comparison table contains two reported-period columns followed
-            # by dollar-change and percent-change columns. Only the first two
-            # dates are value semantics for each metric row.
-            return years[:2]
+            # Preserve every dated column. Change columns have no year and
+            # are discarded later by pairing values with these periods.
+            return years[:5]
     return _periods(page_text, filing_year)
 
 
@@ -215,15 +259,138 @@ def _table_name(page_text: str, evidence: str) -> str:
         len(lines),
     )
     rejected = re.compile(
-        r"^(year|years) ended$|^\$\s*%$|^\(?\$ in |^20\d{2}(?:\s+20\d{2})*",
+        r"^(year|years) ended$|^\$\s*%$|^\(?\$ in |^\(?in\s+(?:millions|thousands)\)?$|^\(continued\)$|^20\d{2}(?:\s+20\d{2})*",
         re.IGNORECASE,
     )
+
+    # Prefer document/table-level headings over the nearest prose paragraph.
+    # In SEC text extraction, a row can be separated from its heading by many
+    # rows, while an unrelated subsection title may be closer in raw order.
+    for line in reversed(lines[max(0, row_index - 30):row_index]):
+        lower = line.lower()
+        if (
+            "consolidated statements" in lower
+            or "consolidated balance sheets" in lower
+            or lower in {
+                "liquidity and capital resources",
+                "results of operations",
+            }
+        ):
+            return line
+
+    # Summary/section tables normally put a short title directly above the
+    # period header (for example, "Fiscal Year 2023 Summary").
+    period_index = next(
+        (
+            index
+            for index in range(row_index - 1, -1, -1)
+            if re.search(r"^years? ended$", lines[index], re.IGNORECASE)
+        ),
+        None,
+    )
+    if period_index is not None:
+        for line in reversed(lines[max(0, period_index - 6):period_index]):
+            lower = line.lower()
+            if rejected.search(line):
+                continue
+            if (
+                "following table" in lower
+                or "summary" in lower
+                or (len(line) <= 80 and not _NUMBER_RE.search(line))
+            ):
+                return line
+
     for line in reversed(lines[max(0, row_index - 12):row_index]):
         if rejected.search(line) or _NUMBER_RE.search(line):
             continue
         if 4 <= len(line) <= 120:
             return line
     return "UNKNOWN_TABLE"
+
+
+def _table_context(page_text: str, evidence: str, max_chars: int = 500) -> str:
+    """Return a verbatim page excerpt containing the table header and row.
+
+    A metric row by itself is not a self-contained evidence unit: it loses the
+    statement title, period columns, and scale.  Keep the row values separate
+    for parsing, but persist a compact, page-verbatim context excerpt for
+    citation and human review.
+    """
+    raw_lines = [line.strip() for line in str(page_text or "").splitlines() if line.strip()]
+    target = _normalise(evidence)
+    row_index = next(
+        (index for index, line in enumerate(raw_lines) if _normalise(line) == target),
+        None,
+    )
+    if row_index is None:
+        return str(evidence or "")[:max_chars]
+
+    header_index = next(
+        (
+            index
+            for index in range(row_index - 1, -1, -1)
+            if re.search(r"^years? ended$", raw_lines[index], re.IGNORECASE)
+        ),
+        None,
+    )
+    if header_index is not None:
+        # Keep the table description, period header, scale line when present,
+        # and the target row. Do not copy every intervening metric row into a
+        # single claim; that would blur which values support this metric.
+        description_index = next(
+            (
+                index
+                for index in range(header_index - 1, max(-1, header_index - 4), -1)
+                if "following table" in raw_lines[index].lower()
+                or "consolidated statements" in raw_lines[index].lower()
+            ),
+            None,
+        )
+        start = description_index if description_index is not None else max(0, header_index - 1)
+        header_end = header_index
+        for index in range(header_index + 1, min(row_index, header_index + 5) + 1):
+            line = raw_lines[index]
+            is_date_header = bool(
+                _YEAR_RE.search(line)
+                or re.search(
+                    r"\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|"
+                    r"may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:tember)?|"
+                    r"oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b",
+                    line,
+                    re.IGNORECASE,
+                )
+            )
+            is_scale_header = bool(
+                re.search(r"\(\$\s+in\s+(?:millions|thousands)\)", line, re.IGNORECASE)
+                or re.search(r"^\s*\$\s+%\s*$", line)
+            )
+            if not (is_date_header or is_scale_header):
+                break
+            header_end = index
+        selected = raw_lines[start:header_end + 1]
+        if row_index > header_end:
+            selected.append(raw_lines[row_index])
+    else:
+        table_name = _table_name(page_text, evidence)
+        heading_index = next(
+            (
+                index
+                for index in range(row_index - 1, -1, -1)
+                if _normalise(raw_lines[index]) == _normalise(table_name)
+            ),
+            max(0, row_index - 3),
+        )
+        selected = raw_lines[heading_index:row_index + 1]
+
+    candidate = "\n".join(selected)
+    if len(candidate) <= max_chars:
+        return candidate
+    row_line = raw_lines[row_index]
+    header = "\n".join(selected[:-1]) if selected[-1] == row_line else selected[0]
+    available = max_chars - len(row_line) - 1
+    if available <= 0:
+        return row_line[-max_chars:]
+    return f"{header[:available]}\n{row_line}"
 
 
 def _unit(page_text: str, row_text: str) -> str:
@@ -264,22 +431,82 @@ def _unit(page_text: str, row_text: str) -> str:
     return "reported units"
 
 
-def extract_financial_table_triples(page, page_text: str, filing_year: int) -> List[Dict]:
-    """Extract strict numeric disclosure triples from one PDF page."""
+def _has_change_column_header(page_text: str, evidence: str) -> bool:
+    """Detect a reported change column from the nearby table header."""
+    lines = [line.strip() for line in str(page_text or "").splitlines() if line.strip()]
+    target = _normalise(evidence)
+    row_index = next(
+        (index for index, line in enumerate(lines) if _normalise(line) == target),
+        len(lines),
+    )
+    header = " ".join(lines[max(0, row_index - 5):row_index])
+    return bool(re.search(r"\b(?:change|yoy|year[- ]over[- ]year)\b", header, re.IGNORECASE))
+
+
+def extract_financial_table_triples(
+    page,
+    page_text: str,
+    filing_year: int,
+    *,
+    company_id: Optional[str] = None,
+    document_id: Optional[str] = None,
+    report_period: Optional[str] = None,
+) -> List[Dict]:
+    """Extract strict numeric disclosure triples from one PDF page.
+
+    ``company_id`` is intentionally optional for backwards-compatible dry
+    runs, but the extractor never guesses a company when it is absent.  Such
+    records are marked ``PENDING_COMPANY_REVIEW`` and must not be presented as
+    verified company facts.
+    """
     try:
         tables = page.extract_tables() or []
-    except Exception:
-        return []
+    except Exception as exc:
+        raise TableParseError(f"table extraction failed: {type(exc).__name__}: {exc}") from exc
 
     triples: List[Dict] = []
     seen = set()
     for table in tables:
+        parent_metric = None
+        parent_row = None
         for row in table or []:
             row_text = _row_text(row)
             metric = _find_metric(row_text)
+            disclosed_ratio = False
+            if re.match(r"^%\s+of\s+(?:net\s+)?revenue\b", row_text, re.IGNORECASE):
+                ratios = {"R_AND_D_EXPENSE": "R_AND_D_RATIO", "SG_AND_A_EXPENSE": "SG_AND_A_RATIO",
+                          "OPERATING_COST": "OPERATING_EXPENSE_RATIO"}
+                if parent_metric in ratios:
+                    metric = ("% of revenue", ratios[parent_metric])
+                    disclosed_ratio = True
+            elif metric:
+                parent_metric, parent_row = metric[1], row_text
+            else:
+                parent_metric, parent_row = None, None
             if not metric or not _numeric_values(row_text):
                 continue
             metric_alias, metric_id = metric
+            # A working-capital cash-flow adjustment is not the closing balance.
+            # Component disclosures likewise must not become total expenses.
+            statement_type = "FINANCIAL_TABLE"
+            if re.search(r"consolidated statements of cash flows", page_text, re.IGNORECASE):
+                statement_type = "CASH_FLOW_STATEMENT"
+                if metric_id in {"ACCOUNTS_RECEIVABLE", "INVENTORIES", "ACCOUNTS_PAYABLE", "OTHER_LONG_TERM_LIABILITIES"}:
+                    metric_id = "CASH_FLOW_CHANGE_" + metric_id
+            elif re.search(r"(?im)^note\s+\d+\s*[-:]\s*stock[- ]based compensation", page_text):
+                statement_type = "STOCK_BASED_COMPENSATION_NOTE"
+                if metric_id in {"R_AND_D_EXPENSE", "SG_AND_A_EXPENSE", "COST_OF_REVENUE"}:
+                    metric_id = "STOCK_BASED_" + metric_id
+            elif re.search(r"(?im)^\s*consolidated balance sheets\s*$", page_text):
+                statement_type = "BALANCE_SHEET"
+            elif re.search(r"(?im)^\s*consolidated statements of income\s*$", page_text):
+                statement_type = "INCOME_STATEMENT"
+            elif re.search(r'consolidated statements of comprehensive income',page_text,re.I):
+                statement_type = 'COMPREHENSIVE_INCOME_STATEMENT'
+            # These labels also occur as cash-flow changes and components in
+            # notes. Accept them only under an explicit balance-sheet header.
+            if metric_id in {"INTANGIBLE_ASSETS", "OTHER_ASSETS", "RETAINED_EARNINGS"} and statement_type != "BALANCE_SHEET":
+                continue
             # MD&A contains a percentage-of-revenue table whose row labels
             # reuse income-statement names.  In that context "Gross profit
             # 75.0" is a margin percentage, not USD gross profit.
@@ -302,23 +529,34 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 # Revenue=100% is the denominator of this presentation, not
                 # an amount or a growth metric.
                 continue
-            evidence = _find_exact_row(page_text, row_text, metric_alias)
-            if len(evidence) < 20:
+            row_evidence = _find_exact_row(page_text, row_text, metric_alias)
+            if not row_evidence.strip():
                 continue
-            periods = _periods_for_evidence(page_text, evidence, filing_year)
+            evidence = _table_context(page_text, row_evidence)
+            if disclosed_ratio:
+                parent_evidence = _find_exact_row(page_text, parent_row, _find_metric(parent_row)[0])
+                if not parent_evidence:
+                    continue
+                evidence = evidence.replace(row_evidence, parent_evidence + "\n" + row_evidence)
+            periods = _periods_for_evidence(page_text, row_evidence, filing_year)
             period_text = ",".join(str(year) for year in periods)
-            unit = _unit(page_text, evidence)
+            unit = _unit(page_text, row_evidence)
+            if disclosed_ratio:
+                unit = "percent"
             # The table may report dollars while nearby prose mentions a
             # percentage view of the same metric.  Use row-level units first.
-            if unit == "percent" and "$" in evidence:
+            if not disclosed_ratio and unit == "percent" and "$" in row_evidence:
                 unit = "USD millions" if "in millions" in page_text.lower() else "USD"
-            key = (metric_id, evidence)
+            key = (metric_id, row_evidence)
             if key in seen:
                 continue
             seen.add(key)
             # pdfplumber may split currency symbols into separate cells.  The
             # exact page line is the authoritative row for values and units.
-            values = _numeric_values(evidence)
+            values = _numeric_values(
+                row_evidence,
+                drop_trailing_change=False if disclosed_ratio else _has_change_column_header(page_text, row_evidence),
+            )
             if not values:
                 values = _numeric_values(row_text)
             # Values are positionally paired with the reported period columns.
@@ -332,9 +570,27 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 {"period": str(period), "value": value}
                 for period, value in zip(periods, values)
             ]
+            resolved_company_id = str(company_id or "").strip() or None
+            table_name = _table_name(page_text, row_evidence)
+            from .financial_context import describe,dated_columns
+            context=describe(page_text,table_name,row_evidence,statement_type)
+            dates=dated_columns(page_text,periods,balance=statement_type=='BALANCE_SHEET')
+            period_values=[dict(x,**dates.get(int(x['period']),{})) for x in period_values]
+            if disclosed_ratio:
+                # Both adjacent source rows are necessary to identify what the
+                # repeated '% of revenue' row measures. Preserve, never invent,
+                # the parent label as part of the verbatim claim.
+                row_evidence = parent_evidence + "\n" + row_evidence
             triples.append({
-                "source": "NVIDIA_CORPORATION",
-                "source_category": "Company",
+                "source": resolved_company_id or "",
+                "source_category": "Company" if resolved_company_id else "UnresolvedCompany",
+                "company_id": resolved_company_id,
+                "subject_resolution_status": (
+                    "VERIFIED_INPUT" if resolved_company_id else "PENDING_COMPANY_REVIEW"
+                ),
+                "document_id": document_id,
+                "report_period": report_period or f"FY{filing_year}",
+                "fiscal_period": str(periods[0]) if periods else f"FY{filing_year}",
                 "target": metric_id,
                 "target_category": "FinancialMetric",
                 "relation": "REPORTS_METRIC",
@@ -342,14 +598,36 @@ def extract_financial_table_triples(page, page_text: str, filing_year: int) -> L
                 "relation_polarity": "reported",
                 "modality": "observed",
                 "temporal_scope": period_text,
-                "evidence_sentence": evidence,
+                # The row is the cross-parser verbatim citation unit.  The
+                # surrounding header/period/unit context is persisted
+                # separately for human review and table interpretation.
+                "evidence_sentence": row_evidence,
+                "row_evidence": row_evidence,
+                "table_context": evidence,
                 "metric_values_json": json.dumps(period_values, ensure_ascii=False),
                 "metric_value": values[0],
-                "metric_unit": _unit(page_text, evidence),
+                "metric_unit": unit,
+                "unit": unit,
+                "currency": "USD" if unit.upper().startswith("USD") else None,
+                "scale": (
+                    "millions" if "million" in unit.lower()
+                    else "thousands" if "thousand" in unit.lower()
+                    else None
+                ),
+                "sign": "negative" if str(values[0]).startswith("-") else "positive",
                 "metric_period": str(periods[0]) if periods else str(filing_year),
-                "table_name": _table_name(page_text, evidence),
+                # Resolve the heading from the exact row, not from the
+                # multi-line citation context.  Passing the full context
+                # makes the row lookup miss and can select an unrelated
+                # heading near the end of the page.
+                "table_name": table_name,
                 "row_label": metric_alias,
-                "statement_type": "FINANCIAL_TABLE",
+                "table_id": table_name,
+                "row_id": metric_id,
+                "column_id": str(periods[0]) if periods else str(filing_year),
+                "source_span": row_evidence,
+                **context,
+                "column_semantics": 'SEGMENT_COLUMNS_UNRESOLVED' if re.search(r'Compute\s*(?:&|and)\s*Networking',page_text,re.I) and re.search(r'Graphics',page_text,re.I) and re.search(r'All Other',page_text,re.I) else 'PERIOD_COLUMNS',
                 "comparability_status": "UNASSESSED",
             })
     return triples

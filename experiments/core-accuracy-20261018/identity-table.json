@@ -1,0 +1,81 @@
+{
+  "implementation": {
+    "build_id": "build_8a5ce6d74be82a7c",
+    "source_fingerprint": "5ff28e24e8b7dfc91a3af2ab4c51bac2f22abc17e600f62fac45d9e57d3ee942",
+    "repair_rounds": 2,
+    "scorer_sha256": "1ea064b66fda7a3e1e79e1848ee155f41d864a6f21379e3bfc08d51b473623b1",
+    "no_post_validation_tuning": true
+  },
+  "actual_health": {
+    "status": "ready",
+    "deterministic_ready": true,
+    "generation_ready": false,
+    "checked_at": 1792257627.9879472,
+    "dependencies": {
+      "neo4j": {
+        "ready": true
+      },
+      "vector": {
+        "ready": true,
+        "collection": "isolated_build_8a5ce6d74be82a7c",
+        "count": 1861,
+        "embedding_backend": "chroma_onnx",
+        "embedding_model": "all-MiniLM-L6-v2",
+        "build_id": "build_8a5ce6d74be82a7c",
+        "actual_build_ids": [
+          "build_8a5ce6d74be82a7c"
+        ]
+      },
+      "llm": {
+        "ready": false,
+        "provider": "deepseek",
+        "model": "deepseek-v4-flash"
+      }
+    },
+    "active_filing": null,
+    "auth_enabled": false
+  },
+  "candidate_hash_checks": {
+    "round1": true,
+    "round2": true
+  },
+  "old_candidate_unchanged": true,
+  "vector_collection": "isolated_build_8a5ce6d74be82a7c",
+  "source_pdfs": {
+    "2023-10-K.pdf": {
+      "sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+      "bytes": 1578179
+    },
+    "2024-10-K.pdf": {
+      "sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+      "bytes": 1074533
+    },
+    "2025-10-K.pdf": {
+      "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+      "bytes": 1274715
+    },
+    "TSMC-2023-Annual-Report.pdf": {
+      "sha256": "b609c154ca5a02f55ee20f098f6553ec253ec73c184f343d07ae155d3d5524bf",
+      "bytes": 15863109
+    },
+    "TSMC-2024-Annual-Report.pdf": {
+      "sha256": "35fb134a4de264d0e68e663cea9bd8d211160abd6d267c6e94bcb8d77921a8a5",
+      "bytes": 11251655
+    }
+  },
+  "frontend_hashes": {
+    "index.html": "15a737de6fe724666982651164675dbca36147ca54476a9327ec33858ad6a37c",
+    "assets\\icons-DWU57Mve.js": "fb7b577a033fb5dee0901c7f694232ad05d144838de80338e437559356b6aec1",
+    "assets\\index-BRTI4XT2.js": "925f456e74ec7573af01087e086fe376710ecc25f4e9317b3a56ad9a5279a891",
+    "assets\\index-CoGsqfcS.css": "98393792477b5e21ee972557f8ff85220e84873d4c539588f960a01e197006e0",
+    "assets\\motion-BTm8TqKA.js": "437cbf2962a73951f84dad2084d567f3e87f2bf49f501dd0131a54a46c5cdbfb",
+    "assets\\react-xxE1au3H.js": "3e7a703072233f20019d2f7cbeaf4a519b9d19d75e24c32e124437ccc00776e8",
+    "assets\\visData-Baj6Ried.js": "981ff4f9160af9320331c82682accd927ce8a394503229e291eb79645f4ada4e",
+    "assets\\visNetwork-B6ecuP7g.js": "fbc6b5580e560b023f1e0d4f94ebc2d5bc88c15e94c848900a901f5d466d93d5"
+  },
+  "service": "http://127.0.0.1:8025/",
+  "neo4j": "bolt://127.0.0.1:17711",
+  "git_head": "80dc9cc958711e6e7ed5da8c67a96a1f3ba1de59",
+  "protected_previous_service": "8021/17708 left running; not modified",
+  "no_commit_push_publish_delete": true
+}

@@ -124,6 +124,9 @@ class LLMProvider:
         self._local_tokenizer = None
         self.last_success_provider = None
         self.last_success_model = None
+        # Counts actual remote transport attempts.  Replay callers bypass
+        # chat() entirely, so this remains unchanged during cache replay.
+        self.network_calls = 0
 
         # Ollama and local are keyless — always "available"
         self._available = (self._type in ("ollama", "local_transformers")) or \
@@ -219,6 +222,9 @@ class LLMProvider:
         """Send a chat completion. Returns text or None."""
         if not self.available:
             return None
+
+        if self._type in {"gemini_rest", "groq_native", "openai_compat"}:
+            self.network_calls = getattr(self, "network_calls", 0) + 1
 
         if self._type == "gemini_rest":
             return self._chat_gemini(prompt, system_prompt, model, temperature, max_tokens, json_mode)
@@ -398,6 +404,7 @@ class LLMProvider:
         system_prompt: str = "",
         model: str = None,
         max_tokens: int = None,
+        temperature: float = None,
     ) -> Optional[dict]:
         """Chat with forced JSON, return parsed dict or None."""
         text = self.chat(
@@ -405,6 +412,7 @@ class LLMProvider:
             system_prompt=system_prompt,
             model=model,
             max_tokens=max_tokens,
+            temperature=temperature,
             json_mode=True,
         )
         if text is None:
@@ -457,7 +465,9 @@ class LLMProvider:
 
     def switch_provider(self, provider: str, model: str = None):
         """Switch to a different provider at runtime."""
+        network_calls = getattr(self, "network_calls", 0)
         self.__init__(provider=provider, model=model)
+        self.network_calls = network_calls
         return self
 
     # ── Auto-Fallback ──
@@ -548,10 +558,15 @@ class LLMProvider:
         system_prompt: str = "",
         model: str = None,
         max_tokens: int = None,
+        temperature: float = None,
     ) -> Optional[dict]:
         """extract_json with automatic provider fallback."""
         result = self.extract_json(
-            prompt, system_prompt, model=model, max_tokens=max_tokens
+            prompt,
+            system_prompt,
+            model=model,
+            max_tokens=max_tokens,
+            temperature=temperature,
         )
         if result is not None:
             self.last_success_provider = self.provider
@@ -582,6 +597,7 @@ class LLMProvider:
                     system_prompt,
                     model=fallback_model,
                     max_tokens=max_tokens,
+                    temperature=temperature,
                     json_mode=True,
                 )
                 if result is None:

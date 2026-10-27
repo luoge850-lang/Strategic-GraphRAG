@@ -1,0 +1,62 @@
+{
+  "human_reviewed": 0,
+  "grade": "AI_PDF_NOT_HUMAN_GOLD",
+  "relationships": {
+    "U21": {
+      "core": true,
+      "complete": false,
+      "reason": "Actual returned citations support disclosed foundry dependency/conditional pathway; no realized NVIDIA loss asserted. PARTIALLY_ANSWERED stays incomplete."
+    },
+    "U22": {
+      "core": true,
+      "complete": false,
+      "reason": "Actual returned citations support disclosed foundry dependency/conditional pathway; no realized NVIDIA loss asserted. PARTIALLY_ANSWERED stays incomplete."
+    },
+    "V36": {
+      "core": true,
+      "complete": false,
+      "reason": "Actual returned citations support disclosed foundry dependency/conditional pathway; no realized NVIDIA loss asserted. PARTIALLY_ANSWERED stays incomplete."
+    },
+    "V37": {
+      "core": true,
+      "complete": false,
+      "reason": "Actual returned citations support disclosed foundry dependency/conditional pathway; no realized NVIDIA loss asserted. PARTIALLY_ANSWERED stays incomplete."
+    }
+  },
+  "reserved": {
+    "source": "reserved-source-packet-v2.json",
+    "core": "23 source-supported company/metric/year/version amounts, two source-answerable misses R03/R12; no wrong successful numeric answer",
+    "exact_frozen_page_match": [
+      22,
+      23
+    ],
+    "original_source_support_after_AI": [
+      23,
+      23
+    ],
+    "alternate_R04": {
+      "file": "2023-10-K.pdf",
+      "document_sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+      "page": 55,
+      "text": "Table of Contents\n\n\n\n                                      NVIDIA CORPORATION AND SUBSIDIARIES\n                          CONSOLIDATED STATEMENTS OF COMPREHENSIVE INCOME\n                                                                        (In millions)\n                                                                                           Year Ended\n                                                                        January 29,      January 30,      January 31,\n                                                                          2023            2022            2021\n\n\nNet income                                                           $         4,368  $         9,752  $         4,332\nOther comprehensive income (loss), net of tax\nAvailable-for-sale debt securities:\n  Net unrealized gain (loss)                                                                       (31)                (16)              2\n   Reclassification adjustments for net realized gain (loss) included in net income                 1        —                   (2)\n  Net change in unrealized loss                                                                   (30)                (16)        —\nCash flow hedges:\n  Net unrealized gain (loss)                                                          47                (43)              9\n   Reclassification adjustments for net realized gain (loss) included in net income                   (49)             29               9\n  Net change in unrealized gain (loss)                                                                    (2)                (14)             18\nOther comprehensive income (loss), net of tax                                                     (32)                (30)             18\nTotal comprehensive income                                              $         4,336  $         9,722  $         4,350\n\n                             See accompanying notes to the consolidated financial statements.\n\n\n\n\n\n                                                         55",
+      "reason": "Comprehensive-income statement directly repeats Net income4368/9752/4332 for2023/2022/2021; returned9752 FY2022 is supported. Frozen reference lists income-statement54 only. Exact-reference score remains22/23; labels and raw score unchanged."
+    }
+  },
+  "failures": [
+    {
+      "id": "R03",
+      "question": "Report NVIDIA Income from operations for FY2021, using the 2023 annual report?",
+      "expected": 4532,
+      "actual": "NOT_REQUESTED with unrelated legacy evidence trace",
+      "root": "Source heading synonym Income from operations absent from query aliases; no canonical metric/slot; old nonnumeric path still returns text trace"
+    },
+    {
+      "id": "R12",
+      "question": "How much was NVIDIA Intangible assets, net for FY2024, using the 2025 annual report?",
+      "expected": 1112,
+      "actual": "ABSTAINED",
+      "root": "Alias matches Intangible assets only; comma plus net suffix treated as unresolved extra item"
+    }
+  ],
+  "no_postfreeze_fix": true
+}

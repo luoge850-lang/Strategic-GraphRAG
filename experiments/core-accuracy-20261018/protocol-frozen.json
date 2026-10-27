@@ -1,0 +1,23 @@
+{
+  "objective": "Reduce actual wrong successful answers and source-answerable false refusals. No success-precision-only optimization.",
+  "round_limit": 2,
+  "development": "All historical28/37 and prior10 holdout now exposed, causal-loss counterexample and four invalid diagnostics excluded as labels; no independent claims",
+  "stopping": "At most2 root-cause rounds; freeze then source-first new reserved identities/variants with exposure recorded; no postvalidation tuning",
+  "metrics": [
+    "core among PDF-answerable",
+    "correct among successful numeric answers",
+    "false refusal",
+    "request identity and operation",
+    "source support",
+    "per-family failures"
+  ],
+  "gates": {
+    "core_min": 0.9,
+    "false_refusal_max": 0.1,
+    "severe_wrong_success_max": 0
+  },
+  "scope": "Existing5 PDFs; annual supported amount identities and signed cash movement; no FX/EPS/proforma or realized event-loss inference",
+  "model": "generation off/cache off; no paid or external calls",
+  "controls": "Unsupported modifiers must not become generic revenue; neighboring balance/flow metrics separate; known numeric facts must retain source version and units",
+  "protection": "No Git commits/push/release/delete; old experiments and liveDB unchanged"
+}

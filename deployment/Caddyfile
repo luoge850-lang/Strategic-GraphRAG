@@ -1,0 +1,51 @@
+{
+    http_port 8080
+    https_port 8443
+    admin off
+}
+
+{$DEMO_DOMAIN} {
+    @query {
+        method POST
+        path /query
+    }
+    @read {
+        method GET
+        path / /assets/* /graph/* /evidence/* /health /health/live /health/ready
+    }
+    @source_pdf {
+        method GET
+        path /evaluation/table-quality/source/2023-10-K.pdf /evaluation/table-quality/source/2024-10-K.pdf /evaluation/table-quality/source/2025-10-K.pdf
+    }
+
+    route {
+        basic_auth {
+            {$BASIC_AUTH_USER} {$BASIC_AUTH_HASH}
+        }
+
+        handle @query {
+            request_body {
+                max_size 16KB
+            }
+            reverse_proxy api:8000 {
+                header_up -Authorization
+                header_up X-API-Key {$API_KEY}
+            }
+        }
+        handle @read {
+            reverse_proxy api:8000 {
+                header_up -Authorization
+                header_up X-API-Key {$API_KEY}
+            }
+        }
+        handle @source_pdf {
+            reverse_proxy api:8000 {
+                header_up -Authorization
+                header_up X-API-Key {$API_KEY}
+            }
+        }
+        handle {
+            respond "Forbidden" 403
+        }
+    }
+}

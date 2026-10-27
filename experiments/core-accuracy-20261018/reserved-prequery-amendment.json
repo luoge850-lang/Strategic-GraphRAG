@@ -1,0 +1,6 @@
+{
+  "before": "reserved-freeze.json",
+  "after": "reserved-freeze-v2.json",
+  "reason": "Source row selector initially excluded TSMC rows with a trailing percent glyph; allowed the source Difference/% columns, taking only the two source year columns. No reserved query has run; no system output used. Original15-label freeze retained.",
+  "before_queries": true
+}

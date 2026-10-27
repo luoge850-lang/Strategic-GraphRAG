@@ -14,12 +14,13 @@ import os
 import sys
 import json
 import logging
+import threading
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 
 from dotenv import load_dotenv
 from neo4j import GraphDatabase, Query, READ_ACCESS
-from neo4j.exceptions import Neo4jError, ServiceUnavailable
+from neo4j.exceptions import Neo4jError, ServiceUnavailable, SessionExpired
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 ENV_PATH = PROJECT_ROOT / ".env"
@@ -144,50 +145,96 @@ class SchemaManager:
         self.database = os.getenv("NEO4J_DATABASE", "neo4j")
         self.query_timeout = max(float(os.getenv("NEO4J_QUERY_TIMEOUT_SECONDS", "8")), 0.5)
         self.driver = None
+        self._connection_lock = threading.RLock()
 
     def connect(self) -> bool:
-        try:
-            self.driver = GraphDatabase.driver(
-                self.uri,
-                auth=(self.user, self.password),
-                max_connection_pool_size=max(
-                    int(os.getenv("NEO4J_POOL_SIZE", "8")), 1
-                ),
-                connection_acquisition_timeout=max(
-                    float(os.getenv("NEO4J_ACQUISITION_TIMEOUT_SECONDS", "5")), 0.5
-                ),
-                max_transaction_retry_time=max(
-                    float(os.getenv("NEO4J_MAX_RETRY_SECONDS", "3")), 0.0
-                ),
-                keep_alive=True,
-            )
-            self.driver.verify_connectivity()
-            logger.info(f"Connected to Neo4j: {self.uri}")
-            return True
-        except ServiceUnavailable as e:
-            logger.error(f"Cannot connect to Neo4j: {e}")
-            return False
+        """Create and verify a fresh driver, replacing a stale Aura connection.
+
+        Aura free-tier databases can suspend and later drop the driver's pooled
+        routing connection.  Treat reconnection as a normal lifecycle event:
+        close the old pool, verify the replacement, and leave ``driver`` unset
+        when verification fails so callers cannot accidentally reuse it.
+        """
+        with self._connection_lock:
+            old_driver = self.driver
+            self.driver = None
+            if old_driver is not None:
+                try:
+                    old_driver.close()
+                except Exception as exc:
+                    logger.debug("Closing stale Neo4j driver failed: %s", exc)
+
+            candidate = None
+            try:
+                candidate = GraphDatabase.driver(
+                    self.uri,
+                    auth=(self.user, self.password),
+                    max_connection_pool_size=max(
+                        int(os.getenv("NEO4J_POOL_SIZE", "8")), 1
+                    ),
+                    connection_acquisition_timeout=max(
+                        float(os.getenv("NEO4J_ACQUISITION_TIMEOUT_SECONDS", "5")), 0.5
+                    ),
+                    max_transaction_retry_time=max(
+                        float(os.getenv("NEO4J_MAX_RETRY_SECONDS", "3")), 0.0
+                    ),
+                    keep_alive=True,
+                )
+                candidate.verify_connectivity()
+                self.driver = candidate
+                logger.info(f"Connected to Neo4j: {self.uri}")
+                return True
+            except Exception as e:
+                if candidate is not None:
+                    try:
+                        candidate.close()
+                    except Exception:
+                        pass
+                logger.warning(f"Cannot connect to Neo4j: {e}")
+                return False
 
     def close(self):
         if self.driver:
             self.driver.close()
 
     def _run(self, cypher, **params):
-        with self.driver.session(database=self.database) as session:
-            query = Query(cypher, timeout=self.query_timeout)
-            return [r.data() for r in session.run(query, **params)]
+        last_error = None
+        for attempt in range(2):
+            if self.driver is None and not self.connect():
+                raise ServiceUnavailable("Neo4j driver is unavailable")
+            try:
+                with self.driver.session(database=self.database) as session:
+                    query = Query(cypher, timeout=self.query_timeout)
+                    return [r.data() for r in session.run(query, **params)]
+            except (ServiceUnavailable, SessionExpired, OSError) as exc:
+                last_error = exc
+                if attempt == 0 and self.connect():
+                    continue
+                raise
+        raise last_error or ServiceUnavailable("Neo4j operation failed")
 
     def _read(self, cypher, **params):
-        with self.driver.session(
-            database=self.database,
-            default_access_mode=READ_ACCESS,
-        ) as session:
-            query = Query(
-                cypher,
-                timeout=self.query_timeout,
-                metadata={"app": "strategic-graphrag", "operation": "read"},
-            )
-            return [r.data() for r in session.run(query, **params)]
+        last_error = None
+        for attempt in range(2):
+            if self.driver is None and not self.connect():
+                raise ServiceUnavailable("Neo4j driver is unavailable")
+            try:
+                with self.driver.session(
+                    database=self.database,
+                    default_access_mode=READ_ACCESS,
+                ) as session:
+                    query = Query(
+                        cypher,
+                        timeout=self.query_timeout,
+                        metadata={"app": "strategic-graphrag", "operation": "read"},
+                    )
+                    return [r.data() for r in session.run(query, **params)]
+            except (ServiceUnavailable, SessionExpired, OSError) as exc:
+                last_error = exc
+                if attempt == 0 and self.connect():
+                    continue
+                raise
+        raise last_error or ServiceUnavailable("Neo4j read failed")
 
     def _exec_many(self, statements: List[str]) -> int:
         count = 0
@@ -308,10 +355,16 @@ class SchemaManager:
         products = [
             ("H100_TENSOR_CORE_GPU", "H100 Tensor Core GPU", "Data Center GPU", "Hopper"),
             ("A100_TENSOR_CORE_GPU", "A100 Tensor Core GPU", "Data Center GPU", "Ampere"),
+            ("A800_GPU", "A800 GPU", "Data Center GPU", "Ampere"),
             ("B200_BLACKWELL_GPU", "B200 Blackwell GPU", "Data Center GPU", "Blackwell"),
+            ("GEFORCE_GPU", "GeForce GPU", "Consumer GPU", None),
             ("GEFORCE_RTX_4090", "GeForce RTX 4090", "Consumer GPU", "Ada Lovelace"),
+            ("H800_GPU", "H800 GPU", "Data Center GPU", None),
+            ("H20_GPU", "H20 GPU", "Data Center GPU", None),
             ("CUDA_PLATFORM", "CUDA Platform", "Software Platform", None),
             ("DRIVE_PLATFORM", "DRIVE Platform", "Automotive Platform", None),
+            ("DRIVE_SIM", "DRIVE Sim", "Automotive Software", None),
+            ("DRIVE_ORIN", "DRIVE Orin", "Automotive SoC", None),
             ("DGX_SYSTEM", "DGX System", "AI Supercomputer", None),
             ("OMNIVERSE_PLATFORM", "Omniverse Platform", "Digital Twin Platform", None),
             ("MELLANOX_NETWORKING", "Mellanox Networking", "Networking", None),
@@ -433,6 +486,23 @@ class SchemaManager:
             r = self._run(f"MATCH ()-[r:{rel_type}]->() RETURN count(r) AS c")
             results["rel_counts"][rel_type] = r[0]["c"] if r else 0
         return results
+
+    def inventory(self, source_filing: Optional[str] = None) -> Dict:
+        """Explicitly separate whole-store totals from selected-build facts."""
+        build=os.getenv('GRAPHRAG_BUILD_ID') or None
+        result={}
+        queries={
+            'database_total_nodes':('MATCH(n) RETURN count(n) AS n',{}),
+            'database_total_relationships':('MATCH()-[r]->() RETURN count(r) AS n',{}),
+            'document_count':('MATCH(d:Document) WHERE ($build IS NULL OR d.build_id=$build) AND ($filing IS NULL OR d.filename=$filing) RETURN count(d) AS n',dict(build=build,filing=source_filing)),
+            'financial_observations':('MATCH(o:FinancialObservation) WHERE ($build IS NULL OR o.build_id=$build) AND ($filing IS NULL OR o.source_filing=$filing) RETURN count(o) AS n',dict(build=build,filing=source_filing)),
+            'company_count':('MATCH(o:FinancialObservation) WHERE ($build IS NULL OR o.build_id=$build) AND ($filing IS NULL OR o.source_filing=$filing) RETURN count(DISTINCT o.company_id) AS n',dict(build=build,filing=source_filing)),
+            'company_relations':('MATCH()-[r:DEPENDS_ON_FOUNDRY|EXPOSED_TO]->() WHERE ($build IS NULL OR r.build_id=$build) AND ($filing IS NULL OR r.source_filing=$filing) RETURN count(r) AS n',dict(build=build,filing=source_filing)),
+        }
+        for key,(query,params) in queries.items():
+            rows=self._read(query,**params)
+            result[key]=rows[0]['n'] if rows else None
+        return result
 
     def stats(self, source_filing: Optional[str] = None) -> Dict:
         """Return strict EvidenceClaim graph statistics in one Aura round trip."""

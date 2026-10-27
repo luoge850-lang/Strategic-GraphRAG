@@ -1,0 +1,542 @@
+[
+  {
+    "id": "R01",
+    "family": "NVIDIA_CORPORATION/GROSS_PROFIT",
+    "question": "What was NVIDIA Gross profit for FY2021, using the 2023 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "GROSS_PROFIT",
+        "value": 10396.0,
+        "unit": "USD millions",
+        "fact_period": "FY2021",
+        "disclosure_version": "2023-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2023-10-K.pdf",
+            "page": 54,
+            "anchor": "Gross profit"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 10396.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Gross profit                                                                          15,356           17,475           10,396",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R02",
+    "family": "NVIDIA_CORPORATION/REVENUE",
+    "question": "Give NVIDIA Revenue for FY2022, using the 2023 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "REVENUE",
+        "value": 26914.0,
+        "unit": "USD millions",
+        "fact_period": "FY2022",
+        "disclosure_version": "2023-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2023-10-K.pdf",
+            "page": 54,
+            "anchor": "Revenue"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 26914.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Revenue                                                             $        26,974  $        26,914  $        16,675",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R03",
+    "family": "NVIDIA_CORPORATION/OPERATING_INCOME",
+    "question": "Report NVIDIA Income from operations for FY2021, using the 2023 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "OPERATING_INCOME",
+        "value": 4532.0,
+        "unit": "USD millions",
+        "fact_period": "FY2021",
+        "disclosure_version": "2023-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2023-10-K.pdf",
+            "page": 54,
+            "anchor": "Income from operations"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 4532.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Income from operations                                                                 4,224           10,041             4,532",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R04",
+    "family": "NVIDIA_CORPORATION/NET_INCOME",
+    "question": "How much was NVIDIA Net income for FY2022, using the 2023 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "NET_INCOME",
+        "value": 9752.0,
+        "unit": "USD millions",
+        "fact_period": "FY2022",
+        "disclosure_version": "2023-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2023-10-K.pdf",
+            "page": 54,
+            "anchor": "Net income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 9752.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Net income                                                           $         4,368  $         9,752  $         4,332",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R05",
+    "family": "NVIDIA_CORPORATION/R_AND_D_EXPENSE",
+    "question": "What was NVIDIA Research and development for FY2023, using the 2023 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "R_AND_D_EXPENSE",
+        "value": 7339.0,
+        "unit": "USD millions",
+        "fact_period": "FY2023",
+        "disclosure_version": "2023-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2023-10-K.pdf",
+            "page": 54,
+            "anchor": "Research and development"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 7339.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Research and development                                                         7,339             5,268             3,924",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R06",
+    "family": "NVIDIA_CORPORATION/SG_AND_A_EXPENSE",
+    "question": "Give NVIDIA Sales, general and administrative for FY2023, using the 2024 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "SG_AND_A_EXPENSE",
+        "value": 2440.0,
+        "unit": "USD millions",
+        "fact_period": "FY2023",
+        "disclosure_version": "2024-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2024-10-K.pdf",
+            "page": 50,
+            "anchor": "Sales, general and administrative"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 2440.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Sales, general and administrative                                                           2,654               2,440               2,166",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R07",
+    "family": "NVIDIA_CORPORATION/OPERATING_LEASE_ASSETS",
+    "question": "Report NVIDIA Operating lease assets for FY2024, using the 2024 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "OPERATING_LEASE_ASSETS",
+        "value": 1346.0,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2024-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2024-10-K.pdf",
+            "page": 52,
+            "anchor": "Operating lease assets"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1346.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Operating lease assets                                                                                               1,346               1,038",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R08",
+    "family": "NVIDIA_CORPORATION/LONG_TERM_DEBT",
+    "question": "How much was NVIDIA Long-term debt for FY2023, using the 2024 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "LONG_TERM_DEBT",
+        "value": 9703.0,
+        "unit": "USD millions",
+        "fact_period": "FY2023",
+        "disclosure_version": "2024-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2024-10-K.pdf",
+            "page": 52,
+            "anchor": "Long-term debt"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 9703.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Long-term debt                                                                                                      8,459               9,703",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R09",
+    "family": "NVIDIA_CORPORATION/NET_INCOME",
+    "question": "What was NVIDIA Net income for FY2023, using the 2024 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "NET_INCOME",
+        "value": 4368.0,
+        "unit": "USD millions",
+        "fact_period": "FY2023",
+        "disclosure_version": "2024-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2024-10-K.pdf",
+            "page": 50,
+            "anchor": "Net income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 4368.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Net income                                                                 $          29,760  $           4,368  $           9,752",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R10",
+    "family": "NVIDIA_CORPORATION/NET_INCOME",
+    "question": "Give NVIDIA Net income for FY2022, using the 2024 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "NET_INCOME",
+        "value": 9752.0,
+        "unit": "USD millions",
+        "fact_period": "FY2022",
+        "disclosure_version": "2024-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2024-10-K.pdf",
+            "page": 50,
+            "anchor": "Net income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 9752.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Net income                                                                 $          29,760  $           4,368  $           9,752",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R11",
+    "family": "NVIDIA_CORPORATION/PROPERTY_PLANT_EQUIPMENT",
+    "question": "Report NVIDIA Property and equipment, net for FY2025, using the 2025 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "PROPERTY_PLANT_EQUIPMENT",
+        "value": 6283.0,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Property and equipment, net"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 6283.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Property and equipment, net                                                                                          6,283               3,914",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R12",
+    "family": "NVIDIA_CORPORATION/INTANGIBLE_ASSETS",
+    "question": "How much was NVIDIA Intangible assets, net for FY2024, using the 2025 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "INTANGIBLE_ASSETS",
+        "value": 1112.0,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Intangible assets, net"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1112.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Intangible assets, net                                                                                        807                1,112",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R13",
+    "family": "NVIDIA_CORPORATION/OPERATING_COST",
+    "question": "What was NVIDIA Total operating expenses for FY2023, using the 2025 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "OPERATING_COST",
+        "value": 11132.0,
+        "unit": "USD millions",
+        "fact_period": "FY2023",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Total operating expenses"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 11132.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Total operating expenses                                                              16,405              11,329              11,132",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R14",
+    "family": "NVIDIA_CORPORATION/OPERATING_LEASE_ASSETS",
+    "question": "Give NVIDIA Operating lease assets for FY2024, using the 2025 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "OPERATING_LEASE_ASSETS",
+        "value": 1346.0,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Operating lease assets"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1346.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Operating lease assets                                                                                              1,793               1,346",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  },
+  {
+    "id": "R15",
+    "family": "NVIDIA_CORPORATION/ACCUMULATED_OTHER_COMPREHENSIVE_INCOME",
+    "question": "Report NVIDIA Accumulated other comprehensive income for FY2024, using the 2025 annual report?",
+    "kind": "fact",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "ACCUMULATED_OTHER_COMPREHENSIVE_INCOME",
+        "value": 27.0,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Accumulated other comprehensive income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 27.0,
+    "expected_unit": "USD millions",
+    "answer_tolerance": 0.5,
+    "expected_operation": "fact",
+    "source_row": "Accumulated other comprehensive income                                                                   28                27",
+    "source_answerable": true,
+    "exposure": "Known metric family; no matching company/metric/year found in screened structured label files. Source audits and unsaved interactions may already expose this fact.",
+    "review": "AI_PDF_NOT_HUMAN_GOLD"
+  }
+]

@@ -1,15 +1,45 @@
 // Vite dev uses the /api proxy; the FastAPI-hosted production build is
 // same-origin and exposes these routes at the root.
-const B = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "/api" : "");
+export const API_BASE = import.meta.env.VITE_API_BASE ?? (import.meta.env.DEV ? "/api" : "");
+const B = API_BASE;
 
 async function fetchWithTimeout(input: RequestInfo | URL, init: RequestInit = {}, timeoutMs = 15000) {
   const controller = new AbortController();
   const timer = window.setTimeout(() => controller.abort(), timeoutMs);
   try {
     return await fetch(input, { ...init, signal: controller.signal });
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new Error("Local API request timed out. Check Neo4j/LLM readiness and retry.");
+    }
+    if (error instanceof TypeError) {
+      throw new Error("Cannot reach the local API. Run .\\scripts\\start_demo.ps1, then reload the page.");
+    }
+    throw error;
   } finally {
     window.clearTimeout(timer);
   }
+}
+
+async function throwApiError(operation: string, response: Response): Promise<never> {
+  let detail = "";
+  let executionStatus = "";
+  let outcome = "";
+  try {
+    const payload = await response.clone().json() as Record<string, any>;
+    executionStatus = String(payload.execution_status || payload.error?.execution_status || "");
+    outcome = String(payload.outcome || payload.error?.outcome || "");
+    const rawDetail = payload.detail || payload.error?.message || payload.dependencies?.neo4j?.error || "";
+    detail = typeof rawDetail === "string" ? rawDetail : JSON.stringify(rawDetail);
+  } catch {
+    // Keep a stable user-facing error even when a proxy returns non-JSON text.
+  }
+  if (response.status === 503) {
+    throw new Error(
+      `${operation} 暂不可用（503）：本地 API 已启动，但外部依赖未就绪。请检查 /health/ready 和 .env 中的连接配置。${executionStatus || outcome ? ` [${executionStatus || outcome}]` : ""}${detail ? ` ${detail}` : ""}`,
+    );
+  }
+  throw new Error(`${operation} ${response.status}${executionStatus || outcome ? ` [${executionStatus || outcome}]` : ""}${detail ? `: ${detail}` : ""}`);
 }
 
 export interface CausalPath {
@@ -26,6 +56,9 @@ export interface CausalPath {
   total_hops: number;
   score: number;
   score_breakdown: Record<string, number>;
+  evidence_role?: "ANSWER_CRITICAL" | "MECHANISM_SUPPORT" | "BACKGROUND_CONTEXT";
+  graph_structure?: "DIRECT_GRAPH_EDGE" | "MULTI_HOP_GRAPH_PATH";
+  evidence_semantic_scope?: "ATOMIC_RELATION" | "EMBEDDED_MECHANISM";
 }
 
 export interface QueryResult {
@@ -33,6 +66,29 @@ export interface QueryResult {
   intent: string;
   intent_display: string;
   answer: string;
+  citations?: Array<{ evidence_id: string; source_filing: string; page: number }>;
+  calculation?: {
+    status: "PASS" | "AMBIGUOUS" | "INSUFFICIENT_EVIDENCE" | "INVALID_INPUT" | "OPERATION_UNSUPPORTED" | "DEPENDENCY_ERROR" | string;
+    operation?: string;
+    value?: unknown;
+    unit?: string | null;
+    display?: string;
+    reason_code?: string;
+    required_count?: number;
+    answered_count?: number;
+    missing_metrics?: string[];
+    items?: Array<{ metric_id: string; status: string; display?: string; unit?: string; reason_code?: string }>;
+    comparability_assessment?: {
+      status?: string;
+      basis?: string;
+      [key: string]: unknown;
+    };
+  } | null;
+  execution_status: "SUCCEEDED" | "DEPENDENCY_ERROR" | "MODEL_ERROR" | "TIMEOUT" | "RATE_LIMITED" | "AUTH_ERROR" | "VALIDATION_ERROR" | "CONTRACT_ERROR" | "INTERNAL_ERROR";
+  answer_status: "NOT_REQUESTED" | "ANSWERED" | "PARTIALLY_ANSWERED" | "ABSTAINED";
+  grounding_status: "VERIFIED" | "FAILED" | "NOT_EXECUTED" | "NOT_APPLICABLE" | "INSUFFICIENT";
+  outcome: string;
+  status_provenance?: Record<string, unknown>;
   structured_report?: {
     format?: string;
     status?: string;
@@ -42,6 +98,9 @@ export interface QueryResult {
       evidence_claim_ids: string[];
       pages: number[];
       fiscal_years: number[];
+      source_filings?: string[];
+      numeric_fields?: unknown;
+      citation_audit?: Record<string, unknown>;
       support_level?: string;
     }>;
     evidence_quality?: string;
@@ -50,14 +109,20 @@ export interface QueryResult {
   paths: CausalPath[];
   evidence_sentences: string[];
   metadata: {
-    total_candidates: number;
-    top_paths: number;
-    anchors_used: string[];
-    avg_score: number;
+    total_candidates?: number;
+    top_paths?: number;
+    anchors_used?: string[];
+    avg_score?: number;
+    negative_evidence_audit?: Record<string, unknown>;
+    clarification_suggestions?: string[];
+    scope_suggestion?: FilingScope | null;
+    [key: string]: unknown;
   };
 }
 
 export interface GraphStats {
+  build_id?: string;
+  inventory?: Record<string, number | null>;
   total_nodes: number;
   total_relationships: number;
   graph_nodes?: number;
@@ -107,7 +172,9 @@ export type FilingScope =
   | "all"
   | "2023-10-K.pdf"
   | "2024-10-K.pdf"
-  | "2025-10-K.pdf";
+  | "2025-10-K.pdf"
+  | "TSMC-2023-Annual-Report.pdf"
+  | "TSMC-2024-Annual-Report.pdf";
 
 export type RetrievalMode =
   | "auto"
@@ -146,7 +213,7 @@ export async function postQuery(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   }, 120000);
-  if (!r.ok) throw new Error(`Query ${r.status}`);
+  if (!r.ok) await throwApiError("Query", r);
   return r.json();
 }
 
@@ -154,7 +221,7 @@ export async function getStats(scope: FilingScope = "all"): Promise<GraphStats> 
   const p = new URLSearchParams();
   applyScope(p, scope);
   const r = await fetchWithTimeout(`${B}/graph/statistics?${p}`);
-  if (!r.ok) throw new Error(`Stats ${r.status}`);
+  if (!r.ok) await throwApiError("Stats", r);
   return r.json();
 }
 
@@ -168,7 +235,7 @@ export async function getSubgraph(
   p.set("limit", String(limit));
   applyScope(p, scope);
   const r = await fetchWithTimeout(`${B}/graph/subgraph?${p}`);
-  if (!r.ok) throw new Error(`Subgraph ${r.status}`);
+  if (!r.ok) await throwApiError("Subgraph", r);
   return r.json();
 }
 
@@ -180,7 +247,7 @@ export async function getEvidence(
   const p = new URLSearchParams({ limit: String(limit) });
   applyScope(p, scope);
   const r = await fetchWithTimeout(`${B}/evidence/${encodeURIComponent(entityId)}?${p}`);
-  if (!r.ok) throw new Error(`Evidence ${r.status}`);
+  if (!r.ok) await throwApiError("Evidence", r);
   return r.json();
 }
 
@@ -195,11 +262,240 @@ export interface TemporalEvent {
   evidence_id: string | null;
 }
 
+export type AnnotationValue = boolean | "uncertain" | null;
+
+export interface ExtractionAnnotationRow {
+  claim_id: string;
+  doc_id: string;
+  page: number;
+  section: string | null;
+  extraction_method: string;
+  source_id: string;
+  relation_type: string;
+  target_id: string;
+  evidence: string;
+  evidence_context?: string | null;
+  verbatim_on_declared_page?: boolean;
+  labels: {
+    source_entity_correct: AnnotationValue;
+    target_entity_correct: AnnotationValue;
+    relation_correct: AnnotationValue;
+    evidence_supports_relation: AnnotationValue;
+    missing_gold_relations: string[] | null;
+  };
+  annotation_status: string;
+  annotator: string | null;
+  notes: string;
+}
+
+export interface ExtractionSampleResponse {
+  sample: string;
+  rows: ExtractionAnnotationRow[];
+  total: number;
+  labeled: number;
+  unlabeled: number;
+}
+
+export interface ExtractionAnnotationPatch {
+  source_entity_correct?: AnnotationValue;
+  target_entity_correct?: AnnotationValue;
+  relation_correct?: AnnotationValue;
+  evidence_supports_relation?: AnnotationValue;
+  missing_gold_relations?: string[];
+  annotation_status?: string | null;
+  annotator?: string | null;
+  notes?: string | null;
+}
+
+export interface ExtractionAnnotationPatchResponse extends Omit<ExtractionSampleResponse, "rows"> {
+  row: ExtractionAnnotationRow;
+}
+
+export type ExtractionSampleKey = "baseline" | "2025_post_repair_v2" | "2025_post_repair_human_v1";
+
 export async function getTemporalEvolution(
   riskId: string,
   limit = 20,
 ): Promise<TemporalEvent[]> {
   const r = await fetchWithTimeout(`${B}/graph/temporal/${encodeURIComponent(riskId)}?limit=${limit}`);
   if (!r.ok) throw new Error(`Temporal ${r.status}`);
+  return r.json();
+}
+
+export async function getExtractionSample(sample: ExtractionSampleKey): Promise<ExtractionSampleResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/extraction-sample?sample=${encodeURIComponent(sample)}`);
+  if (!r.ok) throw new Error(`Annotation sample ${r.status}`);
+  return r.json();
+}
+
+export async function patchExtractionSample(
+  claimId: string,
+  patch: ExtractionAnnotationPatch,
+  sample: ExtractionSampleKey,
+): Promise<ExtractionAnnotationPatchResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/extraction-sample/${encodeURIComponent(claimId)}?sample=${encodeURIComponent(sample)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  if (!r.ok) throw new Error(`Annotation save ${r.status}`);
+  return r.json();
+}
+
+export type GoldenQAStatus = "HUMAN_REVIEW_PENDING" | "IN_PROGRESS" | "HUMAN_REVIEWED";
+
+export interface GoldenQARow {
+  id: string;
+  question: string;
+  candidate_question_type?: string;
+  candidate_difficulty?: string;
+  candidate_expected_answer?: string;
+  candidate_atomic_facts?: string[];
+  candidate_answerable?: boolean;
+  candidate_source_filing?: string;
+  candidate_evidence_claim_ids?: string[];
+  candidate_supporting_triples?: Array<Record<string, string>>;
+  candidate_pages?: number[];
+  candidate_years?: Array<number | null>;
+  reference_answer: string;
+  gold_evidence_ids: string[];
+  gold_pages: number[];
+  relevant_evidence_grades: Record<string, number>;
+  answerable: boolean | null;
+  requires_abstention: boolean | null;
+  reviewer: string;
+  review_notes: string;
+  review_status: GoldenQAStatus;
+}
+
+export interface GoldenQAResponse {
+  rows: GoldenQARow[];
+  total: number;
+  reviewed: number;
+  pending: number;
+}
+
+export interface GoldenQAPatch {
+  reference_answer?: string;
+  gold_evidence_ids?: string[];
+  gold_pages?: number[];
+  relevant_evidence_grades?: Record<string, number>;
+  answerable?: boolean | null;
+  requires_abstention?: boolean | null;
+  reviewer?: string;
+  review_notes?: string;
+  review_status?: GoldenQAStatus;
+}
+
+export interface GoldenQAPatchResponse {
+  row: GoldenQARow;
+  total: number;
+  reviewed: number;
+  pending: number;
+}
+
+export async function getGoldenQA(): Promise<GoldenQAResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/golden-qa`);
+  if (!r.ok) throw new Error(`Golden QA ${r.status}`);
+  return r.json();
+}
+
+export async function patchGoldenQA(
+  qaId: string,
+  patch: GoldenQAPatch,
+): Promise<GoldenQAPatchResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/golden-qa/${encodeURIComponent(qaId)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  if (!r.ok) {
+    const payload = await r.json().catch(() => null);
+    const detail = payload?.detail || `Golden QA save ${r.status}`;
+    throw new Error(detail);
+  }
+  return r.json();
+}
+
+export type TableQualityStatus = "UNLABELED_CANDIDATE" | "IN_PROGRESS" | "HUMAN_REVIEWED";
+
+export interface TableQualityGold {
+  company_id?: string;
+  fiscal_year?: number | string;
+  metric_id?: string;
+  value?: number | string;
+  unit?: string;
+  source_filing?: string;
+  page?: number | string;
+  row_label?: string;
+  column_label?: string;
+  table_name?: string;
+  evidence_text?: string;
+  cell_supported?: boolean | "uncertain" | null | "";
+  [key: string]: unknown;
+}
+
+export interface TableQualityRow {
+  queue_id: string;
+  id: string;
+  company_id: string;
+  metric_id: string;
+  fiscal_year: number;
+  value: number;
+  raw_value: string;
+  unit: string;
+  source_filing: string;
+  page: number;
+  row_label: string;
+  column_label: string;
+  table_name: string;
+  evidence_sentence: string;
+  table_context?: string | null;
+  review_status: TableQualityStatus;
+  reviewer: string;
+  review_notes: string;
+  gold: TableQualityGold;
+  annotation_instruction: string;
+}
+
+export interface TableQualityResponse {
+  rows: TableQualityRow[];
+  total: number;
+  reviewed: number;
+  in_progress: number;
+  pending: number;
+}
+
+export interface TableQualityPatch {
+  gold?: TableQualityGold;
+  reviewer?: string;
+  review_notes?: string;
+  review_status?: TableQualityStatus;
+}
+
+export interface TableQualityPatchResponse extends Omit<TableQualityResponse, "rows"> {
+  row: TableQualityRow;
+}
+
+export async function getTableQuality(): Promise<TableQualityResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/table-quality`);
+  if (!r.ok) throw new Error(`Table QA ${r.status}`);
+  return r.json();
+}
+
+export async function patchTableQuality(
+  queueId: string,
+  patch: TableQualityPatch,
+): Promise<TableQualityPatchResponse> {
+  const r = await fetchWithTimeout(`${B}/evaluation/table-quality/${encodeURIComponent(queueId)}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  if (!r.ok) {
+    const payload = await r.json().catch(() => null);
+    const detail = payload?.detail || payload?.error?.message || `Table QA save ${r.status}`;
+    throw new Error(detail);
+  }
   return r.json();
 }

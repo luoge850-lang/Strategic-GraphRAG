@@ -1,0 +1,111 @@
+name: graphrag-public-demo
+
+services:
+  api:
+    image: graphrag-demo-api:${GRAPHRAG_BUILD_ID:?Set the canonical candidate build id}
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+      target: runtime
+    restart: unless-stopped
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 256
+    environment:
+      API_AUTH_ENABLED: "true"
+      API_KEY: ${API_KEY:?Set a non-placeholder random API_KEY}
+      CANDIDATE_BUILD_DIR: /candidate
+      GRAPHRAG_BUILD_ID: ${GRAPHRAG_BUILD_ID:?Set the canonical candidate build id}
+      GRAPH_EMBEDDING_BACKEND: chroma_onnx
+      GRAPH_VECTOR_COLLECTION: ${GRAPH_VECTOR_COLLECTION:?Set the candidate collection}
+      GRAPH_VECTOR_DB_PATH: /app/data/chroma_db
+      GRAPH_ACTIVE_FILING: ${GRAPH_ACTIVE_FILING:-2025-10-K.pdf}
+      NEO4J_URI: ${NEO4J_URI:?Set the isolated candidate Neo4j URI}
+      NEO4J_USERNAME: ${NEO4J_USERNAME:?Set the isolated candidate Neo4j user}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:?Set the isolated candidate Neo4j password}
+      NEO4J_DATABASE: ${NEO4J_DATABASE:?Set the isolated candidate database}
+      CORS_ORIGINS: https://${DEMO_DOMAIN:?Set a real DNS name}
+      LLM_PROVIDER: ${LLM_PROVIDER:?Set the ready LLM provider}
+      LLM_MODEL: ${LLM_MODEL:?Set the ready LLM model}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      OLLAMA_API_KEY: ${OLLAMA_API_KEY:-}
+      CROSS_ENCODER_ENABLED: "false"
+      QUERY_CACHE_TTL_SECONDS: "0"
+      RATE_LIMIT_PER_MINUTE: "60"
+    volumes:
+      - type: bind
+        source: ${CANDIDATE_HOST_DIR:?Set an absolute path to the immutable candidate package}
+        target: /candidate
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${PDF_2023_FILE:?Set an absolute path to 2023-10-K.pdf}
+        target: /app/data/pdfs_other/2023-10-K.pdf
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${PDF_2024_FILE:?Set an absolute path to 2024-10-K.pdf}
+        target: /app/data/pdfs_other/2024-10-K.pdf
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${PDF_2025_FILE:?Set an absolute path to 2025-10-K.pdf}
+        target: /app/data/pdfs/2025-10-K.pdf
+        read_only: true
+        bind:
+          create_host_path: false
+    tmpfs:
+      - /app/data/chroma_db:rw,nosuid,nodev,size=1g,uid=10001,gid=10001
+      - /runtime:rw,nosuid,nodev,size=16m,uid=10001,gid=10001
+      - /tmp:rw,nosuid,nodev,size=512m,uid=10001,gid=10001
+    networks: [private]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=20).close()"]
+      interval: 30s
+      timeout: 25s
+      start_period: 90s
+      retries: 3
+
+  caddy:
+    image: graphrag-demo-caddy:${GRAPHRAG_BUILD_ID:?Set the canonical candidate build id}
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+      target: caddy
+    restart: unless-stopped
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+    environment:
+      DEMO_DOMAIN: ${DEMO_DOMAIN:?Set a real DNS name}
+      BASIC_AUTH_USER: ${BASIC_AUTH_USER:?Set the demo username}
+      BASIC_AUTH_HASH: ${BASIC_AUTH_HASH:?Set a Caddy password hash}
+      API_KEY: ${API_KEY:?Set a non-placeholder random API_KEY}
+    ports:
+      - "80:8080"
+      - "443:8443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,size=64m,uid=10001,gid=10001
+    networks: [private]
+    depends_on:
+      api:
+        condition: service_healthy
+
+networks:
+  private:
+
+volumes:
+  caddy_data:
+  caddy_config:

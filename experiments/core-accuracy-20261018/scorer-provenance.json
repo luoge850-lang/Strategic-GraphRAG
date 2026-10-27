@@ -1,0 +1,585 @@
+{
+  "current_sha256": "1ea064b66fda7a3e1e79e1848ee155f41d864a6f21379e3bfc08d51b473623b1",
+  "previous_sha256": "1ea064b66fda7a3e1e79e1848ee155f41d864a6f21379e3bfc08d51b473623b1",
+  "unchanged": true,
+  "negative_tests": {
+    "kind": "synthetic scorer falsification, not service accuracy",
+    "cases": [
+      {
+        "name": "exchange_company",
+        "result": {
+          "core": false,
+          "successful": true,
+          "precision_correct": false,
+          "numeric": true,
+          "identity": false,
+          "operation": true,
+          "citation_identity": false,
+          "citation_reference": false,
+          "metadata_joint": false,
+          "request_joint": false,
+          "false_refusal": false,
+          "severe_wrong_success": true,
+          "details": [
+            {
+              "identity": false,
+              "amount": false,
+              "citation_identity": false,
+              "citation_reference": false,
+              "metadata": false,
+              "observations": []
+            }
+          ]
+        },
+        "detected": true
+      },
+      {
+        "name": "exchange_year",
+        "result": {
+          "core": false,
+          "successful": true,
+          "precision_correct": false,
+          "numeric": true,
+          "identity": false,
+          "operation": true,
+          "citation_identity": false,
+          "citation_reference": false,
+          "metadata_joint": false,
+          "request_joint": false,
+          "false_refusal": false,
+          "severe_wrong_success": true,
+          "details": [
+            {
+              "identity": false,
+              "amount": false,
+              "citation_identity": false,
+              "citation_reference": false,
+              "metadata": false,
+              "observations": []
+            }
+          ]
+        },
+        "detected": true
+      },
+      {
+        "name": "change_basis",
+        "result": {
+          "core": false,
+          "successful": true,
+          "precision_correct": false,
+          "numeric": true,
+          "identity": false,
+          "operation": true,
+          "citation_identity": true,
+          "citation_reference": true,
+          "metadata_joint": true,
+          "request_joint": false,
+          "false_refusal": false,
+          "severe_wrong_success": true,
+          "details": [
+            {
+              "identity": false,
+              "amount": true,
+              "citation_identity": true,
+              "citation_reference": true,
+              "metadata": true,
+              "observations": [
+                {
+                  "id": "o",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "value": 17,
+                  "unit": "USD millions",
+                  "fact_period": "FY2025",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "period_granularity": "ANNUAL",
+                  "financial_basis": "PRO_FORMA",
+                  "source_filing": "fixture.pdf",
+                  "build_id": "fixture",
+                  "page": 2,
+                  "claim_id": "c",
+                  "table_name": "Consolidated income",
+                  "row_label": "Revenue",
+                  "column_label": "2025",
+                  "source_section": "FINANCIAL_STATEMENTS",
+                  "statement_type": "INCOME_STATEMENT",
+                  "basis_evidence": "Consolidated Statements of Income",
+                  "document_sha256": "synthetic-hash",
+                  "period_end": "2025-01-31"
+                }
+              ]
+            }
+          ]
+        },
+        "detected": true
+      },
+      {
+        "name": "change_scope",
+        "result": {
+          "core": false,
+          "successful": true,
+          "precision_correct": false,
+          "numeric": true,
+          "identity": false,
+          "operation": true,
+          "citation_identity": true,
+          "citation_reference": true,
+          "metadata_joint": true,
+          "request_joint": false,
+          "false_refusal": false,
+          "severe_wrong_success": true,
+          "details": [
+            {
+              "identity": false,
+              "amount": true,
+              "citation_identity": true,
+              "citation_reference": true,
+              "metadata": true,
+              "observations": [
+                {
+                  "id": "o",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "value": 17,
+                  "unit": "USD millions",
+                  "fact_period": "FY2025",
+                  "business_scope": "AUTOMOTIVE",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "period_granularity": "ANNUAL",
+                  "financial_basis": "ACTUAL_REPORTED",
+                  "source_filing": "fixture.pdf",
+                  "build_id": "fixture",
+                  "page": 2,
+                  "claim_id": "c",
+                  "table_name": "Consolidated income",
+                  "row_label": "Revenue",
+                  "column_label": "2025",
+                  "source_section": "FINANCIAL_STATEMENTS",
+                  "statement_type": "INCOME_STATEMENT",
+                  "basis_evidence": "Consolidated Statements of Income",
+                  "document_sha256": "synthetic-hash",
+                  "period_end": "2025-01-31"
+                }
+              ]
+            }
+          ]
+        },
+        "detected": true
+      },
+      {
+        "name": "quarter_vs_annual",
+        "result": {
+          "core": false,
+          "successful": true,
+          "precision_correct": false,
+          "numeric": true,
+          "identity": false,
+          "operation": true,
+          "citation_identity": true,
+          "citation_reference": true,
+          "metadata_joint": true,
+          "request_joint": false,
+          "false_refusal": false,
+          "severe_wrong_success": true,
+          "details": [
+            {
+              "identity": false,
+              "amount": true,
+              "citation_identity": true,
+              "citation_reference": true,
+              "metadata": true,
+              "observations": [
+                {
+                  "id": "o",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "value": 17,
+                  "unit": "USD millions",
+                  "fact_period": "FY2025",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "period_granularity": "QUARTERLY",
+                  "financial_basis": "ACTUAL_REPORTED",
+                  "source_filing": "fixture.pdf",
+                  "build_id": "fixture",
+                  "page": 2,
+                  "claim_id": "c",
+                  "table_name": "Consolidated income",
+                  "row_label": "Revenue",
+                  "column_label": "2025",
+                  "source_section": "FINANCIAL_STATEMENTS",
+                  "statement_type": "INCOME_STATEMENT",
+                  "basis_evidence": "Consolidated Statements of Income",
+                  "document_sha256": "synthetic-hash",
+                  "period_end": "2025-01-31"
+                }
+              ]
+            }
+          ]
+        },
+        "detected": true
+      },
+      {
+        "name": "alter_operand",
+        "result": {
+          "core": false,
+          "successful": true,
+          "precision_correct": false,
+          "numeric": true,
+          "identity": true,
+          "operation": true,
+          "citation_identity": true,
+          "citation_reference": true,
+          "metadata_joint": true,
+          "request_joint": false,
+          "false_refusal": false,
+          "severe_wrong_success": true,
+          "details": [
+            {
+              "identity": true,
+              "amount": false,
+              "citation_identity": true,
+              "citation_reference": true,
+              "metadata": true,
+              "observations": [
+                {
+                  "id": "o",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "value": 19,
+                  "unit": "USD millions",
+                  "fact_period": "FY2025",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "period_granularity": "ANNUAL",
+                  "financial_basis": "ACTUAL_REPORTED",
+                  "source_filing": "fixture.pdf",
+                  "build_id": "fixture",
+                  "page": 2,
+                  "claim_id": "c",
+                  "table_name": "Consolidated income",
+                  "row_label": "Revenue",
+                  "column_label": "2025",
+                  "source_section": "FINANCIAL_STATEMENTS",
+                  "statement_type": "INCOME_STATEMENT",
+                  "basis_evidence": "Consolidated Statements of Income",
+                  "document_sha256": "synthetic-hash",
+                  "period_end": "2025-01-31"
+                }
+              ]
+            }
+          ]
+        },
+        "detected": true
+      },
+      {
+        "name": "wrong_row_same_page",
+        "result": {
+          "core": true,
+          "successful": true,
+          "precision_correct": true,
+          "numeric": true,
+          "identity": true,
+          "operation": true,
+          "citation_identity": true,
+          "citation_reference": false,
+          "metadata_joint": true,
+          "request_joint": false,
+          "false_refusal": false,
+          "severe_wrong_success": false,
+          "details": [
+            {
+              "identity": true,
+              "amount": true,
+              "citation_identity": true,
+              "citation_reference": false,
+              "metadata": true,
+              "observations": [
+                {
+                  "id": "o",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "value": 17,
+                  "unit": "USD millions",
+                  "fact_period": "FY2025",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "period_granularity": "ANNUAL",
+                  "financial_basis": "ACTUAL_REPORTED",
+                  "source_filing": "fixture.pdf",
+                  "build_id": "fixture",
+                  "page": 2,
+                  "claim_id": "c",
+                  "table_name": "Consolidated income",
+                  "row_label": "Interest income",
+                  "column_label": "2025",
+                  "source_section": "FINANCIAL_STATEMENTS",
+                  "statement_type": "INCOME_STATEMENT",
+                  "basis_evidence": "Consolidated Statements of Income",
+                  "document_sha256": "synthetic-hash",
+                  "period_end": "2025-01-31"
+                }
+              ]
+            }
+          ]
+        },
+        "detected": true
+      },
+      {
+        "name": "unit",
+        "result": {
+          "core": false,
+          "successful": true,
+          "precision_correct": false,
+          "numeric": false,
+          "identity": true,
+          "operation": true,
+          "citation_identity": true,
+          "citation_reference": true,
+          "metadata_joint": true,
+          "request_joint": false,
+          "false_refusal": false,
+          "severe_wrong_success": true,
+          "details": [
+            {
+              "identity": true,
+              "amount": true,
+              "citation_identity": true,
+              "citation_reference": true,
+              "metadata": true,
+              "observations": [
+                {
+                  "id": "o",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "value": 17,
+                  "unit": "USD millions",
+                  "fact_period": "FY2025",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "period_granularity": "ANNUAL",
+                  "financial_basis": "ACTUAL_REPORTED",
+                  "source_filing": "fixture.pdf",
+                  "build_id": "fixture",
+                  "page": 2,
+                  "claim_id": "c",
+                  "table_name": "Consolidated income",
+                  "row_label": "Revenue",
+                  "column_label": "2025",
+                  "source_section": "FINANCIAL_STATEMENTS",
+                  "statement_type": "INCOME_STATEMENT",
+                  "basis_evidence": "Consolidated Statements of Income",
+                  "document_sha256": "synthetic-hash",
+                  "period_end": "2025-01-31"
+                }
+              ]
+            }
+          ]
+        },
+        "detected": true
+      },
+      {
+        "name": "citation",
+        "result": {
+          "core": true,
+          "successful": true,
+          "precision_correct": true,
+          "numeric": true,
+          "identity": true,
+          "operation": true,
+          "citation_identity": false,
+          "citation_reference": false,
+          "metadata_joint": true,
+          "request_joint": false,
+          "false_refusal": false,
+          "severe_wrong_success": false,
+          "details": [
+            {
+              "identity": true,
+              "amount": true,
+              "citation_identity": false,
+              "citation_reference": false,
+              "metadata": true,
+              "observations": [
+                {
+                  "id": "o",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "value": 17,
+                  "unit": "USD millions",
+                  "fact_period": "FY2025",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "period_granularity": "ANNUAL",
+                  "financial_basis": "ACTUAL_REPORTED",
+                  "source_filing": "fixture.pdf",
+                  "build_id": "fixture",
+                  "page": 2,
+                  "claim_id": "c",
+                  "table_name": "Consolidated income",
+                  "row_label": "Revenue",
+                  "column_label": "2025",
+                  "source_section": "FINANCIAL_STATEMENTS",
+                  "statement_type": "INCOME_STATEMENT",
+                  "basis_evidence": "Consolidated Statements of Income",
+                  "document_sha256": "synthetic-hash",
+                  "period_end": "2025-01-31"
+                }
+              ]
+            }
+          ]
+        },
+        "detected": true
+      },
+      {
+        "name": "operation",
+        "result": {
+          "core": false,
+          "successful": true,
+          "precision_correct": false,
+          "numeric": true,
+          "identity": true,
+          "operation": false,
+          "citation_identity": true,
+          "citation_reference": true,
+          "metadata_joint": true,
+          "request_joint": false,
+          "false_refusal": false,
+          "severe_wrong_success": true,
+          "details": [
+            {
+              "identity": true,
+              "amount": true,
+              "citation_identity": true,
+              "citation_reference": true,
+              "metadata": true,
+              "observations": [
+                {
+                  "id": "o",
+                  "company_id": "NVIDIA_CORPORATION",
+                  "metric_id": "REVENUE",
+                  "value": 17,
+                  "unit": "USD millions",
+                  "fact_period": "FY2025",
+                  "business_scope": "CONSOLIDATED",
+                  "measurement_nature": "PERIOD_RESULT",
+                  "period_granularity": "ANNUAL",
+                  "financial_basis": "ACTUAL_REPORTED",
+                  "source_filing": "fixture.pdf",
+                  "build_id": "fixture",
+                  "page": 2,
+                  "claim_id": "c",
+                  "table_name": "Consolidated income",
+                  "row_label": "Revenue",
+                  "column_label": "2025",
+                  "source_section": "FINANCIAL_STATEMENTS",
+                  "statement_type": "INCOME_STATEMENT",
+                  "basis_evidence": "Consolidated Statements of Income",
+                  "document_sha256": "synthetic-hash",
+                  "period_end": "2025-01-31"
+                }
+              ]
+            }
+          ]
+        },
+        "detected": true
+      },
+      {
+        "name": "missing_slot",
+        "result": {
+          "core": false,
+          "successful": true,
+          "precision_correct": false,
+          "numeric": false,
+          "identity": false,
+          "citation_identity": false,
+          "citation_reference": false,
+          "metadata_joint": false,
+          "request_joint": false,
+          "false_refusal": true,
+          "severe_wrong_success": true,
+          "items": [
+            {
+              "core": true,
+              "successful": true,
+              "precision_correct": true,
+              "numeric": true,
+              "identity": true,
+              "operation": true,
+              "citation_identity": true,
+              "citation_reference": true,
+              "metadata_joint": true,
+              "request_joint": true,
+              "false_refusal": false,
+              "severe_wrong_success": false,
+              "details": [
+                {
+                  "identity": true,
+                  "amount": true,
+                  "citation_identity": true,
+                  "citation_reference": true,
+                  "metadata": true,
+                  "observations": [
+                    {
+                      "id": "o",
+                      "company_id": "NVIDIA_CORPORATION",
+                      "metric_id": "REVENUE",
+                      "value": 17,
+                      "unit": "USD millions",
+                      "fact_period": "FY2025",
+                      "business_scope": "CONSOLIDATED",
+                      "measurement_nature": "PERIOD_RESULT",
+                      "period_granularity": "ANNUAL",
+                      "financial_basis": "ACTUAL_REPORTED",
+                      "source_filing": "fixture.pdf",
+                      "build_id": "fixture",
+                      "page": 2,
+                      "claim_id": "c",
+                      "table_name": "Consolidated income",
+                      "row_label": "Revenue",
+                      "column_label": "2025",
+                      "source_section": "FINANCIAL_STATEMENTS",
+                      "statement_type": "INCOME_STATEMENT",
+                      "basis_evidence": "Consolidated Statements of Income",
+                      "document_sha256": "synthetic-hash",
+                      "period_end": "2025-01-31"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "core": false,
+              "successful": false,
+              "precision_correct": null,
+              "numeric": false,
+              "identity": false,
+              "operation": false,
+              "citation_identity": false,
+              "citation_reference": false,
+              "metadata_joint": false,
+              "request_joint": false,
+              "false_refusal": true,
+              "severe_wrong_success": false,
+              "details": [
+                {
+                  "identity": false,
+                  "amount": false,
+                  "citation_identity": false,
+                  "citation_reference": false,
+                  "metadata": false,
+                  "observations": []
+                }
+              ]
+            }
+          ]
+        },
+        "detected": true
+      }
+    ],
+    "passed": 11,
+    "failed": 0
+  },
+  "no_reference_values_in_production": true
+}

@@ -1,0 +1,87 @@
+Browser tab: 2, Title: "Strategic-GraphRAG · Financial Causal Intelligence", URL: "http://127.0.0.1:8025/".
+0 AXWebArea Strategic-GraphRAG · Financial Causal Intelligence, URL: 127.0.0.1:8025/
+	1 container root
+		2 text Strategic-GraphRAG
+		3 container
+			4 heading NVIDIA & TSMC Filings Evidence Explorer, Value: 1
+				5 text NVIDIA & TSMC Filings
+				6 text Evidence Explorer
+			7 text Financial observations and disclosed dependencies from five annual filings. Research prototype: source citations support review, not universal accuracy.
+			42 text 2
+			43 text 公司 · 当前范围
+			44 text 5
+			45 text 文件 · 当前范围
+			46 text 695
+			47 text 财务观测 · 当前范围
+			48 text 3
+			49 text 公司依赖／风险披露
+			50 text 1,861
+			51 text 向量文本块 · 当前范围
+			8 heading The knowledge graph, in ink, Value: 2
+				9 text The knowledge graph, in ink
+			10 container
+				11 text 74 nodes, 169 edges  entities in this view · companies, metrics and risks ·  1  candidates
+			52 text Causal path Graph node
+			53 container
+				54 text field (settable)
+				55 image
+				56 text 74 nodes · 169 edges · ready  · scroll to zoom · drag to pan · click to select
+			14 container
+				15 text ANNUAL REPORTS ·  ALL INDEXED FILINGS  · 视图  74  个实体 /  169  条聚合边
+				16 text 数据库全库（含辅助来源连接）： 1398  节点 /  5389  关系 · BUILD  BUILD_8A5CE6D74BE82A7C
+			17 heading Ask a financial question, Value: 2
+				18 text Ask a financial question
+			19 text 请明确公司、指标和财年；每次提问独立处理，不继承上一问。引用用于核对原文，不保证所有问题均可回答。
+			20 text FILING SCOPE
+			21 pop up button (collapsed, settable) FILING SCOPE, Value: All indexed filings, ID: filing-scope, Secondary Actions: Expand
+				22 menu
+					23 FY2025 · 10-K
+					24 FY2024 · 10-K
+					25 FY2023 · 10-K
+					26 TSMC FY2023 · Annual report (TWD)
+					27 TSMC FY2024 · Annual report (TWD)
+					28 (selected) All indexed filings
+			29 text Cross-year mode
+			30 container
+				31 checkbox (settable, integer) Description: Enable model answer synthesis, Value: 0
+				32 text Enable model answer synthesis (may send the question and retrieved evidence to the configured external model). Off by default.
+			33 container
+				34 text entry area (settable) In the 2025 annual report, what was NVIDIA accumulated other comprehensive income for FY2025?
+				35 button Analyze →
+			36 button 英伟达2025财年的税前利润是多少？
+			37 button 台积电2024年的总资产是多少？
+			38 button Calculate NVIDIA net income divided by revenue in fiscal 2025.
+			39 button What possible risk path connects TSMC natural disasters to NVIDIA wafer supply?
+			40 button Show another batch of example questions
+			57 button Clear results
+			58 text 本次结果对应问题 / QUESTION:  IN THE 2025 ANNUAL REPORT, WHAT WAS NVIDIA ACCUMULATED OTHER COMPREHENSIVE INCOME FOR FY2025?
+			59 container Deterministic calculation status
+				60 text DETERMINISTIC CALCULATION ·  PASS fact
+				61 text 28.000 USD millions
+				62 container
+					63 text 请求完整性：已回答  1 / 1  项。  所有请求项均已核对。
+			64 text ANALYSIS Financial fact  ·  1  candidates · avg  0.00 EXECUTION ·  SUCCEEDED ANSWER ·  ANSWERED GROUNDING ·  VERIFIED 本次返回事实已通过来源身份与计算检查；这不等于人工原文审核。完整性另见已回答项数。 28.000 USD millions RESPONSE ·  ANSWERED  · BUILD  BUILD_8A5CE6D74BE82A7C  · SELECTED SCOPE:  ALL INDEXED FILINGS
+			65 container Answer sources
+				66 heading 回答来源 · PDF 物理页（点击在当前页打开）, Value: 3
+					67 text 回答来源 · PDF 物理页（点击在当前页打开）
+				68 link Description: 核对 2025-10-K.pdf 物理页 54, Value: 127.0.0.1:8025/evaluation/table-quality/source/2025-10-K.pdf/page/54
+			69 button Evidence paths 1 of 1 ▾
+				70 heading Evidence paths, Value: 2
+					71 text Evidence paths
+				72 text 1 of 1
+				73 text ▾
+			74 button Graph evidence chain · path 1 1 graph hops ▾
+				75 heading Graph evidence chain · path 1, Value: 2
+					76 text Graph evidence chain · path 1
+				77 text 1 graph hops
+				78 text ▾
+			79 text [ 1 ] Accumulated other comprehensive income 28 27 p. 54 DISCLOSED_ONLY Y 2025 Claim  claim_v2_00cfedd04e527e926b68b68f
+			80 link Description: 打开原始文件 2025-10-K.pdf，PDF物理页 54, Value: 127.0.0.1:8025/evaluation/table-quality/source/2025-10-K.pdf/page/54
+			81 button Retrieval logic Financial fact ▾
+				82 heading Retrieval logic, Value: 2
+					83 text Retrieval logic
+				84 text Financial fact
+				85 text ▾
+		41 text STRATEGIC-GRAPHRAG · RESEARCH PROTOTYPE · FINITE-SAMPLE ACCEPTANCE ONLY
+
+The focused UI element is 0 AXWebArea Strategic-GraphRAG · Financial Causal Intelligence, URL: 127.0.0.1:8025/

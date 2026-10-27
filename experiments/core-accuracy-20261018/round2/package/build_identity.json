@@ -1,0 +1,46 @@
+{
+  "build_id": "build_8a5ce6d74be82a7c",
+  "schema": "strategic-graphrag-build-identity/v1",
+  "corpus_id": "real-user-qa-five-source-20261015",
+  "source_tree_sha256": "5ff28e24e8b7dfc91a3af2ab4c51bac2f22abc17e600f62fac45d9e57d3ee942",
+  "pdfs": {
+    "2023-10-K.pdf": {
+      "sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+      "bytes": 1578179
+    },
+    "2024-10-K.pdf": {
+      "sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+      "bytes": 1074533
+    },
+    "2025-10-K.pdf": {
+      "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+      "bytes": 1274715
+    },
+    "TSMC-2023-Annual-Report.pdf": {
+      "sha256": "b609c154ca5a02f55ee20f098f6553ec253ec73c184f343d07ae155d3d5524bf",
+      "bytes": 15863109
+    },
+    "TSMC-2024-Annual-Report.pdf": {
+      "sha256": "35fb134a4de264d0e68e663cea9bd8d211160abd6d267c6e94bcb8d77921a8a5",
+      "bytes": 11251655
+    }
+  },
+  "parser_version": "pdfplumber-document-layer/v1",
+  "parser_config_hash": "6eceb0c9e52cb18356a62e66f419cfc446a562742f1a7dfae1a4f4b335184e6f",
+  "prompt_version": "not_applicable_rule_table_v1",
+  "extraction_provider": "local_rules_and_tables",
+  "extraction_model": "not_applicable",
+  "query_model": "disabled_for_local_acceptance",
+  "report_model": "disabled_for_local_acceptance",
+  "embedding_backend": "chroma_onnx",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "dependency_lock_sha256": "994e613c8846b9d1c165121d4b539489be147a097ab96ce0a8795f213afe58f8",
+  "git_commit": "80dc9cc958711e6e7ed5da8c67a96a1f3ba1de59",
+  "component_fingerprints": {
+    "runtime_sources": "828337f1aa782e790eb86a7cf8b203a744fbe37cf360e67eaed2e298b2f4ff7b",
+    "deployment_and_evaluation": "e553c6c7b6f851a87bc577b6e945c48da4617ac836f8c77064c1f2b5f267078f",
+    "build_scripts": "10029705484cf53ce502d3345e1c918ca5753ce3aa81d73c14e94b17ff54ef9d",
+    "dependency_locks": "2b44259877da43c7b5c3b2bc873c5a79e757cc16cfb1d86dee053073a4000cc2",
+    "frontend_sources": "816ca2b17c4cdf569a6d4d1db35385598b837a44b01b0b01e3221993cd898ac6"
+  }
+}

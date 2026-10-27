@@ -1,0 +1,51 @@
+{
+  "implementation": {
+    "build_id": "build_8a5ce6d74be82a7c",
+    "source_fingerprint": "5ff28e24e8b7dfc91a3af2ab4c51bac2f22abc17e600f62fac45d9e57d3ee942",
+    "repair_rounds": 2,
+    "scorer_sha256": "1ea064b66fda7a3e1e79e1848ee155f41d864a6f21379e3bfc08d51b473623b1",
+    "no_post_validation_tuning": true
+  },
+  "reference_sha256": "463cfc55272c766a00354885e2d136e9e7a969822a14fbc8d89793d9d5cbbe7f",
+  "source_packet_sha256": "e2b045097faee1b9bee02ed65c1713a2f3c4652e9ad886bf56f3cefb39912b71",
+  "n": 15,
+  "family_count": 12,
+  "selected_per_filing": 5,
+  "pool_after_exposure_screen": {
+    "2023-10-K.pdf": 46,
+    "2024-10-K.pdf": 36,
+    "2025-10-K.pdf": 30,
+    "TSMC-2023-Annual-Report.pdf": 0,
+    "TSMC-2024-Annual-Report.pdf": 0
+  },
+  "screened_label_files": [
+    "experiments\\acceptance-20261015\\validation-labels.json",
+    "experiments\\accuracy-closure-20261016\\source-reserved-labels.json",
+    "experiments\\answer-correctness-2026-10-03\\development_labels.json",
+    "experiments\\answer-correctness-2026-10-03\\validation_labels.json",
+    "experiments\\answer-repair-20261017\\validation-labels-frozen.json",
+    "experiments\\bounded-delivery-20261018\\extraction-labels-frozen.json",
+    "experiments\\bounded-delivery-20261018\\holdout-labels-frozen.json",
+    "experiments\\bounded-delivery-20261018\\holdout-labels-v2-frozen.json",
+    "experiments\\bounded-delivery-20261018\\multi-diagnostic-labels-frozen.json",
+    "experiments\\finalization-20261016\\development-slot-labels.json",
+    "experiments\\finalization-20261016\\reserved-labels-frozen.json",
+    "experiments\\optimization-20261015\\new-family-labels.json",
+    "experiments\\optimization-20261015\\regression-labels.json",
+    "experiments\\request-contract-20261015\\development-labels.json",
+    "experiments\\service-validity-2026-10-02\\development_fact_labels.json",
+    "experiments\\service-validity-2026-10-02\\validation_fact_labels.json",
+    "experiments\\source-validation-20261017\\labels-frozen.json",
+    "experiments\\user-qa-20261015\\fresh-labels.json",
+    "experiments\\accuracy-closure-20261016\\round2\\development-slot-labels.json",
+    "experiments\\accuracy-closure-20261016\\round2\\final-source-labels.json",
+    "experiments\\answer-repair-20261017\\relationship-retrieval\\labels-frozen.json",
+    "experiments\\answer-repair-20261017\\retrieval\\labels-frozen.json",
+    "experiments\\bounded-delivery-20261018\\financial-retrieval\\labels-frozen.json",
+    "experiments\\bounded-delivery-20261018\\relation-retrieval\\labels-frozen.json",
+    "experiments\\request-contract-20261015\\round2\\development-labels.json",
+    "experiments\\user-qa-20261015\\round2\\fresh-labels.json"
+  ],
+  "screened_fact_identities": 126,
+  "limitation": "Finite source-first known-family fact validation. Not wholly unseen-family independent Gold, no human review; sample selection and exact-fact exposure screen do not establish population accuracy. No prediction or accepted-fact file used to construct labels."
+}
