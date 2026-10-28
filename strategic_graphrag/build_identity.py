@@ -79,6 +79,7 @@ def source_fingerprint(root: Path = ROOT) -> str:
     # Documentation is deliberately excluded: changing README wording must
     # not invalidate a graph/vector/numeric build that used the same runtime
     # code, corpus, prompts, and dependency lock.
+    paths.extend((root / "evaluation/current").glob("*.py"))
     paths.extend([root / ".env.example"])
     return _fingerprint_files(paths, root=root)
 
@@ -134,7 +135,7 @@ def make_build_identity(
         if not path.exists():
             raise FileNotFoundError(path)
         pdfs[path.name] = {"sha256": sha256_file(path), "bytes": path.stat().st_size}
-    lock_path = Path(dependency_lock) if dependency_lock else root / "requirements-lock-2026-09-19.txt"
+    lock_path = Path(dependency_lock) if dependency_lock else root / "requirements-lock.txt"
     lock_hash = sha256_file(lock_path) if lock_path.exists() else None
     identity_payload = {
         "schema": SCHEMA,
@@ -153,7 +154,7 @@ def make_build_identity(
         "dependency_lock_sha256": lock_hash,
         "component_fingerprints": {
             "runtime_sources": _fingerprint_files((root / 'strategic_graphrag').rglob('*.py'), root=root),
-            "deployment_and_evaluation": _fingerprint_files((root / 'deployment').rglob('*.py'), root=root),
+            "evaluation_protocol": _fingerprint_files((root / 'evaluation/current').rglob('*.py'), root=root),
             "build_scripts": _fingerprint_files((root / 'scripts').rglob('*.py'), root=root),
             "dependency_locks": _fingerprint_files(list(root.glob('requirements*.txt')) + [root/'frontend/package.json',root/'frontend/package-lock.json'], root=root),
             "frontend_sources": _fingerprint_files([p for p in (root/'frontend/src').rglob('*') if p.suffix in {'.ts','.tsx','.css'}], root=root),

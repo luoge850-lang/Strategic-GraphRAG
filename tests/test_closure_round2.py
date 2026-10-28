@@ -1,7 +1,7 @@
 import copy
 import pytest
 from strategic_graphrag.engine.query_understanding import parse_query
-from deployment.slot_score_20261016 import score
+from evaluation.current.slot_score import score
 from tests.test_slot_scorer_integrity import fixture
 
 @pytest.mark.parametrize('label',['accounts receivable, net','accounts receivable net'])

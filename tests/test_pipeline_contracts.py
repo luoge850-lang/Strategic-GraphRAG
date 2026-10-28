@@ -332,12 +332,16 @@ class PipelineContractTests(unittest.TestCase):
         self.assertEqual(triple["metric_unit"], "USD millions")
         self.assertEqual(triple["metric_period"], "2025")
         self.assertEqual(
-            json.loads(triple["metric_values_json"]),
+            [{k: v[k] for k in ("period", "value")} for v in json.loads(triple["metric_values_json"])],
             [
                 {"period": "2025", "value": "3491"},
                 {"period": "2024", "value": "2654"},
             ],
         )
+
+        values = json.loads(triple["metric_values_json"])
+        self.assertEqual([v["column_label"] for v in values], ["Jan 26, 2025", "Jan 28, 2024"])
+        self.assertEqual([v["period_end"] for v in values], ["2025-01-26", "2024-01-28"])
 
     def test_split_header_periods_are_positionally_recovered(self):
         evidence = "Sales, general and administrative expenses 2,440 2,166 274 13 %"

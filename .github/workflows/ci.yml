@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches: [stable]
   pull_request:
 
 permissions:
@@ -20,11 +21,13 @@ jobs:
       - name: Install focused test dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install neo4j numpy python-dotenv pydantic requests pdfplumber pymupdf langchain-text-splitters nltk
+          pip install -r requirements-dev.txt -c requirements-lock.txt
       - name: Compile Python
         run: python -m compileall -q strategic_graphrag scripts tests
       - name: Run focused contracts
-        run: python -m unittest discover -s tests -v
+        run: python -m pytest -q
+      - name: Recompute current evidence
+        run: python scripts/evaluate.py
 
   frontend:
     runs-on: ubuntu-latest

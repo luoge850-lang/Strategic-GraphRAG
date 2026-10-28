@@ -1,6 +1,6 @@
 import copy
 import pytest
-from deployment.slot_score_20261016 import score
+from evaluation.current.slot_score import score
 
 def fixture():
     operand=dict(company_id='A',metric_id='REVENUE',fact_period='FY2025',business_scope='CONSOLIDATED',value=12,unit='USD millions',sources=[dict(file='report.pdf',page=3,rows=['Revenue'])])

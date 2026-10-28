@@ -77,3 +77,7 @@ GraphRAG初稿.docx
 **/runtime/
 **/neo4j/
 **/vector_index/
+
+# Sole private runtime and configuration
+/.local/
+.pytest_cache/

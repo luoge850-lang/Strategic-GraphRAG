@@ -22,11 +22,15 @@ class AuditExtractionRegressions(unittest.TestCase):
         ])
         facts = extract_financial_table_triples(Page(), text, 2025)
         self.assertEqual(len(facts), 1)
-        self.assertEqual(json.loads(facts[0]["metric_values_json"]), [
+        values = json.loads(facts[0]["metric_values_json"])
+        self.assertEqual([{k: v[k] for k in ("period", "value")} for v in values], [
             {"period": "2025", "value": "130497"},
             {"period": "2024", "value": "60922"},
             {"period": "2023", "value": "26974"},
         ])
+        self.assertEqual([v["column_label"] for v in values], ["Jan 26, 2025", "Jan 28, 2024", "Jan 29, 2023"])
+        self.assertEqual(values[0]["period_end"], "2025-01-26")
+        self.assertEqual(values[1]["period_end"], "2024-01-28")
 
     def test_generic_pandemic_does_not_assert_specific_event(self):
         for word in ("pandemic", "pandemics"):

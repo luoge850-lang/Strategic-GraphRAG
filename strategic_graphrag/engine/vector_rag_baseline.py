@@ -31,11 +31,12 @@ class VectorRAGBaseline:
 
     def __init__(
         self,
-        db_path: str = "data/chroma_db",
+        db_path: str = None,
         collection_name: str = None,
         embedding_model: str = None,
         model_name: str = None,
     ):
+        db_path = db_path or os.getenv("GRAPHRAG_VECTOR_PATH", "data/chroma_db")
         self.db_path = db_path
         self.collection_name = collection_name or os.getenv(
             "GRAPH_VECTOR_COLLECTION", "nvidia_sec_filings"
@@ -87,7 +88,7 @@ class VectorRAGBaseline:
             )
             count = self.collection.count()
             logger.info(f"Vector collection loaded: {count} chunks")
-        except Exception:
+        except chromadb.errors.NotFoundError:
             if self.build_id:
                 raise RuntimeError('Expected candidate vector collection unavailable; refusing implicit creation')
             self.collection = self.client.create_collection(

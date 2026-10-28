@@ -1,0 +1,21 @@
+{
+  "schema": "current-evaluation/v1",
+  "reference_build_id": "build_8a5ce6d74be82a7c",
+  "partition": "KNOWN_FAMILY_SOURCE_FIRST_DIAGNOSTIC_EXPOSED_AFTER_RUN",
+  "review": "AI_PDF_NOT_HUMAN_GOLD",
+  "human_reviews": 0,
+  "questions": 25,
+  "expected_core": 23,
+  "expected_false_refusal": 1,
+  "expected_not_requested": 1,
+  "expected_joint": 9,
+  "legacy_inputs_sha256": {
+    "reserved-labels-v2-frozen.json": "1091546c49fb6c827c8ea651ecc099baee46518fad7018f4b08b85b8efd009be",
+    "round2/reserved-raw.jsonl": "2d5995d68fada8b9391002ad926e5c3e6de9376d44e1e7c9222d5c2cf6356eb3",
+    "score.py": "1ea064b66fda7a3e1e79e1848ee155f41d864a6f21379e3bfc08d51b473623b1"
+  },
+  "known_failures": [
+    "R03",
+    "R12"
+  ]
+}

@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.run_isolated_staging import (
+from strategic_graphrag.pipeline.build_contract import (
     embedding_provenance_matches,
     identity_for,
     normalize_no_llm_candidate_metadata,

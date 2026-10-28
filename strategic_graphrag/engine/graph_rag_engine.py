@@ -302,42 +302,35 @@ class CausalPathFinder:
         now = time.time()
         if self._available_rel_types and (now - self._rel_types_fetched) < 300:
             return self._available_rel_types
-        try:
-            with self.driver.session() as session:
-                result = session.run("CALL db.relationshipTypes()")
-                self._available_rel_types = [r[0] for r in result]
-                self._rel_types_fetched = now
-                return self._available_rel_types
-        except Exception:
-            return self.CAUSAL_REL_TYPES  # fallback to hardcoded list
+        with self.driver.session() as session:
+            result = session.run("CALL db.relationshipTypes()")
+            self._available_rel_types = [r[0] for r in result]
+            self._rel_types_fetched = now
+            return self._available_rel_types
 
     def find_text_anchors(self, query: str, limit: int = 8) -> List[str]:
         """Resolve query terms to canonical entities using Neo4j full-text search."""
         if not query or limit <= 0:
             return []
-        try:
-            with self.driver.session() as session:
-                rows = list(session.run(
-                    """
-                    CALL db.index.fulltext.queryNodes('entity_fulltext', $search_query)
-                    YIELD node, score
-                    WHERE node.id IS NOT NULL
-                    RETURN node.id AS id, node.name AS name, score
-                    ORDER BY score DESC
-                    LIMIT $limit
-                    """,
-                    search_query=query,
-                    limit=int(limit),
-                ))
-            anchors = []
-            for row in rows:
-                for value in (row.get("id"), row.get("name")):
-                    if value and value not in anchors:
-                        anchors.append(str(value))
-            return anchors[:limit]
-        except Exception as exc:
-            logger.info("Entity full-text lookup unavailable: %s", type(exc).__name__)
-            return []
+        with self.driver.session() as session:
+            rows = list(session.run(
+                """
+                CALL db.index.fulltext.queryNodes('entity_fulltext', $search_query)
+                YIELD node, score
+                WHERE node.id IS NOT NULL
+                RETURN node.id AS id, node.name AS name, score
+                ORDER BY score DESC
+                LIMIT $limit
+                """,
+                search_query=query,
+                limit=int(limit),
+            ))
+        anchors = []
+        for row in rows:
+            for value in (row.get("id"), row.get("name")):
+                if value and value not in anchors:
+                    anchors.append(str(value))
+        return anchors[:limit]
 
     def find_vector_evidence_anchors(
         self, vector_hits: List[Dict[str, Any]], limit: int = 12
@@ -355,29 +348,25 @@ class CausalPathFinder:
                 pages.append({"doc_id": str(filing).removesuffix(".pdf"), "page": page})
         if not pages:
             return []
-        try:
-            with self.driver.session() as session:
-                rows = session.run(
-                    """
-                    UNWIND $pages AS item
-                    MATCH (claim:EvidenceClaim {doc_id:item.doc_id, page:item.page})
-                    WHERE claim.verification_status='VERBATIM'
-                    RETURN claim.source_id AS source_id, claim.target_id AS target_id,
-                           count(*) AS support
-                    ORDER BY support DESC LIMIT $limit
-                    """,
-                    pages=pages,
-                    limit=int(limit),
-                )
-                anchors = []
-                for row in rows:
-                    for value in (row.get("source_id"), row.get("target_id")):
-                        if value and value not in anchors:
-                            anchors.append(str(value))
-                return anchors[:limit]
-        except Exception as exc:
-            logger.info("Vector evidence anchor join unavailable: %s", type(exc).__name__)
-            return []
+        with self.driver.session() as session:
+            rows = session.run(
+                """
+                UNWIND $pages AS item
+                MATCH (claim:EvidenceClaim {doc_id:item.doc_id, page:item.page})
+                WHERE claim.verification_status='VERBATIM'
+                RETURN claim.source_id AS source_id, claim.target_id AS target_id,
+                       count(*) AS support
+                ORDER BY support DESC LIMIT $limit
+                """,
+                pages=pages,
+                limit=int(limit),
+            )
+            anchors = []
+            for row in rows:
+                for value in (row.get("source_id"), row.get("target_id")):
+                    if value and value not in anchors:
+                        anchors.append(str(value))
+            return anchors[:limit]
 
     def find_paths(
         self,

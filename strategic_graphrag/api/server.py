@@ -36,6 +36,8 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from dotenv import load_dotenv
 from pathlib import Path
 from ..build_identity import BuildIdentityMismatch
+from neo4j.exceptions import ServiceUnavailable, SessionExpired
+from functools import lru_cache
 from ..response_contract import (
     ANSWER_STATUSES,
     EXECUTION_STATUSES,
@@ -1203,21 +1205,31 @@ async def get_table_quality_source(filename: str):
     )
 
 
+@lru_cache(maxsize=1)
+def _source_registry(registry_path: str, build_id: str):
+    import hashlib
+    registry = json.loads(Path(registry_path).read_text(encoding='utf-8'))
+    if registry['build_id'] != build_id:
+        raise HTTPException(status_code=409, detail='Source registry build mismatch')
+    files = {}
+    for row in registry['documents']:
+        path = Path(row['path'])
+        if not path.is_absolute():
+            path = Path(__file__).resolve().parents[2] / path
+        if hashlib.sha256(path.read_bytes()).hexdigest() != row['sha256']:
+            raise HTTPException(status_code=409, detail='Source PDF integrity mismatch')
+        files[row['filename']] = path
+    return files
+
+
 def _registered_source(filename: str):
     registry_path = os.getenv('GRAPHRAG_SOURCE_REGISTRY', '').strip()
     if not registry_path:
         return _TABLE_QUALITY_SOURCE_FILES.get(filename)
-    import hashlib
-    registry = json.loads(Path(registry_path).read_text(encoding='utf-8'))
-    if registry.get('build_id') != os.getenv('GRAPHRAG_BUILD_ID'):
-        raise HTTPException(status_code=409, detail='Source registry build mismatch')
-    rows = [row for row in registry.get('documents', []) if row.get('filename') == filename]
-    if len(rows) != 1:
+    files = _source_registry(registry_path, os.environ['GRAPHRAG_BUILD_ID'])
+    if filename not in files:
         raise HTTPException(status_code=404, detail='Source not registered in this build')
-    path = Path(rows[0]['path'])
-    if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != rows[0]['sha256']:
-        raise HTTPException(status_code=409, detail='Source PDF integrity mismatch')
-    return path
+    return files[filename]
 
 
 @app.get('/evaluation/table-quality/source/{filename}/page/{physical_page}')
@@ -1333,6 +1345,9 @@ async def graphrag_query(req: QueryRequest):
         raise
     except BuildIdentityMismatch:
         raise HTTPException(status_code=409,detail={'code':'BUILD_IDENTITY_MISMATCH','outcome':'VALIDATION_ERROR','message':'Candidate artifacts do not share the expected build identity'})
+    except (ServiceUnavailable, SessionExpired):
+        logger.error("Neo4j unavailable during query")
+        raise HTTPException(status_code=503, detail={"code":"DEPENDENCY_ERROR", "outcome":"DEPENDENCY_ERROR"})
     except Exception as e:
         logger.error(f"Query error: {e}")
         raise HTTPException(
