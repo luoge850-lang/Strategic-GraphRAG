@@ -1,0 +1,52 @@
+{
+  "build_id": "build_3b918db3d1355d09",
+  "files": [
+    {
+      "filename": "2023-10-K.pdf",
+      "pages": 169,
+      "chunks": 346,
+      "candidates": 94,
+      "seconds": 36.65700910000305,
+      "model_calls": 0,
+      "tokens": 0
+    },
+    {
+      "filename": "2024-10-K.pdf",
+      "pages": 96,
+      "chunks": 210,
+      "candidates": 90,
+      "seconds": 16.700450100004673,
+      "model_calls": 0,
+      "tokens": 0
+    },
+    {
+      "filename": "2025-10-K.pdf",
+      "pages": 130,
+      "chunks": 288,
+      "candidates": 97,
+      "seconds": 24.920754799997667,
+      "model_calls": 0,
+      "tokens": 0
+    },
+    {
+      "filename": "TSMC-2023-Annual-Report.pdf",
+      "pages": 326,
+      "chunks": 731,
+      "candidates": 33,
+      "seconds": 19.938286199991126,
+      "model_calls": 0,
+      "tokens": 0
+    },
+    {
+      "filename": "TSMC-2024-Annual-Report.pdf",
+      "pages": 94,
+      "chunks": 339,
+      "candidates": 34,
+      "seconds": 9.229422200005502,
+      "model_calls": 0,
+      "tokens": 0
+    }
+  ],
+  "mode": "FRESH_PDF_EXTRACTION",
+  "generation": "DISABLED"
+}

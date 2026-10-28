@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Tuple, Optional
 import chromadb
 from chromadb.utils import embedding_functions
 from dotenv import load_dotenv
+from ..build_identity import build_id_from_env
 
 load_dotenv()
 logger = logging.getLogger("VectorRAG")
@@ -30,11 +31,12 @@ class VectorRAGBaseline:
 
     def __init__(
         self,
-        db_path: str = "data/chroma_db",
+        db_path: str = None,
         collection_name: str = None,
         embedding_model: str = None,
         model_name: str = None,
     ):
+        db_path = db_path or os.getenv("GRAPHRAG_VECTOR_PATH", "data/chroma_db")
         self.db_path = db_path
         self.collection_name = collection_name or os.getenv(
             "GRAPH_VECTOR_COLLECTION", "nvidia_sec_filings"
@@ -46,6 +48,7 @@ class VectorRAGBaseline:
         self.embedding_backend = os.getenv(
             "GRAPH_EMBEDDING_BACKEND", "chroma_onnx"
         ).strip().lower()
+        self.build_id = build_id_from_env()
 
         # ChromaDB
         self.client = chromadb.PersistentClient(path=db_path)
@@ -67,6 +70,7 @@ class VectorRAGBaseline:
             )
         self.collection = None
         self._init_collection()
+        self._validate_identity()
 
         # LLM via unified provider
         from ..llm_provider import get_llm
@@ -84,11 +88,22 @@ class VectorRAGBaseline:
             )
             count = self.collection.count()
             logger.info(f"Vector collection loaded: {count} chunks")
-        except Exception:
+        except chromadb.errors.NotFoundError:
+            if self.build_id:
+                raise RuntimeError('Expected candidate vector collection unavailable; refusing implicit creation')
             self.collection = self.client.create_collection(
                 name=self.collection_name, embedding_function=self.embedding_fn
             )
             logger.warning(f"Created new empty collection: {self.collection_name}")
+
+    def _validate_identity(self):
+        from ..build_identity import BuildIdentityMismatch
+        if not self.build_id:
+            self.actual_build_ids=[];return
+        rows=self.collection.get(include=['metadatas']).get('metadatas') or []
+        self.actual_build_ids=sorted({str((r or {}).get('build_id') or 'UNKNOWN') for r in rows})
+        if self.actual_build_ids != [self.build_id]:
+            raise BuildIdentityMismatch('Vector collection metadata does not match expected build identity')
 
     def retrieve(self, query: str, k: int = 5) -> List[str]:
         """Retrieve top-K chunks via semantic similarity."""
@@ -108,7 +123,10 @@ class VectorRAGBaseline:
         ``source_filing`` metadata field and failures are reported explicitly.
         """
         if not self.collection or self.collection.count() == 0:
-            return {"status": "EMPTY", "hits": [], "collection": self.collection_name}
+            return {
+                "status": "EMPTY", "hits": [], "collection": self.collection_name,
+                "build_id": self.build_id,
+            }
 
         kwargs: Dict[str, Any] = {
             "query_texts": [query],
@@ -134,9 +152,13 @@ class VectorRAGBaseline:
                     "collection": self.collection_name,
                     "source_filing": source_filing,
                     "error": type(e).__name__,
+                    "build_id": self.build_id,
                 }
             logger.error(f"Retrieval error: {e}")
-            return {"status": "ERROR", "hits": [], "collection": self.collection_name}
+            return {
+                "status": "ERROR", "hits": [], "collection": self.collection_name,
+                "build_id": self.build_id,
+            }
 
         documents = (results.get("documents") or [[]])[0] or []
         metadatas = (results.get("metadatas") or [[]])[0] or []
@@ -160,10 +182,12 @@ class VectorRAGBaseline:
             "source_filing": source_filing,
             "embedding_backend": self.embedding_backend,
             "embedding_model": self.embedding_model,
+            "build_id": self.build_id,
         }
 
     def diagnostics(self) -> Dict[str, Any]:
         """Return machine-readable readiness without invoking the LLM."""
+        self._validate_identity()
         count = self.collection.count() if self.collection is not None else 0
         return {
             "ready": count > 0,
@@ -171,7 +195,29 @@ class VectorRAGBaseline:
             "count": count,
             "embedding_backend": self.embedding_backend,
             "embedding_model": self.embedding_model,
+            "build_id": self.build_id,
+            "actual_build_ids": getattr(self,'actual_build_ids',[]),
         }
+
+    def corpus_documents(self, source_filing: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Return every indexed chunk in scope for a bounded corpus audit."""
+        if not self.collection or self.collection.count() == 0:
+            return []
+        kwargs: Dict[str, Any] = {"include": ["documents", "metadatas"]}
+        if source_filing:
+            kwargs["where"] = {"source_filing": source_filing}
+        result = self.collection.get(**kwargs)
+        documents = result.get("documents") or []
+        metadatas = result.get("metadatas") or []
+        ids = result.get("ids") or []
+        return [
+            {
+                "document": document,
+                "metadata": metadatas[index] if index < len(metadatas) else {},
+                "id": ids[index] if index < len(ids) else None,
+            }
+            for index, document in enumerate(documents)
+        ]
 
     def generate(self, query: str, context_chunks: List[str]) -> str:
         """Generate an answer from retrieved context chunks."""
@@ -199,7 +245,7 @@ Provide a concise, factual answer. Do not make up information not in the context
             max_tokens=1000,
         )
         if result is None:
-            return f"[Generation error: LLM call failed]"
+            return "[MODEL ERROR] Vector synthesis failed."
         return result
 
     def ask(

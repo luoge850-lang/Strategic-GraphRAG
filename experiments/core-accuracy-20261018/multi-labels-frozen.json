@@ -1,0 +1,248 @@
+[
+  {
+    "id": "M1",
+    "question": "Using the 2025 annual report, give NVIDIA revenue for FY2024 in USD billions and net income for FY2025 in USD millions.",
+    "kind": "multi",
+    "items": [
+      {
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "REVENUE",
+            "value": 60922.0,
+            "unit": "USD millions",
+            "fact_period": "FY2024",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "anchor": "Revenue"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 60.922,
+        "expected_unit": "USD billions",
+        "answer_tolerance": 1e-05,
+        "expected_operation": "unit_conversion"
+      },
+      {
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "NET_INCOME",
+            "value": 72880.0,
+            "unit": "USD millions",
+            "fact_period": "FY2025",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "anchor": "Net income"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 72880.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 1e-05,
+        "expected_operation": "unit_conversion"
+      }
+    ]
+  },
+  {
+    "id": "M2",
+    "question": "Using the 2025 annual report, report NVIDIA net income for FY2025 and revenue for FY2025.",
+    "kind": "multi",
+    "items": [
+      {
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "NET_INCOME",
+            "value": 72880.0,
+            "unit": "USD millions",
+            "fact_period": "FY2025",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "anchor": "Net income"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 72880.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 1e-05,
+        "expected_operation": "fact"
+      },
+      {
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "REVENUE",
+            "value": 130497.0,
+            "unit": "USD millions",
+            "fact_period": "FY2025",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "anchor": "Revenue"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 130497.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 1e-05,
+        "expected_operation": "fact"
+      }
+    ]
+  },
+  {
+    "id": "M3",
+    "question": "Using the 2025 annual report, what was NVIDIA net income divided by revenue for FY2025?",
+    "kind": "ratio",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "NET_INCOME",
+        "value": 72880.0,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Net income"
+          }
+        ],
+        "tolerance": 0.5
+      },
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "REVENUE",
+        "value": 130497.0,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "financial_basis": "ACTUAL_REPORTED",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Revenue"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 0.5584802715771244,
+    "expected_unit": "ratio",
+    "answer_tolerance": 1e-06,
+    "expected_operation": "ratio"
+  },
+  {
+    "id": "M4",
+    "question": "Using the 2025 annual report, give NVIDIA revenue for FY2024 and revenue for FY2025.",
+    "kind": "multi",
+    "items": [
+      {
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "REVENUE",
+            "value": 60922.0,
+            "unit": "USD millions",
+            "fact_period": "FY2024",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "anchor": "Revenue"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 60922.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 1e-05,
+        "expected_operation": "fact"
+      },
+      {
+        "kind": "fact",
+        "operands": [
+          {
+            "company_id": "NVIDIA_CORPORATION",
+            "metric_id": "REVENUE",
+            "value": 130497.0,
+            "unit": "USD millions",
+            "fact_period": "FY2025",
+            "disclosure_version": "2025-10-K.pdf",
+            "business_scope": "CONSOLIDATED",
+            "measurement_nature": "PERIOD_RESULT",
+            "period_granularity": "ANNUAL",
+            "financial_basis": "ACTUAL_REPORTED",
+            "sources": [
+              {
+                "file": "2025-10-K.pdf",
+                "page": 52,
+                "anchor": "Revenue"
+              }
+            ],
+            "tolerance": 0.5
+          }
+        ],
+        "expected_value": 130497.0,
+        "expected_unit": "USD millions",
+        "answer_tolerance": 1e-05,
+        "expected_operation": "fact"
+      }
+    ]
+  }
+]

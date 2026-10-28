@@ -1,0 +1,955 @@
+[
+  {
+    "id": "U01",
+    "question": "In the 2025 10-K, how much interest income did NVIDIA earn during FY2025?",
+    "kind": "fact",
+    "family": "nvidia_interest_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "INTEREST_INCOME",
+        "value": 1786,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_INCOME",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Interest income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1786,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U02",
+    "question": "Report NVIDIA FY2025 interest expense as a signed amount, not interest income. Use the 2025 annual report.",
+    "kind": "fact",
+    "family": "nvidia_interest_expense",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "INTEREST_EXPENSE",
+        "value": -247,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_INCOME",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Interest expense"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": -247,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U03",
+    "question": "What is NVIDIA total comprehensive income for FY2025 in the 2025 10-K, rather than net income?",
+    "kind": "fact",
+    "family": "nvidia_comprehensive_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "TOTAL_COMPREHENSIVE_INCOME",
+        "value": 72881,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_COMPREHENSIVE_INCOME",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 53,
+            "anchor": "Total comprehensive income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 72881,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U04",
+    "question": "How much contribution expense did NVIDIA disclose for employee retirement plans in FY2025?",
+    "kind": "fact",
+    "family": "nvidia_retirement",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "RETIREMENT_CONTRIBUTION_EXPENSE",
+        "value": 314,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "NOTES",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 78,
+            "anchor": "contribution expense"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 314,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U05",
+    "question": "For NVIDIA FY2025, what was the current federal income tax amount in Note 13 of the 2025 10-K?",
+    "kind": "fact",
+    "family": "nvidia_federal_tax",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "CURRENT_FEDERAL_INCOME_TAX",
+        "value": 14032,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "NOTES",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 75,
+            "anchor": "Federal"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 14032,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U06",
+    "question": "Give the signed total deferred income tax expense or benefit for NVIDIA FY2025 from Note 13.",
+    "kind": "fact",
+    "family": "nvidia_deferred_tax",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "TOTAL_DEFERRED_INCOME_TAX",
+        "value": -4477,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "NOTES",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 75,
+            "anchor": "Total deferred"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": -4477,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U07",
+    "question": "How much cash did NVIDIA pay for interest in FY2025, according to its 2025 cash flow statement?",
+    "kind": "fact",
+    "family": "nvidia_cash_interest",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "CASH_PAID_FOR_INTEREST",
+        "value": 246,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_MOVEMENT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_CASH_FLOWS",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 56,
+            "anchor": "Cash paid for interest"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 246,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U08",
+    "question": "What stock-based compensation adjustment appears in NVIDIA operating cash flows for FY2025 in the 2025 report?",
+    "kind": "fact",
+    "family": "nvidia_stock_comp_cash_adjustment",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "STOCK_BASED_COMPENSATION_CASH_FLOW_ADJUSTMENT",
+        "value": 4737,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_MOVEMENT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_CASH_FLOWS",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 56,
+            "anchor": "Stock-based compensation expense"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 4737,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U09",
+    "question": "From the 2025 report, retrieve NVIDIA Automotive end-market revenue for FY2023, not company-wide sales.",
+    "kind": "segment",
+    "family": "nvidia_automotive",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "AUTOMOTIVE_REVENUE",
+        "value": 903,
+        "unit": "USD millions",
+        "fact_period": "FY2023",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "AUTOMOTIVE",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "NOTES",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 80,
+            "anchor": "Automotive"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 903,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [
+      "What was NVIDIA Automotive revenue for fiscal 2025, as disclosed in the 2025 10-K?"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U10",
+    "question": "Using the 2025 10-K, state Professional Visualization revenue for NVIDIA FY2024.",
+    "kind": "segment",
+    "family": "nvidia_professional_visualization",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "PROFESSIONAL_VISUALIZATION_REVENUE",
+        "value": 1553,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "PROFESSIONAL_VISUALIZATION",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "NOTES",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 80,
+            "anchor": "Professional Visualization"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1553,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [
+      "What was NVIDIA Professional Visualization revenue for fiscal 2025, as disclosed in the 2025 10-K?"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U11",
+    "question": "Within NVIDIA Data Center revenue for FY2025, how much came from Networking in the 2025 report?",
+    "kind": "segment",
+    "family": "nvidia_networking_component",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "DATA_CENTER_NETWORKING_REVENUE",
+        "value": 12990,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "DATA_CENTER_NETWORKING",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "NOTES",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 80,
+            "anchor": "Networking"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 12990,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U12",
+    "question": "What operating income did NVIDIA Graphics segment report for FY2025 in Note 16?",
+    "kind": "segment",
+    "family": "nvidia_graphics_operating_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "GRAPHICS_OPERATING_INCOME",
+        "value": 5085,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "GRAPHICS",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "NOTES",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 78,
+            "anchor": "Operating income (loss)"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 5085,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U13",
+    "question": "Using its 2025 annual report, calculate NVIDIA FY2025 interest income minus FY2024 interest income.",
+    "kind": "difference",
+    "family": "nvidia_interest_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "INTEREST_INCOME",
+        "value": 1786,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_INCOME",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Interest income"
+          }
+        ],
+        "tolerance": 0.5
+      },
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "INTEREST_INCOME",
+        "value": 866,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_INCOME",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Interest income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 920,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U14",
+    "question": "Calculate the change in signed dividends-paid cash flows: NVIDIA FY2025 minus FY2024, using the 2025 10-K.",
+    "kind": "difference",
+    "family": "nvidia_dividend_cash_movement",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "DIVIDENDS_PAID",
+        "value": -834,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_MOVEMENT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_CASH_FLOWS",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 56,
+            "anchor": "Dividends paid"
+          }
+        ],
+        "tolerance": 0.5
+      },
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "DIVIDENDS_PAID",
+        "value": -395,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_MOVEMENT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_CASH_FLOWS",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 56,
+            "anchor": "Dividends paid"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": -439,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [
+      "What evidence-backed REPORTS_METRIC relationship connects NVIDIA_CORPORATION to DIVIDEND_PAYOUT_RATIO in fiscal 2019?"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U15",
+    "question": "Convert NVIDIA FY2025 interest income from USD millions to USD billions, using its 2025 10-K.",
+    "kind": "unit_conversion",
+    "family": "nvidia_interest_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "INTEREST_INCOME",
+        "value": 1786,
+        "unit": "USD millions",
+        "fact_period": "FY2025",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_INCOME",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Interest income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1.786,
+    "expected_unit": "USD billions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.0005
+  },
+  {
+    "id": "U16",
+    "question": "In the FY2023 comparative column of the 2025 10-K, what interest income does NVIDIA report?",
+    "kind": "period",
+    "family": "nvidia_interest_income",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "INTEREST_INCOME",
+        "value": 267,
+        "unit": "USD millions",
+        "fact_period": "FY2023",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_STATEMENTS_OF_INCOME",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 52,
+            "anchor": "Interest income"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 267,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U17",
+    "question": "Use the 2025 disclosure to give NVIDIA net property and equipment at the end of FY2024.",
+    "kind": "period",
+    "family": "nvidia_property_equipment",
+    "operands": [
+      {
+        "company_id": "NVIDIA_CORPORATION",
+        "metric_id": "PROPERTY_PLANT_EQUIPMENT",
+        "value": 3914,
+        "unit": "USD millions",
+        "fact_period": "FY2024",
+        "disclosure_version": "2025-10-K.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "BALANCE",
+        "period_granularity": "ANNUAL",
+        "statement": "CONSOLIDATED_BALANCE_SHEETS",
+        "sources": [
+          {
+            "file": "2025-10-K.pdf",
+            "page": 54,
+            "anchor": "Property and equipment, net"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 3914,
+    "expected_unit": "USD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [
+      "What were TSMC consolidated property, plant and equipment at the end of fiscal 2024 as disclosed in its 2024 annual report?",
+      "What were TSMC consolidated property, plant and equipment at the end of fiscal 2023 as disclosed in its 2024 annual report?",
+      "What were TSMC consolidated property, plant and equipment in fiscal 2022 in its 2023 annual report?"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U18",
+    "question": "According to the consolidated column of TSMC 2024 annual report, what was its FY2024 cost of revenue?",
+    "kind": "fact",
+    "family": "tsmc_cost_revenue",
+    "operands": [
+      {
+        "company_id": "TSMC",
+        "metric_id": "COST_OF_REVENUE",
+        "value": 1269954135,
+        "unit": "TWD thousands",
+        "fact_period": "FY2024",
+        "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "FINANCIAL_PERFORMANCE",
+        "sources": [
+          {
+            "file": "TSMC-2024-Annual-Report.pdf",
+            "page": 64,
+            "anchor": "Cost of Revenue"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1269954135,
+    "expected_unit": "TWD thousands",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [
+      "What was TSMC consolidated cost of revenue for fiscal 2024, as disclosed in its 2024 annual report?",
+      "What was TSMC consolidated cost of revenue for fiscal 2023, as disclosed in its 2024 annual report?",
+      "What was TSMC consolidated cost of revenue for fiscal 2023, as disclosed in its 2023 annual report?",
+      "What was TSMC consolidated cost of revenue for fiscal 2022, as disclosed in its 2023 annual report?",
+      "Convert TSMC consolidated cost of revenue for fiscal 2024 in its 2024 annual report from TWD thousands to TWD millions.",
+      "Calculate the absolute difference in TSMC consolidated cost of revenue between fiscal 2023 and fiscal 2024 using its 2024 annual report."
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U19",
+    "question": "What non-operating income and expenses did TSMC disclose on a consolidated basis for 2024?",
+    "kind": "fact",
+    "family": "tsmc_nonoperating",
+    "operands": [
+      {
+        "company_id": "TSMC",
+        "metric_id": "NON_OPERATING_INCOME",
+        "value": 83785585,
+        "unit": "TWD thousands",
+        "fact_period": "FY2024",
+        "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "FINANCIAL_PERFORMANCE",
+        "sources": [
+          {
+            "file": "TSMC-2024-Annual-Report.pdf",
+            "page": 64,
+            "anchor": "Non-operating Income and Expenses"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 83785585,
+    "expected_unit": "TWD thousands",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [],
+    "new_family_candidate": true,
+    "independence": "NEW_EXACT_QUESTION_FAMILY_CANDIDATE",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U20",
+    "question": "Convert TSMC consolidated 2024 cost of revenue from TWD thousands to TWD millions, using its 2024 annual report.",
+    "kind": "unit_conversion",
+    "family": "tsmc_cost_revenue",
+    "operands": [
+      {
+        "company_id": "TSMC",
+        "metric_id": "COST_OF_REVENUE",
+        "value": 1269954135,
+        "unit": "TWD thousands",
+        "fact_period": "FY2024",
+        "disclosure_version": "TSMC-2024-Annual-Report.pdf",
+        "business_scope": "CONSOLIDATED",
+        "measurement_nature": "PERIOD_RESULT",
+        "period_granularity": "ANNUAL",
+        "statement": "FINANCIAL_PERFORMANCE",
+        "sources": [
+          {
+            "file": "TSMC-2024-Annual-Report.pdf",
+            "page": 64,
+            "anchor": "Cost of Revenue"
+          }
+        ],
+        "tolerance": 0.5
+      }
+    ],
+    "expected_value": 1269954.135,
+    "expected_unit": "TWD millions",
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "prior_family_question_matches": [
+      "What was TSMC consolidated cost of revenue for fiscal 2024, as disclosed in its 2024 annual report?",
+      "What was TSMC consolidated cost of revenue for fiscal 2023, as disclosed in its 2024 annual report?",
+      "What was TSMC consolidated cost of revenue for fiscal 2023, as disclosed in its 2023 annual report?",
+      "What was TSMC consolidated cost of revenue for fiscal 2022, as disclosed in its 2023 annual report?",
+      "Convert TSMC consolidated cost of revenue for fiscal 2024 in its 2024 annual report from TWD thousands to TWD millions.",
+      "Calculate the absolute difference in TSMC consolidated cost of revenue between fiscal 2023 and fiscal 2024 using its 2024 annual report."
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.0005
+  },
+  {
+    "id": "U21",
+    "question": "For NVIDIA and TSMC, describe the disclosed direction of the wafer foundry relationship without assuming a revenue-loss amount.",
+    "kind": "relationship",
+    "family": "cross_foundry_direction",
+    "operands": [],
+    "expected_value": null,
+    "expected_unit": null,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "expected_statuses": [
+      "PARTIALLY_ANSWERED",
+      "ANSWERED"
+    ],
+    "required_relations": [
+      "DEPENDS_ON_FOUNDRY"
+    ],
+    "prior_family_question_matches": [
+      "Boundary/relationship family conservatively considered exposed"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U22",
+    "question": "Explain a possible TSMC natural-disaster-to-NVIDIA supply pathway and state which causal links the annual reports do not establish.",
+    "kind": "relationship",
+    "family": "cross_conditional_path",
+    "operands": [],
+    "expected_value": null,
+    "expected_unit": null,
+    "source_answerable": true,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "expected_statuses": [
+      "PARTIALLY_ANSWERED"
+    ],
+    "required_relations": [
+      "DEPENDS_ON_FOUNDRY",
+      "EXPOSED_TO"
+    ],
+    "prior_family_question_matches": [
+      "Boundary/relationship family conservatively considered exposed"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U23",
+    "question": "Calculate the exact NVIDIA revenue lost to TSMC earthquake disruption in FY2025 from these annual reports.",
+    "kind": "refusal",
+    "family": "cross_loss_not_identified",
+    "operands": [],
+    "expected_value": null,
+    "expected_unit": null,
+    "source_answerable": false,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "prior_family_question_matches": [
+      "Boundary/relationship family conservatively considered exposed"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U24",
+    "question": "Compare NVIDIA FY2025 Professional Visualization sales with TSMC FY2024 consolidated sales and return a USD difference without an exchange rate.",
+    "kind": "refusal",
+    "family": "incomparable_currency_and_scope",
+    "operands": [],
+    "expected_value": null,
+    "expected_unit": null,
+    "source_answerable": false,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "expected_statuses": [
+      "ABSTAINED",
+      "PARTIALLY_ANSWERED"
+    ],
+    "prior_family_question_matches": [
+      "Boundary/relationship family conservatively considered exposed"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U25",
+    "question": "What is NVIDIA interest income in Q4 FY2025? Do not substitute the annual amount.",
+    "kind": "refusal",
+    "family": "quarter_interest_scope",
+    "operands": [],
+    "expected_value": null,
+    "expected_unit": null,
+    "source_answerable": false,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "prior_family_question_matches": [
+      "Boundary/relationship family conservatively considered exposed"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U26",
+    "question": "Give NVIDIA revenue for FY2032 as an observed fact from the five annual reports.",
+    "kind": "refusal",
+    "family": "future_period_unavailable",
+    "operands": [],
+    "expected_value": null,
+    "expected_unit": null,
+    "source_answerable": false,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "prior_family_question_matches": [
+      "Boundary/relationship family conservatively considered exposed"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U27",
+    "question": "How much revenue did TSMC earn specifically from NVIDIA in 2024, not its total revenue?",
+    "kind": "refusal",
+    "family": "customer_specific_unavailable",
+    "operands": [],
+    "expected_value": null,
+    "expected_unit": null,
+    "source_answerable": false,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "prior_family_question_matches": [
+      "Boundary/relationship family conservatively considered exposed"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  },
+  {
+    "id": "U28",
+    "question": "Give NVIDIA financial performance; I have not specified a metric or year.",
+    "kind": "ambiguity",
+    "family": "missing_metric_and_period",
+    "operands": [],
+    "expected_value": null,
+    "expected_unit": null,
+    "source_answerable": false,
+    "review_grade": "AI_PDF_DIAGNOSTIC_NOT_HUMAN_GOLD",
+    "expected_statuses": [
+      "ABSTAINED"
+    ],
+    "prior_family_question_matches": [
+      "Boundary/relationship family conservatively considered exposed"
+    ],
+    "new_family_candidate": false,
+    "independence": "NEW_QUESTION_EXPOSED_OR_RELATED_FAMILY",
+    "answer_tolerance": 0.5
+  }
+]

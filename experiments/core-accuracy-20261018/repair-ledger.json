@@ -1,0 +1,35 @@
+{
+  "round1": {
+    "build": "build_b426c821326c245e",
+    "tests": "130 passed",
+    "changes": [
+      "Nonoverlapping semantic spans choose target and slots consistently",
+      "Separate accumulated OCI balance, OCI flow and total comprehensive income",
+      "Event attribution remains an obligation; unknown specific modifiers cannot become generic totals",
+      "Parse statement-source tails and register exact expense/cash identities",
+      "Extract retirement prose, tax groups, cash adjustments/dividends and explicit segment columns from original source"
+    ],
+    "remaining": [
+      "U05 contextual prefix comma + current tax heading",
+      "U08 movement flag evaluated before resolved metric identity",
+      "U11 component clarification comma",
+      "H02 tax-component row collides with underlying asset balance",
+      "H07/H09/H10 comma inside full accounting identity and missing full source row"
+    ]
+  },
+  "round2": {
+    "build": "build_8a5ce6d74be82a7c",
+    "tests": "147 passed",
+    "changes": [
+      "Recognized context-prefix commas and scoped component clauses",
+      "Full accounting labels include loss/net/tax punctuation",
+      "Resolve movement nature before deciding modifier ambiguity",
+      "Quarantine deferred-tax component rows rather than treating them as company balances",
+      "Recognize Current income taxes/Deferred income taxes source headings",
+      "Reject cross-line date joins that fabricate year/date pairing"
+    ],
+    "development_result": "All prior59 source-answerable cores pass including4 bounded partial relations;55/55 successful financial amounts correct",
+    "reserved_result": "23/25; R03/R12 retained; stop after2 rounds"
+  },
+  "reference_handling": "Initial reserved source selector omitted percent-tailed TSMC lines; corrected before any reserved service query, original15-label freeze kept. Final25-label v2 frozen before query. Prior invalid4 diagnostic labels remain untouched; new4 exposed diagnostics constructed from originalPDF52 and pass4/4."
+}

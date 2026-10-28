@@ -29,6 +29,22 @@ _PERCENT_METRIC_MAP = {
     "SG_AND_A_EXPENSE": "SG_AND_A_RATIO",
 }
 
+def measurement_identity(metric: str, period: str, unit: str) -> Dict[str, str]:
+    metric=metric.upper()
+    scopes=('DATA_CENTER_NETWORKING','DATA_CENTER','GAMING','AUTOMOTIVE','PROFESSIONAL_VISUALIZATION','COMPUTE_NETWORKING','GRAPHICS')
+    scope=next((x for x in scopes if metric==x+'_REVENUE'),'CONSOLIDATED')
+    if metric=='GRAPHICS_OPERATING_INCOME':scope='GRAPHICS'
+    balances={'ACCOUNTS_RECEIVABLE','ACCOUNTS_PAYABLE','INVENTORIES','TOTAL_ASSETS','TOTAL_CURRENT_ASSETS',
+              'TOTAL_LIABILITIES','TOTAL_CURRENT_LIABILITIES','MARKETABLE_SECURITIES','CASH_AND_CASH_EQUIVALENTS','TOTAL_SHAREHOLDERS_EQUITY','TOTAL_EQUITY','RETAINED_EARNINGS'}
+    balances.update({'LONG_TERM_INVESTMENTS','PROPERTY_PLANT_EQUIPMENT','RIGHT_OF_USE_ASSETS','INTANGIBLE_ASSETS',
+                     'OTHER_ASSETS','NONCURRENT_LIABILITIES','CAPITAL_STOCK','CAPITAL_SURPLUS','OTHER_EQUITY','PARENT_EQUITY','GOODWILL','LONG_TERM_DEBT','DEFERRED_TAX_ASSETS'})
+    balances.update({'ACCUMULATED_OTHER_COMPREHENSIVE_INCOME','PREPAID_CURRENT_ASSETS','OPERATING_LEASE_ASSETS','OTHER_LONG_TERM_LIABILITIES'})
+    ratio=unit.lower() in {'percent','percentage points','%'} or metric.endswith('_RATIO') or metric.endswith('_MARGIN')
+    nature='PERIOD_MOVEMENT' if metric.startswith(('CASH_FLOW_CHANGE_','CASH_PAID_FOR_')) or metric.endswith('_CASH_FLOW') else 'BALANCE' if metric in balances else 'DISCLOSED_RATIO' if ratio else 'PERIOD_RESULT'
+    if metric in {'DIVIDENDS_PAID','STOCK_BASED_COMPENSATION_CASH_FLOW_ADJUSTMENT'}:nature='PERIOD_MOVEMENT'
+    return dict(business_scope=scope,measurement_nature=nature,value_kind='RATIO' if ratio else 'AMOUNT',
+                period_granularity='QUARTERLY' if re.match(r'Q[1-4]',period,re.I) else 'ANNUAL')
+
 
 @dataclass(frozen=True)
 class FinancialObservation:
@@ -53,6 +69,21 @@ class FinancialObservation:
     valid_from: str
     valid_to: str
     comparability_status: str
+    build_id: Optional[str] = None
+    business_scope: str = "CONSOLIDATED"
+    measurement_nature: str = "UNSPECIFIED"
+    value_kind: str = "AMOUNT"
+    period_granularity: str = "ANNUAL"
+    source_section: str = "UNKNOWN"
+    financial_basis: str = "ACTUAL_REPORTED"
+    basis_evidence: str = "UNKNOWN"
+    document_sha256: str = "UNKNOWN"
+    source_row: str = "UNKNOWN"
+    table_context: str = "UNKNOWN"
+    period_start: str = "UNKNOWN"
+    period_end: str = "UNKNOWN"
+    period_bounds_status: str = "UNKNOWN"
+    eps_basis: str = "NOT_APPLICABLE"
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -64,11 +95,18 @@ def parse_numeric_value(value: Any) -> Optional[float]:
         number = float(value)
         return number if math.isfinite(number) else None
     raw = str(value or "").strip()
+    if raw.casefold() in {
+        "nan", "+nan", "-nan", "inf", "+inf", "-inf",
+        "infinity", "+infinity", "-infinity",
+    }:
+        return None
     negative = raw.startswith("(") and raw.endswith(")")
     cleaned = raw.replace(",", "").replace("$", "").replace("%", "").strip("() ")
     try:
         number = float(cleaned)
     except ValueError:
+        return None
+    if not math.isfinite(number):
         return None
     return -abs(number) if negative else number
 
@@ -76,7 +114,13 @@ def parse_numeric_value(value: Any) -> Optional[float]:
 def split_unit(unit: str) -> tuple[Optional[str], Optional[str]]:
     normalized = str(unit or "").strip()
     lower = normalized.casefold()
-    currency = "USD" if lower.startswith("usd") else None
+    if lower in {"percent", "%", "percentage", "percentage points"}:
+        return None, "percent"
+    currency = next(
+        (code for code in ("USD", "EUR", "GBP", "JPY", "CNY", "CAD", "AUD", "TWD")
+         if lower.startswith(code.casefold())),
+        None,
+    )
     if "million" in lower:
         scale = "millions"
     elif "thousand" in lower:
@@ -112,6 +156,7 @@ def build_financial_observations(
     page: int,
     filing_year: int,
     section: str,
+    build_id: Optional[str] = None,
 ) -> List[Dict[str, Any]]:
     """Expand one REPORTS_METRIC claim into period-specific observations."""
     if str(triple.get("relation", "")).upper() != "REPORTS_METRIC":
@@ -145,6 +190,10 @@ def build_financial_observations(
         return []
     statement_type = str(triple.get("statement_type") or section or "UNKNOWN").strip()
     table_name = str(triple.get("table_name") or "UNKNOWN_TABLE").strip()
+    context = ' '.join(str(triple.get(k) or '') for k in ('table_name','table_context','statement_type'))
+    basis = ('PRO_FORMA' if re.search(r'pro[ -]?forma',context,re.I) else
+             'ADJUSTED' if re.search(r'\badjusted\b|non[- ]gaap',context,re.I) else
+             str(triple.get('financial_basis') or 'UNKNOWN'))
     row_label = str(triple.get("row_label") or triple.get("target") or metric_id).strip()
     comparability = str(triple.get("comparability_status") or "UNASSESSED").upper()
     observations: List[Dict[str, Any]] = []
@@ -166,11 +215,11 @@ def build_financial_observations(
             [claim_id, metric_id, period, raw_value, unit, source_filing, str(page)]
         )
         observation_id = "FO_" + hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24].upper()
-        measurement_identity = "|".join(
-            [company_id, metric_id, period, raw_value, unit]
+        measurement_signature = "|".join(
+            [company_id, metric_id, period, raw_value, unit, basis]
         )
         measurement_key = "FM_" + hashlib.sha256(
-            measurement_identity.encode("utf-8")
+            measurement_signature.encode("utf-8")
         ).hexdigest()[:20].upper()
         observations.append(
             FinancialObservation(
@@ -195,6 +244,18 @@ def build_financial_observations(
                 valid_from=valid_from,
                 valid_to=valid_to,
                 comparability_status=comparability,
+                build_id=build_id,
+                source_section=str(triple.get('source_section') or section),
+                financial_basis=basis,
+                basis_evidence=str(triple.get('basis_evidence') or 'UNKNOWN'),
+                document_sha256=str(triple.get('document_sha256') or 'UNKNOWN'),
+                source_row=str(triple.get('source_row') or triple.get('row_evidence') or evidence or 'UNKNOWN'),
+                table_context=str(triple.get('table_context') or 'UNKNOWN'),
+                period_start=str(item.get('period_start') or triple.get('period_start') or 'UNKNOWN'),
+                period_end=str(item.get('period_end') or triple.get('period_end') or 'UNKNOWN'),
+                period_bounds_status=str(item.get('period_bounds_status') or triple.get('period_bounds_status') or 'UNKNOWN'),
+                eps_basis=str(triple.get('eps_basis') or 'NOT_APPLICABLE'),
+                **measurement_identity(metric_id,period,unit),
             ).to_dict()
         )
     return observations

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "C1",
+    "question": "What was the exact NVIDIA revenue loss caused by the Taiwan earthquake in FY2024?",
+    "kind": "boundary",
+    "family": "event_attribution_boundary",
+    "operands": [],
+    "expected_statuses": [
+      "ABSTAINED"
+    ]
+  },
+  {
+    "id": "C2",
+    "question": "How much NVIDIA net income was lost due to a fire in FY2024?",
+    "kind": "boundary",
+    "family": "event_attribution_boundary",
+    "operands": [],
+    "expected_statuses": [
+      "ABSTAINED"
+    ]
+  },
+  {
+    "id": "C3",
+    "question": "Report the NVIDIA revenue decline attributable to export restrictions in FY2025.",
+    "kind": "boundary",
+    "family": "event_attribution_boundary",
+    "operands": [],
+    "expected_statuses": [
+      "ABSTAINED"
+    ]
+  }
+]

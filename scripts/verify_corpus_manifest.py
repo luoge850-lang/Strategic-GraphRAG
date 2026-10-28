@@ -18,8 +18,16 @@ import create_corpus_manifest as manifest_lib
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def latest_manifest() -> Path:
+    reports = ROOT / "reports"
+    candidates = sorted(
+        path for path in reports.glob("*corpus_manifest*.json") if path.is_file()
+    )
+    return candidates[-1] if candidates else reports / "2026-08-14_corpus_manifest.json"
+
+
 def main() -> int:
-    path = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "reports/2026-08-14_corpus_manifest.json"
+    path = Path(sys.argv[1]) if len(sys.argv) > 1 else latest_manifest()
     saved = json.loads(path.read_text(encoding="utf-8"))
     checks = {}
     checks["schema_v2"] = saved.get("schema") == "strategic-graphrag-corpus-manifest/v2"

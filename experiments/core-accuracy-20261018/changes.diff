@@ -1,0 +1,385 @@
+--- before/strategic_graphrag\engine\cross_company.py
++++ after/strategic_graphrag\engine\cross_company.py
+@@ -93,7 +93,8 @@
+            'Conditional interpretation: if the disclosed disaster risk interrupts TSMC wafer production or deliveries serving NVIDIA, the disclosed foundry dependency provides a possible route to NVIDIA wafer-supply disruption. The path does not establish that this happened.']
+     else:lines.append('Missing link: no matched TSMC operational-risk disclosure for the requested time. The dependency alone cannot establish a complete risk path.')
+     lines.append('Unsupported links: customer-specific delivery loss, alternative capacity, inventories, realized NVIDIA business impact and NVIDIA revenue-loss amounts are not established by these citations. Disclosure years identify source versions; they do not prove continuous validity or causal occurrence.')
+-    numeric_loss=bool(re.search(r'\b(how many|how much|lost|lose|loss|caused|prove|did)\b',text))
++    assertion_text=re.sub(r'\bwithout\s+(?:assuming|estimating|quantifying)\b[^.;?]*','',text)
++    numeric_loss=bool(re.search(r'\b(how many|how much|lost|lose|loss|caused|prove|did)\b',assertion_text))
+     if numeric_loss:
+         lines.insert(0,'无法从这些披露确定 NVIDIA 已发生的营收损失金额或证明事件已经发生。 The cited disclosures do not establish a realized NVIDIA revenue-loss amount or causal occurrence.')
+     return response('\n\n'.join(lines),'ABSTAINED' if numeric_loss else 'PARTIALLY_ANSWERED',
+--- before/strategic_graphrag\engine\financial_request.py
++++ after/strategic_graphrag\engine\financial_request.py
+@@ -46,8 +46,12 @@
+ 
+ 
+ def answer_financial_request(question,plan,finder,build_id,source_filing,serialize):
++    ambiguities=plan.get('ambiguity') or []
++    if 'unresolved_financial_identity_modifier' in ambiguities:
++        return respond(question,plan,build_id,'The specific financial component or balance modifier is unresolved. A broader metric cannot substitute for it.','unresolved_financial_identity_modifier')
++    if 'attributed_financial_outcome_not_disclosed' in ambiguities and plan.get('task_type')!='RELATION':
++        return respond(question,plan,build_id,'The requested event-attributed financial amount is not established by the stored disclosures. A reported company total cannot substitute for an attributed loss.','attributed_financial_outcome_not_disclosed')
+     if plan.get('task_type')=='RELATION':return None
+-    ambiguities=plan.get('ambiguity') or []
+     if any(x in ambiguities for x in ['unsupported_financial_component','pro_forma_request_not_supported']):
+         return respond(question,plan,build_id,'The requested financial component or basis is not supported; consolidated actual amounts cannot substitute for it.','unsupported_financial_component_or_basis')
+     if 'investing_cash_flow_or_capital_expenditure' in ambiguities:
+--- before/strategic_graphrag\engine\query_understanding.py
++++ after/strategic_graphrag\engine\query_understanding.py
+@@ -137,6 +137,30 @@
+ 
+ # Financial metric keywords for target detection
+ FINANCIAL_METRICS_MAP = {
++    "other comprehensive income (loss), net of tax": "OTHER_COMPREHENSIVE_INCOME_NET",
++    "other comprehensive gain (loss), net of income tax": "OTHER_COMPREHENSIVE_GAIN_NET",
++    "other operating income and expenses, net": "OTHER_OPERATING_INCOME_EXPENSE_NET",
++    "accumulated other comprehensive income": "ACCUMULATED_OTHER_COMPREHENSIVE_INCOME",
++    "other comprehensive income, net of tax": "OTHER_COMPREHENSIVE_INCOME_NET",
++    "other comprehensive income net of tax": "OTHER_COMPREHENSIVE_INCOME_NET",
++    "other comprehensive income": "OTHER_COMPREHENSIVE_INCOME_NET",
++    "prepaid expenses and other current assets": "PREPAID_CURRENT_ASSETS",
++    "operating lease assets": "OPERATING_LEASE_ASSETS",
++    "other long-term liabilities": "OTHER_LONG_TERM_LIABILITIES",
++    "other long term liabilities": "OTHER_LONG_TERM_LIABILITIES",
++    "other income (expense), net": "TOTAL_OTHER_INCOME_NET",
++    "total other income": "TOTAL_OTHER_INCOME_NET",
++    "other, net": "OTHER_INCOME_NET",
++    "acquisition termination cost": "ACQUISITION_TERMINATION_COST",
++    "other operating income and expenses": "OTHER_OPERATING_INCOME_EXPENSE_NET",
++    "other comprehensive gain": "OTHER_COMPREHENSIVE_GAIN_NET",
++    "current federal income tax": "CURRENT_FEDERAL_INCOME_TAX",
++    "total deferred income tax": "TOTAL_DEFERRED_INCOME_TAX",
++    "stock-based compensation adjustment": "STOCK_BASED_COMPENSATION_CASH_FLOW_ADJUSTMENT",
++    "dividends-paid": "DIVIDENDS_PAID",
++    "dividends paid": "DIVIDENDS_PAID",
++    "total operating expenses": "OPERATING_COST",
++    "operating expenses": "OPERATING_COST",
+     "contribution expense": "RETIREMENT_CONTRIBUTION_EXPENSE",
+     "non-operating income and expenses": "NON_OPERATING_INCOME",
+     "non-operating income": "NON_OPERATING_INCOME",
+@@ -331,6 +355,7 @@
+     disclosed_percentage_metric=False
+     from .bilingual_query import normalize_financial_question
+     question = normalize_financial_question(question)
++    question = re.sub(r'(20\d{2})\s+(?:cash\s+flow\s+statement|statement\s+of\s+cash\s+flows|balance\s+sheet|income\s+statement)\b',r'\1 annual report',question,flags=re.I)
+     question = re.sub(r'cash\s+did\s+(NVIDIA|TSMC)\s+pay\s+for\s+interest',r'\1 cash paid for interest',question,flags=re.I)
+     # Excluded alternatives are constraints, not positive requested operands.
+     # Only remove a bounded, recognized alternative; leave unknown exclusions
+@@ -442,12 +467,11 @@
+             if not any(match.start()<end and match.end()>start for start,end,_,_ in metric_spans):
+                 metric_spans.append((match.start(),match.end(),metric,alias))
+     q.requested_metrics=list(dict.fromkeys(metric for _,_,metric,_ in sorted(metric_spans)))
+-    for keyword, metric_id in sorted(FINANCIAL_METRICS_MAP.items(),
+-                                     key=lambda x: -len(x[0])):  # longest match first
+-        if keyword in q_lower:
+-            q.target_metric = metric_id
+-            q.target_entity = metric_id
+-            break
++    if metric_spans:
++        # Use the same non-overlapping semantic spans for target and slots.
++        # A substring alias must never override a more specific matched row.
++        chosen=min(metric_spans,key=lambda x:(-len(x[3]),x[0]))
++        q.target_metric=q.target_entity=chosen[2]
+ 
+     if q.calculation == 'RATIO' and re.search(r'\b(calculate|compute|divide|divided|quotient)\b|/', q_lower):
+         # Metric order follows the expression, not alias-map ordering.
+@@ -496,9 +520,14 @@
+         q.business_scope=next(iter(matched_scopes))
+         if q.target_metric=='REVENUE':
+             q.target_metric=q.target_entity=q.business_scope+'_REVENUE'
++        elif q.target_metric=='OPERATING_INCOME' and q.business_scope=='GRAPHICS':
++            q.target_metric=q.target_entity='GRAPHICS_OPERATING_INCOME'
++        elif q.target_metric==q.business_scope+'_REVENUE':pass
+         else:q.ambiguity.append("unsupported_business_scope_for_metric")
+     elif re.search(r"\b(segment|division|business unit|regional|geographic)\b",q_lower):
+         q.ambiguity.append("business_scope_not_resolved")
++    if q.business_scope=='DATA_CENTER' and re.search(r'\bnetworking\b',q_lower) and q.target_metric=='DATA_CENTER_REVENUE':
++        q.target_metric=q.target_entity='DATA_CENTER_NETWORKING_REVENUE';q.business_scope='DATA_CENTER_NETWORKING'
+     flow_change = bool(re.search(r"cash[- ]?flow|cash flows|working capital|operating assets",q_lower)) and bool(re.search(r"adjustment|change|movement",q_lower))
+     if flow_change and q.target_metric in {'ACCOUNTS_RECEIVABLE','INVENTORIES','ACCOUNTS_PAYABLE'}:
+         q.target_metric=q.target_entity='CASH_FLOW_CHANGE_'+q.target_metric
+@@ -517,7 +546,7 @@
+             disclosed_percentage_metric=True
+     if re.search(r"percentage[- ]point|percentage points",q_lower):
+         q.calculation='PERCENTAGE_POINT_CHANGE'
+-    if re.search(r"\b(adjustment|movement)\b",q_lower) and q.measurement_nature!='PERIOD_MOVEMENT':
++    if re.search(r"\b(adjustment|movement)\b",q_lower) and measurement_identity(q.target_metric,q.fact_period or '','')['measurement_nature']!='PERIOD_MOVEMENT':
+         q.ambiguity.append("movement_qualifier_not_resolved")
+ 
+     year_matches = list(re.finditer(r"(20\d{2})", question))
+@@ -619,8 +648,17 @@
+     identity=measurement_identity(q.target_metric,q.fact_period or '', 'percent' if q.measurement_nature=='DISCLOSED_RATIO' else '')
+     q.measurement_nature=identity['measurement_nature']
+     q.value_kind=identity['value_kind']
+-    if re.search(r'\b(?:current federal|deferred income tax|within .*networking|networking .*within)\b',q_lower) and q.target_metric!='DEFERRED_TAX_ASSETS':
++    # Specific identity modifiers outside recognized metric spans are not
++    # optional adjectives. Keep unknown components out of generic totals.
++    for modifier in re.finditer(r'\b(?:accumulated|deferred|unearned|unrealized|unrecognized|prepaid|adjusted)\b',q_lower):
++        if not any(s<=modifier.start()<e for s,e,_,_ in metric_spans):
++            q.ambiguity.append('unresolved_financial_identity_modifier')
++    if re.search(r'\b(?:current federal|deferred income tax|within .*networking|networking .*within)\b',q_lower) and q.target_metric not in {'DEFERRED_TAX_ASSETS','CURRENT_FEDERAL_INCOME_TAX','TOTAL_DEFERRED_INCOME_TAX','DATA_CENTER_NETWORKING_REVENUE'}:
+         q.ambiguity.append('unsupported_financial_component')
++    # A reported total is not an attributed loss. Preserve this obligation
++    # before typed arithmetic can certify a different, real financial fact.
++    if re.search(r'\b(?:loss|lost|reduction|decline|impact)\b',q_lower) and re.search(r'\b(?:caused by|due to|attribut(?:ed|able) to|resulting from|earthquake|disaster|tariff|export restrictions?)\b',q_lower):
++        q.ambiguity.append('attributed_financial_outcome_not_disclosed')
+     if re.search(r'\bpro[ -]?forma\b',q_lower):
+         q.ambiguity.append('pro_forma_request_not_supported')
+     # A disclosed percentage is one requested metric, not two independent facts.
+--- before/strategic_graphrag\engine\request_slots.py
++++ after/strategic_graphrag\engine\request_slots.py
+@@ -13,9 +13,11 @@
+     if not spans:return []
+     # A comma inside an alias or date is not a list separator.
+     for join in re.finditer(r',\s*',question):
++        if join.start()<spans[0][0] and re.match(r'\s*(?:for|in|using|according to)\b',question,re.I) and re.match(r'(?:what|how much|give|report)\b',question[join.end():],re.I):continue
+         if join.start()<spans[0][0] and re.search(r'\b(report|10-k|filing|disclosure|according|consolidated column)\b',question[:join.start()],re.I):continue
+         if any(start<=join.start()<end for start,end,_,_ in spans):continue
+         tail=question[join.end():]
++        if plan.target_metric=='DATA_CENTER_NETWORKING_REVENUE' and re.match(r'how much came from\s+networking\b',tail,re.I):continue
+         if not tail.strip(' .?;'):continue
+         if re.match(r'(?:not|rather than)\s+(?:the\s+)?(?:company|total|balance|annual|quarter)',tail,re.I):continue
+         # Disclosure adjuncts qualify the preceding fact; they are not list
+--- before/strategic_graphrag\pipeline\consolidated_ntd_table.py
++++ after/strategic_graphrag\pipeline\consolidated_ntd_table.py
+@@ -6,6 +6,11 @@
+ """
+ import json,re
+ LABELS = {'Net Revenue':'REVENUE','Cost of Revenue':'COST_OF_REVENUE',
++          'Other Operating Income and Expenses, Net':'OTHER_OPERATING_INCOME_EXPENSE_NET',
++          'Other Comprehensive Income (Loss), Net':'OTHER_COMPREHENSIVE_GAIN_NET',
++          'Other Comprehensive Income, Net':'OTHER_COMPREHENSIVE_GAIN_NET',
++          'Other Comprehensive Gain (Loss), Net':'OTHER_COMPREHENSIVE_GAIN_NET',
++          'Other Comprehensive Gain (Loss), Net of Income Tax':'OTHER_COMPREHENSIVE_GAIN_NET',
+           'Non-operating Income and Expenses':'NON_OPERATING_INCOME',
+           'Gross Profit':'GROSS_PROFIT','Operating Expenses':'OPERATING_COST',
+           'Income from Operations':'OPERATING_INCOME','Income before Income Tax':'PRETAX_INCOME',
+--- before/strategic_graphrag\pipeline\financial_cache.py
++++ after/strategic_graphrag\pipeline\financial_cache.py
+@@ -11,7 +11,7 @@
+ def extraction_contract(*, document_sha256, company_id, filing_year, filename):
+     digest=hashlib.sha256()
+     folder=Path(__file__).resolve().parent
+-    for name in ['financial_cache.py','financial_context.py','financial_table_extractor.py','consolidated_ntd_table.py','financial_candidate_guard.py']:
++    for name in ['financial_cache.py','financial_context.py','financial_table_extractor.py','financial_note_extractor.py','consolidated_ntd_table.py','financial_candidate_guard.py']:
+         digest.update(name.encode())
+         digest.update((folder/name).read_bytes().replace(b'\r\n',b'\n'))
+     return dict(schema='financial-extraction-cache/v1',document_sha256=document_sha256,
+@@ -27,11 +27,15 @@
+     import time
+     import pdfplumber
+     from .financial_table_extractor import extract_financial_table_triples, _find_metric, _numeric_values
++    from .financial_note_extractor import extract as note_extract
+     started=time.perf_counter();facts=[];selected=[]
+     with pdfplumber.open(pdf) as document:
+         total=len(document.pages)
+         for number,page in enumerate(document.pages,1):
+             text=page.extract_text() or ''
++            extra=note_extract(text,contract['company_id'],contract['filename'],contract['filing_year'])
++            for fact in extra:
++                fact.update(source_page=number,page=number,document_sha256=contract['document_sha256']);facts.append(fact)
+             # The same strict row recognizer selects table work; no fixed page
+             # list or reference values are used. Percent rows retain parents.
+             if not any(_find_metric(line) and _numeric_values(line) for line in text.splitlines()):
+--- before/strategic_graphrag\pipeline\financial_candidate_guard.py
++++ after/strategic_graphrag\pipeline\financial_candidate_guard.py
+@@ -20,6 +20,8 @@
+     if triple.get('target') == 'EARNINGS_PER_SHARE':
+         return 'earnings_per_share_basis_not_in_fact_identity'
+     title = str(triple.get('table_name') or '').casefold()
++    if re.search(r'deferred tax (?:assets|liabilities)',title):
++        return 'deferred_tax_component_is_not_underlying_company_balance'
+     unit = str(triple.get('metric_unit') or triple.get('unit') or '').casefold()
+     if re.search(r'\ballocation\b|purchase.price|acquisition.date', title):
+         return 'acquisition_allocation_is_not_company_year_end_balance'
+--- before/strategic_graphrag\pipeline\financial_context.py
++++ after/strategic_graphrag\pipeline\financial_context.py
+@@ -27,7 +27,7 @@
+ 
+ def dated_columns(text,years,*,balance=False):
+     dates={}
+-    for m in re.finditer(r'\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s+(\d{1,2}),?\s+(20\d{2})\b',text,re.I):
++    for m in re.finditer(r'\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?[ \t]+(\d{1,2}),?[ \t]+(20\d{2})\b',text,re.I):
+         try:d=datetime.strptime(m.group(1)[:3].title()+' '+m.group(2)+' '+m.group(3),'%b %d %Y').date()
+         except ValueError:continue
+         if d.year in years:dates.setdefault(d.year,(d,m.group(0)))
+--- before/strategic_graphrag\pipeline\financial_note_extractor.py
++++ after/strategic_graphrag\pipeline\financial_note_extractor.py
+@@ -0,0 +1,65 @@
++"""Explicit note/prose and statement-row layouts omitted by the table backend.
++
++No page numbers or reference values. Require issuer, monetary unit, source
++header periods and complete value/column cardinality before emitting a fact.
++"""
++import json,re
++from .financial_context import describe,dated_columns
++from .financial_table_extractor import _periods_for_evidence
++
++TOKEN=r'\(?-?\d[\d,]*(?:\.\d+)?\)?|[—–]'
++
++def amounts(text):
++    return [('0' if s in {'—','–'} else ('-' if s.startswith('(') else '')+s.strip('()').replace(',','')) for s in re.findall(TOKEN,text)]
++
++def extract(text,company,filename,filing_year):
++    out=[];lines=[s.strip() for s in text.splitlines() if s.strip()]
++    def emit(metric,label,row,years,values,table,statement,proof=None):
++        if not years or len(years)!=len(values) or len(set(years))!=len(years):return
++        context=describe(text,table,row,statement)
++        if proof:context.update(financial_basis='ACTUAL_REPORTED',basis_evidence=proof)
++        if context['financial_basis']!='ACTUAL_REPORTED':return
++        dates=dated_columns(text,years)
++        pv=[dict(period=str(y),value=v,**dates.get(y,{})) for y,v in zip(years,values)]
++        out.append(dict(source=company,company_id=company,source_category='Company',target=metric,target_category='FinancialMetric',relation='REPORTS_METRIC',causal_strength='DISCLOSED_ONLY',causal_form='FINANCIAL_RELATION',source_filing=filename,report_period=f'FY{filing_year}',evidence_sentence=row,row_evidence=row,row_label=label,table_name=table,table_id=table,metric_values_json=json.dumps(pv),metric_unit='USD millions',unit='USD millions',currency='USD',scale='millions',comparability_status='SAME_TABLE',column_semantics='PERIOD_COLUMNS',**context))
++    is_note=bool(re.search(r'Notes to the Consolidated Financial Statements',text,re.I))
++    # Respect the explicitly paired 'respectively' construction in prose.
++    prose=re.search(r'(?:Our\s+)?contribution expense for fiscal years?\s+((?:20\d{2}[,\s]*(?:and\s*)?)+)was\s+((?:\$[\d,.]+\s+(?:million|billion)[,\s]*(?:and\s*)?)+),?\s+respectively',re.sub(r'\s+',' ',text),re.I)
++    if is_note and prose and re.search(r'employee retirement plans|defined contribution plans',text,re.I):
++        years=[int(y) for y in re.findall(r'20\d{2}',prose.group(1))]
++        values=[str(float(v.replace(',',''))*(1000 if u.lower()=='billion' else 1)) for v,u in re.findall(r'\$([\d,.]+)\s+(million|billion)',prose.group(2),re.I)]
++        emit('RETIREMENT_CONTRIBUTION_EXPENSE','contribution expense',prose.group(),years,values,'Employee Retirement Plans','FINANCIAL_NOTE_TABLE','Notes to the Consolidated Financial Statements; employee retirement contribution expense')
++    in_millions=bool(re.search(r'\(In millions(?:,|\))',text,re.I))
++    if not in_millions:return out
++    cash=bool(re.search(r'Consolidated Statements of Cash Flows',text,re.I));income=bool(re.search(r'(?im)^Consolidated Statements of Income\s*$',text))
++    tax_state=None
++    for line in lines:
++        if re.fullmatch(r'Current(?: income taxes)?:?\s*',line,re.I):tax_state='current'
++        if re.fullmatch(r'Deferred(?: income taxes)?:?\s*',line,re.I):tax_state='deferred'
++        metric=label=None
++        if cash:
++            for label_,metric_ in [('Stock-based compensation expense','STOCK_BASED_COMPENSATION_CASH_FLOW_ADJUSTMENT'),('Dividends paid','DIVIDENDS_PAID')]:
++                if re.match(re.escape(label_)+r'\s+[$(\d—–-]',line,re.I):label,metric=label_,metric_
++        if income:
++            for label_,metric_ in [('Other, net','OTHER_INCOME_NET'),('Other income (expense), net','TOTAL_OTHER_INCOME_NET'),('Acquisition termination cost','ACQUISITION_TERMINATION_COST')]:
++                if re.match(re.escape(label_)+r'\s+[$(\d—–-]',line,re.I):label,metric=label_,metric_
++        if is_note and re.search(r'income tax expense|income taxes',text,re.I):
++            if tax_state=='current' and re.match(r'Federal\s+[$(\d—–-]',line):label,metric='Federal','CURRENT_FEDERAL_INCOME_TAX'
++            elif re.match(r'Total deferred\s+[$(\d—–-]',line,re.I):label,metric='Total deferred','TOTAL_DEFERRED_INCOME_TAX'
++        if metric:
++            tail=line[len(label):];years=_periods_for_evidence(text,line,filing_year);values=amounts(tail)
++            # More numbers mean an unresolved change/percentage column; omit.
++            if len(values)!=len(years):continue
++            emit(metric,label,line,years,values,'Consolidated Statements of Cash Flows' if cash else 'Consolidated Statements of Income' if income else 'Income Taxes', 'CASH_FLOW_STATEMENT' if cash else 'INCOME_STATEMENT' if income else 'FINANCIAL_NOTE_TABLE')
++    # Segment-by-column layout: each row has one year and four segment values.
++    # Read the actual header and fiscal-year marker; never treat segments as years.
++    if is_note and re.search(r'Compute\s*(?:&|and)\s*Networking',text,re.I) and re.search(r'Graphics\s+All Other\s+Consolidated',text,re.I):
++        year=None;header='Compute & Networking | Graphics | All Other | Consolidated'
++        for line in lines:
++            m=re.fullmatch(r'Year Ended\s+.+?\b(20\d{2})',line,re.I)
++            if m:year=int(m.group(1));continue
++            m=re.match(r'Operating income \(loss\)\s+(.+)',line,re.I)
++            if year and m:
++                vals=amounts(m.group(1))
++                if len(vals)==4:emit('GRAPHICS_OPERATING_INCOME','Operating income (loss)',line,[year],[vals[1]],'Segment Information / Graphics','FINANCIAL_NOTE_TABLE',header)
++    return out
+--- before/strategic_graphrag\pipeline\financial_table_extractor.py
++++ after/strategic_graphrag\pipeline\financial_table_extractor.py
+@@ -13,6 +13,14 @@
+ 
+ 
+ TABLE_METRICS: Sequence[Tuple[str, str]] = (
++    ("accumulated other comprehensive income", "ACCUMULATED_OTHER_COMPREHENSIVE_INCOME"),
++    ("accumulated other comprehensive income loss", "ACCUMULATED_OTHER_COMPREHENSIVE_INCOME"),
++    ("prepaid expenses and other current assets", "PREPAID_CURRENT_ASSETS"),
++    ("operating lease assets", "OPERATING_LEASE_ASSETS"),
++    ("other long-term liabilities", "OTHER_LONG_TERM_LIABILITIES"),
++    ("other comprehensive income net of tax", "OTHER_COMPREHENSIVE_INCOME_NET"),
++    ("other comprehensive income loss net of tax", "OTHER_COMPREHENSIVE_INCOME_NET"),
++    ("networking", "DATA_CENTER_NETWORKING_REVENUE"),
+     ("goodwill", "GOODWILL"),
+     ("long-term debt", "LONG_TERM_DEBT"),
+     ("deferred income tax assets", "DEFERRED_TAX_ASSETS"),
+@@ -483,13 +491,13 @@
+             statement_type = "FINANCIAL_TABLE"
+             if re.search(r"consolidated statements of cash flows", page_text, re.IGNORECASE):
+                 statement_type = "CASH_FLOW_STATEMENT"
+-                if metric_id in {"ACCOUNTS_RECEIVABLE", "INVENTORIES", "ACCOUNTS_PAYABLE"}:
++                if metric_id in {"ACCOUNTS_RECEIVABLE", "INVENTORIES", "ACCOUNTS_PAYABLE", "OTHER_LONG_TERM_LIABILITIES"}:
+                     metric_id = "CASH_FLOW_CHANGE_" + metric_id
+             elif re.search(r"(?im)^note\s+\d+\s*[-:]\s*stock[- ]based compensation", page_text):
+                 statement_type = "STOCK_BASED_COMPENSATION_NOTE"
+                 if metric_id in {"R_AND_D_EXPENSE", "SG_AND_A_EXPENSE", "COST_OF_REVENUE"}:
+                     metric_id = "STOCK_BASED_" + metric_id
+-            elif re.search(r"consolidated balance sheets", page_text, re.IGNORECASE):
++            elif re.search(r"(?im)^\s*consolidated balance sheets\s*$", page_text):
+                 statement_type = "BALANCE_SHEET"
+             elif re.search(r"(?im)^\s*consolidated statements of income\s*$", page_text):
+                 statement_type = "INCOME_STATEMENT"
+--- before/strategic_graphrag\schema\financial_observation.py
++++ after/strategic_graphrag\schema\financial_observation.py
+@@ -31,14 +31,17 @@
+ 
+ def measurement_identity(metric: str, period: str, unit: str) -> Dict[str, str]:
+     metric=metric.upper()
+-    scopes=('DATA_CENTER','GAMING','AUTOMOTIVE','PROFESSIONAL_VISUALIZATION','COMPUTE_NETWORKING','GRAPHICS')
++    scopes=('DATA_CENTER_NETWORKING','DATA_CENTER','GAMING','AUTOMOTIVE','PROFESSIONAL_VISUALIZATION','COMPUTE_NETWORKING','GRAPHICS')
+     scope=next((x for x in scopes if metric==x+'_REVENUE'),'CONSOLIDATED')
++    if metric=='GRAPHICS_OPERATING_INCOME':scope='GRAPHICS'
+     balances={'ACCOUNTS_RECEIVABLE','ACCOUNTS_PAYABLE','INVENTORIES','TOTAL_ASSETS','TOTAL_CURRENT_ASSETS',
+               'TOTAL_LIABILITIES','TOTAL_CURRENT_LIABILITIES','MARKETABLE_SECURITIES','CASH_AND_CASH_EQUIVALENTS','TOTAL_SHAREHOLDERS_EQUITY','TOTAL_EQUITY','RETAINED_EARNINGS'}
+     balances.update({'LONG_TERM_INVESTMENTS','PROPERTY_PLANT_EQUIPMENT','RIGHT_OF_USE_ASSETS','INTANGIBLE_ASSETS',
+                      'OTHER_ASSETS','NONCURRENT_LIABILITIES','CAPITAL_STOCK','CAPITAL_SURPLUS','OTHER_EQUITY','PARENT_EQUITY','GOODWILL','LONG_TERM_DEBT','DEFERRED_TAX_ASSETS'})
++    balances.update({'ACCUMULATED_OTHER_COMPREHENSIVE_INCOME','PREPAID_CURRENT_ASSETS','OPERATING_LEASE_ASSETS','OTHER_LONG_TERM_LIABILITIES'})
+     ratio=unit.lower() in {'percent','percentage points','%'} or metric.endswith('_RATIO') or metric.endswith('_MARGIN')
+     nature='PERIOD_MOVEMENT' if metric.startswith(('CASH_FLOW_CHANGE_','CASH_PAID_FOR_')) or metric.endswith('_CASH_FLOW') else 'BALANCE' if metric in balances else 'DISCLOSED_RATIO' if ratio else 'PERIOD_RESULT'
++    if metric in {'DIVIDENDS_PAID','STOCK_BASED_COMPENSATION_CASH_FLOW_ADJUSTMENT'}:nature='PERIOD_MOVEMENT'
+     return dict(business_scope=scope,measurement_nature=nature,value_kind='RATIO' if ratio else 'AMOUNT',
+                 period_granularity='QUARTERLY' if re.match(r'Q[1-4]',period,re.I) else 'ANNUAL')
+ 
+--- before/tests\test_core_identity_20261018.py
++++ after/tests\test_core_identity_20261018.py
+@@ -0,0 +1,53 @@
++import pytest
++from strategic_graphrag.engine.query_understanding import parse_query
++from strategic_graphrag.pipeline.financial_note_extractor import extract
++from strategic_graphrag.schema.financial_observation import measurement_identity
++
++@pytest.mark.parametrize('phrase,metric,nature',[
++ ('accumulated other comprehensive income','ACCUMULATED_OTHER_COMPREHENSIVE_INCOME','BALANCE'),
++ ('total comprehensive income','COMPREHENSIVE_INCOME','PERIOD_RESULT'),
++ ('other comprehensive income','OTHER_COMPREHENSIVE_INCOME_NET','PERIOD_RESULT'),
++ ('total operating expenses','OPERATING_COST','PERIOD_RESULT')])
++@pytest.mark.parametrize('verb',['What was','How much was','Give','Report'])
++def test_adjacent_metric_identity(phrase,metric,nature,verb):
++ p=parse_query(f'{verb} NVIDIA {phrase} for FY2024 using the 2025 annual report?')
++ assert p.target_metric==metric
++ assert p.requested_facts[0]['metric_id']==metric
++ assert p.requested_facts[0]['measurement_nature']==nature
++ assert not p.ambiguity
++
++@pytest.mark.parametrize('condition',['caused by a fire','due to an earthquake','attributable to export restrictions','resulting from a disaster'])
++def test_causal_loss_not_generic_total(condition):
++ p=parse_query(f'What was NVIDIA revenue loss {condition} in FY2024?')
++ assert 'attributed_financial_outcome_not_disclosed' in p.ambiguity
++
++def test_statement_source_tail_is_not_unknown_item():
++ p=parse_query('How much cash did NVIDIA pay for interest in FY2024, according to its 2025 cash flow statement?')
++ assert not p.ambiguity
++ assert p.requested_facts[0]['source_filing']=='2025-10-K.pdf'
++
++@pytest.mark.parametrize('noun',['deferred revenue','unearned revenue','unrealized net income','accumulated net income'])
++def test_unknown_specific_metric_never_degrades_to_total(noun):
++ assert 'unresolved_financial_identity_modifier' in parse_query(f'Give NVIDIA {noun} in FY2024.').ambiguity
++
++def test_resolved_cash_adjustment_does_not_keep_unknown_movement_flag():
++ assert not parse_query('What stock-based compensation adjustment appears in NVIDIA operating cash flows for FY2025 in the 2025 report?').ambiguity
++
++def test_current_federal_note_row_keeps_current_not_deferred():
++ import json
++ text='Notes to the Consolidated Financial Statements\nIncome Taxes\nYear Ended\nJan 28, 2024 Jan 29, 2023\n(In millions)\nCurrent income taxes:\nFederal $ 17 $ 11\nDeferred income taxes:\nFederal (7) (3)'
++ r=extract(text,'ISSUER','sample.pdf',2024)
++ assert len(r)==1 and r[0]['target']=='CURRENT_FEDERAL_INCOME_TAX'
++ assert json.loads(r[0]['metric_values_json'])[0]['value']=='17'
++
++def test_note_prose_values_follow_respective_years():
++ text='Notes to the Consolidated Financial Statements\nEmployee Retirement Plans\nOur contribution expense for fiscal years 2024, 2023, and 2022 was $19 million, $13 million, and $11 million, respectively.'
++ rows=extract(text,'ISSUER','sample.pdf',2024)
++ assert len(rows)==1 and '19.0' in rows[0]['metric_values_json']
++
++def test_cash_outflow_and_missing_zero_columns_keep_position():
++ text='Consolidated Statements of Income\n(In millions)\nYear Ended\nJan 28, 2024 Jan 29, 2023 Jan 30, 2022\nAcquisition termination cost — — 17'
++ rows=extract(text,'ISSUER','sample.pdf',2024)
++ import json
++ assert [v['value'] for v in json.loads(rows[0]['metric_values_json'])]==['0','0','17']
++ assert measurement_identity('DIVIDENDS_PAID','FY2024','USD millions')['measurement_nature']=='PERIOD_MOVEMENT'

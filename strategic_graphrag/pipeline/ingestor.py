@@ -32,6 +32,7 @@ from ..ontology.relation_inference import (
     ENTITY_CATEGORIES,
     classify_causal_form,
 )
+from ..build_identity import build_id_from_env
 
 load_dotenv()
 logger = logging.getLogger("GraphIngestor")
@@ -55,6 +56,7 @@ class GraphIngestor:
         self.driver = None
         self.run_id = os.getenv("GRAPHRAG_RUN_ID", "") or uuid.uuid4().hex
         self.prompt_version = os.getenv("GRAPHRAG_PROMPT_VERSION", "v2-evidence-claim-1")
+        self.build_id = build_id_from_env()
         self.llm_provider = os.getenv("LLM_PROVIDER", "unknown")
         self.llm_model = os.getenv("LLM_MODEL", "unknown")
 
@@ -66,20 +68,26 @@ class GraphIngestor:
 
     def connect(self) -> bool:
         """Connect to Neo4j."""
+        candidate = None
         try:
-            self.driver = GraphDatabase.driver(
+            candidate = GraphDatabase.driver(
                 self.uri, auth=(self.user, self.password),
                 max_connection_lifetime=1800,
                 keep_alive=True,
                 connection_acquisition_timeout=15,
             )
-            self.driver.verify_connectivity()
+            candidate.verify_connectivity()
+            self.driver = candidate
             logger.info(f"Connected to Neo4j: {self.uri}")
             return True
         except ServiceUnavailable as e:
+            if candidate is not None:
+                candidate.close()
             logger.error(f"Cannot connect to Neo4j: {e}")
             return False
         except Exception as e:
+            if candidate is not None:
+                candidate.close()
             logger.error(f"Connection error: {e}")
             return False
 
@@ -92,6 +100,21 @@ class GraphIngestor:
             return True
         except Exception:
             return False
+
+    def ensure_connection(self) -> bool:
+        """Reuse a live driver or safely replace a dead one before writes."""
+        if self._driver_alive():
+            return True
+
+        if self.driver is not None:
+            try:
+                self.driver.close()
+            except Exception as exc:
+                logger.warning("Closing stale Neo4j driver failed: %s", exc)
+            finally:
+                self.driver = None
+
+        return self.connect()
 
     def close(self):
         if self.driver:
@@ -216,6 +239,7 @@ class GraphIngestor:
         causal_form = classify_causal_form(s_cat, t_cat)
         cs = str(triple.get("causal_strength", "DISCLOSED_EXPOSURE")).upper()
         evidence = str(triple.get("evidence_sentence", ""))[:500]
+        table_context = str(triple.get("table_context", ""))[:500]
         evidence_start = triple.get("evidence_char_start")
         evidence_end = triple.get("evidence_char_end")
         chunk_id = str(triple.get("chunk_id", "")).strip()
@@ -272,6 +296,7 @@ class GraphIngestor:
             page=page,
             filing_year=year,
             section=section,
+            build_id=self.build_id,
         )
 
         # Cypher: Create nodes + native relationship + evidence chain
@@ -288,6 +313,7 @@ class GraphIngestor:
             r.causal_strength = $cs,
             r.confidence = $conf,
             r.evidence_sentence = $ev,
+            r.table_context = $table_context,
             r.year = $yr,
             r.page = $pg,
             r.filing = $file,
@@ -309,10 +335,12 @@ class GraphIngestor:
             r.llm_provider = $llm_provider,
             r.llm_model = $llm_model,
             r.prompt_version = $prompt_version
+            ,r.build_id = $build_id
 
         SET r.causal_strength = $cs,
             r.confidence = $conf,
             r.evidence_sentence = $ev,
+            r.table_context = $table_context,
             r.year = $yr,
             r.page = $pg,
             r.filing = $file,
@@ -325,6 +353,7 @@ class GraphIngestor:
             r.source_filing = $file,
             r.source_page = $pg,
             r.chunk_id = $chunk_id
+            ,r.build_id = $build_id
 
         // 3. Temporal anchors
         MERGE (y:Year {{year: $yr}})
@@ -336,6 +365,7 @@ class GraphIngestor:
             d.filename = $file,
             d.fiscal_year = $yr,
             d.ingested_at = datetime()
+            ,d.build_id = $build_id
         MERGE (d)-[:REPORTS]->(y)
 
         // 5. Sentence and claim-level provenance.  Neo4j relationships cannot
@@ -374,11 +404,13 @@ class GraphIngestor:
             ,claim.llm_provider = $llm_provider
             ,claim.llm_model = $llm_model
             ,claim.prompt_version = $prompt_version
+            ,claim.build_id = $build_id
             ,claim.chunk_id = $chunk_id
             ,claim.metric_value = $metric_value
             ,claim.metric_unit = $metric_unit
             ,claim.metric_period = $metric_period
             ,claim.metric_values_json = $metric_values_json
+            ,claim.table_context = $table_context
             ,claim.recorded_from = coalesce(claim.recorded_from, datetime())
         MERGE (claim)-[:SUPPORTED_BY]->(es)
         MERGE (claim)-[:ABOUT_SOURCE]->(s)
@@ -430,11 +462,13 @@ class GraphIngestor:
                     llm_provider=self.llm_provider,
                     llm_model=self.llm_model,
                     prompt_version=self.prompt_version,
+                    build_id=self.build_id,
                     chunk_id=chunk_id,
                     metric_value=metric_value,
                     metric_unit=metric_unit,
                     metric_period=metric_period,
                     metric_values_json=metric_values_json,
+                    table_context=table_context,
                     financial_observations=financial_observations,
                     conf=self._calibrate_confidence(cs, "HYBRID", len(evidence), rel_type),
                     method="HYBRID",
@@ -480,6 +514,7 @@ class GraphIngestor:
             causal_form = classify_causal_form(s_cat, t_cat)
             cs = str(triple.get("causal_strength", "DISCLOSED_EXPOSURE")).upper()
             evidence = str(triple.get("evidence_sentence", ""))[:500]
+            table_context = str(triple.get("table_context", ""))[:500]
 
             if not s_name or not t_name or not rel_type:
                 continue
@@ -532,7 +567,7 @@ class GraphIngestor:
                 "t_id": t_id, "t_name": t_name, "t_cat": t_cat,
                 "eid": eid, "es_id": es_id, "rel_type": rel_type,
                 "claim_id": claim_id,
-                "cs": cs, "ev": evidence, "conf": conf,
+                "cs": cs, "ev": evidence, "table_context": table_context, "conf": conf,
                 "method": extraction_method,
                 "causal_form": causal_form,
                 "evidence_start": evidence_start,
@@ -556,6 +591,7 @@ class GraphIngestor:
                 "llm_provider": self.llm_provider,
                 "llm_model": self.llm_model,
                 "prompt_version": self.prompt_version,
+                "build_id": self.build_id,
                 "metric_value": str(triple.get("metric_value", "")).strip(),
                 "metric_unit": str(triple.get("metric_unit", "")).strip(),
                 "metric_period": str(triple.get("metric_period", "")).strip(),
@@ -571,6 +607,7 @@ class GraphIngestor:
                     page=pg,
                     filing_year=year,
                     section=sec,
+                    build_id=self.build_id,
                 ),
             })
 
@@ -610,6 +647,7 @@ class GraphIngestor:
                             r.causal_strength = row.cs,
                             r.confidence = row.conf,
                             r.evidence_sentence = row.ev,
+                            r.table_context = row.table_context,
                             r.year = row.yr,
                             r.page = row.pg,
                             r.filing = row.file,
@@ -631,6 +669,7 @@ class GraphIngestor:
                             r.llm_provider = row.llm_provider,
                             r.llm_model = row.llm_model,
                             r.prompt_version = row.prompt_version,
+                            r.build_id = row.build_id,
                             r.evidence_id = row.claim_id,
                             r.source_filing = row.file,
                             r.source_page = row.pg,
@@ -647,7 +686,8 @@ class GraphIngestor:
                         ON CREATE SET
                             d.filename = row.file,
                             d.fiscal_year = row.yr,
-                            d.ingested_at = datetime()
+                            d.ingested_at = datetime(),
+                            d.build_id = row.build_id
                         MERGE (d)-[:REPORTS]->(y)
 
                         MERGE (es:Sentence {{id: row.es_id}})
@@ -684,11 +724,13 @@ class GraphIngestor:
                             ,claim.llm_provider = row.llm_provider
                             ,claim.llm_model = row.llm_model
                             ,claim.prompt_version = row.prompt_version
+                            ,claim.build_id = row.build_id
                             ,claim.chunk_id = row.chunk_id
                             ,claim.metric_value = row.metric_value
                             ,claim.metric_unit = row.metric_unit
                             ,claim.metric_period = row.metric_period
                             ,claim.metric_values_json = row.metric_values_json
+                            ,claim.table_context = row.table_context
                             ,claim.recorded_from = coalesce(claim.recorded_from, datetime())
                         MERGE (claim)-[:SUPPORTED_BY]->(es)
                         MERGE (claim)-[:ABOUT_SOURCE]->(s)
@@ -714,6 +756,7 @@ class GraphIngestor:
                             r.causal_strength = row.cs,
                             r.confidence = row.conf,
                             r.evidence_sentence = row.ev,
+                            r.table_context = row.table_context,
                             r.year = row.yr,
                             r.page = row.pg,
                             r.filing = row.file,
@@ -735,7 +778,8 @@ class GraphIngestor:
                             r.extraction_run_id = row.run_id,
                             r.llm_provider = row.llm_provider,
                             r.llm_model = row.llm_model,
-                            r.prompt_version = row.prompt_version
+                            r.prompt_version = row.prompt_version,
+                            r.build_id = row.build_id
                             ,r.chunk_id = row.chunk_id
                         """
                         session.run(cypher, batch=group)
@@ -838,14 +882,15 @@ class GraphIngestor:
                         d.extraction_run_id = $run_id,
                         d.llm_provider = $llm_provider,
                         d.llm_model = $llm_model,
-                        d.prompt_version = $prompt_version
+                        d.prompt_version = $prompt_version,
+                        d.build_id = $build_id
                     MERGE (y:Year {year: $fy})
                     MERGE (d)-[:REPORTS]->(y)
                 """, doc_id=doc_id, fn=filename, dt=doc_type,
                    fd=filing_date, fy=fiscal_year, tp=total_pages,
                    document_sha256=document_sha256, run_id=self.run_id,
                    llm_provider=self.llm_provider, llm_model=self.llm_model,
-                   prompt_version=self.prompt_version)
+                   prompt_version=self.prompt_version, build_id=self.build_id)
             return True
         except Neo4jError as e:
             logger.warning(f"Document node error: {e}")

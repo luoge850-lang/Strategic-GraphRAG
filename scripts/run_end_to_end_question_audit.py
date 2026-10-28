@@ -14,6 +14,10 @@ import requests
 from dotenv import load_dotenv
 from neo4j import GraphDatabase
 
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from strategic_graphrag.response_contract import classify_outcome
+
 
 ROOT = Path(__file__).resolve().parent.parent
 QUESTIONS = [
@@ -67,6 +71,7 @@ def run(base_url: str) -> dict:
                 timeout=240,
             )
             payload = response.json()
+            outcome = classify_outcome(payload, http_status=response.status_code)
             grounding = (payload.get("metadata") or {}).get("grounding") or {}
             ids = list(dict.fromkeys(grounding.get("cited_evidence_ids") or []))
             claims = _claim_index(ids)
@@ -85,7 +90,8 @@ def run(base_url: str) -> dict:
                 for claim_id in ids
             )
             answer = str(payload.get("answer") or "")
-            abstained = answer.startswith(("[INSUFFICIENT", "[GROUNDING FAILURE]"))
+            abstained = outcome == "ABSTAINED"
+            execution_error = outcome in {"DEPENDENCY_ERROR", "MODEL_ERROR", "TIMEOUT", "VALIDATION_ERROR"}
             years_returned = sorted({
                 int(year)
                 for path in payload.get("paths", [])
@@ -93,30 +99,33 @@ def run(base_url: str) -> dict:
                 if str(year).isdigit()
             })
             semantic_pass = {
-                "causal_risk": not abstained and bool(ids),
-                "financial_metric": not abstained and bool(ids) and "3,491" in answer,
+                "causal_risk": not abstained and not execution_error and bool(ids),
+                "financial_metric": not abstained and not execution_error and bool(ids) and "3,491" in answer,
                 "cross_year": (
                     not abstained
+                    and not execution_error
                     and bool(ids)
                     and years_returned == [2023, 2024, 2025]
                     and all(value in answer for value in ("2,440", "2,654", "3,491"))
                 ),
-                "evidence_lookup": not abstained and bool(ids),
-                "unsupported_abstention": abstained,
+                "evidence_lookup": not abstained and not execution_error and bool(ids),
+                "unsupported_abstention": abstained and not execution_error,
             }[item["kind"]]
             row.update({
                 "http_status": response.status_code,
+                "outcome": outcome,
                 "answer": answer,
                 "grounding_status": grounding.get("status"),
                 "cited_evidence_ids": ids,
-                "citation_contract_pass": citation_contract if ids else abstained,
+                "citation_contract_pass": citation_contract if ids else abstained and not execution_error,
                 "semantic_pass": semantic_pass,
                 "abstained": abstained,
                 "paths": len(payload.get("paths") or []),
                 "years_returned": years_returned,
-                "error": None,
+                "error": payload if execution_error else None,
             })
         except Exception as exc:
+            row["outcome"] = "TIMEOUT" if isinstance(exc, requests.Timeout) else "DEPENDENCY_ERROR"
             row["error"] = f"{type(exc).__name__}: {exc}"
         row["latency_ms"] = round((time.perf_counter() - started) * 1000, 2)
         rows.append(row)

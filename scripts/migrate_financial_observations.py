@@ -17,14 +17,19 @@ sys.path.insert(0, str(ROOT))
 
 from strategic_graphrag.schema.financial_observation import build_financial_observations
 from strategic_graphrag.schema.manager import SchemaManager
+from strategic_graphrag.build_identity import build_id_from_env
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--build-id", default=None)
     args = parser.parse_args()
     load_dotenv(ROOT / ".env", override=True)
+    build_id = args.build_id or build_id_from_env()
+    if not build_id:
+        parser.error("--build-id or GRAPHRAG_BUILD_ID is required to keep observations build-isolated")
 
     driver = GraphDatabase.driver(
         os.environ["NEO4J_URI"],
@@ -38,6 +43,7 @@ def main() -> None:
                 MATCH (claim:EvidenceClaim)
                 WHERE claim.verification_status='VERBATIM'
                   AND claim.relation_type='REPORTS_METRIC'
+                  AND claim.build_id=$build_id
                 RETURN claim.id AS claim_id, claim.source_id AS source_id,
                        claim.target_id AS target_id, claim.doc_id AS doc_id,
                        claim.page AS page, claim.filing_fiscal_year AS filing_year,
@@ -46,7 +52,8 @@ def main() -> None:
                        claim.metric_values_json AS metric_values_json,
                        claim.text AS evidence_text
                 ORDER BY doc_id, page, claim_id
-                """
+                """,
+                build_id=build_id,
             )]
             for claim in claims:
                 triple = {
@@ -71,11 +78,13 @@ def main() -> None:
                     page=int(claim.get("page") or 0),
                     filing_year=int(claim.get("filing_year") or 0),
                     section=claim.get("section") or "UNKNOWN",
+                    build_id=build_id,
                 ))
             applied = 0
             if args.apply and observations:
                 session.run(
-                    "MATCH (observation:FinancialObservation {model_version:'financial_observation_v1'}) DETACH DELETE observation"
+                    "MATCH (observation:FinancialObservation {model_version:'financial_observation_v1', build_id:$build_id}) DETACH DELETE observation",
+                    build_id=build_id,
                 ).consume()
                 result = session.run(
                     """
@@ -120,11 +129,13 @@ def main() -> None:
     report = {
         "schema": "strategic-graphrag-financial-observation/v1",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "build_id": build_id,
         "mode": "apply" if args.apply else "dry-run",
         "metric_claims": len(claims),
         "financial_observations": len(observations),
         "applied": applied,
         "guardrails": [
+            "source claims, observations, and replacement scope are restricted to one explicit build_id",
             "one observation per claim, metric, period, value, and unit",
             "every observation links to a verbatim EvidenceClaim",
             "fiscal-year granularity is preserved without fabricated calendar dates",

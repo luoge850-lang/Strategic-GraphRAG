@@ -10,10 +10,15 @@ import {
   CausalPath,
   GNode,
   FilingScope,
+  API_BASE,
 } from "./lib/api";
 import { fmtLabel, nodeLabelStyle } from "./lib/graph";
+import { readQuerySession, writeQuerySession } from "./lib/querySession";
 import GraphCanvas from "./components/GraphCanvas";
 import NodeTooltip from "./components/NodeTooltip";
+import ExtractionAnnotationPanel from "./components/ExtractionAnnotationPanel";
+import GoldenQAReviewPanel from "./components/GoldenQAReviewPanel";
+import TableQualityAnnotationPanel from "./components/TableQualityAnnotationPanel";
 
 /* ═══════════════════════════════════════════════════════
    Error Boundary
@@ -22,7 +27,7 @@ interface EBState {
   hasError: boolean;
   error: Error | null;
 }
-class ErrorBoundary extends Component<
+export class ErrorBoundary extends Component<
   { children: React.ReactNode },
   EBState
 > {
@@ -65,9 +70,7 @@ class ErrorBoundary extends Component<
             </pre>
             <button
               className="btn-ink"
-              onClick={() =>
-                this.setState({ hasError: false, error: null })
-              }
+              onClick={() => window.location.reload()}
               style={{ marginTop: 12 }}
             >
               Retry
@@ -87,19 +90,41 @@ class ErrorBoundary extends Component<
    Example prompts
    ═══════════════════════════════════════════════════════ */
 
-const PROMPTS = [
-  "How do US export controls impact NVIDIA revenue?",
-  "How does NVIDIA mitigate supply chain risks?",
-  "What risks does NVIDIA face in the China market?",
-  "How do supply chain disruptions affect NVIDIA margins?",
+const PROMPT_BATCHES = [
+  [
+    "英伟达2025财年的税前利润是多少？",
+    "台积电2024年的总资产是多少？",
+    "Calculate NVIDIA net income divided by revenue in fiscal 2025.",
+    "What possible risk path connects TSMC natural disasters to NVIDIA wafer supply?",
+  ],
+  [
+    "What evidence directly supports NVIDIA's supply-chain mitigation strategies?",
+    "Which supply-chain risks recur across the FY2023-FY2025 filings?",
+    "How did NVIDIA revenue change from FY2023 to FY2025?",
+    "What evidence links inventory risk to financial performance?",
+  ],
+  [
+    "Do the filings document a realized revenue loss from export controls?",
+    "Which mitigation actions are explicitly linked to supply-chain risk reduction?",
+    "What cannot be concluded about climate risk and NVIDIA revenue?",
+    "How did export-control risk disclosures change across FY2023-FY2025?",
+  ],
 ];
+
+const finiteNumber = (value: unknown, fallback = 0) =>
+  typeof value === "number" && Number.isFinite(value) ? value : fallback;
 
 const FILING_OPTIONS: Array<{ value: FilingScope; label: string }> = [
   { value: "2025-10-K.pdf", label: "FY2025 · 10-K" },
   { value: "2024-10-K.pdf", label: "FY2024 · 10-K" },
   { value: "2023-10-K.pdf", label: "FY2023 · 10-K" },
-  { value: "all", label: "All verified filings" },
+  { value: "TSMC-2023-Annual-Report.pdf", label: "TSMC FY2023 · Annual report (TWD)" },
+  { value: "TSMC-2024-Annual-Report.pdf", label: "TSMC FY2024 · Annual report (TWD)" },
+  { value: "all", label: "All indexed filings" },
 ];
+
+const GRAPH_RETRY_DELAYS_MS = [0, 1000, 2000, 4000, 8000, 12000] as const;
+const GRAPH_RETRY_WINDOW_MS = 30_000;
 
 /* ═══════════════════════════════════════════════════════
    Collapsible Card — expand/collapse secondary content
@@ -163,31 +188,22 @@ function CollapsibleCard({
 
 function StatsBar({
   stats,
-  result,
 }: {
   stats: GraphStats | null;
   result: QueryResult | null;
 }) {
   if (!stats) return null;
-  const graphNodes = stats.graph_nodes ?? stats.total_nodes;
-  const graphRelationships =
-    stats.graph_relationships ?? stats.total_relationships;
+  const inventory = stats.inventory || {};
+  const count = (key: string) => typeof inventory[key] === "number" ? inventory[key].toLocaleString() : "—";
   const items = [
-    [graphNodes.toLocaleString(), "Graph Nodes", "#1C1C1A"],
-    [graphRelationships.toLocaleString(), "Graph Edges", "#4A4944"],
-    [
-      String(Object.keys(stats.by_label || {}).length),
-      "Entity Types",
-      "#8F8E88",
-    ],
-    [
-      result ? String(result.metadata.total_candidates) : "—",
-      "Candidates",
-      "#6A6963",
-    ],
+    [count("company_count"), "公司 · 当前范围", "#1C1C1A"],
+    [count("document_count"), "文件 · 当前范围", "#4A4944"],
+    [count("financial_observations"), "财务观测 · 当前范围", "#5E6859"],
+    [count("company_relations"), "公司依赖／风险披露", "#6A6963"],
+    [count("vector_chunks"), "向量文本块 · 当前范围", "#6A6963"],
   ];
   return (
-    <div className="grid2" style={{ gridTemplateColumns: "repeat(4,1fr)" }}>
+    <div className="grid2" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))" }}>
       {items.map(([v, l, c], i) => (
         <div key={l} className="reveal" style={{ animationDelay: `${i * 60}ms` }}>
           <div
@@ -280,7 +296,7 @@ function PathCard({
         }}
       >
         <span style={{ fontSize: 9.5, fontWeight: 600, color: "var(--muted)", letterSpacing: "0.04em" }}>
-          PATH {i + 1} · {p.total_hops} HOPS
+          PATH {i + 1} · {p.total_hops} GRAPH {p.total_hops === 1 ? "HOP" : "HOPS"}
         </span>
         <span
           style={{
@@ -290,7 +306,7 @@ function PathCard({
             color: "var(--ink)",
           }}
         >
-          {p.score.toFixed(3)}
+          {finiteNumber(p.score).toFixed(3)}
         </span>
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
@@ -315,6 +331,11 @@ function PathCard({
         ))}
       </div>
       <div style={{ display: "flex", gap: 10, marginTop: 6, fontSize: 9, color: "var(--muted)" }}>
+        {p.evidence_role && (
+          <span style={{ color: p.evidence_role === "ANSWER_CRITICAL" ? "var(--L1)" : "var(--muted)", fontWeight: 700 }}>
+            {p.evidence_role.replace(/_/g, " ")}
+          </span>
+        )}
         {p.pages.filter((pg) => pg > 0).length > 0 && (
           <span>pp. {[...new Set(p.pages.filter((pg) => pg > 0))].slice(0, 3).join(", ")}</span>
         )}
@@ -333,9 +354,11 @@ function PathCard({
    ═══════════════════════════════════════════════════════ */
 
 export default function App() {
-  const [q, setQ] = useState("");
+  const [restoredSession] = useState(readQuerySession);
+  const [q, setQ] = useState(restoredSession.question);
+  const [synthesize, setSynthesize] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<QueryResult | null>(null);
+  const [result, setResult] = useState<QueryResult | null>(restoredSession.result);
   const [stats, setStats] = useState<GraphStats | null>(null);
   const [error, setError] = useState("");
   const [subgraph, setSubgraph] = useState<Subgraph | null>(null);
@@ -346,37 +369,92 @@ export default function App() {
   const [selectedPath, setSelectedPath] = useState(0);
   const [hoveredNode, setHoveredNode] = useState<GNode | null>(null);
   const [selectedNode, setSelectedNode] = useState<GNode | null>(null);
+  const [promptBatch, setPromptBatch] = useState(0);
   // The demo should show the verified multi-year graph on first load.  Users
   // can still switch to a single filing from the scope selector below.
-  const [scope, setScope] = useState<FilingScope>("all");
+  const [scope, setScope] = useState<FilingScope>(restoredSession.scope);
+  useEffect(() => { writeQuerySession({ question: q, scope, result }); }, [q, scope, result]);
+  useEffect(() => {
+    if (stats?.build_id && result?.metadata.build_id && stats.build_id !== result.metadata.build_id) {
+      setResult(null); setHlNodes(new Set()); setHlEdges(new Set());
+      setError("构建已经变化，请重新查询；旧构建结果已清除。");
+    }
+  }, [stats?.build_id, result?.metadata.build_id]);
 
   const graphContainerRef = useRef<HTMLDivElement>(null);
   const [graphDim, setGraphDim] = useState({ w: 900, h: 560 });
 
   /* ── Load data ── */
   useEffect(() => {
+    let cancelled = false;
+    let retryTimer: number | undefined;
+    const deadline = Date.now() + GRAPH_RETRY_WINDOW_MS;
+    let lastError: unknown = new Error("request failed");
+
     setGraphLoading(true);
     setGraphError("");
-    getStats(scope)
-      .then(setStats)
-      .catch((e) => setGraphError(`Statistics unavailable: ${e instanceof Error ? e.message : "request failed"}`));
-    getSubgraph(undefined, 500, scope)
-      .then((d) => {
-        console.log(
-          "Graph:",
-          d.nodes?.length,
-          "nodes,",
-          d.edges?.length,
-          "edges"
-        );
-        setSubgraph(d);
+    const loadGraph = async () => {
+      for (const delay of GRAPH_RETRY_DELAYS_MS) {
+        if (cancelled) return;
+        const waitMs = Math.min(delay, Math.max(0, deadline - Date.now()));
+        if (waitMs > 0) {
+          await new Promise<void>((resolve) => {
+            retryTimer = window.setTimeout(resolve, waitMs);
+          });
+        }
+        if (cancelled) return;
+
+        const remainingMs = deadline - Date.now();
+        if (remainingMs <= 0) break;
+        try {
+          const d = await Promise.race([
+            getSubgraph(undefined, 200, scope),
+            new Promise<never>((_, reject) => {
+              retryTimer = window.setTimeout(
+                () => reject(new Error("Graph load retry window expired")),
+                remainingMs,
+              );
+            }),
+          ]);
+          if (retryTimer !== undefined) window.clearTimeout(retryTimer);
+          if (cancelled) return;
+          console.log(
+            "Graph:",
+            d.nodes?.length,
+            "nodes,",
+            d.edges?.length,
+            "edges"
+          );
+          setSubgraph(d);
+          setGraphLoading(false);
+          try {
+            const nextStats = await getStats(scope);
+            if (!cancelled) setStats(nextStats);
+          } catch (e) {
+            if (!cancelled) {
+              setGraphError(`Statistics unavailable: ${e instanceof Error ? e.message : "request failed"}`);
+            }
+          }
+          return;
+        } catch (e) {
+          if (retryTimer !== undefined) window.clearTimeout(retryTimer);
+          lastError = e;
+          if (Date.now() >= deadline) break;
+        }
+      }
+
+      if (!cancelled) {
+        console.error("Subgraph error:", lastError);
+        setGraphError(`Graph unavailable: ${lastError instanceof Error ? lastError.message : "request failed"}`);
         setGraphLoading(false);
-      })
-      .catch((e) => {
-        console.error("Subgraph error:", e);
-        setGraphError(`Graph unavailable: ${e instanceof Error ? e.message : "request failed"}`);
-        setGraphLoading(false);
-      });
+      }
+    };
+
+    void loadGraph();
+    return () => {
+      cancelled = true;
+      if (retryTimer !== undefined) window.clearTimeout(retryTimer);
+    };
   }, [scope]);
 
   /* ── Measure graph container ── */
@@ -398,13 +476,29 @@ export default function App() {
     if (!q.trim() || loading) return;
     setLoading(true);
     setError("");
+    setResult(null);
+    setHlNodes(new Set());
+    setHlEdges(new Set());
     try {
-      const r = await postQuery(q.trim(), 10, undefined, undefined, scope);
-      setResult(r);
+      const r = await postQuery(q.trim(), 10, undefined, undefined, scope, "auto", synthesize);
+      const safePaths = Array.isArray(r.paths) ? r.paths : [];
+      const safeMetadata = r.metadata ?? {};
+      const normalized: QueryResult = {
+        ...r,
+        paths: safePaths,
+        metadata: {
+          ...safeMetadata,
+          total_candidates: finiteNumber(safeMetadata.total_candidates),
+          top_paths: finiteNumber(safeMetadata.top_paths, safePaths.length),
+          anchors_used: Array.isArray(safeMetadata.anchors_used) ? safeMetadata.anchors_used : [],
+          avg_score: finiteNumber(safeMetadata.avg_score),
+        },
+      };
+      setResult(normalized);
       setSelectedPath(0);
       const hn = new Set<string>();
       const he = new Set<string>();
-      r.paths.forEach((p) => {
+      safePaths.forEach((p) => {
         p.nodes.forEach((n) => hn.add(n));
         for (let i = 0; i < p.nodes.length - 1; i++) {
           he.add(`${p.nodes[i]}|${p.nodes[i + 1]}`);
@@ -421,7 +515,7 @@ export default function App() {
     } finally {
       setLoading(false);
     }
-  }, [q, loading, scope]);
+  }, [q, loading, scope, synthesize]);
 
   const clearResults = useCallback(() => {
     setResult(null);
@@ -431,8 +525,117 @@ export default function App() {
     setError("");
   }, []);
 
+  const negativeAudit = result?.metadata.negative_evidence_audit as
+    | { status?: string; chunks_scanned?: number; total_matches?: number; safe_absence_statement?: string }
+    | undefined;
+
+  const isAnnotationRoute = ["/annotation", "/annotation/"].includes(window.location.pathname.toLowerCase());
+  const isGoldenQARoute = ["/golden-qa", "/golden-qa/"].includes(window.location.pathname.toLowerCase());
+  const isTableQARoute = ["/table-qa", "/table-qa/"].includes(window.location.pathname.toLowerCase());
+
+  if (isGoldenQARoute) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "var(--paper)",
+          fontFamily: "'Inter', sans-serif",
+          paddingBottom: 60,
+        }}
+      >
+        <nav
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: 14,
+            pointerEvents: "none",
+          }}
+        >
+          <div className="nav-mono" style={{ pointerEvents: "auto", display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>Strategic-GraphRAG</span>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/annotation"; }} style={{ fontSize: 10 }}>
+              抽取标注
+            </button>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/table-qa"; }} style={{ fontSize: 10 }}>
+              表格 Gold
+            </button>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/"; }} style={{ fontSize: 10 }}>
+              返回 Demo
+            </button>
+          </div>
+        </nav>
+        <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 36px" }}>
+          <GoldenQAReviewPanel />
+        </main>
+      </div>
+    );
+  }
+
+  if (isAnnotationRoute) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "var(--paper)",
+          fontFamily: "'Inter', sans-serif",
+          paddingBottom: 60,
+        }}
+      >
+        <nav
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            display: "flex",
+            justifyContent: "center",
+            paddingTop: 14,
+            pointerEvents: "none",
+          }}
+        >
+          <div className="nav-mono" style={{ pointerEvents: "auto", display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>Strategic-GraphRAG</span>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/golden-qa"; }} style={{ fontSize: 10 }}>
+              Golden QA
+            </button>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/table-qa"; }} style={{ fontSize: 10 }}>
+              表格 Gold
+            </button>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/"; }} style={{ fontSize: 10 }}>
+              返回 Demo
+            </button>
+          </div>
+        </nav>
+        <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 36px" }}>
+          <ExtractionAnnotationPanel />
+        </main>
+      </div>
+    );
+  }
+
+  if (isTableQARoute) {
+    return (
+      <div style={{ minHeight: "100vh", background: "var(--paper)", fontFamily: "'Inter', sans-serif", paddingBottom: 60 }}>
+        <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 50, display: "flex", justifyContent: "center", paddingTop: 14, pointerEvents: "none" }}>
+          <div className="nav-mono" style={{ pointerEvents: "auto", display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>Strategic-GraphRAG</span>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/annotation"; }} style={{ fontSize: 10 }}>抽取标注</button>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/golden-qa"; }} style={{ fontSize: 10 }}>Golden QA</button>
+            <button className="btn-ghost" onClick={() => { window.location.href = "/"; }} style={{ fontSize: 10 }}>返回 Demo</button>
+          </div>
+        </nav>
+        <main style={{ maxWidth: 1100, margin: "0 auto", padding: "0 36px" }}><TableQualityAnnotationPanel /></main>
+      </div>
+    );
+  }
+
   return (
-    <ErrorBoundary>
       <div
         style={{
           minHeight: "100vh",
@@ -541,9 +744,9 @@ export default function App() {
                 color: "var(--ink)",
               }}
             >
-              NVIDIA Financial Risk
+              NVIDIA & TSMC Filings
               <br />
-              <span style={{ color: "var(--L2)" }}>Causal Intelligence</span>
+              <span style={{ color: "var(--L2)" }}>Evidence Explorer</span>
             </h1>
             <p
               style={{
@@ -554,8 +757,8 @@ export default function App() {
                 margin: "0 auto",
               }}
             >
-              Temporal causal knowledge graph with evidence provenance.
-              Every relationship traced to SEC filings, every claim verifiable.
+              Financial observations and disclosed dependencies from five annual filings.
+              Research prototype: source citations support review, not universal accuracy.
             </p>
           </section>
 
@@ -588,8 +791,7 @@ export default function App() {
                   The knowledge graph, in ink
                 </h2>
                 <div className="sub" style={{ marginBottom: 0, marginTop: 2 }}>
-                  {simRef(subgraph)} entities mapped from SEC filings · each
-                  node is a financial fact
+                  {simRef(subgraph)} entities in this view · companies, metrics and risks
                   {result && (
                     <span style={{ color: "var(--L1)", fontWeight: 600 }}>
                       {" "}
@@ -640,7 +842,7 @@ export default function App() {
               >
                 {graphLoading && (
                   <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", zIndex: 3, background: "rgba(247,246,242,0.88)", fontSize: 11, color: "var(--muted)" }}>
-                    Loading verified EvidenceClaim graph…
+                    Loading indexed EvidenceClaim graph…
                   </div>
                 )}
                 {graphError && !graphLoading && (
@@ -661,17 +863,18 @@ export default function App() {
               </div>
             </div>
             <div className="src" style={{ marginTop: 8, paddingLeft: 4 }}>
-              KNOWLEDGE GRAPH · SEC FILINGS · {FILING_OPTIONS.find((item) => item.value === scope)?.label || "Filing"} · {subgraph?.nodes?.length || 0} NODES
+              ANNUAL REPORTS · {FILING_OPTIONS.find((item) => item.value === scope)?.label || "Filing"} · 视图 {subgraph?.nodes?.length || 0} 个实体 / {subgraph?.edges?.length || 0} 条聚合边
+              <br />
+              数据库全库（含辅助来源连接）：{stats?.inventory?.database_total_nodes ?? "—"} 节点 / {stats?.inventory?.database_total_relationships ?? "—"} 关系 · BUILD {stats?.build_id || "—"}
             </div>
           </section>
 
           {/* ── QUERY ── */}
           <section style={{ marginBottom: 36 }}>
             <div className="card-mono" style={{ border: "1px solid var(--grid)" }}>
-              <h2>Ask a financial risk question</h2>
+              <h2>Ask a financial question</h2>
               <div className="sub">
-                Natural language queries resolved against the causal graph ·
-                every answer backed by evidence
+                请明确公司、指标和财年；每次提问独立处理，不继承上一问。引用用于核对原文，不保证所有问题均可回答。
               </div>
 
               <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "14px 0 12px" }}>
@@ -681,7 +884,7 @@ export default function App() {
                 <select
                   id="filing-scope"
                   value={scope}
-                  onChange={(e) => setScope(e.target.value as FilingScope)}
+                  onChange={(e) => { setScope(e.target.value as FilingScope); setStats(null); setSubgraph(null); setResult(null); setHlNodes(new Set()); setHlEdges(new Set()); }}
                   disabled={loading}
                   className="input-mono"
                   style={{ width: "auto", minWidth: 190, padding: "8px 32px 8px 10px", fontSize: 11 }}
@@ -694,6 +897,18 @@ export default function App() {
                   {scope === "all" ? "Cross-year mode" : "Single-filing mode"}
                 </span>
               </div>
+
+              <label style={{ display: "flex", alignItems: "flex-start", gap: 8, margin: "0 0 12px", fontSize: 11, lineHeight: 1.45, color: "var(--muted)" }}>
+                <input
+                  type="checkbox"
+                  checked={synthesize}
+                  onChange={(e) => setSynthesize(e.target.checked)}
+                  disabled={loading}
+                  aria-label="Enable model answer synthesis"
+                  style={{ marginTop: 2 }}
+                />
+                <span>Enable model answer synthesis (may send the question and retrieved evidence to the configured external model). Off by default.</span>
+              </label>
 
               <div style={{ position: "relative", marginBottom: 12 }}>
                 <textarea
@@ -728,7 +943,7 @@ export default function App() {
               </div>
 
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                {PROMPTS.map((p) => (
+                {PROMPT_BATCHES[promptBatch].map((p) => (
                   <button
                     key={p}
                     onClick={() => setQ(p)}
@@ -739,6 +954,15 @@ export default function App() {
                     {p}
                   </button>
                 ))}
+                <button
+                  onClick={() => setPromptBatch((current) => (current + 1) % PROMPT_BATCHES.length)}
+                  disabled={loading}
+                  className="btn-ghost"
+                  style={{ fontSize: 10.5, fontWeight: 700 }}
+                  aria-label="Show another batch of example questions"
+                >
+                  More examples ↻
+                </button>
               </div>
 
               {result && (
@@ -788,6 +1012,53 @@ export default function App() {
                 transition={{ duration: 0.5, ease: [0.2, 0.7, 0.3, 1] }}
                 style={{ display: "flex", flexDirection: "column", gap: 20 }}
               >
+                <p className="src" style={{ overflowWrap: "anywhere" }}>本次结果对应问题 / Question: {result.query}</p>
+                {result.calculation && (
+                  <section
+                    aria-label="Deterministic calculation status"
+                    className="card-mono reveal-card"
+                    style={{
+                      border: `1.5px solid ${result.calculation.status === "PASS" ? "var(--L3)" : "#b87936"}`,
+                      background: "var(--paper)",
+                      padding: 16,
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                        Deterministic calculation · {result.calculation.status}
+                      </span>
+                      {result.calculation.operation && (
+                        <span className="nav-mono">{result.calculation.operation.replace(/_/g, " ")}</span>
+                      )}
+                    </div>
+                    {result.calculation.status === "PASS" || result.calculation.status === "PARTIAL" ? (
+                      <>
+                        <div style={{ marginTop: 8, fontSize: 13, lineHeight: 1.6 }}>
+                          {result.calculation.display || "Calculation completed; no formatted value was supplied."}
+                        </div>
+                        {result.calculation.comparability_assessment && (
+                          <div style={{ marginTop: 6, fontSize: 10, color: "var(--muted)" }}>
+                            Comparability: {result.calculation.comparability_assessment.status || "UNSPECIFIED"}
+                            {result.calculation.comparability_assessment.basis
+                              ? ` · ${result.calculation.comparability_assessment.basis.replace(/_/g, " ")}`
+                              : ""}
+                          </div>
+                        )}
+                        {result.calculation.required_count !== undefined && (
+                          <p role="status">请求完整性：已回答 {result.calculation.answered_count}/{result.calculation.required_count} 项。
+                            {result.calculation.status === "PARTIAL" ? " 部分回答，整体未通过。" : " 所有请求项均已核对。"}</p>
+                        )}
+                      </>
+                    ) : (
+                      <div role="status" style={{ marginTop: 8, fontSize: 12, lineHeight: 1.6 }}>
+                        No numeric result returned. {result.calculation.reason_code
+                          ? result.calculation.reason_code.replace(/_/g, " ")
+                          : "The calculation did not complete successfully."}
+                      </div>
+                    )}
+                  </section>
+                )}
+
                 {/* ══════════════════════════════════════════════
                     PRIMARY: Synthesis Report — the official answer
                     ══════════════════════════════════════════════ */}
@@ -811,9 +1082,15 @@ export default function App() {
                         Analysis
                       </span>
                       <span style={{ fontSize: 10, color: "var(--muted)", fontWeight: 500 }}>
-                        {result.intent_display} · {result.metadata.total_candidates} candidates · avg {result.metadata.avg_score.toFixed(2)}
+                        {result.intent_display} · {finiteNumber(result.metadata.total_candidates)} candidates · avg {finiteNumber(result.metadata.avg_score).toFixed(2)}
                       </span>
                     </div>
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 12, fontSize: 9, color: "var(--muted)" }}>
+                      <span className="nav-mono">EXECUTION · {result.execution_status || "UNKNOWN"}</span>
+                      <span className="nav-mono">ANSWER · {result.answer_status || "UNKNOWN"}</span>
+                      <span className="nav-mono">GROUNDING · {result.grounding_status || "UNKNOWN"}</span>
+                    </div>
+                    <p style={{ fontSize: 10, color: "var(--muted)", marginBottom: 10 }}>{result.grounding_status === "VERIFIED" ? "本次返回事实已通过来源身份与计算检查；这不等于人工原文审核。完整性另见已回答项数。" : "本次回答未获得完整事实核验；请查看缺项、限制与逐条来源，不能据此认定影响已经发生。"}</p>
 
                     <div style={{
                       fontSize: 13,
@@ -857,15 +1134,25 @@ export default function App() {
                       })}
                     </div>
                     <div className="src" style={{ marginTop: 16 }}>
-                      SYNTHESIS REPORT · {result.intent_display} · {FILING_OPTIONS.find((item) => item.value === scope)?.label || "Filing"}
+                      RESPONSE · {result.answer_status || "UNKNOWN"} · BUILD {String(result.metadata.build_id || "UNKNOWN")} · SELECTED SCOPE: {FILING_OPTIONS.find((item) => item.value === scope)?.label || "Filing"}
                     </div>
                   </motion.div>
+                )}
+
+                {result.metadata.clarification_suggestions?.length ? (
+                  <section className="card-mono" aria-label="Clarification choices">
+                    <p>请选择需要的口径，问题会填入输入框；确认后点击 Analyze。</p>
+                    {result.metadata.clarification_suggestions.map(suggestion => <button key={suggestion} className="btn-outline" onClick={() => setQ(suggestion)} style={{ display: "block", marginTop: 8 }}>{suggestion}</button>)}
+                  </section>
+                ) : null}
+                {result.metadata.scope_suggestion && (
+                  <button className="btn-outline" onClick={() => { setScope(result.metadata.scope_suggestion!); setResult(null); setStats(null); setSubgraph(null); setHlNodes(new Set()); setHlEdges(new Set()); }}>切换到全部语料并保留问题，再点击 Analyze</button>
                 )}
 
                 {/* ══════════════════════════════════════════════
                     SECONDARY: Paths + Evidence + Logic (collapsible grid)
                     ══════════════════════════════════════════════ */}
-                {result.structured_report?.claims && result.structured_report.claims.length > 0 && (
+                {result.answer_status !== "ABSTAINED" && result.grounding_status === "VERIFIED" && result.structured_report?.claims && result.structured_report.claims.length > 0 && (
                   <div className="card-mono reveal-card" style={{ border: "1px solid var(--grid)", background: "var(--paper)" }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
                       <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
@@ -890,9 +1177,38 @@ export default function App() {
                   </div>
                 )}
 
-                <div className="grid2">
+                {result.answer_status !== "ABSTAINED" && result.citations && result.citations.length > 0 && (
+                  <section className="card-mono" aria-label="Answer sources">
+                    <h3 style={{ fontSize: 13, marginBottom: 10 }}>回答来源 · PDF 物理页（点击在当前页打开）</h3>
+                    {Array.from(new Map(result.citations.map(c => [`${c.source_filing}:${c.page}`, c])).values()).map(c => (
+                      <p key={`${c.source_filing}:${c.page}`} style={{ marginBottom: 8 }}>
+                        <a href={`${API_BASE}/evaluation/table-quality/source/${encodeURIComponent(c.source_filing)}/page/${c.page}`} aria-label={`核对 ${c.source_filing} 物理页 ${c.page}`}>
+                          {c.source_filing} · PDF 第 {c.page} 页
+                        </a>
+                      </p>
+                    ))}
+                  </section>
+                )}
+                {negativeAudit && (
+                  <CollapsibleCard
+                    title="Negative evidence audit"
+                    badge={negativeAudit.status || "UNKNOWN"}
+                    defaultOpen={false}
+                  >
+                    <div style={{ fontSize: 10.5, lineHeight: 1.6, color: "var(--L1)" }}>
+                      <div>
+                        Scanned {finiteNumber(negativeAudit.chunks_scanned).toLocaleString()} indexed chunks · {finiteNumber(negativeAudit.total_matches)} potential matches
+                      </div>
+                      <div style={{ marginTop: 6, color: "var(--muted)" }}>
+                        {negativeAudit.safe_absence_statement}
+                      </div>
+                    </div>
+                  </CollapsibleCard>
+                )}
+
+                {result.answer_status !== "ABSTAINED" && <div className="grid2">
                   {/* Left column: Causal Paths */}
-                  <CollapsibleCard title="Causal paths" badge={`${result.paths.length} of ${result.metadata.total_candidates}`} defaultOpen={true}>
+                  <CollapsibleCard title="Evidence paths" badge={`${result.paths.length} of ${result.metadata.total_candidates}`} defaultOpen={false}>
                     <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 360, overflowY: "auto" }}>
                       {result.paths.map((p, i) => (
                         <PathCard
@@ -908,11 +1224,17 @@ export default function App() {
 
                   {/* Right column: Evidence + Logic */}
                   <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-                    <CollapsibleCard title={`Evidence chain · path ${selectedPath + 1}`} badge={`${result.paths[selectedPath]?.total_hops || 0} hops`} defaultOpen={true}>
+                    <CollapsibleCard title={`Graph evidence chain · path ${selectedPath + 1}`} badge={`${result.paths[selectedPath]?.total_hops || 0} graph hops`} defaultOpen={true}>
                       {result.paths[selectedPath] && (
                         <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 320, overflowY: "auto" }}>
-                          {result.paths[selectedPath].evidence.map((ev, i) =>
-                            ev && ev.length > 15 && (
+                          {result.paths[selectedPath].evidence.map((ev, i) => {
+                            const evidencePath = result.paths[selectedPath];
+                            const page = evidencePath.pages[i];
+                            const filing = evidencePath.filings?.[i];
+                            const sourceUrl = filing && page > 0
+                              ? `${API_BASE}/evaluation/table-quality/source/${encodeURIComponent(filing)}/page/${page}`
+                              : null;
+                            return ev && ev.length > 15 && (
                               <motion.div
                                 key={i}
                                 initial={{ opacity: 0 }}
@@ -930,26 +1252,39 @@ export default function App() {
                                 <span style={{ fontSize: 10.5, color: "var(--L1)", lineHeight: 1.5 }}>
                                   {ev.length > 280 ? ev.slice(0, 280) + "…" : ev}
                                 </span>
-                                <div style={{ display: "flex", gap: 12, marginTop: 4, fontSize: 9, color: "var(--muted)", fontWeight: 500 }}>
-                                  <span>p.{result.paths[selectedPath].pages[i] || "?"}</span>
-                                  <span>{result.paths[selectedPath].causal_strengths[i] || ""}</span>
-                                  <span>Y{result.paths[selectedPath].years[i] || "?"}</span>
-                                  <span>Claim {result.paths[selectedPath].evidence_ids?.[i] || "?"}</span>
+                                <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center", marginTop: 4, fontSize: 9, color: "var(--muted)", fontWeight: 500 }}>
+                                  <span>p.{page || "?"}</span>
+                                  <span>{evidencePath.causal_strengths[i] || ""}</span>
+                                  <span>Y{evidencePath.years[i] || "?"}</span>
+                                  <span>Claim {evidencePath.evidence_ids?.[i] || "?"}</span>
+                                  {sourceUrl ? (
+                                    <a
+                                      href={sourceUrl}
+                                      aria-label={`打开原始文件 ${filing}，PDF物理页 ${page}`}
+                                      style={{ color: "var(--L3)", fontWeight: 700, textDecoration: "underline" }}
+                                    >
+                                      打开 {filing} · PDF 第 {page} 页
+                                    </a>
+                                  ) : (
+                                    <span>Source locator unavailable</span>
+                                  )}
                                 </div>
                               </motion.div>
-                            )
-                          )}
+                            );
+                          })}
                         </div>
                       )}
                     </CollapsibleCard>
 
-                    <CollapsibleCard title="Retrieval logic" badge={result.intent_display} defaultOpen={true}>
+                    <CollapsibleCard title="Retrieval logic" badge={result.intent_display} defaultOpen={false}>
                       <div style={{ display: "flex", flexDirection: "column", gap: 5, fontSize: 10 }}>
                         {[
                           ["Intent", result.intent_display],
                           ["Candidates", String(result.metadata.total_candidates)],
-                          ["Avg score", result.metadata.avg_score.toFixed(3)],
-                          ["Anchors", result.metadata.anchors_used.slice(0, 5).join(", ")],
+                          ["Avg score", finiteNumber(result.metadata.avg_score).toFixed(3)],
+                          ["Answer evidence", String(result.metadata.answer_evidence_status || "NOT_CLASSIFIED").replace(/_/g, " ")],
+                          ["Corpus audit", negativeAudit?.status || "NOT_RUN"],
+                          ["Anchors", (result.metadata.anchors_used || []).slice(0, 5).join(", ")],
                         ].map(([k, v]) => (
                           <div key={k} style={{
                             display: "flex", justifyContent: "space-between",
@@ -962,7 +1297,8 @@ export default function App() {
                       </div>
                     </CollapsibleCard>
                   </div>
-                </div>
+                </div>}
+                {result.answer_status === "ABSTAINED" && <p role="status">The requested answer was withheld. Retrieved candidates do not verify the requested fact or period.</p>}
               </motion.div>
             )}
           </AnimatePresence>
@@ -987,12 +1323,10 @@ export default function App() {
               textTransform: "uppercase",
             }}
           >
-            Strategic-GraphRAG v3 · Three-Filing Evidence Candidate · Temporal Causal Knowledge Graph for
-            Financial Risk Inference
+            Strategic-GraphRAG · Research prototype · Finite-sample acceptance only
           </p>
         </footer>
       </div>
-    </ErrorBoundary>
   );
 }
 

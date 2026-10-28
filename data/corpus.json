@@ -1,0 +1,45 @@
+{
+  "schema": "five-report-corpus/v1",
+  "documents": [
+    {
+      "filename": "2023-10-K.pdf",
+      "company_id": "NVIDIA_CORPORATION",
+      "filing_year": 2023,
+      "sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+      "type": "SEC 10-K",
+      "currency": "USD"
+    },
+    {
+      "filename": "2024-10-K.pdf",
+      "company_id": "NVIDIA_CORPORATION",
+      "filing_year": 2024,
+      "sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+      "type": "SEC 10-K",
+      "currency": "USD"
+    },
+    {
+      "filename": "2025-10-K.pdf",
+      "company_id": "NVIDIA_CORPORATION",
+      "filing_year": 2025,
+      "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+      "type": "SEC 10-K",
+      "currency": "USD"
+    },
+    {
+      "filename": "TSMC-2023-Annual-Report.pdf",
+      "company_id": "TSMC",
+      "filing_year": 2023,
+      "sha256": "b609c154ca5a02f55ee20f098f6553ec253ec73c184f343d07ae155d3d5524bf",
+      "type": "Taiwan annual report",
+      "currency": "TWD"
+    },
+    {
+      "filename": "TSMC-2024-Annual-Report.pdf",
+      "company_id": "TSMC",
+      "filing_year": 2024,
+      "sha256": "35fb134a4de264d0e68e663cea9bd8d211160abd6d267c6e94bcb8d77921a8a5",
+      "type": "Taiwan annual report",
+      "currency": "TWD"
+    }
+  ]
+}

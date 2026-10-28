@@ -1,0 +1,65 @@
+{
+  "baseline": "Exact source snapshot at this task start; earlier user/task changes excluded",
+  "files": [
+    {
+      "path": "strategic_graphrag\\engine\\cross_company.py",
+      "before": "c3c5099b864396058c98cd6217b636b0081d5b3e213a47092be903d944c31691",
+      "after": "6595e5c6f03c325289713a77ca289c765c7e4f2b661056b75e1ac71171bb0232"
+    },
+    {
+      "path": "strategic_graphrag\\engine\\financial_request.py",
+      "before": "27bcb6848013a01d42dfe7ba1a03f4585d83678d58412b3ff1d8aeaef38eeb52",
+      "after": "ed53214b9d2fd48669c9a40f9581a3bbc1dc589528718adc69c4ce69f600a28e"
+    },
+    {
+      "path": "strategic_graphrag\\engine\\query_understanding.py",
+      "before": "39f3f2ddb59e982ca883d1ffd5c78d58e0ec14215e59ec13f6f353a4dd112b38",
+      "after": "9f619c68e303c30734dd4bc1c7ae5c398608eede973cbba2f085798a38bd1306"
+    },
+    {
+      "path": "strategic_graphrag\\engine\\request_slots.py",
+      "before": "133b1786a697fd7874012f7e71459ef904cef0a0f311411714d4dd10c847e86f",
+      "after": "3d8e0c97be8972ce6feaa1ae3f364a55c6f5528d688c1dfc8cd6029180f0aea5"
+    },
+    {
+      "path": "strategic_graphrag\\pipeline\\consolidated_ntd_table.py",
+      "before": "fb13364556dab18f887c5c86b5fce87053719cbda63c31463b06dc34f763f27e",
+      "after": "6b8b0a4d46bf55d04037bdc7c4a3cb988483f5c721fd879afa559c796354c463"
+    },
+    {
+      "path": "strategic_graphrag\\pipeline\\financial_cache.py",
+      "before": "c07911829c1c223300a966b897ce64d4a65e106e5b1f9db9c656987fbbbc237b",
+      "after": "9fc188abba805d29d1ce76d95c4f36ed8f656b7d81ee17dbe49d5a061f231c74"
+    },
+    {
+      "path": "strategic_graphrag\\pipeline\\financial_candidate_guard.py",
+      "before": "11f0a1e0906fd84ab7e4dd7c964a525cc4ca4db71fb015083a29acfc2e9c4cca",
+      "after": "9cb7cfdedc46d513640efc6da6c02a13f8abc51258a60bcaa244d44b875e6c5b"
+    },
+    {
+      "path": "strategic_graphrag\\pipeline\\financial_context.py",
+      "before": "539ccfc9551d4161d52a6ee909c09b656b25e331223e87ff22c0b9b7929815eb",
+      "after": "71bd0797769cbd62dc1136f913693dba0f508c1c0902a62f426cd0bd64810f43"
+    },
+    {
+      "path": "strategic_graphrag\\pipeline\\financial_note_extractor.py",
+      "before": null,
+      "after": "eece4fb83d025bc5149fb6874c5ff0c72fc2e1e9271306f1659e87a24333c7b1"
+    },
+    {
+      "path": "strategic_graphrag\\pipeline\\financial_table_extractor.py",
+      "before": "0ca81d338a9fc1cfeba39d99559394eb619bfbd18f4a4da3b7ffa9a4bba35d88",
+      "after": "afca798d3f136b1cba097d082337d83fad37f0b7e650427d6eaa861a3d5024ec"
+    },
+    {
+      "path": "strategic_graphrag\\schema\\financial_observation.py",
+      "before": "3144d6dedfa3daa93bbb29e06f8141cbab144fd82570ed34c762e2f8038abdab",
+      "after": "70728a814d6025fc71681bf7eef00d63733f5c8760e79c8fafd16fac64766d26"
+    },
+    {
+      "path": "tests\\test_core_identity_20261018.py",
+      "before": null,
+      "after": "7b93e7bb9e74f1090610c3254e89d74e410221979655b3f7339ad6ca1d515ca6"
+    }
+  ]
+}

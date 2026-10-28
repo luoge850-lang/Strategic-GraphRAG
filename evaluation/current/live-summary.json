@@ -1,0 +1,49 @@
+{
+  "core": {
+    "numerator": 23,
+    "denominator": 25,
+    "not_applicable": 0
+  },
+  "numeric": {
+    "numerator": 23,
+    "denominator": 25,
+    "not_applicable": 0
+  },
+  "identity": {
+    "numerator": 23,
+    "denominator": 25,
+    "not_applicable": 0
+  },
+  "citation_identity": {
+    "numerator": 23,
+    "denominator": 25,
+    "not_applicable": 0
+  },
+  "citation_reference": {
+    "numerator": 22,
+    "denominator": 25,
+    "not_applicable": 0
+  },
+  "request_joint": {
+    "numerator": 9,
+    "denominator": 25,
+    "not_applicable": 0
+  },
+  "false_refusal": {
+    "numerator": 1,
+    "denominator": 25,
+    "not_applicable": 0
+  },
+  "severe_wrong_success": {
+    "numerator": 0,
+    "denominator": 25,
+    "not_applicable": 0
+  },
+  "mode": "LIVE_REPLAY",
+  "review": "AI_PDF_NOT_HUMAN_GOLD",
+  "questions": 25,
+  "failed": [
+    "R03",
+    "R12"
+  ]
+}
