@@ -1,0 +1,43 @@
+{
+  "build_id": "build_3b918db3d1355d09",
+  "method": "Real in-app browser typing/clicking, AX inspection and screenshots; AI observation, no human Gold",
+  "cases": [
+    {
+      "kind": "NVIDIA fact",
+      "question": "What was NVIDIA revenue in fiscal 2025?",
+      "observed": "130497 USD millions",
+      "answer_status": "ANSWERED"
+    },
+    {
+      "kind": "TSMC fact",
+      "question": "What were TSMC total assets in fiscal 2024?",
+      "observed": "6691938000 TWD thousands",
+      "answer_status": "ANSWERED"
+    },
+    {
+      "kind": "Calculation",
+      "question": "Calculate NVIDIA net income divided by revenue in fiscal 2025.",
+      "observed": "0.558480 ratio",
+      "answer_status": "ANSWERED"
+    },
+    {
+      "kind": "Multi item",
+      "question": "What were NVIDIA revenue in USD billions and net income in USD millions in fiscal 2025?",
+      "observed": "130.497 USD billions; 72880 USD millions; 2/2",
+      "answer_status": "ANSWERED"
+    },
+    {
+      "kind": "Unsupported attribution",
+      "question": "How many dollars of NVIDIA revenue were lost due to TSMC earthquakes in fiscal 2025?",
+      "observed": "No numeric result; attributed financial outcome not disclosed",
+      "answer_status": "ABSTAINED"
+    }
+  ],
+  "citation": {
+    "filename": "2025-10-K.pdf",
+    "physical_page": 52,
+    "method": "clicked source link; original page rendered visibly with Revenue row 130497",
+    "image": "docs/current-source.png"
+  },
+  "navigation": "Back restored the same request/result; new build identity caused old persisted result to be cleared after inventory load"
+}

@@ -1,0 +1,46 @@
+{
+  "build_id": "build_3b918db3d1355d09",
+  "schema": "strategic-graphrag-build-identity/v1",
+  "corpus_id": "five-report-current-v1",
+  "source_tree_sha256": "e6b84d1aa47c164c6445234e6a69ff84b8ec3f7b5bd9d10b47e020374aa304f6",
+  "pdfs": {
+    "2023-10-K.pdf": {
+      "sha256": "89981bbfcd91e20498c1060d7efb39022ac8f85e639f2841091695885aa9f8a8",
+      "bytes": 1578179
+    },
+    "2024-10-K.pdf": {
+      "sha256": "536f66d7f1c3413abbf643e0a02bd0aab65639116fe630225f3f93529244658b",
+      "bytes": 1074533
+    },
+    "2025-10-K.pdf": {
+      "sha256": "b67bd67a64488a54886de001c788bc5059a965fc6ef5b4d8b71624951e13df8e",
+      "bytes": 1274715
+    },
+    "TSMC-2023-Annual-Report.pdf": {
+      "sha256": "b609c154ca5a02f55ee20f098f6553ec253ec73c184f343d07ae155d3d5524bf",
+      "bytes": 15863109
+    },
+    "TSMC-2024-Annual-Report.pdf": {
+      "sha256": "35fb134a4de264d0e68e663cea9bd8d211160abd6d267c6e94bcb8d77921a8a5",
+      "bytes": 11251655
+    }
+  },
+  "parser_version": "pdfplumber-document-layer/v1",
+  "parser_config_hash": "",
+  "prompt_version": "v2-evidence-claim-1",
+  "extraction_provider": "local_rules_and_tables",
+  "extraction_model": "not_applicable",
+  "query_model": "disabled_for_local_acceptance",
+  "report_model": "disabled_for_local_acceptance",
+  "embedding_backend": "chroma_onnx",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "dependency_lock_sha256": "1c1961585cb6f69c9b560071fce72ce0d9dad0389adea0467a994c4d4b71bae3",
+  "git_commit": "90f8e928d0ea57487203f7393bfc28722f3215c8",
+  "component_fingerprints": {
+    "runtime_sources": "6508e9b51191b1dd39ad5231c41b61c2b28b8358691dedf490c00c6553097ce7",
+    "evaluation_protocol": "c5b6600a20822e40136a2d3d587403ed8310e8e026c0b16c2cccee195e225c4a",
+    "build_scripts": "abf166e34753ecac4d7c928f6c0635f9c35ea6fc9a0827f82e256a2c643906f5",
+    "dependency_locks": "937fd4f072f88ac89941908601bc5fbd53945d7d7b8c61af31bff04578d42896",
+    "frontend_sources": "816ca2b17c4cdf569a6d4d1db35385598b837a44b01b0b01e3221993cd898ac6"
+  }
+}
