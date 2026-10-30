@@ -1,5 +1,11 @@
 # Consolidation receipt
 
+## Active closure work
+
+Branch `codex/quality-closure` preserves the prior uncommitted repairs. Accounting aliases, preceding unknown obligations, split header dates, Docker exclusions and per-question evaluation persistence were reviewed. Response validation now uses the existing API response model once; arrays/null/invalid objects become recorded invalid responses. Results use a context-managed exclusive file, and failures stay in the 25-question denominator. The latest full run before the final dependency-error classification adjustment was 440 passed, 7 subtests passed; pip check passed.
+
+The API and database are stopped. No new LIVE_REPLAY result or final build is claimed. Exact deletion targets `.local/build` and `.local/neo4j` were resolved within this project, then their removal was rejected with `blocked by policy`. Neither directory was deleted. Their removal is the minimum manual action needed before the existing build/import flow can resume; no identity check was disabled and no parallel runtime was created. New period completeness and R03/R12 HTTP outcomes remain unmeasured. Historical results below retain their original identity.
+
 Scope: current workflow and GitHub source delivery. Disk cleanup is blocked, not completed.
 
 ## Source and runtime

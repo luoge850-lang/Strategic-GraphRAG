@@ -26,6 +26,17 @@ def describe(text,table,row,statement):
 
 
 def dated_columns(text,years,*,balance=False):
+    # Some statement headers put all month/day cells on one line and their
+    # years immediately underneath. Pair only equal-cardinality complete
+    # header rows, preserving the printed left-to-right order.
+    lines=text.splitlines()
+    for index,line in enumerate(lines[:-1]):
+        cells=re.findall(r'\b((?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}),?',line,re.I)
+        next_line=lines[index+1].strip()
+        if cells and re.fullmatch(r'20\d{2}(?:\s+20\d{2})+',next_line):
+            column_years=next_line.split()
+            if len(cells)==len(column_years):
+                text+='\n'+' '.join(f'{cell}, {year}' for cell,year in zip(cells,column_years))
     dates={}
     for m in re.finditer(r'\b(Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?[ \t]+(\d{1,2}),?[ \t]+(20\d{2})\b',text,re.I):
         try:d=datetime.strptime(m.group(1)[:3].title()+' '+m.group(2)+' '+m.group(3),'%b %d %Y').date()

@@ -38,6 +38,8 @@ def bind_slots(question, original, plan, spans, parse):
             unresolved_conditions=list(plan.ambiguity),
             output_currency=plan.calculation_target_currency,output_scale=plan.calculation_target_scale)]
     prefix=question[:spans[0][0]]
+    if re.search(r'\b(?:and|plus)\s*$', prefix, re.I):
+        plan.ambiguity.append('preceding_requested_item_not_resolved')
     fragments=[]
     for index,(start,end,metric,alias) in enumerate(spans):
         stop=spans[index+1][0] if index+1<len(spans) else len(question)
