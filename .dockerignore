@@ -13,3 +13,12 @@ pipeline_stats.json
 test_answer.json
 __pycache__
 *.pyc
+
+.local/
+archive/
+reports/
+experiments/
+tmp/
+configs/
+**/node_modules/
+**/.venv/
