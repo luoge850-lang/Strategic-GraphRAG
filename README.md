@@ -2,11 +2,11 @@
 
 Maintenance branch `codex/quality-closure`: response validation and accounting aliases are under verification. Local services are stopped. The build below is the last accepted snapshot, not a build of the modified working sources. Rebuild/live acceptance is blocked by automatic rejection of removing the superseded `.local/build` and `.local/neo4j` directories.
 
-Current local candidate: **`build_3b918db3d1355d09`**. NVIDIA FY2023–2025 10-Ks and TSMC 2023–2024 Taiwan annual reports; five source PDFs, two companies. This is a financial-report research prototype.
+Last accepted frozen candidate (not compatible with modified working sources): **`build_3b918db3d1355d09`**. NVIDIA FY2023–2025 10-Ks and TSMC 2023–2024 Taiwan annual reports; five source PDFs, two companies. This is a financial-report research prototype.
 
 The API supports company/period-specific financial facts, arithmetic and unit conversion, independently bound multi-item requests, evidence-backed disclosed dependencies and refusal of unsupported event-attributed losses. Financial answers use deterministic rules and calculation over typed observations. Optional model synthesis is a separate mechanism; it is disabled in the current local configuration and was not evaluated in this consolidation.
 
-The desktop repository is the active development location. The canonical flow uses `scripts/manage.py`, `scripts/evaluate.py`, `data/pdfs/`, `data/corpus.json` and ignored `.local/` configuration/runtime. Old worktrees and dated entry points remain pending deletion because automatic execution review blocked deletion; they are not inputs to this flow. Consolidation and disk cleanup are therefore not complete.
+The desktop repository is the active development location. The canonical flow uses `scripts/manage.py`, `scripts/evaluate.py`, `data/pdfs/`, `data/corpus.json` and ignored `.local/` configuration/runtime. Two worktrees remain after Git removed the clean README and reproduction checkouts. The dirty delivery tree and dated entry points remain pending deletion because automatic execution review blocked deletion; they are not inputs to this flow. Consolidation and disk cleanup are therefore not complete.
 
 ## Install and run (Windows)
 

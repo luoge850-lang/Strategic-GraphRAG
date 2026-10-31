@@ -2,17 +2,22 @@
 
 ## Active closure work
 
+Current refresh: branch codex/quality-closure, source b0422b9; PR #5 CI passed. Current local full verification: 443 passed, 7 subtests passed, 2 warnings in 107.77 seconds; pip check and frontend production build passed. Runtime-source comparison against the remaining delivery worktree found no delivery-only runtime/frontend/test files. Differences were confined to the already-integrated identity/API/database-error, alias/slot, period-context and test-contract repairs. The delivery tree remains for full unique-input review, not as another active service. Contrary to the expected manual cleanup, `.local/build` and `.local/neo4j` still contain the old build_3b918db3d1355d09 artifacts. Neither service port is listening. No new build or LIVE_REPLAY has been produced. The minimum outstanding manual action is deletion of these two stopped, superseded directories. No rename, parallel runtime or identity bypass was used.
+
+Physical worktree cleanup: stable-readme-refresh and public-demo-reproduce were clean and removed using Git. The reproduction head is retained by codex/retired-public-demo-reproduce; the README branch remains retained. Reproduction removal was measured at 2,304 files / 51,918,389 bytes, no reparse points; the README tree was not premeasured. Worktrees: 4 to 2. Observed C: free-space change across both operations: 40,227,991,552 to 40,280,702,976 bytes (+52,711,424 bytes); this is concurrent disk-level change, not exact per-file attribution. Shared Git metadata was retained. PR #1 and #3 were closed as superseded delivery/homepage proposals, without deleting their branches, commits or original PR records. The dirty public-demo-delivery worktree remains pending unique-input review.
+
+
 Branch `codex/quality-closure` preserves the prior uncommitted repairs. Accounting aliases, preceding unknown obligations, split header dates, Docker exclusions and per-question evaluation persistence were reviewed. Response validation now uses the existing API response model once; arrays/null/invalid objects become recorded invalid responses. Results use a context-managed exclusive file, and failures stay in the 25-question denominator. The latest full run before the final dependency-error classification adjustment was 440 passed, 7 subtests passed; pip check passed.
 
 The API and database are stopped. No new LIVE_REPLAY result or final build is claimed. Exact deletion targets `.local/build` and `.local/neo4j` were resolved within this project, then their removal was rejected with `blocked by policy`. Neither directory was deleted. Their removal is the minimum manual action needed before the existing build/import flow can resume; no identity check was disabled and no parallel runtime was created. New period completeness and R03/R12 HTTP outcomes remain unmeasured. Historical results below retain their original identity.
 
-Scope: current workflow and GitHub source delivery. Disk cleanup is blocked, not completed.
+Scope: current workflow and GitHub source delivery. Two old worktrees have been physically removed; remaining cleanup and new-build acceptance are incomplete.
 
 ## Source and runtime
 
 Started from PR #4 head `db2f323a01983331458978451f0bd6285c7664a9`, not the older desktop branch. Compared current engine, frontend, scripts, tests and dependencies with the dirty delivery worktree. Its only source differences from PR #4 were four historical deployment wrappers and the cleared example API key; no unique current engine/frontend implementation was omitted.
 
-Canonical source commit: `90f8e928d0ea57487203f7393bfc28722f3215c8`. Current build: `build_3b918db3d1355d09`; full component/source/PDF fingerprints are in [build identity](../evaluation/current/build-identity.json). Later evidence/documentation commits do not alter runtime sources. Active API: loopback port 8000; Neo4j: 7687/7474. Runtime/configuration: `.local/`; active Python: `.venv/`.
+Canonical source commit: `90f8e928d0ea57487203f7393bfc28722f3215c8`. Current build: `build_3b918db3d1355d09`; full component/source/PDF fingerprints are in [build identity](../evaluation/current/build-identity.json). Later evidence/documentation commits do not alter runtime sources. Last accepted configuration: API port 8000; Neo4j 7687/7474. Both services are currently stopped; this is configuration, not live availability. Runtime/configuration: `.local/`; active Python: `.venv/`.
 
 New generic entry points directly build from the five canonical PDFs, import into an empty local database and serve the matching graph/vector/source registry. The 25-question evidence set and its scorer no longer import dated deployment scripts. Historical scripts are still physically present because deletion was rejected; the canonical flow does not call them. Their removal has not been represented as completed.
 
@@ -50,11 +55,11 @@ Snapshot excludes shared `.git` object internals, does not follow reparse points
 | Logical bytes in scoped roots | 13,632,372,161 | 14,677,100,077 |
 | Disk free bytes | 49,007,378,432 | 47,299,416,064 |
 
-Actual deleted files: **0**. Logical deleted bytes: **0**. Disk free-space change: **-1,707,962,368 bytes**; this is a decrease while restoring dependencies/building, not released capacity. Same-volume moves of the superseded preflight build/database were only namespace changes and are not counted as cleanup. Their directories still exist. Logs/current files continued changing after the timestamped snapshot.
+Historical snapshot below predates the current cleanup. Current measured removal: **2,304 files / 51,918,389 logical bytes** from public-demo-reproduce, plus stable-readme-refresh whose file count/size was not measured before removal. Disk free-space change: **-1,707,962,368 bytes**; this is a decrease while restoring dependencies/building, not released capacity. Same-volume moves of the superseded preflight build/database were only namespace changes and are not counted as cleanup. Their directories still exist. Logs/current files continued changing after the timestamped snapshot.
 
 Automatic execution review rejected (1) the combined generated source-deletion batch, and (2) a separately preflighted exact `reports` directory deletion after checking its absolute path, reparse points and running processes. Both returned only `blocked by policy`; neither command executed. No alternative tool was used to bypass these decisions. The source batch was not executed, so no old scripts, components or tests were deleted.
 
-Still pending: obsolete `archive/`, `reports/`, `experiments/`, dated deployment chains, duplicate environments/runtime stores, the three old worktrees, project-specific audit copies, and individually classified old docs. User untracked docs/config/tmp remain present. Current tree is source-committed but not fully clean because these user documents remain untracked. No claim of one remaining worktree or released disk capacity is made.
+Still pending: obsolete `archive/`, `reports/`, `experiments/`, dated deployment chains, duplicate environments/runtime stores, the dirty public-demo-delivery worktree, project-specific audit copies, and individually classified old docs. User untracked docs/config/tmp remain present. Current tree is source-committed but not fully clean because these user documents remain untracked. No claim of one remaining worktree or released disk capacity is made.
 
 ## Current structure and inventory
 
@@ -70,7 +75,7 @@ data/                corpus/source manifests; five original PDFs local only
 docs/                current inventory, receipt and two browser evidence images
 ```
 
-[FILE_INVENTORY.csv](FILE_INVENTORY.csv) enumerates current tracked/new public files, all five canonical PDFs with hashes, and grouped dependency/store directories. Pending-removal directories and legacy files are explicitly marked; this is not a claim to have enumerated every file in the blocked historical forests. All 4 worktrees remain registered; only the desktop tree is used by the new workflow. Old research/deployment branches are retired as current entry points, but their branch refs/history are retained while worktree cleanup is blocked.
+[FILE_INVENTORY.csv](FILE_INVENTORY.csv) enumerates current tracked/new public files, all five canonical PDFs with hashes, and grouped dependency/store directories. Pending-removal directories and legacy files are explicitly marked; this is not a claim to have enumerated every file in the blocked historical forests. Two worktrees now remain: the desktop tree and public-demo-delivery. The clean readme and reproduction worktrees were removed through git worktree remove; their commit history remains accessible. Old research/deployment branches are retired as current entry points, but their branch refs/history are retained while worktree cleanup is blocked.
 
 ## GitHub and reproducibility
 
